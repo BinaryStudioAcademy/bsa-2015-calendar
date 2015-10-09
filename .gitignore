@@ -1,0 +1,8 @@
+*sublime*
+public/
+node_modules/
+bower_components/
+*.html
+*.log
+.DS_Store
+*.zip
