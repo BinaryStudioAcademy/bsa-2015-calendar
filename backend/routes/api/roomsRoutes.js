@@ -32,6 +32,6 @@ module.exports = function(app) {
 			res.err = err;
 			next()
 		});
-	}, apiResponse);
+	}, apiResponse);	
 
 };
