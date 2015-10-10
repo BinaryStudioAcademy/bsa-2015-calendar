@@ -26,6 +26,14 @@ module.exports = function(app) {
 		});
 	}, apiResponse);
 
+	app.update('api/group/:id', function(req, res, next){
+		groupRepository.update(req.params.id, req.body, function(err, data){
+			res.data = data;
+			res.err = err;
+			next();
+		});
+	}, apiResponse);
+
 	app.delete('api/group/', function(req, res, next){
 		groupRepository.delete(req.params.id, function(err, data){
 			res.data = data;

@@ -26,6 +26,14 @@ module.exports = function(app) {
 		});
 	}, apiResponse);
 
+	app.update('api/device/:id', function(req, res, next){
+		deviceRepository.update(req.params.id, req.body, function(err, data){
+			res.data = data;
+			res.err = err;
+			next();
+		});
+	}, apiResponse);
+
 	app.delete('api/device/', function(req, res, next){
 		deviceRepository.delete(req.params.id, function(err, data){
 			res.data = data;

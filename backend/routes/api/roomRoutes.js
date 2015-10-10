@@ -26,6 +26,14 @@ module.exports = function(app) {
 		});
 	}, apiResponse);
 
+	app.update('api/room/:id', function(req, res, next){
+		roomRepository.update(req.params.id, req.body, function(err, data){
+			res.data = data;
+			res.err = err;
+			next();
+		});
+	}, apiResponse);
+
 	app.delete('api/room/', function(req, res, next){
 		roomRepository.delete(req.params.id, function(err, data){
 			res.data = data;

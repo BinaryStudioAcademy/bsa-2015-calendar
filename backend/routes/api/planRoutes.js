@@ -10,13 +10,21 @@ module.exports = function(app) {
 		});
 	}, apiResponse);
 
-	app.get('api/plan/', function(req, res, next){
-		planRepository.getAll(function(err, data){
+	app.get('api/plan/:user', function(req, res, next){
+		planRepository.getAll(req.params.user, function(err, data){
 			res.data = data;
 			res.err = err;
 			next()
 		});
 	}, apiResponse);
+
+	app.get('api/planByOwner/:user', function(req, res, next){
+		planRepository.getAllByOwner(req.params.user, function(err, data){
+			res.data = data;
+			res.err = err;
+			next()
+		});
+	}, apiResponse);	
 
 	app.post('/api/plan/', function(req, res, next) {
 		planRepository.add(req.body, function(err, data) {
@@ -25,6 +33,14 @@ module.exports = function(app) {
 			next();
 		});
 	}, apiResponse);
+
+	app.update('api/plan/:id', function(req, res, next){
+		planRepository.update(req.params.id, req.body, function(err, data){
+			res.data = data;
+			res.err = err;
+			next();
+		});
+	}, apiResponse);	
 
 	app.delete('api/plan/', function(req, res, next){
 		planRepository.delete(req.params.id, function(err, data){

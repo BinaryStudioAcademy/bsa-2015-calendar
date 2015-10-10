@@ -10,16 +10,24 @@ module.exports = function(app) {
 		});
 	}, apiResponse);
 
-	app.get('api/event/', function(req, res, next){
-		eventRepository.getAll(function(err, data){
+	app.get('api/event/:user', function(req, res, next){
+		eventRepository.getAll(req.params.user, function(err, data){
 			res.data = data;
 			res.err = err;
 			next()
 		});
 	}, apiResponse);
 
-	app.get('api/event/:name', function(req, res, next){
-		eventRepository.searchByName(req.params.name, function(err, data){
+	app.get('api/eventByOwner/:user', function(req, res, next){
+		eventRepository.getByOwner(req.params.user, function(err, data){
+			res.data = data;
+			res.err = err;
+			next()
+		});
+	}, apiResponse);	
+
+	app.get('api/eventByTitle/:name', function(req, res, next){
+		eventRepository.searchByTitle(req.params.title, function(err, data){
 			res.data = data;
 			res.err = err;
 			next()
@@ -44,6 +52,14 @@ module.exports = function(app) {
 
 	app.post('/api/event/', function(req, res, next) {
 		eventRepository.add(req.body, function(err, data) {
+			res.data = data;
+			res.err = err;
+			next();
+		});
+	}, apiResponse);
+
+	app.update('api/event/:id', function(req, res, next){
+		eventRepository.update(req.params.id, req.body, function(err, data){
 			res.data = data;
 			res.err = err;
 			next();
