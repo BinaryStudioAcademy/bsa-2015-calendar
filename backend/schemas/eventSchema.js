@@ -11,8 +11,8 @@ var eventSchema = new Schema({
     description : String,
     plan : {type:  Schema.Types.ObjectId, ref: 'Plan'},
     isPrivate : Boolean,
-    start: Date, 
-    end: Date, 
+    dateStart: Date, 
+    dateEnd: Date, 
     /* users: [{type Schema.Types.ObjectId, ref: 'User'}] */
     room: {type: Schema.Types.ObjectId, ref: 'Room'},
     devices: [{type: Schema.Types.ObjectId, ref: 'Device'}],

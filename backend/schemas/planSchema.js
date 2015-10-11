@@ -1,4 +1,7 @@
 var mongoose = require('mongoose');
+var Room = require('./roomSchema');
+var Device = require('./deviceSchema');
+
 var Schema = mongoose.Schema;
 
 var planSchema = new Schema({
