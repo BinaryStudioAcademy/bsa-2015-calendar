@@ -10,6 +10,7 @@ function DayViewController(DailyCalendarService) {
 	var todayDate = Date.now();
 	var date1 = new Date(2015, 9, 9, 8);
 	var date2 = new Date(2015, 9, 9, 13);
+
 	
 	vm.selectedDate = todayDate;
 	vm.eventSelected = false;

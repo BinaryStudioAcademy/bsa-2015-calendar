@@ -21,10 +21,16 @@ var app = angular.module('calendar-app', ['ui.router', 'ngResource', 'ui.bootstr
 					controllerAs: 'calendarCtrl',
 				})
 				.state('calendar.dayView', {
-					url: '/calendar/dayView',
+					url: '/dayView',
 					templateUrl: './templates/dailyCalendar/dailyCalendarTemplate.html',
 					controller: 'DayViewController',
 					controllerAs: 'dvCtrl',
+				})
+				.state('calendar.weekView', {
+					url: '/weekView',
+					templateUrl: './templates/weekCalendar/weekCalendarTemplate.html',
+					controller: 'WeekViewController',
+					controllerAs: 'wCtrl',
 				});
 		}
 	]);
