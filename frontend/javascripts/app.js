@@ -1,4 +1,4 @@
-var app = angular.module('calendar-app', ['ui.router', 'ngResource', 'ui.bootstrap', 'ngAnimate', 'dayViewDemo'])
+var app = angular.module('calendar-app', ['ui.router', 'ngResource', 'ui.bootstrap', 'ngAnimate'])
 	.config(['$stateProvider', '$urlRouterProvider','$resourceProvider', '$httpProvider', '$locationProvider', 
 		function($stateProvider, $urlRouterProvider, $resourceProvider, $httpProvider, $locationProvider) {
 			$urlRouterProvider.otherwise('/');

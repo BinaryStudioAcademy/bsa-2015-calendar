@@ -1,4 +1,4 @@
-#dayView(ng-app="dayViewDemo" ng-cloak)
+#dayView(ng-cloak)
   .col-sm-8.main-content
     table#calendar.table
       tr(ng-repeat="timeSt in dvCtrl.timeStamps")
@@ -7,9 +7,14 @@
   .col-sm-4.right-sidebar
     .row.text-center
       ul.list-inline
-        li: a(href='#'): i.glyphicon.glyphicon-chevron-left.bigger-icon
-        li {{dvCtrl.selectedDate | date: 'd EEE yyyy'}}
-        li: a(href='#'): i.glyphicon.glyphicon-chevron-right.bigger-icon
+        li
+          a(href='#')
+            i.glyphicon.glyphicon-chevron-left.bigger-icon
+        li 
+          span {{dvCtrl.selectedDate | date: 'd EEE yyyy'}}
+        li
+          a(href='#')
+            i.glyphicon.glyphicon-chevron-right.bigger-icon
     #showAllEvents.text-center
       input(type="checkbox", id="showEvents")
       label(for="showEvents") Show all events
@@ -33,4 +38,3 @@
       #eventParticipants
         strong Participants: 
         span.badge {{dvCtrl.event.participants}}
-        

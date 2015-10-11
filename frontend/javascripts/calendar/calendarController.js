@@ -1,12 +1,8 @@
-(function () {
+var app = require('../app');
 
-	angular
-		.module('calendar-app')
-		.controller('CalendarController', CalendarController);
+app.controller('CalendarController', CalendarController);
 
-	function CalendarController() {
-		var vm = this;
-		
-	}
-
-})();
+function CalendarController() {
+	var vm = this;
+	
+}
