@@ -16,9 +16,7 @@ module.exports = function(app) {
 
 			console.log('user registered!');
 			res.send({success : 'true'});
-		});
-
-		
+		});		
 	});
 
 	app.post('/api/login', passport.authenticate('local'), function(req, res){
@@ -26,12 +24,12 @@ module.exports = function(app) {
 	});
 
 	app.get('/api/authTest', passport.authenticate('local'), function(req, res){
-		res.send('If you see this, you are authorized')
-	})
+		res.send('If you see this, you are authorized');
+	});
 
 	app.post('/api/logout', function(req, res){
 		req.logout();
 		res.send({ unauthenticated: 'true' });
-	})
+	});
 
 };

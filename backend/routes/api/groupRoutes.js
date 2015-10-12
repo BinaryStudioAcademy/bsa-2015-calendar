@@ -14,7 +14,7 @@ module.exports = function(app) {
 		groupRepository.getAll(function(err, data){
 			res.data = data;
 			res.err = err;
-			next()
+			next();
 		});
 	}, apiResponse);
 
@@ -22,7 +22,7 @@ module.exports = function(app) {
 		groupRepository.searchByTitle(req.params.title, function(err, data){
 			res.data = data;
 			res.err = err;
-			next()
+			next();
 		});
 	}, apiResponse);
 
@@ -46,7 +46,7 @@ module.exports = function(app) {
 		groupRepository.delete(req.params.id, function(err, data){
 			res.data = data;
 			res.err = err;
-			next()
+			next();
 		});
 	}, apiResponse);
 };

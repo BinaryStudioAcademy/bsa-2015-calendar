@@ -14,7 +14,7 @@ module.exports = function(app) {
 		planRepository.searchByTitle(req.params.title, function(err, data){
 			res.data = data;
 			res.err = err;
-			next()
+			next();
 		});
 	}, apiResponse);
 
@@ -22,7 +22,7 @@ module.exports = function(app) {
 		planRepository.getAll(req.params.user, function(err, data){
 			res.data = data;
 			res.err = err;
-			next()
+			next();
 		});
 	}, apiResponse);
 
@@ -30,7 +30,7 @@ module.exports = function(app) {
 		planRepository.getAllByOwner(req.params.user, function(err, data){
 			res.data = data;
 			res.err = err;
-			next()
+			next();
 		});
 	}, apiResponse);	
 
@@ -54,7 +54,7 @@ module.exports = function(app) {
 		planRepository.delete(req.params.id, function(err, data){
 			res.data = data;
 			res.err = err;
-			next()
+			next();
 		});
 	}, apiResponse);
 };

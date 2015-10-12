@@ -15,7 +15,7 @@ module.exports = function(app) {
 		eventRepository.getAll(function(err, data){
 			res.data = data;
 			res.err = err;
-			next()
+			next();
 		});
 	}, apiResponse);
 
@@ -23,7 +23,7 @@ module.exports = function(app) {
 		eventRepository.getByOwner(req.params.user, function(err, data){
 			res.data = data;
 			res.err = err;
-			next()
+			next();
 		});
 	}, apiResponse);	
 
@@ -31,7 +31,7 @@ module.exports = function(app) {
 		eventRepository.searchByTitle(req.params.title, function(err, data){
 			res.data = data;
 			res.err = err;
-			next()
+			next();
 		});
 	}, apiResponse);
 
@@ -39,7 +39,7 @@ module.exports = function(app) {
 		eventRepository.getByDateStart(req.params.date, function(err, data){
 			res.data = data;
 			res.err = err;
-			next()
+			next();
 		});
 	}, apiResponse);
 
@@ -47,7 +47,7 @@ module.exports = function(app) {
 		eventRepository.getByDateEnd(req.params.date, function(err, data){
 			res.data = data;
 			res.err = err;
-			next()
+			next();
 		});
 	}, apiResponse);
 
@@ -55,7 +55,7 @@ module.exports = function(app) {
 		eventRepository.getByInterval(req.params.gteDate, req.params.lteDate, function(err, data){
 			res.data = data;
 			res.err = err;
-			next()
+			next();
 		});
 	}, apiResponse);	
 
@@ -80,7 +80,7 @@ module.exports = function(app) {
 		eventRepository.delete(req.params.id, function(err, data){
 			res.data = data;
 			res.err = err;
-			next()
+			next();
 		});
 	}, apiResponse);
 };

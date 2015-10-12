@@ -16,7 +16,7 @@ module.exports = function(app) {
 		roomRepository.getAll(function(err, data){
 			res.data = data;
 			res.err = err;
-			next()
+			next();
 		});
 	}, apiResponse);
 
@@ -24,7 +24,7 @@ module.exports = function(app) {
 		roomRepository.searchByTitle(req.params.title, function(err, data){
 			res.data = data;
 			res.err = err;
-			next()
+			next();
 		});
 	}, apiResponse);
 
@@ -33,7 +33,7 @@ module.exports = function(app) {
 			console.log('rout', req.body);
 			res.data = data;
 			res.err = err;
-			next()
+			next();
 		});
 	}, apiResponse);
 
@@ -49,7 +49,7 @@ module.exports = function(app) {
 		roomRepository.delete(req.params.id, function(err, data){
 			res.data = data;
 			res.err = err;
-			next()
+			next();
 		});
 	}, apiResponse);	
 

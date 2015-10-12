@@ -15,7 +15,7 @@ module.exports = function(app) {
 		deviceRepository.getAll(function(err, data){
 			res.data = data;
 			res.err = err;
-			next()
+			next();
 		});
 	}, apiResponse);
 
@@ -24,7 +24,7 @@ module.exports = function(app) {
 		deviceRepository.searchByTitle(req.params.title, function(err, data){
 			res.data = data;
 			res.err = err;
-			next()
+			next();
 		});
 	}, apiResponse);
 
@@ -34,7 +34,7 @@ module.exports = function(app) {
 
 			res.data = data;
 			res.err = err;
-			next()
+			next();
 		});
 	}, apiResponse);
 
@@ -51,7 +51,7 @@ module.exports = function(app) {
 		deviceRepository.delete(req.params.id, function(err, data){
 			res.data = data;
 			res.err = err;
-			next()
+			next();
 		});
 	}, apiResponse);
 
