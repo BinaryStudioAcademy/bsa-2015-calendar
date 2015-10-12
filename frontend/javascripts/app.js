@@ -25,6 +25,18 @@ var app = angular.module('calendar-app', ['ui.router', 'ngResource', 'ui.bootstr
 					templateUrl: './templates/dailyCalendar/dailyCalendarTemplate.html',
 					controller: 'DayViewController',
 					controllerAs: 'dvCtrl',
+				})
+				.state('calendar2', {
+					url: '/calendar2',
+					templateUrl: './templates/calendar2/calendar.html',
+					controller: 'CalendarController',
+					controllerAs: 'CCtrl',
+				})
+				.state('calendar2.yearView', {
+					url: '/calendar2/yearView',
+					templateUrl: './templates/yearCalendar/yearCalendarTemplate.html',
+					controller: 'yearCalendarController',
+					controllerAs: 'YCtrl',
 				});
 		}
 	]);
