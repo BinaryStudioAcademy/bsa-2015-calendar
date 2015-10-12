@@ -1,0 +1,78 @@
+mixin days-head
+  table.year-month-table
+    tr
+      td Mon
+      td Tue
+      td Wed
+      td Thu
+      td Fri
+      td: span.holiday Sat
+      td: span.holiday Sun
+    tr(ng-repeat='week in YCtrl.calendar')
+      td(ng-repeat='day in week') {{day}}
+
+
+div#year-content(ng-cloak).row
+  div.row
+    div.col-sm-12.col-md-12.col-lg-12
+      div.year-carousel.center-block
+        carousel(interval='interval', no-wrap='noWrapSlides')
+          slide(ng-repeat='year in YCtrl.years') 
+            div.year-slide.center-block {{year}}
+  //Desktop
+  div.row
+    div.col-sm-12.col-md-12.col-lg-12.hidden-xs
+      div.row#first
+        div.month.col-sm-3.col-md-3.col-lg-3.text-center#jan January
+          +days-head
+        div.month.col-sm-3.col-md-3.col-lg-3.text-center#feb February
+          +days-head
+        div.month.col-sm-3.col-md-3.col-lg-3.text-center#mar March
+          +days-head
+        div.month.col-sm-3.col-md-3.col-lg-3.text-center#apr April
+          +days-head
+      div.row#second
+        div.month.col-sm-3.col-md-3.col-lg-3.text-center#may May
+          +days-head
+        div.month.col-sm-3.col-md-3.col-lg-3.text-center#jun June
+          +days-head
+        div.month.col-sm-3.col-md-3.col-lg-3.text-center#jul July
+          +days-head
+        div.month.col-sm-3.col-md-3.col-lg-3.text-center#aug August
+          +days-head
+      div.row#third
+        div.month.col-sm-3.col-md-3.col-lg-3.text-center#sep September
+          +days-head
+        div.month.col-sm-3.col-md-3.col-lg-3.text-center#oct October
+          +days-head
+        div.month.col-sm-3.col-md-3.col-lg-3.text-center#nov November
+          +days-head
+        div.month.col-sm-3.col-md-3.col-lg-3.text-center#dec December
+          +days-head
+  //Mobile
+  div.row
+    div.col-xs-12.visible-xs
+      div.month.col-sm-3.col-md-3.col-lg-3.text-center#jan January
+        +days-head
+      div.month.col-sm-3.col-md-3.col-lg-3.text-center#feb February
+        +days-head
+      div.month.col-sm-3.col-md-3.col-lg-3.text-center#mar March
+        +days-head
+      div.month.col-sm-3.col-md-3.col-lg-3.text-center#apr April
+        +days-head
+      div.month.col-sm-3.col-md-3.col-lg-3.text-center#may May
+        +days-head
+      div.month.col-sm-3.col-md-3.col-lg-3.text-center#jun June
+        +days-head
+      div.month.col-sm-3.col-md-3.col-lg-3.text-center#jul July
+        +days-head
+      div.month.col-sm-3.col-md-3.col-lg-3.text-center#aug August
+        +days-head
+      div.month.col-sm-3.col-md-3.col-lg-3.text-center#sep September
+        +days-head
+      div.month.col-sm-3.col-md-3.col-lg-3.text-center#oct October
+        +days-head
+      div.month.col-sm-3.col-md-3.col-lg-3.text-center#nov November
+        +days-head
+      div.month.col-sm-3.col-md-3.col-lg-3.text-center#dec December
+        +days-head
