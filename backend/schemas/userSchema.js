@@ -4,7 +4,7 @@ var passportLocalMongoose = require('passport-local-mongoose');
 
 var userSchema = new Schema({
     email: {
-        type: 'email',
+        type: 'string',
         required: true
     },
     name: {
@@ -33,7 +33,7 @@ var userSchema = new Schema({
         required: false
     },
     avatar: {
-        type: 'json'
+        type: 'string'
     },
     workDate: {
         type: 'date',
@@ -61,7 +61,7 @@ var userSchema = new Schema({
         defaultsTo: true
     },
     preModeration: {
-        type: 'json'
+        type: 'string'
     },
     events: [{type: Schema.Types.ObjectId, ref: 'Event'}]
 });
