@@ -1,0 +1,31 @@
+#calendarOneDayView(ng-cloak)
+  .container
+    .col-sm-2.left-sidebar
+      .sidebar-nav
+        .navbar.navbar-default(role="navigation")
+          ul.nav.navbar-nav.text-center
+            li.active: a(ui-sref='.dayView' ng-click="calendarCtrl.toggleMode()") Day
+            li: a(href='#') Week
+            li: a(href='#') Month
+            li: a(href='#') Year
+            li: a(href='#') Events
+      .filters
+        h3 Filters
+        ul
+          li
+            input(type="checkbox", id="events")
+            label(for="events") Events
+          li 
+            input(type="checkbox", id="googleEvents")
+            label(for="googleEvents") G Events
+          li 
+            input(type="checkbox", id="roomBooking")
+            label(for="roomBooking") Rooms
+          li 
+            input(type="checkbox", id="deviceBooking")
+            label(for="deviceBooking") Devices
+          li 
+            input(type="checkbox", id="bDays")
+            label(for="bDays") Birthdays
+    .col-sm-10
+      ui-view#calendar-content

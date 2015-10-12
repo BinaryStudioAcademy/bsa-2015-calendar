@@ -8,11 +8,23 @@ var app = angular.module('calendar-app', ['ui.router', 'ngResource', 'ui.bootstr
 					templateUrl: './templates/layout/layout.html',
 					controller: 'LayoutController',
 					controllerAs: 'LayoutCtrl',
-					redirectTo: 'home.start'
+					redirectTo: 'home.start',
 				})
 				.state('home.start', {
 					url: '/',
 					templateUrl: './templates/home/homepage.html',
+				})
+				.state('calendar', {
+					url: '/calendar',
+					templateUrl: './templates/calendar/calendar.html',
+					controller: 'CalendarController',
+					controllerAs: 'calendarCtrl',
+				})
+				.state('calendar.dayView', {
+					url: '/calendar/dayView',
+					templateUrl: './templates/dailyCalendar/dailyCalendarTemplate.html',
+					controller: 'DayViewController',
+					controllerAs: 'dvCtrl',
 				});
 		}
 	]);
