@@ -1,0 +1,22 @@
+#eventView(ng-cloak)
+  .col-sm-4.events-search-bar
+    #radio-group
+      h2 Filter events by scope
+      label
+        input(type="radio", name="events-filter", checked) Year
+      label
+        input(type="radio", name="events-filter") Month      
+      label
+        input(type="radio", name="events-filter") Week
+      label
+        input(type="radio", name="events-filter") Day
+    #events-search-field
+      h2 Search
+      input(type="text", placeholder="enter keywords").form-control
+  .col-sm-8.events-list
+    table#event-table
+      tr(ng-repeat="")
+        td.event-date-cell
+          a(href="{{}}"){{evCtrl.date}}
+        td.event-duration-cell {{evCtrl.duration}}
+        td.event-description-cell {{evCtrl.description}}
