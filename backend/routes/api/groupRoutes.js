@@ -10,8 +10,16 @@ module.exports = function(app) {
 		});
 	}, apiResponse);
 
-	app.get('api/group/', function(req, res, next){
+	app.get('/api/group/', function(req, res, next){
 		groupRepository.getAll(function(err, data){
+			res.data = data;
+			res.err = err;
+			next()
+		});
+	}, apiResponse);
+
+	app.get('/api/groupByTitle/:title', function(req, res, next){
+		groupRepository.searchByTitle(req.params.title, function(err, data){
 			res.data = data;
 			res.err = err;
 			next()
@@ -26,7 +34,7 @@ module.exports = function(app) {
 		});
 	}, apiResponse);
 
-	app.update('api/group/:id', function(req, res, next){
+	app.put('/api/group/:id', function(req, res, next){
 		groupRepository.update(req.params.id, req.body, function(err, data){
 			res.data = data;
 			res.err = err;
@@ -34,7 +42,7 @@ module.exports = function(app) {
 		});
 	}, apiResponse);
 
-	app.delete('api/group/', function(req, res, next){
+	app.delete('/api/group/:id', function(req, res, next){
 		groupRepository.delete(req.params.id, function(err, data){
 			res.data = data;
 			res.err = err;

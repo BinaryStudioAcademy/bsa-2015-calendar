@@ -10,15 +10,16 @@ module.exports = function(app) {
 		});
 	}, apiResponse);
 
-	app.get('api/event/:user', function(req, res, next){
-		eventRepository.getAll(req.params.user, function(err, data){
+
+	app.get('/api/event/', function(req, res, next){
+		eventRepository.getAll(function(err, data){
 			res.data = data;
 			res.err = err;
 			next()
 		});
 	}, apiResponse);
 
-	app.get('api/eventByOwner/:user', function(req, res, next){
+	app.get('/api/eventByOwner/:user', function(req, res, next){
 		eventRepository.getByOwner(req.params.user, function(err, data){
 			res.data = data;
 			res.err = err;
@@ -26,7 +27,7 @@ module.exports = function(app) {
 		});
 	}, apiResponse);	
 
-	app.get('api/eventByTitle/:name', function(req, res, next){
+	app.get('/api/eventByTitle/:title', function(req, res, next){
 		eventRepository.searchByTitle(req.params.title, function(err, data){
 			res.data = data;
 			res.err = err;
@@ -34,16 +35,24 @@ module.exports = function(app) {
 		});
 	}, apiResponse);
 
-	app.get('api/event/:date', function(req, res, next){
-		eventRepository.getByDate(req.params.date, function(err, data){
+	app.get('/api/eventByDateStart/:date', function(req, res, next){
+		eventRepository.getByDateStart(req.params.date, function(err, data){
 			res.data = data;
 			res.err = err;
 			next()
 		});
 	}, apiResponse);
 
-	app.get('api/event/:startDate/:endDate', function(req, res, next){
-		eventRepository.getByInterval(req.params.startDate, req.params.endDate, function(err, data){
+	app.get('/api/eventByDateEnd/:date', function(req, res, next){
+		eventRepository.getByDateEnd(req.params.date, function(err, data){
+			res.data = data;
+			res.err = err;
+			next()
+		});
+	}, apiResponse);
+
+	app.get('/api/eventByInterval/:gteDate/:lteDate', function(req, res, next){
+		eventRepository.getByInterval(req.params.gteDate, req.params.lteDate, function(err, data){
 			res.data = data;
 			res.err = err;
 			next()
@@ -52,13 +61,14 @@ module.exports = function(app) {
 
 	app.post('/api/event/', function(req, res, next) {
 		eventRepository.add(req.body, function(err, data) {
+			console.log('rout', req.body['title']);
 			res.data = data;
 			res.err = err;
 			next();
 		});
 	}, apiResponse);
 
-	app.update('api/event/:id', function(req, res, next){
+	app.put('/api/event/:id', function(req, res, next){
 		eventRepository.update(req.params.id, req.body, function(err, data){
 			res.data = data;
 			res.err = err;
@@ -66,7 +76,7 @@ module.exports = function(app) {
 		});
 	}, apiResponse);
 
-	app.delete('api/event/', function(req, res, next){
+	app.delete('/api/event/:id', function(req, res, next){
 		eventRepository.delete(req.params.id, function(err, data){
 			res.data = data;
 			res.err = err;
