@@ -1,2 +1,30 @@
 #calendar-wrapper Hello
 a(ui-sref='calendar') Go to calendar page
+form.form-horizontal(ng-controller='LoginController')
+    .control-group(ng-show='isVisible')
+        .control-group
+            label.control-label(for='inputEmail') Email
+            .controls
+                input#inputEmail(type='text', placeholder='Email')
+        .control-group
+            label.control-label(for='inputPassword') Password
+            .controls
+                input#inputPassword(type='password', placeholder='Password')
+        button.btn.btn-primary(type='submit') Login
+    .control-group(ng-hide='isVisible')
+        .control-group
+            label.control-label(for='username') Username
+            .controls
+                input#inputEmail(type='text', placeholder='Username')
+        .control-group
+            label.control-label(for='inputEmail') Email
+            .controls
+                input#inputEmail(type='text', placeholder='Email')
+        .control-group
+            label.control-label(for='inputPassword') Password
+            .controls
+                input#inputPassword(type='password', placeholder='Password')
+
+        button.btn.btn-primary(type='submit') Register
+    a(href='#', ng-show='isVisible' ng-click='showHide()') Register
+    a(href='#', ng-hide='isVisible' ng-click='showHide()') Login
