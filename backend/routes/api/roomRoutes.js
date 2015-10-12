@@ -28,6 +28,7 @@ module.exports = function(app) {
 
 	app.post('/api/room/', function(req, res, next){
 		roomRepository.add(req.body, function(err, data){
+			console.log('rout', req.body);
 			res.data = data;
 			res.err = err;
 			next()

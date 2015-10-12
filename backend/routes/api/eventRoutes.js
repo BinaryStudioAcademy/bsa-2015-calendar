@@ -67,6 +67,7 @@ module.exports = function(app) {
 
 	app.post('/api/event/', function(req, res, next) {
 		eventRepository.add(req.body, function(err, data) {
+			console.log('rout', req.body['title']);
 			res.data = data;
 			res.err = err;
 			next();
