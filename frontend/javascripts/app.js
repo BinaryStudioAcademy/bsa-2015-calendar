@@ -25,6 +25,12 @@ var app = angular.module('calendar-app', ['ui.router', 'ngResource', 'ui.bootstr
 					templateUrl: './templates/dailyCalendar/dailyCalendarTemplate.html',
 					controller: 'DayViewController',
 					controllerAs: 'dvCtrl',
+				})
+				.state('calendar.eventsView', {
+					url: '/calendar/eventsView',
+					templateUrl: './templates/eventsCalendar/eventsCalendarTemplate.html',
+					controller: 'EventsViewController',
+					controllerAs: 'evCtrl'
 				});
 		}
 	]);
