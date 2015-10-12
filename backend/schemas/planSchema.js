@@ -1,6 +1,4 @@
 var mongoose = require('mongoose');
-<<<<<<< HEAD
-=======
 var Room = require('./roomSchema');
 var Device = require('./deviceSchema');
 

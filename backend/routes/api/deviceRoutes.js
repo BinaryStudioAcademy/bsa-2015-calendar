@@ -29,7 +29,9 @@ module.exports = function(app) {
 	}, apiResponse);
 
 	app.post('/api/device/', function(req, res, next){
+		console.log(req.body);
 		deviceRepository.add(req.body, function(err, data){
+
 			res.data = data;
 			res.err = err;
 			next()

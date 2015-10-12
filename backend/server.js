@@ -6,6 +6,8 @@ var app = express();
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
 
 app.use(cookieParser());
 app.use(bodyParser());
@@ -19,6 +21,15 @@ app.use('/', express.static(__dirname + '/../public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+//passport
+app.use(passport.initialize());
+app.use(passport.session());
+
+var User = require('./schemas/userSchema');
+passport.use(User.createStrategy());
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 app.set('view engine', 'jade');
 app.set('views', __dirname + '/../frontend/views');
