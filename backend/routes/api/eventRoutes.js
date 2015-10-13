@@ -1,5 +1,6 @@
 var apiResponse = require('express-api-response');
 var eventRepository = require('../../repositories/eventRepository');
+var eventService = require('../../services/eventService');
 
 module.exports = function(app) {
 	app.get('/api/event/:id', function(req, res, next) {
@@ -60,7 +61,11 @@ module.exports = function(app) {
 	}, apiResponse);	
 
 	app.post('/api/event/', function(req, res, next) {
-		eventRepository.add(req.body, function(err, data) {
+		
+		// for(var i in eventService)
+		// 	console.log(eventService[i]);
+
+		eventService.add(req.body, function(err, data) {
 			console.log('rout', req.body['title']);
 			res.data = data;
 			res.err = err;
