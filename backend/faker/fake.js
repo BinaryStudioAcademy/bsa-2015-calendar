@@ -7,7 +7,7 @@ casual.define('mongo_id', function(){
 	return mongoose.Types.ObjectId();
 });
 
-casaul.define('user_', function () {
+casual.define('user_', function () {
 	var id = casual.mongo_id;
 	context.user_ids.push(id);
 
@@ -27,7 +27,7 @@ casaul.define('user_', function () {
 	};
 });
 
-casaul.define('device_', function () {
+casual.define('device_', function () {
 	var id = casual.mongo_id;
 	context.device_ids.push(id);
 
@@ -38,7 +38,7 @@ casaul.define('device_', function () {
 	};
 });
 
-casaul.define('room_', function () {
+casual.define('room_', function () {
 	var id = casual.mongo_id;
 	context.room_ids.push(id);
 
@@ -49,7 +49,7 @@ casaul.define('room_', function () {
 	};
 });
 
-casaul.define('group_', function () {
+casual.define('group_', function () {
 	var numOfUsers = casual.integer(from = 0, to = context.user_ids.length);
 	var usersArr = [];
 

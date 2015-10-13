@@ -1,6 +1,7 @@
 var faker = require('./fake.js');
 var mongoose = require('mongoose');
 var async = require('async');
+var casual = require('casual');
 
 var repositories = {
 	device: require('../repositories/deviceRepository'),
