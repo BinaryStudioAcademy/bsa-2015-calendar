@@ -8,7 +8,7 @@ var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-var generateFakes = require('./faker/generate');
+//var generateFakes = require('./faker/generate');
 
 app.use(cookieParser());
 app.use(bodyParser());

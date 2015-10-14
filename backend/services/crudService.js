@@ -26,8 +26,8 @@ crudService.prototype.addEventToDevice = function(deviceId, eventId, callback){
 		});
 	},
 	function(device, cb){
-		console.log('device TITLE: ' + device.title);
-		console.log('device ID: ' + device._id);
+		//console.log('device TITLE: ' + device.title);
+		//console.log('device ID: ' + device._id);
 
 		device.events.push(eventId);
 		console.log('device EVENTS: ' + device.events);

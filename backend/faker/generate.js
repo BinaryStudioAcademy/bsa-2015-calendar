@@ -16,7 +16,7 @@ var generate = function(type, count, callback) {
 		repositories[type].add(casual[type + '_'], callback);
 	}
 
-	console.log(entities);
+	//console.log(entities);
 };
 
 async.waterfall([
