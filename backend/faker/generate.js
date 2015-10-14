@@ -6,8 +6,8 @@ var casual = require('casual');
 var repositories = {
 	device: require('../repositories/deviceRepository'),
 	room: require('../repositories/roomRepository'),
-	group: require('../repositories/groupRepository'),
-	user: require('../repositories/userRepository')
+	user: require('../repositories/userRepository'),
+	group: require('../repositories/groupRepository')	
 };
 
 
@@ -19,12 +19,9 @@ var generate = function(type, count, callback) {
 	//console.log(entities);
 };
 
-async.waterfall([
-	generate.bind(null, 'user', 20),
-	generate.bind(null, 'room', 8),
-	generate.bind(null, 'device', 13),
-	generate.bind(null, 'group', 3)
-], function(err, data){
-	console.log('async', err);
-	process.exit();
-});
+module.exports = function (amount) {
+	generate.call(null, 'device', amount.device);
+	generate.call(null, 'room', amount.room);
+	generate.call(null, 'user', amount.user);
+	generate.call(null, 'group', amount.group);
+}; 
