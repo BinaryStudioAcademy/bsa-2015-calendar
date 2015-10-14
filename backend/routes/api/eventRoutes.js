@@ -82,7 +82,7 @@ module.exports = function(app) {
 	}, apiResponse);
 
 	app.delete('/api/event/:id', function(req, res, next){
-		eventRepository.delete(req.params.id, function(err, data){
+		eventService.delete(req.params.id, function(err, data){
 			res.data = data;
 			res.err = err;
 			next();

@@ -33,7 +33,7 @@ eventService.prototype.add = function(data, callback){
 				cb();
 			});
 		},
-		function(cb){//561e743a36d5a35a19a7d304
+		function(cb){
 			console.log('working on users');
 
 			if(!event.users.length) cb();
@@ -83,7 +83,95 @@ eventService.prototype.add = function(data, callback){
 			callback(err, null);
 			return;
 		}
+		callback(null, {success: 'true'});
+		return;
+	});
+};
 
+eventService.prototype.delete = function(eventId, callback){
+
+
+	var event;
+	async.waterfall([
+		function(cb){
+			eventRepository.getById(eventId, function(err, data){
+				if(err){
+					cb(err, null);
+					return;
+				}
+
+				event = data;
+				cb();
+			});
+		},
+		function(cb){
+			crudService.removeEventFromRoom(event.room, event._id, function(err, data){
+				if(err){
+					cb(err, null);
+					return;
+				}
+
+				cb();
+			});
+		},
+		function(cb){
+			console.log('working on users');
+
+			if(!event.users.length) cb();
+
+			event.users.forEach(function(userId){
+
+				crudService.removeEventFromUser(userId, event._id, function(err, data){
+					if(err){
+						cb(err, null);
+						return;
+					}
+
+				});
+			});
+
+			cb();
+
+		},
+		function(cb){
+
+			console.log('working on devices');
+
+			if(!event.devices.length){
+				console.log('no devices -> cb()');
+				cb();
+			}
+
+			event.devices.forEach(function(deviceId){
+
+				crudService.removeEventFromDevice(deviceId, event._id, function(err, data){
+					console.log('added ');
+					if(err){
+						cb(err, null);
+						return;
+					}
+
+				});
+			});
+
+			cb();
+		},
+		function(cb){
+			eventRepository.delete(event._id, function(err, data){
+				if(err){
+					cb(err, null);
+					return;
+				}
+				cb(null, data);
+			});
+		}
+
+	], function(err, result){
+		if(err){
+			console.log(err);
+			callback(err, null);
+			return;
+		}
 		callback(null, {success: 'true'});
 		return;
 	});
