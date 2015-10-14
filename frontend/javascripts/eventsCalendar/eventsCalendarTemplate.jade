@@ -1,22 +1,30 @@
 #eventView(ng-cloak)
   .col-sm-4.events-search-bar
-    #radio-group
-      h2 Filter events by scope
-      label
-        input(type="radio", name="events-filter", checked) Year
-      label
-        input(type="radio", name="events-filter") Month      
-      label
-        input(type="radio", name="events-filter") Week
-      label
-        input(type="radio", name="events-filter") Day
+    // 
+      #radio-group
+        h4 Filter events by scope
+        input(type="radio", name="events-filter", checked, id="filter-year")
+        label(for="filter-year").
+          Year
+        br
+        input(type="radio", name="events-filter", id="filter-month")
+        label(for="filter-month").
+          Month
+        br
+        input(type="radio", name="events-filter", id="filter-week")
+        label(for="filter-week").
+          Week
+        br
+        input(type="radio", name="events-filter", id="filter-day")
+        label(for="filter-day").
+          Day
     #events-search-field
-      h2 Search
-      input(type="text", placeholder="enter keywords").form-control
+      h4 Search
+      input(type="text", placeholder="enter keywords", ng-model="criteria").form-control
   .col-sm-8.events-list
     table#event-table
-      tr(ng-repeat="")
+      tr(ng-repeat="event in evCtrl.events | filter:criteria")
         td.event-date-cell
-          a(href="{{}}"){{evCtrl.date}}
-        td.event-duration-cell {{evCtrl.duration}}
-        td.event-description-cell {{evCtrl.description}}
+          a(href="#"){{event.date}}
+        td.event-duration-cell {{event.duration}}
+        td.event-description-cell {{event.description}}
