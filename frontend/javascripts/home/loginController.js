@@ -3,7 +3,7 @@
  */
 var app = require('../app');
 
-app.controller('LoginController', function ($scope) {
+app.controller('LoginController', function ($scope, LoginService) {
     $scope.isVisible = true;
 
     $scope.showHide = function () {
@@ -14,10 +14,13 @@ app.controller('LoginController', function ($scope) {
         console.log($scope.user.email);
         console.log($scope.user.password);
 
-        $scope.signInForm.$setPristine();
-        $scope.signInForm.$setUntouched();
+        LoginService.signIn({username: $scope.user.email, password: $scope.user.password});
+
         $scope.user.email = '';
         $scope.user.password = '';
+
+        $scope.signInForm.$setPristine();
+        $scope.signInForm.$setUntouched();
     };
 
     $scope.signUp = function () {
@@ -26,12 +29,19 @@ app.controller('LoginController', function ($scope) {
         console.log($scope.user.newPassword);
         console.log($scope.user.newPasswordConfirm);
 
-        $scope.signUpForm.$setPristine();
-        $scope.signUpForm.$setUntouched();
+        var userInfo = {
+            username: $scope.user.newUsername,
+            password: $scope.user.newPassword
+        };
+
+        LoginService.signUp(userInfo);
 
         $scope.user.newUsername = '';
         $scope.user.newEmail = '';
         $scope.user.newPassword = '';
         $scope.user.newPasswordConfirm = '';
+
+        $scope.signUpForm.$setPristine();
+        $scope.signUpForm.$setUntouched();
     };
 });

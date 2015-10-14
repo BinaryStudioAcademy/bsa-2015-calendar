@@ -16,7 +16,7 @@ div(ng-app='validationApp', ng-controller='LoginController')
                             input#signInPassword(type='password', name='password' placeholder='Password', ng-model='user.password', required='')
                     button.btn.btn-primary(type='submit', ng-disabled='signInForm.$invalid') Sign In
                 form(ng-submit='signUp()', name='signUpForm', novalidate='', ng-hide='isVisible')
-                    .form-group(ng-class="{ 'has-error' : (signUpForm.name.$invalid && !signUpForm.name.$pristine) }")
+                    .form-group(ng-class="{ 'has-error' : (signUpForm.username.$invalid && !signUpForm.username.$pristine) }")
                         label Username
                         div
                             input#inputUsername(type='text', placeholder='Username', name='username', ng-model='user.newUsername', maxlength="10", required='')
@@ -31,11 +31,11 @@ div(ng-app='validationApp', ng-controller='LoginController')
                         div
                             input#signUpPassword(type='password', name='password' placeholder='Password', ng-model='user.newPassword', required='', ng-minlength='5')
                             p.help-block(ng-show='signUpForm.password.$error.minlength') Password is too short.
-                    .form-group
+                    .form-group(ng-class="{ 'has-error' : (user.newPassword != user.newPasswordConfirm) && !signUpForm.confirmPassword.$pristine }")
                         label Confirm password
                         div
-                            input#signUpPassword(type='password', name='confirmPassword' placeholder='Password', ng-model='user.newPasswordConfirm', required='')
+                            input#signUpPassword(type='password', name='confirmPassword' placeholder='Confirm password', ng-model='user.newPasswordConfirm', required='')
                             p.help-block(ng-show='(user.newPassword != user.newPasswordConfirm) && !signUpForm.confirmPassword.$pristine') Passwords do not match.
-                    button.btn.btn-primary(type='submit', ng-disabled='signUpForm.$invalid') Sign Up
+                    button.btn.btn-primary(type='submit', ng-disabled='signUpForm.$invalid || user.newPassword != user.newPasswordConfirm') Sign Up
     a(href='#', ng-show='isVisible' ng-click='showHide()') Register
     a(href='#', ng-hide='isVisible' ng-click='showHide()') Login
