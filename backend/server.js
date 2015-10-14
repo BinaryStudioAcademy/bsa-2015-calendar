@@ -8,7 +8,7 @@ var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-var generateFakes = require('./faker/generate');
+
 
 app.use(cookieParser());
 app.use(bodyParser());
@@ -42,6 +42,7 @@ http.globalAgent.maxSockets = Infinity;
 var server = app.listen(3080);
 console.log('server start on port 3080');
 
-
+var generateFakes = require('./faker/generate');
+generateFakes();
 
 module.exports = app;

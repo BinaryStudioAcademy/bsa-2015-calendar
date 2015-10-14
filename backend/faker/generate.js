@@ -15,15 +15,12 @@ var generate = function(type, count, callback) {
 	for (var i = 0; i < count; i++){
 		repositories[type].add(casual[type + '_'], callback);
 	}
-
+	console.log(type);
 };
 
-async.waterfall([
-	generate.bind(null, 'user', 20),
-	generate.bind(null, 'room', 8),
-	generate.bind(null, 'device', 13),
-	generate.bind(null, 'group', 3)
-], function(err, data){
-	console.log('async', err);
-	process.exit();
-});
+module.exports = function () {
+	generate.call(null, 'device', 20);
+	generate.call(null, 'room', 5);
+	generate.call(null, 'user', 13);
+	generate.call(null, 'group', 3);
+};
