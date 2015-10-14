@@ -1,15 +1,16 @@
 #calendar-wrapper Hello
 a(ui-sref='calendar') Go to calendar page
-form.form-horizontal(ng-controller='LoginController')
+form.form-horizontal(ng-controller='LoginController', ng-submit='login()', name="userForm", novalidate)
     .control-group(ng-show='isVisible')
-        .control-group
-            label.control-label(for='inputEmail') Email
+        .control-group(ng-class='{ "has-error" : userForm.email.$invalid && !userForm.email.$pristine }')
+            label.control-label.form-group(for='inputEmail') Email
             .controls
-                input#inputEmail(type='text', placeholder='Email')
+                input#inputEmail(type='email', name="email", placeholder='Email', ng-model='inputEmail')
+                p.help-block(ng-show='userForm.email.$invalid && !userForm.email.$pristine') Enter a valid email.
         .control-group
             label.control-label(for='inputPassword') Password
             .controls
-                input#inputPassword(type='password', placeholder='Password')
+                input#inputPassword(type='password', placeholder='Password', ng-model='inputPassword')
         button.btn.btn-primary(type='submit') Login
     .control-group(ng-hide='isVisible')
         .control-group
@@ -24,7 +25,10 @@ form.form-horizontal(ng-controller='LoginController')
             label.control-label(for='inputPassword') Password
             .controls
                 input#inputPassword(type='password', placeholder='Password')
-
+        .control-group
+            label.control-label(for='inputPasswordConfirm') Confirm Password
+            .controls
+                input#inputPasswordConfirm(type='password', placeholder='Confirm Password')
         button.btn.btn-primary(type='submit') Register
     a(href='#', ng-show='isVisible' ng-click='showHide()') Register
     a(href='#', ng-hide='isVisible' ng-click='showHide()') Login
