@@ -2,13 +2,27 @@ var app = require('../app');
 
 app.controller('WeekViewController', WeekViewController);
 
-WeekViewController.$inject = ['DailyCalendarService'];
+WeekViewController.$inject = ['WeekCalendarService'];
 
-
-function WeekViewController(DailyCalendarService) {
+function WeekViewController(WeekCalendarService) {
 	var vm = this;
 
-	vm.timeStamps = DailyCalendarService.getTimeStamps();
+	vm.timeStamps = WeekCalendarService.getTimeStamps();
+
+
+	vm.days = WeekCalendarService.getDays();
+  
+
+  // vm.days = [	{ name: 'Monday'}, 
+  //            	{ name: 'Tuesday'}, 
+  //            	{ name: 'Wednesday'},
+		// 					{ name: 'Thursday'}, 
+  //             { name: 'Friday'}, 
+  //             { name: 'Saturday'},
+  //             { name: 'Sunday'},
+  //           ];
+
+
 
 	vm.toggleEventInfo = function() {
 		vm.eventSelected = !vm.eventSelected;
@@ -23,4 +37,24 @@ function WeekViewController(DailyCalendarService) {
 
 	vm.Start = weekStart;
 	vm.End = weekEnd;
+
+
+
+	// vm.daysName = function ($scope){
+	//   $scope.day = [	{ name: 'Monday'}, 
+ //                   	{ name: 'Tuesday'}, 
+ //                   	{ name: 'Wednesday'},
+	// 									{ name: 'Thursday'}, 
+ //                    { name: 'Friday'}, 
+ //                    { name: 'Saturday'},
+ //                    { name: 'Sunday'},
+	//                 ];
+	// };
+
+
+
+
 }
+
+
+
