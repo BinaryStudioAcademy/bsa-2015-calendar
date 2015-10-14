@@ -14,7 +14,12 @@ app.controller('LoginController', function ($scope, LoginService) {
         console.log($scope.user.username);
         console.log($scope.user.password);
 
-        LoginService.signIn({username: $scope.user.username, password: $scope.user.password});
+        var userInfo = {
+            username: $scope.user.username,
+            password: $scope.user.password
+        };
+
+        LoginService.signIn(userInfo);
 
         $scope.user.username = '';
         $scope.user.password = '';

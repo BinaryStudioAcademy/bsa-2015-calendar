@@ -26,7 +26,7 @@ module.exports = function(app) {
 	app.get('/api/authTest', function(req, res){
 		if(req.user)
 			res.send('If you see this, you are authorized as ' + req.user.name);
-		else{ res.send('u are not authenticated' ); }
+		else{ res.send('u are not authenticated'); }
 	});
 
 	app.post('/api/logout', function(req, res){
