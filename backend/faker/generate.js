@@ -18,9 +18,9 @@ var generate = function(type, count, callback) {
 	console.log(type);
 };
 
-module.exports = function () {
-	generate.call(null, 'device', 20);
-	generate.call(null, 'room', 5);
-	generate.call(null, 'user', 13);
-	generate.call(null, 'group', 3);
+module.exports = function (amount) {
+	generate.call(null, 'device', amount.device);
+	generate.call(null, 'room', amount.room);
+	generate.call(null, 'user', amount.user);
+	generate.call(null, 'group', amount.group);
 };
