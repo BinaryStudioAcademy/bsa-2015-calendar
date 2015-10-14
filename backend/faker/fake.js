@@ -20,9 +20,9 @@ casual.define('user_', function () {
 		city: casual.city,
 		gender: casual.random_element(['male','female']),
 		avatar: casual.word,
-		workDate: casual.date,
+		workDate: casual.date(format = 'YYYY-MM-DD'),
 		currentProject: casual.string,
-		birthday: casual.date,
+		birthday: casual.date(format = 'YYYY-MM-DD'),
 		events: []
 	};
 });
