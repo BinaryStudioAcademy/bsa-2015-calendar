@@ -26,8 +26,6 @@ crudService.prototype.addEventToDevice = function(deviceId, eventId, callback){
 		});
 	},
 	function(device, cb){
-		//console.log('device TITLE: ' + device.title);
-		//console.log('device ID: ' + device._id);
 
 		device.events.push(eventId);
 		console.log('device EVENTS: ' + device.events);
@@ -55,7 +53,7 @@ crudService.prototype.addEventToDevice = function(deviceId, eventId, callback){
 	});
 };
 
- crudService.prototype.addEventToUser = function(userId, eventId, callback){
+crudService.prototype.addEventToUser = function(userId, eventId, callback){
 	async.waterfall([
 
 	function(cb){
@@ -70,11 +68,8 @@ crudService.prototype.addEventToDevice = function(deviceId, eventId, callback){
 		});
 	},
 	function(user, cb){
-		//console.log('device TITLE: ' + device.title);
-		//console.log('device ID: ' + device._id);
 
 		user.events.push(eventId);
-		//console.log('device EVENTS: ' + device.events);
 
 		userRepository.update(userId, user, function(err, data){
 			if(err){
@@ -114,11 +109,7 @@ crudService.prototype.addEventToRoom = function(roomId, eventId, callback){
 		});
 	},
 	function(room, cb){
-		//console.log('device TITLE: ' + device.title);
-		//console.log('device ID: ' + device._id);
-
 		room.events.push(eventId);
-		//console.log('device EVENTS: ' + device.events);
 
 		roomRepository.update(roomId, room, function(err, data){
 			if(err){
@@ -143,17 +134,118 @@ crudService.prototype.addEventToRoom = function(roomId, eventId, callback){
 	});		
 };
 
-// crudService.prototype.removeEventFromDevice(device, event, callback){
-	
-// }
+crudService.prototype.removeEventFromDevice(deviceId, eventId, callback){
+	async.waterfall([
+		function(cb){
+			deviceRepository.getById(deviceId, function(err, data){
+				if(err){
+					cb(err, null);
+					return;
+				}
 
-// crudService.prototype.removeEventFromRoom(device, event, callback){
-	
-// }
+				cb(null, data);
+				return;
+			})
+		},
+		function(device, cb){
+			var index = device.events.indexOf(eventId);
+			if( index > -1 ) device.events.splice(index, 1);
 
-// crudService.prototype.removeEventFromRoom(device, event, callback){
+			deviceRepository.update(deviceId, device, function(err, data){
+				if(err){
+					cb(err, null);
+					return;
+				}
+				cb(null, data);
+				return;
+			})
+		}
+	], function(err, result){
+		if(err){
+			callback(err, null);
+			return;
+		}
+
+		callback(null, result);
+		return;
+	})
+}
+
+crudService.prototype.removeEventFromRoom(roomId, eventId, callback){
+
+	async.waterfall([
+		function(cb){
+			roomRepository.getById(roomId, function(err, data){
+				if(err){
+					cb(err, null);
+					return;
+				}
+
+				cb(null, data);
+				return;
+			})
+		},
+		function(room, cb){
+			var index = room.events.indexOf(eventId);
+			if( index > -1 ) room.events.splice(index, 1);
+
+			roomRepository.update(roomId, device, function(err, data){
+				if(err){
+					cb(err, null);
+					return;
+				}
+				cb(null, data);
+				return;
+			})
+		}
+	], function(err, result){
+		if(err){
+			callback(err, null);
+			return;
+		}
+
+		callback(null, result);
+		return;
+	})
 	
-// }
+}
+
+crudService.prototype.removeEventFromUser(userId, eventId, callback){
+		async.waterfall([
+		function(cb){
+			userRepository.getById(userId, function(err, data){
+				if(err){
+					cb(err, null);
+					return;
+				}
+
+				cb(null, data);
+				return;
+			})
+		},
+		function(user, cb){
+			var index = user.events.indexOf(eventId);
+			if( index > -1 ) user.events.splice(index, 1);
+
+			userRepository.update(userId, user, function(err, data){
+				if(err){
+					cb(err, null);
+					return;
+				}
+				cb(null, data);
+				return;
+			})
+		}
+	], function(err, result){
+		if(err){
+			callback(err, null);
+			return;
+		}
+
+		callback(null, result);
+		return;
+	})
+}
 
 module.exports = new crudService();
 
