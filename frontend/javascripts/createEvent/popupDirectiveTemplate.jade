@@ -1,0 +1,36 @@
+.ng-modal(ng-show='show')
+    .ng-modal-overlay(ng-click='hideModal()')
+    .ng-modal-dialog(ng-style='dialogStyle')
+        .ng-modal-close(ng-click='hideModal()') X
+        .ng-modal-dialog-content
+            h3.text-center Add an event
+            form.form-horizontal
+                .form-group
+                    span.col-md-2.control-label Time:
+                    .col-md-9
+                        .form-group.row
+                            label.col-md-1.control-label(for='startTime')
+                                i.glyphicon.glyphicon-time.bigger-icon
+                            .col-md-5
+                                input#startTime.form-control(type='text', placeholder='From...')
+                            label.col-md-1.control-label(for='endTime')
+                                i.glyphicon.glyphicon-time.bigger-icon
+                            .col-md-5
+                                input#endTime.form-control(type='text', placeholder='Till...')
+                .form-group
+                    span.col-md-2.control-label Title:
+                    .col-md-9
+                        input.form-control(type='text', placeholder='Name the event...')
+                .form-group
+                    span.col-md-2.control-label About:
+                    .col-md-9
+                        textarea.form-control(rows='6', placeholder='Description...')
+                .form-group
+                    .col-md-9.col-md-offset-2
+                        .row
+                            .col-md-5.text-center
+                                button.btn.btn-primary(type="submit")
+                                    | Save
+                            .col-md-5.text-center
+                                button.btn
+                                    | Cancel

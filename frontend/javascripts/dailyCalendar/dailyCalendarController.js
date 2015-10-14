@@ -13,8 +13,13 @@ function DayViewController(DailyCalendarService) {
 	
 	vm.selectedDate = todayDate;
 	vm.eventSelected = false;
+	vm.modalShown = false;
 	vm.event = getEvents(date1, date2);
 	
+	vm.toggleModal = function() {
+		vm.modalShown = !vm.modalShown;
+	};
+
 	vm.toggleEventInfo = function() {
 		vm.eventSelected = !vm.eventSelected;
 	};

@@ -1,0 +1,26 @@
+.date-picker(ng-show='showDatePicker')
+    .calendar.no-select
+        .row.calendar-nav
+            .calendar-nav-left.pointer(ng-click='previousYear()')
+                i.icon-chevron-left.icon-white
+            .calendar-hdr
+                | {{calendar.year}}
+            .calendar-nav-right.pointer(ng-click='nextYear()')
+                i.icon-chevron-right.icon-white
+        .row.calendar-nav
+            .calendar-nav-left.pointer(ng-click='previousMonth()')
+                i.icon-chevron-left.icon-white
+            .calendar-hdr
+                | {{calendar.monthName}}
+            .calendar-nav-right.pointer(ng-click='nextMonth()')
+                i.icon-chevron-right.icon-white
+        .row
+            div Sun
+            div Mon
+            div Tue
+            div Wed
+            div Thu
+            div Fri
+            div Sat
+        .row
+            .pointer(ng-repeat='day in days track by $index', ng-click='selectDate(day)') {{day}}
