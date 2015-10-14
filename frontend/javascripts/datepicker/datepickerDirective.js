@@ -4,7 +4,7 @@ app.directive('datePicker', function () {
 
     return {
         restrict: "E",
-        templateUrl: "templates/datepicker/datePickerTemplate.html",
+        templateUrl: "templates/datepicker/datepickerTemplate.html",
         controller: function($scope, datepickerService) {
             $scope.showDatePicker = false;
 
