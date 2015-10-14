@@ -1,10 +1,11 @@
-var app = require('../app');
+var app = require('../../app');
 
-
-app.directive("navMain", function () {
+app.directive("navMenu", function () {
     return {
         restrict: 'E',  
         replace: true,
-				templateUrl: "templates/directive/navigation/navDirective.html"
+				templateUrl: "templates/directive/navigation/navDirectiveTemplate.html",
+				controller: 'NavDirectiveController',
+				controllerAs: 'navCtrl',				
     };
 });

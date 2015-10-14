@@ -8,20 +8,7 @@ function WeekViewController(WeekCalendarService) {
 	var vm = this;
 
 	vm.timeStamps = WeekCalendarService.getTimeStamps();
-
-
 	vm.days = WeekCalendarService.getDays();
-  
-
-  // vm.days = [	{ name: 'Monday'}, 
-  //            	{ name: 'Tuesday'}, 
-  //            	{ name: 'Wednesday'},
-		// 					{ name: 'Thursday'}, 
-  //             { name: 'Friday'}, 
-  //             { name: 'Saturday'},
-  //             { name: 'Sunday'},
-  //           ];
-
 
 
 	vm.toggleEventInfo = function() {
@@ -37,23 +24,6 @@ function WeekViewController(WeekCalendarService) {
 
 	vm.Start = weekStart;
 	vm.End = weekEnd;
-
-
-
-	// vm.daysName = function ($scope){
-	//   $scope.day = [	{ name: 'Monday'}, 
- //                   	{ name: 'Tuesday'}, 
- //                   	{ name: 'Wednesday'},
-	// 									{ name: 'Thursday'}, 
- //                    { name: 'Friday'}, 
- //                    { name: 'Saturday'},
- //                    { name: 'Sunday'},
-	//                 ];
-	// };
-
-
-
-
 }
 
 

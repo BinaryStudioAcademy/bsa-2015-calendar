@@ -1,0 +1,5 @@
+.sidebar-nav
+  .navbar.navbar-default(role="navigation")
+    ul.nav.navbar-nav.text-center
+      li(ng-repeat="day in navCtrl.days")
+        a(ui-sref="{{day.link}}" ng-click="calendarCtrl.toggleMode()") {{day.name}}
