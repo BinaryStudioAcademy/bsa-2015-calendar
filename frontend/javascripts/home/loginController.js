@@ -10,10 +10,28 @@ app.controller('LoginController', function ($scope) {
         $scope.isVisible = $scope.isVisible ? false : true;
     };
 
-    $scope.login = function () {
-        console.log($scope.inputEmail);
-        console.log($scope.inputPassword);
-        $scope.inputEmail = '';
-        $scope.inputPassword = '';
+    $scope.signIn = function () {
+        console.log($scope.user.email);
+        console.log($scope.user.password);
+
+        $scope.signInForm.$setPristine();
+        $scope.signInForm.$setUntouched();
+        $scope.user.email = '';
+        $scope.user.password = '';
+    };
+
+    $scope.signUp = function () {
+        console.log($scope.user.newUsername);
+        console.log($scope.user.newEmail);
+        console.log($scope.user.newPassword);
+        console.log($scope.user.newPasswordConfirm);
+
+        $scope.signUpForm.$setPristine();
+        $scope.signUpForm.$setUntouched();
+
+        $scope.user.newUsername = '';
+        $scope.user.newEmail = '';
+        $scope.user.newPassword = '';
+        $scope.user.newPasswordConfirm = '';
     };
 });
