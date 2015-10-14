@@ -5,11 +5,10 @@ div(ng-app='validationApp', ng-controller='LoginController')
         .row
             .col-sm-6
                 form(ng-submit='signIn()', name="signInForm", novalidate='', ng-show='isVisible')
-                    .form-group(ng-class="{ 'has-error' : signInForm.email.$invalid && !signInForm.email.$pristine }")
-                        label Email
+                    .form-group
+                        label Username
                         div
-                            input#signInEmail(type='email', name="email", placeholder='Email', ng-model='user.email', required='')
-                            p.help-block(ng-show='signInForm.email.$invalid && !signInForm.email.$pristine') Enter a valid email.
+                            input#signInUsername(type='text', name="username", placeholder='Username', ng-model='user.username', required='')
                     .form-group
                         label Password
                         div

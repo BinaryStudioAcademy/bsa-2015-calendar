@@ -11,12 +11,12 @@ app.controller('LoginController', function ($scope, LoginService) {
     };
 
     $scope.signIn = function () {
-        console.log($scope.user.email);
+        console.log($scope.user.username);
         console.log($scope.user.password);
 
-        LoginService.signIn({username: $scope.user.email, password: $scope.user.password});
+        LoginService.signIn({username: $scope.user.username, password: $scope.user.password});
 
-        $scope.user.email = '';
+        $scope.user.username = '';
         $scope.user.password = '';
 
         $scope.signInForm.$setPristine();
@@ -31,7 +31,9 @@ app.controller('LoginController', function ($scope, LoginService) {
 
         var userInfo = {
             username: $scope.user.newUsername,
-            password: $scope.user.newPassword
+            name: $scope.user.newUsername,
+            password: $scope.user.newPassword,
+            email: $scope.user.newEmail
         };
 
         LoginService.signUp(userInfo);

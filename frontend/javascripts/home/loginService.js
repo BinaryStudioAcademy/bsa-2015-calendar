@@ -25,7 +25,7 @@ app.service('LoginService', function ($http) {
         return $http({
             url: baseUrl + 'api/register',
             method: 'POST',
-            data: '{"username":"' + userInfo.username + '","password":"' + userInfo.password + '"}',
+            data: '{"name":"' + userInfo.username + '","password":"' + userInfo.password + '","email":"' + userInfo.email + '","username":"' + userInfo.username + '"}',
             headers: {
                 'Content-Type': 'application/json'
             }
