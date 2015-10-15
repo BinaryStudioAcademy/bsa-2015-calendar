@@ -13,5 +13,4 @@ function EventsCalendarService($resource) {
 	return {
 		getEvents: getEvents
 	};
-	
 }
