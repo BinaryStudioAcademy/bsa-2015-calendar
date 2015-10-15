@@ -4,11 +4,6 @@
 var app = require('../app');
 
 app.controller('LoginController', function ($scope, LoginService) {
-    $scope.isVisible = true;
-
-    $scope.showHide = function () {
-        $scope.isVisible = $scope.isVisible ? false : true;
-    };
 
     $scope.signIn = function () {
         console.log($scope.user.username);

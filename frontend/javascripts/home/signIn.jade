@@ -1,0 +1,15 @@
+div
+    .container
+        .row
+            .col-sm-6
+                form(ng-submit='signIn()', name="signInForm", novalidate='')
+                    .form-group
+                        label Username
+                        div
+                            input#signInUsername(type='text', name="username", placeholder='Username', ng-model='user.username', required='')
+                    .form-group
+                        label Password
+                        div
+                            input#signInPassword(type='password', name='password' placeholder='Password', ng-model='user.password', required='')
+                    button.btn.btn-primary(type='submit', ng-disabled='signInForm.$invalid') Sign In
+                    button.btn.pull-left(ui-sref='home') Back

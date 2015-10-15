@@ -1,40 +1,6 @@
 #calendar-wrapper Hello
 a(ui-sref='calendar') Go to calendar page
-div(ng-app='validationApp', ng-controller='LoginController')
-    .container
-        .row
-            .col-sm-6
-                form(ng-submit='signIn()', name="signInForm", novalidate='', ng-show='isVisible')
-                    .form-group
-                        label Username
-                        div
-                            input#signInUsername(type='text', name="username", placeholder='Username', ng-model='user.username', required='')
-                    .form-group
-                        label Password
-                        div
-                            input#signInPassword(type='password', name='password' placeholder='Password', ng-model='user.password', required='')
-                    button.btn.btn-primary(type='submit', ng-disabled='signInForm.$invalid') Sign In
-                form(ng-submit='signUp()', name='signUpForm', novalidate='', ng-hide='isVisible')
-                    .form-group(ng-class="{ 'has-error' : (signUpForm.username.$invalid && !signUpForm.username.$pristine) }")
-                        label Username
-                        div
-                            input#inputUsername(type='text', placeholder='Username', name='username', ng-model='user.newUsername', maxlength="10", required='')
-                            p.help-block(ng-show='signUpForm.username.$invalid && !signUpForm.username.$pristine') Name is required.
-                    .form-group(ng-class="{ 'has-error' : signUpForm.email.$invalid && !signUpForm.email.$pristine }")
-                        label Email
-                        div
-                            input#signUpEmail(type='email', name="email", placeholder='Email', ng-model='user.newEmail', required='')
-                            p.help-block(ng-show='signUpForm.email.$invalid && !signUpForm.email.$pristine') Enter a valid email.
-                    .form-group
-                        label Password
-                        div
-                            input#signUpPassword(type='password', name='password' placeholder='Password', ng-model='user.newPassword', required='', ng-minlength='5')
-                            p.help-block(ng-show='signUpForm.password.$error.minlength') Password is too short.
-                    .form-group(ng-class="{ 'has-error' : (user.newPassword != user.newPasswordConfirm) && !signUpForm.confirmPassword.$pristine }")
-                        label Confirm password
-                        div
-                            input#signUpPassword(type='password', name='confirmPassword' placeholder='Confirm password', ng-model='user.newPasswordConfirm', required='')
-                            p.help-block(ng-show='(user.newPassword != user.newPasswordConfirm) && !signUpForm.confirmPassword.$pristine') Passwords do not match.
-                    button.btn.btn-primary(type='submit', ng-disabled='signUpForm.$invalid || user.newPassword != user.newPasswordConfirm') Sign Up
-    a(href='#', ng-show='isVisible' ng-click='showHide()') Register
-    a(href='#', ng-hide='isVisible' ng-click='showHide()') Login
+div
+    a(ui-sref='signUp') Register
+div
+    a(ui-sref='signIn') Login
