@@ -1,7 +1,7 @@
 var app = require('../app');
 
-app.controller('EventsViewController', EventsViewController);
-EventsViewController.$inject = ['EventsCalendarService'];
+app.controller('EventsViewController', ['EventsCalendarService', EventsViewController]);
+//EventsViewController.$inject = ['EventsCalendarService'];
 
 function EventsViewController(EventsCalendarService) {
 	var vm = this;
