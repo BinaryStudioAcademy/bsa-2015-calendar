@@ -27,8 +27,8 @@ var app = angular.module('calendar-app', ['ui.router', 'ngResource', 'ui.bootstr
 					controllerAs: 'dvCtrl',
 				})
 				.state('calendar2', {
-					url: '/calendar2',
-					templateUrl: './templates/calendar2/calendar.html',
+					url: '/calendarYearView',
+					templateUrl: './templates/calendarYearView/calendar.html',
 					controller: 'CalendarController',
 					controllerAs: 'CCtrl',
 				})
