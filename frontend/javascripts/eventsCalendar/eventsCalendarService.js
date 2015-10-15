@@ -6,8 +6,8 @@ EventsCalendarService.$inject = ['$resource'];
 
 function EventsCalendarService($resource) {
 	function getEvents(){
-		var events = $resource('api/events');
-		return events.get();
+		var Events = $resource('api/events');
+		return Events.get();
 	}
 
 	return {

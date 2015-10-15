@@ -26,5 +26,5 @@
       tr(ng-repeat="event in evCtrl.events | filter:criteria")
         td.event-date-cell
           a(href="#"){{event.date}}
-        td.event-duration-cell {{event.duration}}
-        td.event-description-cell {{event.description}}
+        td.event-duration-cell {{event.end - event.start}}
+        td.event-description-cell {{event.title}} : {{event.description}}
