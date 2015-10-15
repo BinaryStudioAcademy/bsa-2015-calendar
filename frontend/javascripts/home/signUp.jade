@@ -1,27 +1,18 @@
-div
+div.signin-container
     .container
-        .row
-            .col-sm-6
-                form(ng-submit='signUp()', name='signUpForm', novalidate='')
-                    .form-group(ng-class="{ 'has-error' : (signUpForm.username.$invalid && !signUpForm.username.$pristine) }")
-                        label Username
-                        div
-                            input#inputUsername(type='text', placeholder='Username', name='username', ng-model='user.newUsername', maxlength="10", required='')
-                            p.help-block(ng-show='signUpForm.username.$invalid && !signUpForm.username.$pristine') Name is required.
-                    .form-group(ng-class="{ 'has-error' : signUpForm.email.$invalid && !signUpForm.email.$pristine }")
-                        label Email
-                        div
-                            input#signUpEmail(type='email', name="email", placeholder='Email', ng-model='user.newEmail', required='')
-                            p.help-block(ng-show='signUpForm.email.$invalid && !signUpForm.email.$pristine') Enter a valid email.
-                    .form-group
-                        label Password
-                        div
-                            input#signUpPassword(type='password', name='password' placeholder='Password', ng-model='user.newPassword', required='', ng-minlength='5')
-                            p.help-block(ng-show='signUpForm.password.$error.minlength') Password is too short.
-                    .form-group(ng-class="{ 'has-error' : (user.newPassword != user.newPasswordConfirm) && !signUpForm.confirmPassword.$pristine }")
-                        label Confirm password
-                        div
-                            input#signUpPassword(type='password', name='confirmPassword' placeholder='Confirm password', ng-model='user.newPasswordConfirm', required='')
-                            p.help-block(ng-show='(user.newPassword != user.newPasswordConfirm) && !signUpForm.confirmPassword.$pristine') Passwords do not match.
-                    button.btn.btn-primary(type='submit', ng-disabled='signUpForm.$invalid || user.newPassword != user.newPasswordConfirm') Sign Up
-                    button.btn.pull-left(ui-sref='home') Back
+        form.form-signin(ng-submit='signUp()', name='signUpForm', novalidate='')
+            h2.form-signin-heading Please fill in the form
+            .form-group(ng-class="{ 'has-error' : (signUpForm.username.$invalid && !signUpForm.username.$pristine) }")
+                input#inputUsername.form-control(type='text', placeholder='Username', name='username', ng-model='user.newUsername', maxlength="10", required='')
+                p.help-block(ng-show='signUpForm.username.$invalid && !signUpForm.username.$pristine') Name is required.
+            .form-group(ng-class="{ 'has-error' : signUpForm.email.$invalid && !signUpForm.email.$pristine }")
+                input#signUpEmail.form-control(type='email', name="email", placeholder='Email', ng-model='user.newEmail', required='')
+                p.help-block(ng-show='signUpForm.email.$invalid && !signUpForm.email.$pristine') Enter a valid email.
+            .form-group
+                input#signUpPassword.form-control(type='password', name='password' placeholder='Password', ng-model='user.newPassword', required='', ng-minlength='5')
+                p.help-block(ng-show='signUpForm.password.$error.minlength') Password is too short.
+            .form-group(ng-class="{ 'has-error' : (user.newPassword != user.newPasswordConfirm) && !signUpForm.confirmPassword.$pristine }")
+                input#signUpPassword.form-control(type='password', name='confirmPassword' placeholder='Confirm password', ng-model='user.newPasswordConfirm', required='')
+                p.help-block(ng-show='(user.newPassword != user.newPasswordConfirm) && !signUpForm.confirmPassword.$pristine') Passwords do not match.
+            button.btn.btn-primary.pull-right(type='submit', ng-disabled='signUpForm.$invalid || user.newPassword != user.newPasswordConfirm') Sign Up
+            button.btn.pull-left(ui-sref='home') Back
