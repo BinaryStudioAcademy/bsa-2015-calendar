@@ -20,5 +20,21 @@
           li 
             input(type="checkbox", id="bDays")
             label(for="bDays") Birthdays
+      h3 Creates event and device
+      .navbar.navbar-default(role="navigation")
+        ul.nav.navbar-nav.text-center
+          li
+            a(ui-sref='.dayView' ng-click="calendarCtrl.toggleMode()") new Events
+          li
+            a(ui-sref="{{day.link}}" ng-click="calendarCtrl.toggleMode()") new G Events
+          li
+            a(ui-sref="{{day.link}}" ng-click="calendarCtrl.toggleMode()") new Rooms
+          li
+            a(ui-sref="{{day.link}}" ng-click="calendarCtrl.toggleMode()") new Devices
+          li
+            a(ui-sref="{{day.link}}" ng-click="calendarCtrl.toggleMode()") new Birthdays
     .col-sm-10
       ui-view#calendar-content
+
+
+

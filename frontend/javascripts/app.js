@@ -32,6 +32,13 @@ var app = angular.module('calendar-app', ['ui.router', 'ngResource', 'ui.bootstr
 					controller: 'WeekViewController',
 					controllerAs: 'wCtrl',
 				});
+
+				.state('calendar.newEvent', {
+					url: '/newEvent',
+					templateUrl: './templates/createNew/createNewEventTemplate.html',
+					controller: 'createNewEventController',
+					controllerAs: 'cneCtrl',
+				});				
 		}
 	]);
 
