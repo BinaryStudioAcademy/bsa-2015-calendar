@@ -1,26 +1,10 @@
 var app = require('../app');
 
 app.controller('EventsViewController', ['EventsCalendarService', EventsViewController]);
-//EventsViewController.$inject = ['EventsCalendarService'];
 
 function EventsViewController(EventsCalendarService) {
 	var vm = this;
-	/*vm.events = [
-	{
-		date: 'April 9, 1999',
-		duration: 'Whole day',
-		description: "Someone's b-day."
-	},
-	{
-		date: 'May 13, 2014',
-		duration: '9.00-12.00',
-		description: 'Meeting with foreign customers.'
-	},
-	{
-		date: 'February 27, 2001',
-		duration: '14.00-17.00',
-		description: 'Long daily meeting'
-	}];*/
-	//vm.events = EventsCalendarService.getEvents();
-	
+	vm.months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+	vm.events = EventsCalendarService.getEvents();
+	vm.events[5].start = new Date(vm.events[5].start.toString());
 }

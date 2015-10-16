@@ -24,8 +24,7 @@
   .col-sm-8.events-list
     table#event-table
       tr(ng-repeat="event in evCtrl.events | filter:criteria")
-        //
           td.event-date-cell
-            a(href="#"){{event.start}}
-          td.event-duration-cell {{event.end - event.start}}
+            a(href="#"){{evCtrl.months[event.start.getMonth()]}} {{event.start.getDate()}}, {{event.start.getFullYear()}}
+          td.event-duration-cell {{event.start.getHours()}} - {{event.end.getHours()}}
           td.event-description-cell {{event.title}} : {{event.description}}
