@@ -21,6 +21,6 @@ function EventsViewController(EventsCalendarService) {
 		duration: '14.00-17.00',
 		description: 'Long daily meeting'
 	}];*/
-	vm.events = EventsCalendarService.getEvents();
+	//vm.events = EventsCalendarService.getEvents();
 	
 }
