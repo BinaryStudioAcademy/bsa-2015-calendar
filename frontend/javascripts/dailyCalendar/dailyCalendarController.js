@@ -14,6 +14,7 @@ function DayViewController(DailyCalendarService) {
 	vm.selectedDate = todayDate;
 	vm.eventSelected = false;
 	vm.modalShown = false;
+	vm.sidebarStyle = true;
 	vm.event = getEvents(date1, date2);
 
 	//will be pulled from server 

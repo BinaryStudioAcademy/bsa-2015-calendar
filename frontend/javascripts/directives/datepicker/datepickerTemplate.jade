@@ -1,4 +1,5 @@
-.date-picker(ng-show='showDatePicker' ng-style='datepickerStyle')
+//- add your class depending on position and modify css
+.date-picker(ng-show='showDatePicker' ng-class="dvCtrl.sidebarStyle ? 'sidebar-datepicker' : 'nav-datepicker' ")
     .calendar.no-select
         .row.calendar-nav
             .calendar-nav-left.pointer(ng-click='previousYear()')

@@ -1,6 +1,7 @@
-var app = require('../app');
 
-app.factory('datepickerService', datepickerService);
+angular
+    .module('calendar-app')
+    .factory('datepickerService', datepickerService);
 
 function datepickerService () {
 

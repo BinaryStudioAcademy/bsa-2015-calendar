@@ -15,14 +15,15 @@
                     #datepicker(style="position: relative")
                         button.btn.btn-default#pickDate
                             {{dvCtrl.selectedDate | date: 'd EEE yyyy'}}
-                        date-picker(for="pickDate")
+                        date-picker.sidebar-datepicker(for="pickDate")
                 li
                     a(href='#')#dayNext
                         i.glyphicon.glyphicon-chevron-right.bigger-icon
         #showAllEvents.text-center
-            .form-group
-                input(type="checkbox", id="showEvents")
-                label(for="showEvents") Show all events
+            .checkbox
+                label
+                    input(type="checkbox") 
+                    | Show all events
         .eventInfo.well(ng-show="dvCtrl.eventSelected")
             #eventName
                 strong Event name:
