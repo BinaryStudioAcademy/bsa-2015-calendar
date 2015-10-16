@@ -1,5 +1,6 @@
 var apiResponse = require('express-api-response');
 var roomRepository = require('../../repositories/roomRepository');
+var roomService = require('../../services/roomService');
 
 module.exports = function(app) {
 
@@ -46,7 +47,7 @@ module.exports = function(app) {
 	}, apiResponse);
 
 	app.delete('/api/room/:id', function(req, res, next){
-		roomRepository.delete(req.params.id, function(err, data){
+		roomService.delete(req.params.id, function(err, data){
 			res.data = data;
 			res.err = err;
 			next();

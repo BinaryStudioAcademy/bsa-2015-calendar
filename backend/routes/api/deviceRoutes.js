@@ -1,4 +1,6 @@
 var apiResponse = require('express-api-response');
+var deviceService = require('../../services/deviceService');
+
 var deviceRepository = require('../../repositories/deviceRepository');
 
 module.exports = function(app) {
