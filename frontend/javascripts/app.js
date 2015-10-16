@@ -25,6 +25,11 @@ var app = angular.module('calendar-app', ['ui.router', 'ngResource', 'ui.bootstr
 					templateUrl: './templates/dailyCalendar/dailyCalendarTemplate.html',
 					controller: 'DayViewController',
 					controllerAs: 'dvCtrl',
+				})
+				.state('calendar.monthView', {
+					url: '/calendar/monthView',
+					templateUrl: './templates/monthCalendar/monthCalendar.html',
+					controller: ''
 				});
 		}
 	]);
