@@ -39,8 +39,17 @@ app.directive('datePicker', function () {
             };
 
             $scope.selectDate = function (day) {
-                $scope.element.val(($scope.calendar.month + 1) + "/" + day + "/" +  $scope.calendar.year);
-                $scope.showDatePicker = false;
+                // $scope.element.val(($scope.calendar.month + 1) + "/" + day + "/" +  $scope.calendar.year);
+                var that = this;
+
+                that.$apply(function () {
+                    that.selectedDate = new Date($scope.calendar.year, $scope.calendar.month, day);
+                    console.log($scope.selectedDate);
+                    that.showDatePicker = false;
+                });
+                // $scope.selectedDate = new Date($scope.calendar.year, $scope.calendar.month, day);
+                // $scope.showDatePicker = false;
+                
             };
 
         },
@@ -49,6 +58,12 @@ app.directive('datePicker', function () {
 
             var forElement = angular.element("#" + attrs.for);
             scope.element = forElement;
+
+            if (attrs.moveRelRight) {
+                console.log(attrs.moveRelRight);
+                alert(true);
+                element.css({ 'left': attrs.moveRelRight });
+            }
 
             forElement.on('focus', function() {
                 scope.$apply(function() { 
@@ -63,11 +78,11 @@ app.directive('datePicker', function () {
             });
 
             forElement.on('click', function(event) { 
-                event.stopPropagation();  
+                event.stopPropagation();
             });
 
             angular.element(".calendar-nav").on('click', function(event) { 
-                event.stopPropagation(); 
+                event.stopPropagation();
             });
         }
     };

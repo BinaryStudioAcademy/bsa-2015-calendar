@@ -25,16 +25,13 @@ function datepickerService () {
             }
         },
         getCalendarDays: function (year, month) {
-
-            var monthStartDate = new Date(year, month, 1),
-                days = [],
-                idx;
-
-            for (idx = 0; idx < monthStartDate.getDay(); idx+=1) {
+            var monthStartDate = new Date(year, month, 1);
+            var days = [];
+            for (var idx = 0; idx < monthStartDate.getDay(); idx++) {
                 days.push('');
             }
-            for (idx = 1; idx <= new Date(year, month+1, 0).getDate(); idx+=1) {
-                days.push(idx);
+            for (var idy = 1; idy <= new Date(year, month + 1, 0).getDate(); idy++) {
+                days.push(idy);
             }
             return days;
         },

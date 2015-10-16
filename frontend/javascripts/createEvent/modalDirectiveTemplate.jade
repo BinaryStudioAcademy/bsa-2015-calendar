@@ -1,0 +1,82 @@
+.modal
+    .modal-dialog
+        .modal-content
+            .modal-header
+                button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+                h4.modal-title {{ title }}
+            .modal-body.clearfix
+                form(role='form')
+                    form.form-horizontal
+                        .form-group
+                            label.col-md-2.col-sm-2.control-label Time:
+                            .col-md-10.col-sm-10
+                                .col-md-6.col-sm-6.col-xs-6
+                                    .input-group
+                                        .input-group-addon
+                                            i.glyphicon.glyphicon-time
+                                        input.form-control(type='text', placeholder='From...')
+                                .col-md-6.col-sm-6.col-xs-6
+                                    .input-group
+                                        .input-group-addon
+                                            i.glyphicon.glyphicon-time
+                                        input.form-control(type='text', placeholder='Till...')                                
+                        .form-group
+                            label.col-md-2.control-label(for="eventTitle") Title:
+                            .col-md-10
+                                .col-md-12
+                                    input.form-control(type='text', id="eventTitle" placeholder='Name the event...')
+                        .form-group
+                            label.col-md-2.control-label(for="eventDescription") About:
+                            .col-md-10
+                                .col-md-12
+                                    textarea.form-control(rows='5', id="eventDescription" placeholder='Description...')
+                        .form-group
+                            label.col-md-2.col-sm-2.control-label Organization:
+                            .col-md-10.col-sm-10
+                                .col-md-6.col-sm-6.col-xs-6
+                                    .input-group
+                                        .input-group-addon 
+                                            i.glyphicon.glyphicon-piggy-bank
+                                        input.form-control(type='text', placeholder='Price...')
+                                .col-md-6.col-sm-6.col-xs-6
+                                    .input-group
+                                        .input-group-btn
+                                            button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                                                | Type 
+                                                span.caret
+                                            ul.dropdown-menu
+                                                li(ng-repeat="type in dvCtrl.eventTypes" ng-click="dvCtrl.selectEventType(type)")
+                                                    a(href="") 
+                                                        | {{ type }}
+                                        input.form-control(type='text', aria-label='...' ng-model="dvCtrl.eventType" disabled)
+                        .form-group
+                            .col-md-10.col-sm-10.col-md-offset-2.col-sm-offset-2
+                                .col-md-6.col-sm-6
+                                    .input-group
+                                        .input-group-btn
+                                            button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                                                span
+                                                    i.glyphicon.glyphicon-home
+                                            ul.dropdown-menu
+                                                li(ng-repeat="room in dvCtrl.availableRooms")
+                                                    a(href="") 
+                                                        | {{ room }}
+                                        input.form-control(type='text', aria-label='...' ng-model="dvCtrl.eventType" placeholder="Room..." disabled)
+                                .col-md-6.col-sm-6
+                                    .input-group
+                                        .input-group-btn
+                                            button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                                                span
+                                                    i.glyphicon.glyphicon-blackboard
+                                            ul.dropdown-menu
+                                                li(ng-repeat="item in dvCtrl.availableInventory")
+                                                    a(href="") 
+                                                        | {{ item }}
+                                        input.form-control(type='text', aria-label='...' ng-model="dvCtrl.eventType" placeholder="You need..." disabled)
+            .modal-footer
+                .save-area
+                    .col-md-6.col-sm-6.col-xs-6
+                        button.btn.btn-primary(type='submit') Save
+                    .col-md-6.col-sm-6
+                        button.btn.btn-default(type='submit' ng-click="dvCtrl.toggleModal()") Cancel
+                            

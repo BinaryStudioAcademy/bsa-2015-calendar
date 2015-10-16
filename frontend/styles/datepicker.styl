@@ -1,18 +1,21 @@
 .calendar
-    border 1px solid #555
-    width 238px
+    border-radius 2px
+    -webkit-box-shadow: 0 10px 6px -6px #777;
+    -moz-box-shadow: 0 10px 6px -6px #777;
+    box-shadow: 0 10px 6px -6px #777;
+    width 210px
     .row
         margin-left 0px
-    div
-        float left
-        padding 2px
-        width 30px
-        text-align center
-    .calendar-hdr
-        padding 2px
-        float left
-        width 166px
-        text-align center
+        div
+            float left
+            padding 2px
+            width 30px
+            text-align center
+        .calendar-hdr
+            padding 2px
+            float left
+            width 150px
+            text-align center
 
 .calendar-nav-left
     float left
@@ -30,6 +33,5 @@
 
 .date-picker
     position absolute
-    top -7px
-    left 209px
-    background-color #272b30
+    background-color #ccc
+    z-index 9999

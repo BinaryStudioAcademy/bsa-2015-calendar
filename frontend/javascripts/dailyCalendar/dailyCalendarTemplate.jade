@@ -1,26 +1,28 @@
 #dayView(ng-cloak)
-    .col-md-8.col-sm-8.main-content
+    .col-md-9.col-sm-8.main-content.table-responsive
         table#calendar.table
-            tr(ng-repeat="timeSt in dvCtrl.timeStamps")
-                td.hourCell {{timeSt}}
-                td.eventCell(ng-dblclick="dvCtrl.toggleModal()")
-    .col-md-4.col-sm-4.right-sidebar
+            tbody
+                tr(ng-repeat="timeSt in dvCtrl.timeStamps")
+                    td.hourCell {{timeSt}}
+                    td.eventCell(ng-dblclick="dvCtrl.toggleModal()" ng-click="dvCtrl.toggleEventInfo()")
+    .col-md-3.col-sm-4.right-sidebar.hidden-xs
         .row.text-center
-            ul.list-inline
+            ul.list-inline.datepicker-section
                 li
-                    a(href='#')
+                    a(href='#')#dayPrev
                         i.glyphicon.glyphicon-chevron-left.bigger-icon
                 li
-                    button.btn.btn-default
-                        {{dvCtrl.selectedDate | date: 'd EEE yyyy'}}
-                    date-picker (for="pickDate")
+                    #datepicker(style="position: relative")
+                        button.btn.btn-default#pickDate
+                            {{dvCtrl.selectedDate | date: 'd EEE yyyy'}}
+                        date-picker(for="pickDate")
                 li
-                    a(href='#')
+                    a(href='#')#dayNext
                         i.glyphicon.glyphicon-chevron-right.bigger-icon
         #showAllEvents.text-center
-            input(type="checkbox", id="showEvents")
-            label(for="showEvents") Show all events
-            button.btn.btn-primary(ng-click="dvCtrl.toggleEventInfo()") Toggle Info
+            .form-group
+                input(type="checkbox", id="showEvents")
+                label(for="showEvents") Show all events
         .eventInfo.well(ng-show="dvCtrl.eventSelected")
             #eventName
                 strong Event name:
@@ -37,4 +39,4 @@
             #eventParticipants
                 strong Participants: 
                 span.badge {{dvCtrl.event.participants}}
-    pop-up-window(show='dvCtrl.modalShown' width='750px' height='60%')
+    modal(title='New event', visible='dvCtrl.modalShown')

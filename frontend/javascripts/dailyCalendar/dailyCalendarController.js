@@ -15,6 +15,21 @@ function DayViewController(DailyCalendarService) {
 	vm.eventSelected = false;
 	vm.modalShown = false;
 	vm.event = getEvents(date1, date2);
+
+	//will be pulled from server 
+	vm.eventTypes = ['Basic', 'Leisure', 'Private'];
+	vm.availableRooms = ['Room 1', 'Room 2', 'Room 3'];
+	vm.availableInventory = ['Notebook HP', 'Macbook', 'Ball', 'Pizzayollo'];
+
+	//TODO: service to get this org data
+	// vm.eventOrgResources = EventResourcesService.getEventResources();
+
+	//END of todo
+
+	vm.selectEventType = function(type) {
+		vm.eventType = type;
+		console.log("hello!");
+	};
 	
 	vm.toggleModal = function() {
 		vm.modalShown = !vm.modalShown;
@@ -23,6 +38,8 @@ function DayViewController(DailyCalendarService) {
 	vm.toggleEventInfo = function() {
 		vm.eventSelected = !vm.eventSelected;
 	};
+
+
 	
 	function getEvents(date1, date2) {
 		var event = {
