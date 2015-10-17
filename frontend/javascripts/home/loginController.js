@@ -6,9 +6,6 @@ var app = require('../app');
 app.controller('LoginController', function ($scope, LoginService) {
 
     $scope.signIn = function () {
-        console.log($scope.user.username);
-        console.log($scope.user.password);
-
         var userInfo = {
             username: $scope.user.username,
             password: $scope.user.password
@@ -24,11 +21,6 @@ app.controller('LoginController', function ($scope, LoginService) {
     };
 
     $scope.signUp = function () {
-        console.log($scope.user.newUsername);
-        console.log($scope.user.newEmail);
-        console.log($scope.user.newPassword);
-        console.log($scope.user.newPasswordConfirm);
-
         var userInfo = {
             username: $scope.user.newUsername,
             name: $scope.user.newUsername,

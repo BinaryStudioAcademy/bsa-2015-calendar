@@ -7,8 +7,6 @@ var app = require('../app'),
 app.service('LoginService', function ($http) {
 
     this.signIn = function (userInfo) {
-        console.log(userInfo);
-
         return $http({
             url: baseUrl + 'api/login',
             method: 'POST',
@@ -20,8 +18,6 @@ app.service('LoginService', function ($http) {
     };
 
     this.signUp = function (userInfo) {
-        console.log(userInfo);
-
         return $http({
             url: baseUrl + 'api/register',
             method: 'POST',
