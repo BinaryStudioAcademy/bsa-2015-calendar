@@ -6,7 +6,33 @@ WeekCalendarService.$inject = ['$resource'];
 
 function WeekCalendarService($resource) {
 
-	var timeSatmps = '12am|1am|2am|3am|4am|5am|6am|7am|8am|9am|10am|11am|12pm|1pm|2pm|3pm|4pm|5pm|6pm|7pm|8pm|9pm|10pm|11pm'.split('|');
+	var timeSatmps = [	{ time: '12am'}, 
+					           	{ time: '1am'}, 
+					           	{ time: '2am'},
+											{ time: '3am'}, 
+					            { time: '4am'}, 
+					            { time: '5am'},
+					            { time: '6am'},
+					            { time: '7am'},
+					            { time: '8am'},
+					            { time: '9am'},
+					            { time: '10am'},
+					            { time: '11am'},
+					            { time: '12pm'},
+					            { time: '1pm'},
+					            { time: '2pm'},
+					            { time: '3pm'},
+ 					            { time: '4pm'},
+ 					            { time: '5pm'},
+					            { time: '6pm'},
+					            { time: '7pm'},
+					            { time: '8pm'},
+					            { time: '9pm'},
+					            { time: '10pm'},
+					            { time: '11pm'},
+						          ];
+
+
 
 	var days = [	{ name: 'Monday'}, 
 		           	{ name: 'Tuesday'}, 

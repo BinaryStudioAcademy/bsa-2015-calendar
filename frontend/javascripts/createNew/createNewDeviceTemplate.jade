@@ -1,0 +1,23 @@
+#createNewDeviceView(ng-cloak)
+	.createNewDevice(ng-controller="createNewDeviceController")			
+
+			table(ng-show="showDeviceList")
+				caption
+					b Devices
+				thead
+					tr.titleDeviceList
+						th Name Device
+						th Description
+
+
+form(role="form")
+	.form-group
+		#newDevice
+			label New Device
+			input(type="newDevice" placeholder="New Device")
+
+		#Description
+			label Description
+			input(type="newDevice" placeholder="Description")
+
+	button#addDevice(type="submit") SaveDevice

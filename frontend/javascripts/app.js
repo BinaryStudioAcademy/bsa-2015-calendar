@@ -1,4 +1,4 @@
-var app = angular.module('calendar-app', ['ui.router', 'ngResource', 'ui.bootstrap', 'ngAnimate'])
+	var app = angular.module('calendar-app', ['ui.router', 'ngResource', 'ui.bootstrap', 'ngAnimate'])
 	.config(['$stateProvider', '$urlRouterProvider','$resourceProvider', '$httpProvider', '$locationProvider', 
 		function($stateProvider, $urlRouterProvider, $resourceProvider, $httpProvider, $locationProvider) {
 			$urlRouterProvider.otherwise('/');
@@ -31,16 +31,17 @@ var app = angular.module('calendar-app', ['ui.router', 'ngResource', 'ui.bootstr
 					templateUrl: './templates/weekCalendar/weekCalendarTemplate.html',
 					controller: 'WeekViewController',
 					controllerAs: 'wCtrl',
-				});
-
-				.state('calendar.newEvent', {
-					url: '/newEvent',
-					templateUrl: './templates/createNew/createNewEventTemplate.html',
-					controller: 'createNewEventController',
-					controllerAs: 'cneCtrl',
+				})
+				.state('createNew', {
+					url: '/createNew',
+					templateUrl: './templates/createNew/createNewDeviceTemplate.html',
+					controller: 'createNewDeviceController',
+					controllerAs: 'cndCtrl',
 				});				
 		}
 	]);
+
+
 
 app.run(['$rootScope', '$state', function($rootScope, $state) {
 	$rootScope.$on('$stateChangeStart', function(evt, to, params) {
