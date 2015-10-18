@@ -1,8 +1,4 @@
 var async = require('async');
-var Event = require('../schemas/eventSchema');
-var Room = require('../schemas/roomSchema');
-var Device = require('../schemas/deviceSchema');
-var User = require('../schemas/userSchema');
 var eventRepository = require('../repositories/eventRepository');
 var roomRepository = require('../repositories/roomRepository');
 var userRepository = require('../repositories/userRepository');
@@ -10,7 +6,9 @@ var deviceRepository = require('../repositories/deviceRepository');
 
 var crudService = function(){};
 
-crudService.prototype.addEventToDevice = function(deviceId, eventId, callback){
+crudService.prototype.addEventToDevice = function(deviceId, eventId, eventStart, eventEnd, callback){
+
+	
 
 	async.waterfall([
 
@@ -20,27 +18,40 @@ crudService.prototype.addEventToDevice = function(deviceId, eventId, callback){
 				cb(err, null);
 				return;
 			}
-
+			if (!data){
+				cb("incorrect deviceId " + deviceId + " in event.devices, eventId" + eventId);
+				return;
+			}
 			cb(null, data);
 			return;	
 		});
 	},
 	function(device, cb){
+		console.log(eventId);
+		// device.events.forEach(function(deviceEvent){
+		// 	//console.log(event.start.valueOf() + ">" + deviceEvent.end.valueOf() + "||" + event.end.valueOf() + "<" + deviceEvent.start.valueOf());
+		// 	//if ((event.start.valueOf() > deviceEvent.end.valueOf()) || (event.end.valueOf() < deviceEvent.start.valueOf())) 
+				
+		// 	if ((eventStart.valueOf() < deviceEvent.end.valueOf()) && (eventStart.valueOf() > deviceEvent.start.valueOf())){
+		// 		cb("startTimeConflict");
+		// 		return;
+		// 	}
+		// 	if ((eventEnd.valueOf() < deviceEvent.end.valueOf()) && (eventEnd.valueOf() > deviceEvent.start.valueOf())){
+		// 		cb("endTimeConflict");
+		// 		return;
+		// 	}
+		// });
 
-		device.events.push(eventId);
-
-		deviceRepository.update(deviceId, device, function(err, data){
-			if(err){
-				cb(err, null);
-				return;
-			}
-
-			cb(null, data);
-			return;	
-		});
-
+		// device.events.push(eventId);
+		// deviceRepository.update(deviceId, device, function(err, data){
+		// 	if(err){
+		// 		cb(err, null);
+		// 		return;
+		// 	}
+		// 	cb(null, data);
+		// 	return;	
+		// });	
 	}
-
 	], function(err, result){
 		if(err){
 			callback(err, null);
@@ -61,7 +72,10 @@ crudService.prototype.addEventToUser = function(userId, eventId, callback){
 				cb(err, null);
 				return;
 			}
-
+			if (!data){
+				cb("incorrect userId " + userId + " in event.users, eventId " + eventId);
+				return;
+			}
 			cb(null, data);
 			return;	
 		});
@@ -94,33 +108,48 @@ crudService.prototype.addEventToUser = function(userId, eventId, callback){
  };
 
 crudService.prototype.addEventToRoom = function(roomId, eventId, callback){
+	
+	
+
 	async.waterfall([
-
 	function(cb){
-		roomRepository.getById(roomId, function(err, data){
-			if(err){
-				cb(err, null);
-				return;
-			}
-
-			cb(null, data);
-			return;	
+		roomRepository.addEvent(roomId, eventId, function(err, data){
+	 		if(err){
+	 			cb(err, null);
+	 			return;
+	 		};
 		});
 	},
-	function(room, cb){
-		room.events.push(eventId);
+	// function(cb){
+	// 	roomRepository.getById(roomId, function(err, data){
+	// 		if(err){
+	// 			cb(err, null);
+	// 			return;
+	// 		}
 
-		roomRepository.update(roomId, room, function(err, data){
-			if(err){
-				cb(err, null);
-				return;
-			}
+	// 		if (!data){
+	// 			cb("incorrect roomId " + roomId + " in event " + eventId);
+	// 			return;
+	// 		}
 
-			cb(null, data);
-			return;	
-		});
+	// 		cb(null, data);
+	// 		return;	
+	// 	});
+	// },
+	// function(room, cb){
+	// 	room.events.push(eventId);
 
-	}
+	// 	roomRepository.update(roomId, room, function(err, data){
+	// 		if(err){
+	// 			cb(err, null);
+	// 			return;
+	// 		}
+
+	// 		cb(null, data);
+	// 		return;	
+	// 	});
+
+	// }
 
 	], function(err, result){
 		if(err){
@@ -141,7 +170,10 @@ crudService.prototype.removeEventFromDevice = function(deviceId, eventId, callba
 					cb(err, null);
 					return;
 				}
-
+				if (!data){
+					cb("incorrect eventId " + eventId + " in device.users, deviceId " + deviceId);
+					return;
+				}
 				cb(null, data);
 				return;
 			});
@@ -179,7 +211,10 @@ crudService.prototype.removeEventFromRoom = function(roomId, eventId, callback){
 					cb(err, null);
 					return;
 				}
-
+				if (!data){
+					cb("incorrect roomId " + roomId + " in event " + eventId);
+					return;
+				}
 				cb(null, data);
 				return;
 			});
@@ -217,7 +252,10 @@ crudService.prototype.removeEventFromUser = function(userId, eventId, callback){
 					cb(err, null);
 					return;
 				}
-
+				if (!data){
+					cb("incorrect userId " + userId + " in event.users, eventId " + eventId);
+					return;
+				}
 				cb(null, data);
 				return;
 			});
@@ -247,4 +285,3 @@ crudService.prototype.removeEventFromUser = function(userId, eventId, callback){
 };
 
 module.exports = new crudService();
-

@@ -1,55 +1,48 @@
 var async = require('async');
-var Event = require('../schemas/eventSchema');
-var eventRepository = require('../repositories/eventRepository');
 var deviceRepository = require('../repositories/deviceRepository');
-var crudService = require('./crudService');
+var deviceCrudService = require('./deviceCrudService');
 
 var deviceService = function(){};
 
-deviceService.prototype.delete = function(deviceId, callback){
-	
-	var device;
 
+deviceService.prototype.delete = function(deviceId, callback){
+
+	var device;
 	async.waterfall([
 		function(cb){
-
 			deviceRepository.getById(deviceId, function(err, data){
 				if(err){
 					cb(err, null);
 					return;
 				}
+				if (!data){
+					cb("incorrect deviceId " + deviceId);
+					return;
+				}
 				device = data;
 				cb();
-				return;
 			});
 		},
+
 		function(cb){
-			if(!device.events.length) cb();
+			console.log('working on events');
 
-			device.events.forEach(function(eventId){
-				eventRepository.getById(eventId, function(err, event){
-					if(err){
-						cb(err, null);
-						return;
-					}
-
-					var index = event.devices.indexOf(device._id);
-					event.splice(index, 1);
-
-					event.save(function(err, data){
+			if(device.events.length){
+				device.events.forEach(function(eventId){
+					deviceCrudService.removeDeviceFromEvent(eventId, device._id, function(err, data){
 						if(err){
 							cb(err, null);
 							return;
 						}
-					})
-
+						console.log('delete device from events');
+						cb();
+					});	
 				});
-
-
-			});
-			
-			cb();
-			return;
+			}
+			else {
+				console.log('no events');
+				cb();
+			}
 		},
 		function(cb){
 			deviceRepository.delete(device._id, function(err, data){
@@ -58,20 +51,18 @@ deviceService.prototype.delete = function(deviceId, callback){
 					return;
 				}
 				cb(null, data);
-				return;
 			});
 		}
 
-
 	], function(err, result){
 		if(err){
+			console.log(err);
 			callback(err, null);
 			return;
 		}
-		callback(null, { success : true });
+		callback(null, {success: 'true'});
 		return;
 	});
-
 };
 
 module.exports = new deviceService();

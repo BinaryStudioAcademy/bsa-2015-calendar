@@ -1,54 +1,47 @@
 var async = require('async');
-var Event = require('../schemas/eventSchema');
-var eventRepository = require('../repositories/eventRepository');
 var roomRepository = require('../repositories/roomRepository');
-var crudService = require('./crudService');
+var roomCrudService = require('./roomCrudService');
 
 var roomService = function(){};
 
 roomService.prototype.delete = function(roomId, callback){
-	
-	var room;
 
+	var room;
 	async.waterfall([
 		function(cb){
-
 			roomRepository.getById(roomId, function(err, data){
 				if(err){
 					cb(err, null);
 					return;
 				}
+				if (!data){
+					cb("incorrect roomId " + roomId);
+					return;
+				}
 				room = data;
 				cb();
-				return;
 			});
 		},
+
 		function(cb){
-			if(!room.events.length) cb();
+			console.log('working on events');
 
-			room.events.forEach(function(eventId){
-
-				eventRepository.getById(eventId, function(err, event){
-					if(err){
-						cb(err, null);
-						return;
-					}
-					console.log('event room: ' + event.room);
-					// event.room = undefined;
-					event.set('room', undefined);
-					console.log('event room after: ' + event.room);	
-					event.save(function(err, data){
+			if(room.events.length){
+				room.events.forEach(function(eventId){
+					roomCrudService.removeRoomFromEvent(eventId, room._id, function(err, data){
 						if(err){
 							cb(err, null);
 							return;
 						}
-					})
-
+						console.log('delete room from events');
+						cb();
+					});	
 				});
-			});
-
-			cb();
-			return;
+			}
+			else {
+				console.log('no events -> cb()');
+				cb();
+			}
 		},
 		function(cb){
 			roomRepository.delete(room._id, function(err, data){
@@ -60,15 +53,15 @@ roomService.prototype.delete = function(roomId, callback){
 			});
 		}
 
-
 	], function(err, result){
 		if(err){
+			console.log(err);
 			callback(err, null);
 			return;
 		}
-		callback(null, { success : true });
+		callback(null, {success: 'true'});
+		return;
 	});
-
 };
 
 module.exports = new roomService();

@@ -1,9 +1,18 @@
 var apiResponse = require('express-api-response');
 var planRepository = require('../../repositories/planRepository');
+var planService = require('../../services/planService');
 
 module.exports = function(app) {
 	app.get('/api/plan/:id', function(req, res, next) {
 		planRepository.getById(req.params.id, function(err, data) {
+			res.data = data;
+			res.err = err;
+			next();
+		});
+	}, apiResponse);
+
+	app.get('/api/plan/', function(req, res, next){
+		planRepository.getAll(function(err, data){
 			res.data = data;
 			res.err = err;
 			next();
@@ -35,7 +44,7 @@ module.exports = function(app) {
 	}, apiResponse);	
 
 	app.post('/api/plan/', function(req, res, next) {
-		planRepository.add(req.body, function(err, data) {
+		planService.add(req.body, function(err, data) {
 			res.data = data;
 			res.err = err;
 			next();
@@ -51,7 +60,7 @@ module.exports = function(app) {
 	}, apiResponse);	
 
 	app.delete('/api/plan/:id', function(req, res, next){
-		planRepository.delete(req.params.id, function(err, data){
+		planService.delete(req.params.id, function(err, data){
 			res.data = data;
 			res.err = err;
 			next();

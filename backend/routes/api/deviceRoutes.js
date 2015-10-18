@@ -1,7 +1,6 @@
 var apiResponse = require('express-api-response');
-var deviceService = require('../../services/deviceService');
-
 var deviceRepository = require('../../repositories/deviceRepository');
+var deviceService = require('../../services/deviceService');
 
 module.exports = function(app) {
 
@@ -50,7 +49,7 @@ module.exports = function(app) {
 
 
 	app.delete('/api/device/:id', function(req, res, next){
-		deviceRepository.delete(req.params.id, function(err, data){
+		deviceService.delete(req.params.id, function(err, data){
 			res.data = data;
 			res.err = err;
 			next();

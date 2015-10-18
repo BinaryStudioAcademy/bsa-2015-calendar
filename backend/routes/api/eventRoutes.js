@@ -11,6 +11,13 @@ module.exports = function(app) {
 		});
 	}, apiResponse);
 
+	app.get('/api/event/planid/:id', function(req, res, next) {
+		eventRepository.getByPlanId(req.params.id, function(err, data) {
+			res.data = data;
+			res.err = err;
+			next();
+		});
+	}, apiResponse);
 
 	app.get('/api/event/', function(req, res, next){
 		eventRepository.getAll(function(err, data){
@@ -61,10 +68,6 @@ module.exports = function(app) {
 	}, apiResponse);	
 
 	app.post('/api/event/', function(req, res, next) {
-		
-		// for(var i in eventService)
-		// 	console.log(eventService[i]);
-
 		eventService.add(req.body, function(err, data) {
 			console.log('rout', req.body['title']);
 			res.data = data;

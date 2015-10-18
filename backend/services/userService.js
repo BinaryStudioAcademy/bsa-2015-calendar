@@ -1,55 +1,66 @@
 var async = require('async');
-var Event = require('../schemas/eventSchema');
-var eventRepository = require('../repositories/eventRepository');
 var userRepository = require('../repositories/userRepository');
 var crudService = require('./crudService');
 
 var userService = function(){};
 
-userService.delete = function(userId, callback){
-	
-	var user;
+userService.prototype.delete = function(userId, callback){
 
+	var user;
 	async.waterfall([
 		function(cb){
-
 			userRepository.getById(userId, function(err, data){
 				if(err){
 					cb(err, null);
 					return;
 				}
+				if (!data){
+					cb("incorrect userId " + userId);
+					return;
+				}
 				user = data;
 				cb();
-				return;
 			});
 		},
+
 		function(cb){
-			if(!user.events.length) { cb(); return; }
+			console.log('working on events');
 
-			user.events.forEach(function(eventId){
-				eventRepository.getById(eventId, function(err, event){
-					if(err){
-						cb(err, null);
-						return;
-					}
-
-					var index = event.users.indexOf(user._id);
-					event.splice(index, 1);
-
-					event.save(function(err, data){
+			if(user.events.length){
+				user.events.forEach(function(eventId){
+					userCrudService.removeUserFromEvent(eventId, user._id, function(err, data){
 						if(err){
 							cb(err, null);
 							return;
 						}
-					})
-
+						console.log('delete from events');
+						cb();
+					});	
 				});
-
-
-			});
-
-			cb();
-			return;
+			}
+			else {
+				console.log('no events -> cb()');
+				cb();
+			}
+		}, 
+		function(cb){
+			console.log('working on groups');
+			if(user.groups.length){
+				user.groups.forEach(function(groupId){
+					userCrudService.removeUserFromGroup(groupId, user._id, function(err, data){
+						if(err){
+							cb(err, null);
+							return;
+						}
+						console.log('delete from groups');
+						cb();
+					});
+				});
+			}
+			else{
+				console.log('no groups -> cb()');
+				cb();
+			}
 		},
 		function(cb){
 			userRepository.delete(user._id, function(err, data){
@@ -61,16 +72,15 @@ userService.delete = function(userId, callback){
 			});
 		}
 
-
 	], function(err, result){
 		if(err){
+			console.log(err);
 			callback(err, null);
 			return;
 		}
-		callback(null, { success : true });
+		callback(null, {success: 'true'});
 		return;
 	});
-
 };
 
 module.exports = new userService();

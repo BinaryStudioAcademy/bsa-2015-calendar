@@ -17,7 +17,7 @@ var planSchema = new Schema({
     isPrivate: Boolean, /* for public events */
     isExludeUsers : Boolean, /* method forming a userlist */
     users: [{type: Schema.Types.ObjectId, ref: 'User'}],
-    rooms: [{type: Schema.Types.ObjectId, ref: 'Room'}], /* arr[intervalsCount] */
+    room: {type: Schema.Types.ObjectId, ref: 'Room'}, 
     devices: [{type: Schema.Types.ObjectId, ref: 'Device'}],
 });
 

@@ -1,6 +1,7 @@
 var apiResponse = require('express-api-response');
 var groupRepository = require('../../repositories/groupRepository');
 
+
 module.exports = function(app) {
 	app.get('/api/group/:id', function(req, res, next) {
 		groupRepository.getById(req.params.id, function(err, data) {
