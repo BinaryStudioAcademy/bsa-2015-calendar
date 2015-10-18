@@ -32,12 +32,18 @@
 					controller: 'WeekViewController',
 					controllerAs: 'wCtrl',
 				})
-				.state('createNew', {
-					url: '/createNew',
+				.state('calendar.createNewDevice', {
+					url: '/createNewDevice',
 					templateUrl: './templates/createNew/createNewDeviceTemplate.html',
 					controller: 'createNewDeviceController',
 					controllerAs: 'cndCtrl',
-				});				
+				})		
+				.state('calendar.createNewRoom', {
+					url: '/createNewRoom',
+					templateUrl: './templates/createNew/createNewRoomTemplate.html',
+					controller: 'createNewRoomController',
+					controllerAs: 'cnrCtrl',
+				});	
 		}
 	]);
 

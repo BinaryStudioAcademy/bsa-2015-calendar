@@ -1,23 +1,66 @@
-#createNewDeviceView(ng-cloak)
-	.createNewDevice(ng-controller="createNewDeviceController")			
+.products_list(ng-controller='createNewDeviceController')
+  .form-group
+    label.col-sm-2(for="device") device: 
+    .col-sm-10
+      input(type='text', class="form-control", id="device", placeholder="Enter device", ng-model='device.title')
+    .dfbfdbdbdf
+    label.col-sm-2(for="description" class="form-control4") description: 
+    .col-sm-10
+      input(type='text', class="form-control", id="description", placeholder="Enter description", ng-model='device.description')
+    
+  //- .type Type: 
+  //- .typelist
+  //-   label.col-sm-2(for="device")  device
+  //-     input(type='radio', ng-model='user.gender', value='device') 
+  //-   label.col-sm-12(for="device") room
+  //-     input(type='radio', ng-model='user.gender', value='room')
 
-			table(ng-show="showDeviceList")
-				caption
-					b Devices
-				thead
-					tr.titleDeviceList
-						th Name Device
-						th Description
+  br
+  .button-div(align='center')
+    button(ng-click='reset()') RESET
+    button(ng-click='addDevice()') SAVE
+    button(ng-click='toggleViewDevice()') Скрыть/отобразить DevicesList
 
 
-form(role="form")
-	.form-group
-		#newDevice
-			label New Device
-			input(type="newDevice" placeholder="New Device")
+  //- .print device.title = {{device.title}}
+  //- .print device.description = {{device.description}}
 
-		#Description
-			label Description
-			input(type="newDevice" placeholder="Description")
+  table.col-sm-12(border='1', align='center', ng-show='showDevicesList')
+    caption
+      b(align='center') Oll devices
+    thead
+      tr
+        th.col-sm-3 device
+        th.col-sm-9 description
+    tfoot
+      tr
+        td(colspan='2') Количество device: {{ devices.length }}
+    tbody
+      tr(ng-repeat='device in devices | filter: search')
+        td  {{ device.title }} 
+        td  {{ device.price }} 
 
-	button#addDevice(type="submit") SaveDevice
+  div(align='center', ng-show='showDevicesList')
+    b Поиск:
+    input(type='text', size='19', border='1', ng-model='search')
+
+  //- div(align='center')
+  //-   button(ng-click='addProduct()') Добавить товар
+  //-   button(ng-click='toggleViewProducts()') Скрыть товары
+
+
+
+
+//- span разделитель==============================
+//- form(role="form")
+//- 	.form-group
+//- 		#newDevice
+//- 			label New Device
+//- 			input(type="newDevice" placeholder="New Device")
+
+//- 		#Description
+//- 			label Description
+//- 			input(type="newDevice" placeholder="Description")
+
+//- 	button#addDevice(type="submit") SaveDevice
+
