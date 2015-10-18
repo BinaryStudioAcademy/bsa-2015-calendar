@@ -1,6 +1,7 @@
+<<<<<<< HEAD
 	var app = angular.module('calendar-app', ['ui.router', 'ngResource', 'ui.bootstrap', 'ngAnimate'])
 	.config(['$stateProvider', '$urlRouterProvider','$resourceProvider', '$httpProvider', '$locationProvider', 
-		function($stateProvider, $urlRouterProvider, $resourceProvider, $httpProvider, $locationProvider) {
+		function ($stateProvider, $urlRouterProvider, $resourceProvider, $httpProvider, $locationProvider) {
 			$urlRouterProvider.otherwise('/');
 			$stateProvider
 				.state('home',{
@@ -32,6 +33,16 @@
 					controller: 'WeekViewController',
 					controllerAs: 'wCtrl',
 				})
+                .state('signIn', {
+                    url: '/signIn',
+                    templateUrl: './templates/home/signIn.html',
+                    controller: 'LoginController',
+                })
+                .state('signUp', {
+                    url: '/signUp',
+                    templateUrl: './templates/home/signUp.html',
+                    controller: 'LoginController',
+                });
 				.state('calendar.createNewDevice', {
 					url: '/createNewDevice',
 					templateUrl: './templates/createNew/createNewDeviceTemplate.html',
@@ -43,7 +54,7 @@
 					templateUrl: './templates/createNew/createNewRoomTemplate.html',
 					controller: 'createNewRoomController',
 					controllerAs: 'cnrCtrl',
-				});	
+				});
 		}
 	]);
 
@@ -56,6 +67,5 @@ app.run(['$rootScope', '$state', function($rootScope, $state) {
 			$state.go(to.redirectTo, params);
 		}
 	});
-}]);
 
 module.exports = app;
