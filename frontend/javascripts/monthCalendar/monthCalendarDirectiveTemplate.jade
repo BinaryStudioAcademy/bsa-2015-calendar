@@ -14,3 +14,6 @@ div
             th.tg-yw4l.month-day-header Sat
         tr(ng-repeat='week in weeks')
             td.tg-yw4l.month-day(ng-class="{ 'month-day-today': day.isToday, 'different-month': !day.isCurrentMonth }", ng-repeat='day in week.days') {{day.number}}
+                div.month-event(ng-repeat="event in day.events | limitTo:2") {{event}}
+                div.month-event(ng-show="day.events.length == 3") {{day.events[2]}}
+                div(ng-show="day.events.length > 3") More
