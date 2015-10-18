@@ -67,7 +67,7 @@ planService.prototype.add = function(data, callback){
  			callback(err, null);
 			return;
 		});
-		cb(null, "added " + addEventsCount + " events from plan")
+		cb(null, "added " + addEventsCount + " events from plan");
 	}
 	],
 

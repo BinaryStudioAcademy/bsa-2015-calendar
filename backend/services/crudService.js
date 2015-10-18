@@ -117,7 +117,7 @@ crudService.prototype.addEventToRoom = function(roomId, eventId, callback){
 	 		if(err){
 	 			cb(err, null);
 	 			return;
-	 		};
+	 		}
 		});
 	},
 	// function(cb){

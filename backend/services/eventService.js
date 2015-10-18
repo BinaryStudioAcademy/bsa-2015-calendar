@@ -4,6 +4,7 @@ var userRepository = require('../repositories/userRepository');
 var roomRepository = require('../repositories/roomRepository');
 var deviceRepository = require('../repositories/deviceRepository');
 var crudService = require('./crudService');
+var _ = require('lodash');
 
 var eventService = function(){};
 
@@ -26,12 +27,12 @@ eventService.prototype.add = function(data, callback){
 		},
 
 		function(cb){
-			if (event.room != undefined){
+			if (event.room !== undefined){
 				roomRepository.addEvent(event.room, event._id, function(err, data){
 	 				if(err){
 	 					cb(err, null);
 	 					return;
-	 				};
+	 				}
 				});
 				console.log('added to room');
 			}
@@ -58,7 +59,7 @@ eventService.prototype.add = function(data, callback){
 	 				if(err){
 	 					cb(err, null);
 	 					return;
-	 				};
+	 				}
 				});
 				console.log('added to user');
 				});
@@ -86,7 +87,7 @@ eventService.prototype.add = function(data, callback){
 	 					if(err){
 	 						cb(err, null);
 	 						return;
-	 					};
+	 					}
 					});
 					console.log('added to room');
 				});
@@ -129,12 +130,12 @@ eventService.prototype.delete = function(eventId, callback){
 			});
 		},
 		function(cb){
-			if (ev.room != undefined){
+			if (ev.room !== undefined){
 				roomRepository.removeEvent(ev.room, eventId, function(err, data){
 	 				if(err){
 	 					cb(err, null);
 	 					return;
-	 				};
+	 				}
 				});
 				console.log('delete from room');
 			}
@@ -150,7 +151,7 @@ eventService.prototype.delete = function(eventId, callback){
 	 					if(err){
 	 						cb(err, null);
 	 						return;
-	 					};
+	 					}
 					});
 					console.log('delete from user');
 				});
@@ -167,7 +168,7 @@ eventService.prototype.delete = function(eventId, callback){
 	 					if(err){
 	 						cb(err, null);
 	 						return;
-	 					};
+	 					}
 					});
 					console.log('delete from device');
 				});
@@ -196,6 +197,90 @@ eventService.prototype.delete = function(eventId, callback){
 		callback(null, {success: 'true'});
 		return;
 	});
+};
+
+eventService.prototype.update = function(newEvent, callback){
+	var usersToAdd = [],
+		usersToDelete = [],
+		devicesToAdd = [],
+		devicesToDelete = [],
+		oldEvent;
+
+	async.waterfall([
+		function(cb){
+			eventRepository.getById(newEvent._id, function(err, data){
+				if(err){
+					cb(err, null);
+					return;
+				}
+				if (!data){
+					cb("incorrect eventId " + eventId);
+					return;
+				}
+				oldEvent = data;
+				cb();
+			});
+		},
+		function(cb){
+			usersToAdd = _.difference(newEvent.users, oldEvent.users);
+			usersToDelete = _.difference(oldEvent.users, newEvent.users);
+			devicesToAdd = _.difference(newEvent.devices, oldEvent.devices);
+			devicesToDelete = _.difference(oldEvent.devices, newEvent.devices);
+
+			usersToAdd.forEach(function(userId){
+				userRepository.addEvent(userId, newEvent._id, function(err, data){
+					if(err){
+						cb(err, null);
+						return;
+					}
+				});
+			});
+
+			usersToDelete.forEach(function(userId){
+				userRepository.removeEvent(userId, newEvent._id, function(err, data){
+					if(err){
+						cb(err, null);
+						return;
+					}
+				});
+			});
+
+			devicesToAdd.forEach(function(deviceId){
+				deviceRepository.addEvent(deviceId, newEvent._id, function(err, data){
+					if(err){
+						cb(err, null);
+						return;
+					}
+				});
+			});
+
+			devicesToDelete.forEach(function(deviceId){
+				deviceRepository.removeEvent(deviceId, newEvent._id, function(err, data){
+					if(err){
+						cb(err, null);
+						return;
+					}
+				});
+			});
+
+			eventRepository.update(oldEvent._id, newEvent, function(err, data){
+				if(err){
+					cb(err, null);
+					return;
+				}
+			});
+
+			cb();
+		}
+	], function(err, result){
+		if(err){
+			callback(err, null);
+		}
+
+		callback(null, {success: true});
+	});
+
+
 };
 
 module.exports = new eventService();
