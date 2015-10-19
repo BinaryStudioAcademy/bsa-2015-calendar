@@ -25,24 +25,25 @@
   //- .print device.title = {{device.title}}
   //- .print device.description = {{device.description}}
 
-  table.col-sm-12(border='1', align='center', ng-show='showDevicesList')
-    caption
-      b(align='center') Oll devices
-    thead
-      tr
-        th.col-sm-3 device
-        th.col-sm-9 description
-    tfoot
-      tr
-        td(colspan='2') Количество device: {{ devices.length }}
-    tbody
-      tr(ng-repeat='device in devices | filter: search')
-        td  {{ device.title }} 
-        td  {{ device.price }} 
-
   div(align='center', ng-show='showDevicesList')
     b Поиск:
     input(type='text', size='19', border='1', ng-model='search')
+
+  table.col-sm-12(border='1', align='center', ng-show='showDevicesList')
+    thead
+      tr
+        td(colspan='2', align='center')
+          b Oll devices      
+      tr
+        td(colspan='2', align='center') Количество device: {{ devices.length }}
+      tr
+        th.col-sm-4 device
+        th.col-sm-8 description
+    tbody
+      tr(ng-repeat='device in devices | filter: search')
+        td  {{ device.title }} 
+        td  {{ device.events }} 
+
 
   //- div(align='center')
   //-   button(ng-click='addProduct()') Добавить товар
