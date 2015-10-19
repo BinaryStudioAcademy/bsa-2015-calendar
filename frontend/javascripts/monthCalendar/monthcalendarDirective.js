@@ -58,7 +58,18 @@ app.directive("calendar", function() {
                 isToday: date.isSame(new Date(), "day"),
                 date: date
             });
-            if (days[i].isToday) days[i].events = ['Birthday', 'Meeting', 'Call', 'Meeting2'];
+            if (days[i].isToday) {
+                days[i].events = [{name: 'BirthdayBirthdayBirthdayBirthdayBirthdayBirthday', date: days[i].date},
+                    {name: 'Meeting', date: days[i].date},
+                    {name: 'Call', date: days[i].date},
+                    {name: 'Meeting2', date: days[i].date}];
+
+                days[i - 1].events = [{name: 'Breakfast', date: days[i - 1].date},
+                    {name: 'Lunch', date: days[i - 1].date},
+                    {name: 'Dinner', date: days[i - 1].date},
+                    {name: 'Sleep', date: days[i - 1].date},
+                    {name: 'Dreams', date: days[i - 1].date}];
+            }
             date = date.clone();
             date.add(1, "d");
         }
