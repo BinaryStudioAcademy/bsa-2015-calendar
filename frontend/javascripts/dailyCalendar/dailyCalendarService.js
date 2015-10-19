@@ -13,7 +13,7 @@ function DailyCalendarService($resource, $filter) {
 	}
 
 	function getTodaysEvents(date){
-		var reqDate = $filter('date')(date);
+		var reqDate = $filter('date')(date);//check how it works. 90% that it is shit
 		return $resource('/api/eventByDateStart/:date').query({start: reqDate});
 	}
 
