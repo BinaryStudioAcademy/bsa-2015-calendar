@@ -20,6 +20,16 @@ var app = angular.module('calendar-app', ['ui.router', 'ngResource', 'ui.bootstr
 					controller: 'CalendarController',
 					controllerAs: 'calendarCtrl',
 				})
+                .state('signIn', {
+                    url: '/signIn',
+                    templateUrl: './templates/home/signIn.html',
+                    controller: 'LoginController',
+                })
+                .state('signUp', {
+                    url: '/signUp',
+                    templateUrl: './templates/home/signUp.html',
+                    controller: 'LoginController',
+                })
 				.state('calendar.dayView', {
 					url: '/calendar/dayView',
 					templateUrl: './templates/dailyCalendar/dailyCalendarTemplate.html',
@@ -34,13 +44,13 @@ var app = angular.module('calendar-app', ['ui.router', 'ngResource', 'ui.bootstr
 		}
 	]);
 
-app.run(['$rootScope', '$state', function($rootScope, $state) {
-	$rootScope.$on('$stateChangeStart', function(evt, to, params) {
-		if (to.redirectTo) {
-			evt.preventDefault();
-			$state.go(to.redirectTo, params);
-		}
-	});
+app.run(['$rootScope', '$state', function ($rootScope, $state) {
+    $rootScope.$on('$stateChangeStart', function (evt, to, params) {
+        if (to.redirectTo) {
+            evt.preventDefault();
+            $state.go(to.redirectTo, params);
+        }
+    });
 }]);
 
 module.exports = app;
