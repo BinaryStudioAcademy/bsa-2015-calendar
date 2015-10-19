@@ -63,6 +63,8 @@ eventService.prototype.add = function(data, callback){
 				});
 				console.log('added to user');
 				});
+
+				cb();
 			}
 			else{
 				cb();
@@ -91,6 +93,8 @@ eventService.prototype.add = function(data, callback){
 					});
 					console.log('added to room');
 				});
+
+				cb();
 			}
 			else{
 				console.log('no devices -> cb()');
@@ -199,16 +203,18 @@ eventService.prototype.delete = function(eventId, callback){
 	});
 };
 
-eventService.prototype.update = function(newEvent, callback){
+eventService.prototype.update = function(eventId, newEvent, callback){
 	var usersToAdd = [],
 		usersToDelete = [],
 		devicesToAdd = [],
 		devicesToDelete = [],
 		oldEvent;
 
+	console.log("eventID: " + eventId);
+
 	async.waterfall([
 		function(cb){
-			eventRepository.getById(newEvent._id, function(err, data){
+			eventRepository.getById(eventId, function(err, data){
 				if(err){
 					cb(err, null);
 					return;
@@ -227,26 +233,23 @@ eventService.prototype.update = function(newEvent, callback){
 			devicesToAdd = _.difference(newEvent.devices, oldEvent.devices);
 			devicesToDelete = _.difference(oldEvent.devices, newEvent.devices);
 
-			usersToAdd.forEach(function(userId){
-				userRepository.addEvent(userId, newEvent._id, function(err, data){
-					if(err){
-						cb(err, null);
-						return;
-					}
-				});
-			});
+			console.log("old devices: " + oldEvent.devices);
+			console.log("new devices: " + newEvent.devices);
+
+			console.log("devices to add: " + devicesToAdd);
+			console.log("devices to delete: " + devicesToDelete);
 
 			usersToDelete.forEach(function(userId){
-				userRepository.removeEvent(userId, newEvent._id, function(err, data){
+				userRepository.removeEvent(userId, eventId, function(err, data){
 					if(err){
 						cb(err, null);
 						return;
 					}
 				});
-			});
+			});			
 
-			devicesToAdd.forEach(function(deviceId){
-				deviceRepository.addEvent(deviceId, newEvent._id, function(err, data){
+			usersToAdd.forEach(function(userId){
+				userRepository.addEvent(userId, eventId, function(err, data){
 					if(err){
 						cb(err, null);
 						return;
@@ -255,7 +258,7 @@ eventService.prototype.update = function(newEvent, callback){
 			});
 
 			devicesToDelete.forEach(function(deviceId){
-				deviceRepository.removeEvent(deviceId, newEvent._id, function(err, data){
+				deviceRepository.removeEvent(deviceId, eventId, function(err, data){
 					if(err){
 						cb(err, null);
 						return;
@@ -263,12 +266,41 @@ eventService.prototype.update = function(newEvent, callback){
 				});
 			});
 
-			eventRepository.update(oldEvent._id, newEvent, function(err, data){
+			devicesToAdd.forEach(function(deviceId){
+				deviceRepository.addEvent(deviceId, eventId, function(err, data){
+					if(err){
+						cb(err, null);
+						return;
+					}
+				});
+			});
+
+			if(oldEvent.room !== newEvent.room){
+				console.log("changing room");
+				roomRepository.removeEvent(oldEvent.room, eventId, function(err, data){
+					if(err){
+						cb(err, null);
+						return;
+					}
+				});
+
+				roomRepository.addEvent(newEvent.room, eventId, function(err, data){
+					if(err){
+						cb(err, null);
+						return;
+					}
+				});
+
+			}
+
+			eventRepository.update(eventId, newEvent, function(err, data){
 				if(err){
 					cb(err, null);
 					return;
 				}
 			});
+
+
 
 			cb();
 		}

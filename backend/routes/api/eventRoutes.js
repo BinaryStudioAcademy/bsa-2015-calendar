@@ -77,7 +77,7 @@ module.exports = function(app) {
 	}, apiResponse);
 
 	app.put('/api/event/:id', function(req, res, next){
-		eventRepository.update(req.params.id, req.body, function(err, data){
+		eventService.update(req.params.id, req.body, function(err, data){
 			res.data = data;
 			res.err = err;
 			next();

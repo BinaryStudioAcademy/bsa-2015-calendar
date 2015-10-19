@@ -8,6 +8,14 @@ var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+// var faker = require('./faker/generate.js');
+
+// faker({
+// 	device: 20,
+// 	user: 20,
+// 	room: 20,
+// 	group: 3
+// });
 
 app.use(cookieParser());
 app.use(bodyParser());
