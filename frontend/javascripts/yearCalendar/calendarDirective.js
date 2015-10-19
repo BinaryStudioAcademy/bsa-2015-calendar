@@ -2,55 +2,86 @@ var app = require('../app');
 
 app.directive('calendarDirective', calendarDirective);
 
-function calendarDirective() {
+function calendarDirective($compile) {
     return {
         restrict: 'A',
+
         link: function ($scope, element, attr) {
-            attr.$observe('calendarObj', function(value) { //add binding to calendar object
-                var calendarArr = angular.fromJson(value);
-                var monthArr = calendarArr[+attr.monthNum];
+
+            $scope.$watch('YCtrl.calendar', function(value) { //add binding to calendar object
+                var calendarObj = value;
+                var monthArr = calendarObj.months[+attr.monthNum];
                 //Add table header
-                var tableMonth = '<table class="year-month-table">'+
+                var tableMonth = angular.element('<table class="year-month-table">'+
                                 '<tr><td>Mon</td><td>Tue</td><td>Wed</td><td>Thu</td><td>Fri</td>' +
-                                '<td class="dayoff">Sat</td><td class="dayoff">Sun</td></tr>';
+                                '<td class="dayoff">Sat</td><td class="dayoff">Sun</td></tr></table>');
 
                 var firstDay = monthArr[0].weekDay;
                 if (firstDay === 0) { //convert Sunday code to 7 for start day
                     firstDay = 7;
                 }
-                tableMonth +='<tr>';
+
+                var tableRow = angular.element('<tr></tr>');
                 for (var i=0; i < firstDay-1; i++) { //add empty cells at month start
-                    tableMonth +='<td></td>';
+                    tableRow.append(angular.element('<td></td>'));
                 }
-                var weekNum = 1;
+
                 var monthLenght = monthArr.length;
                 for (var y=0; y < monthLenght; y++) { //add day to table with day off checking
-                    if (!monthArr[y].dayOff) { 
-                        tableMonth +='<td>'+monthArr[y].dayDate+'</td>';
-                    } else {
-                        tableMonth +='<td class="dayoff">'+monthArr[y].dayDate+'</td>';
+                    var dayId = monthArr[y].dayDate+'_'+(+attr.monthNum +1)+'_'+calendarObj.year; //id as DD-MM-YYYY, but without leading 0
+                    var dayCell = angular.element('<td id='+ dayId +'></td>');
+                    dayCell.html(monthArr[y].dayDate);
+
+                    //add class for day off
+                    if (monthArr[y].dayOff) { 
+                        dayCell.addClass('dayoff');
                     }
-                    if (monthArr[y].weekDay === 0 && y == monthLenght-1) {
-                        //pass on last sunday in month; 
-                    } else if (monthArr[y].weekDay === 0) { //new line in table after sunday
-                        tableMonth +='</tr><tr>';
-                        weekNum++;                       
+                    //add class for past, present and future days
+                    switch(monthArr[y].timePeriod) {
+                        case 1:
+                            dayCell.addClass('day-now');
+                            break;
+                        case 0:
+                            dayCell.addClass('day-past');
+                            break;
+                        case 2:
+                            dayCell.addClass('day-future');
+                            break;
                     }
+
+                    tableRow.append(dayCell);
+                    dayCell = null;
+
+                    //append row to table on sunday
+                    if (monthArr[y].weekDay === 0) {
+                        tableMonth.append(tableRow);
+                        tableRow = angular.element('<tr></tr>');  
+                    }
+
                 }
+                //add last row if it not complete
+                if (tableRow.find('td').length !== 0) {
+                    tableMonth.append(tableRow);
+                }
+
                 //Make month tables equal height
+                var weekNum = tableMonth.find('tr').length - 1;
+                var emptyRow = angular.element('<tr><td height="20"></td></tr>');
+                var doubleRow = angular.element('<tr><td height="20"></td></tr><tr><td height="20"></td></tr>');
                 switch(weekNum) {
-                    case 6:
-                        tableMonth +='</tr></table>';
+                    case 4:
+                        tableMonth.append(doubleRow);
                         break;
                     case 5:
-                        tableMonth +='</tr><tr><td height="20"></td></tr></table>';
+                        tableMonth.append(emptyRow);
                         break;
-                    case 4:
-                       tableMonth +='</tr><tr><td height="20"></td></tr></tr><tr><td height="20"></td></tr></table>';
+                    case 6:
                        break; 
                 }
-                element.html(tableMonth);
-            });
+                //insert element in directive container
+                element.empty();
+                element.append(tableMonth);
+            }, true);
         }
     };
 }
