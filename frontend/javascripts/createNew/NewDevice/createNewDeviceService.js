@@ -1,4 +1,4 @@
-var app = require('../app');
+var app = require('../../app');
 
 app.factory('createNewDeviceService', createNewDeviceService);
 createNewDeviceService.$inject = ['$resource'];

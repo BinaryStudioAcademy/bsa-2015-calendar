@@ -44,13 +44,13 @@ var app = angular.module('calendar-app', ['ui.router', 'ngResource', 'ui.bootstr
       })
 			.state('calendar.createNewDevice', {
 				url: '/createNewDevice',
-				templateUrl: './templates/createNew/createNewDeviceTemplate.html',
+				templateUrl: './templates/createNew/NewDevice/createNewDeviceTemplate.html',
 				controller: 'createNewDeviceController',
 				controllerAs: 'cndCtrl',
 			})		
 			.state('calendar.createNewRoom', {
 				url: '/createNewRoom',
-				templateUrl: './templates/createNew/createNewRoomTemplate.html',
+				templateUrl: './templates/createNew/NewRoom/createNewRoomTemplate.html',
 				controller: 'createNewRoomController',
 				controllerAs: 'cnrCtrl',
 			});
