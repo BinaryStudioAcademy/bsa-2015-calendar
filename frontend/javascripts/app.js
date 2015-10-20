@@ -8,33 +8,38 @@ var app = angular.module('calendar-app', ['ui.router', 'ngResource', 'ui.bootstr
                     templateUrl: './templates/layout/layout.html',
                     controller: 'LayoutController',
                     controllerAs: 'LayoutCtrl',
-                    redirectTo: 'home.start',
+                    redirectTo: 'home.start'
                 })
                 .state('home.start', {
                     url: '/',
-                    templateUrl: './templates/home/homepage.html',
+                    templateUrl: './templates/home/homepage.html'
                 })
                 .state('calendar', {
                     url: '/calendar',
                     templateUrl: './templates/calendar/calendar.html',
                     controller: 'CalendarController',
-                    controllerAs: 'calendarCtrl',
+                    controllerAs: 'calendarCtrl'
+                })
+                .state('signIn', {
+                    url: '/signIn',
+                    templateUrl: './templates/home/signIn.html',
+                    controller: 'LoginController'
+                })
+                .state('signUp', {
+                    url: '/signUp',
+                    templateUrl: './templates/home/signUp.html',
+                    controller: 'LoginController'
                 })
                 .state('calendar.dayView', {
                     url: '/calendar/dayView',
                     templateUrl: './templates/dailyCalendar/dailyCalendarTemplate.html',
                     controller: 'DayViewController',
-                    controllerAs: 'dvCtrl',
+                    controllerAs: 'dvCtrl'
                 })
-                .state('signIn', {
-                    url: '/signIn',
-                    templateUrl: './templates/home/signIn.html',
-                    controller: 'LoginController',
-                })
-                .state('signUp', {
-                    url: '/signUp',
-                    templateUrl: './templates/home/signUp.html',
-                    controller: 'LoginController',
+                .state('calendar.monthView', {
+                    url: '/calendar/monthView',
+                    templateUrl: './templates/monthCalendar/monthCalendar.html',
+                    controller: ''
                 });
         }
     ]);
