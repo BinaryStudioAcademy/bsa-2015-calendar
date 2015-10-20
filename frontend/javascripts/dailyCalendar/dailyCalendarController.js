@@ -15,12 +15,37 @@ function DayViewController(DailyCalendarService) {
 	vm.eventSelected = false;
 	vm.modalShown = false;
 	vm.sidebarStyle = true;
-	vm.event = getEvents(date1, date2);
 
 	//will be pulled from server 
 	vm.eventTypes = ['Basic', 'Leisure', 'Private'];
 	vm.availableRooms = ['Room 1', 'Room 2', 'Room 3'];
-	vm.availableInventory = ['Notebook HP', 'Macbook', 'Ball', 'Pizzayollo'];
+
+	vm.availableInventory = [
+		{id: 1, label: 'Notebook HP'}, 
+		{id: 2, label: 'Macbook'}, 
+		{id: 3, label: 'Ball'}, 
+		{id: 4, label: 'Pizzayollo'}
+	];
+	vm.users = [
+		{id: 1, label: 'Alex'},
+		{id: 2, label: 'Max'},
+		{id: 3, label: 'John'},
+		{id: 4, label: 'Zina'},
+		{id: 5, label: 'Vasea'},
+		{id: 6, label: 'Vanea'}
+	];
+
+	vm.event = vm.event || {};
+	vm.event.devices = [];
+	vm.event.users = [];
+	vm.selectConfigDevices = {buttonDefaultText: 'Select devices'};
+	vm.selectConfigUsers = {
+			buttonDefaultText: 'Add people to event', 
+			enableSearch: true, 
+			smartButtonMaxItems: 4, 
+			scrollableHeight: '200px', 
+			scrollable: true
+	};
 
 	//TODO: service to get this org data
 	// vm.eventOrgResources = EventResourcesService.getEventResources();
@@ -28,8 +53,7 @@ function DayViewController(DailyCalendarService) {
 	//END of todo
 
 	vm.selectEventType = function(type) {
-		vm.eventType = type;
-		console.log("hello!");
+		vm.event.type = type;
 	};
 	
 	vm.toggleModal = function() {
@@ -40,19 +64,19 @@ function DayViewController(DailyCalendarService) {
 		vm.eventSelected = !vm.eventSelected;
 	};
 
-
-	
-	function getEvents(date1, date2) {
-		var event = {
-			name: 'Angular Deep Dive',
-			description: 'Nice course about angular directives, casestudies and many practical problems',
-			author: 'Alex C',
-			room: 3,
-			participants: 10,
-			startTime: date1,
-			endTime: date2,
-		};
-		
-		return event;
-	}
+	vm.submitEvent = function(event, newEventForm, date) {
+		DailyCalendarService.configureEventData(date, event);
+		if(newEventForm.$valid) {
+			console.log('form is valid!');
+			DailyCalendarService.saveEvent(event)
+				.$promise.then(
+					function(response) {
+						console.log('success', response);
+					},
+					function(response) {
+						console.log('failure', response);
+					}	
+				);
+		}
+	};
 }

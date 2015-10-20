@@ -6,14 +6,42 @@ DailyCalendarService.$inject = ['$resource'];
 
 function DailyCalendarService($resource) {
 
-	var timeSatmps = '12am|1am|2am|3am|4am|5am|6am|7am|8am|9am|10am|11am|12pm|1pm|2pm|3pm|4pm|5pm|6pm|7pm|8pm|9pm|10pm|11pm'.split('|');
+	var timeStamps = '12am|1am|2am|3am|4am|5am|6am|7am|8am|9am|10am|11am|12pm|1pm|2pm|3pm|4pm|5pm|6pm|7pm|8pm|9pm|10pm|11pm'.split('|');
+	var resAllEvents;
+	var resEvent = $resource('/api/event/');
 
-	function getTimeStamps(){
-		return timeSatmps;
+
+	function getTimeStamps() {
+		return timeStamps;
+	}
+
+	function configureEventData(date, event) {
+		
+		var eventStartPartials = event.start.split(':');
+		var eventEndPartials = event.end.split(':');
+
+		var startTime = new Date(date);
+			startTime.setHours(eventStartPartials[0]);
+			startTime.setMinutes(eventStartPartials[1]);
+
+		var endTime = new Date(date);
+			endTime.setHours(eventEndPartials[0]);
+			endTime.setMinutes(eventEndPartials[1]);
+
+		event.start = startTime;
+		event.end = endTime;
+
+		console.log(event);
+	}
+
+	function saveEvent(event) {
+		return resEvent.save(event);
 	}
 
 	return {
-		getTimeStamps: getTimeStamps
+		getTimeStamps: getTimeStamps,
+		saveEvent: saveEvent,
+		configureEventData: configureEventData,
 	};
 	
 }

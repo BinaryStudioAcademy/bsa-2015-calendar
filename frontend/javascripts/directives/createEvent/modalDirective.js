@@ -12,10 +12,11 @@ angular
 	        	scope.title = attrs.title;
 
 		        scope.$watch(attrs.visible, function(value){
-		          if(value === true)
-		            $(element).modal('show');
-		          else
-		            $(element).modal('hide');
+					if(value === true) {
+						$(element).modal('show');
+					} else {
+						$(element).modal('hide');
+					}
 		        });
 
 		        $(element).on('shown.bs.modal', function(){
@@ -23,9 +24,7 @@ angular
 		        });
 
 		        $(element).on('hidden.bs.modal', function(){
-		          scope.$apply(function(){
-		            scope.$parent[attrs.visible] = false;
-		          });
+		        	scope.$parent[attrs.visible] = false;
 		        });
 		    }
 		};

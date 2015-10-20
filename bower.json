@@ -9,12 +9,17 @@
   ],
   "dependencies": {
     "angular": "~1.4.3",
+    "angular-animate": "~1.4.7",
     "angular-bootstrap": "~0.13.3",
     "angular-resource": "~1.4.3",
     "angular-route": "~1.4.3",
     "angular-ui-router": "~0.2.15",
+    "angularjs-dropdown-multiselect": "~1.5.2",
     "bootstrap": "~3.3.5",
     "font-awesome": "~4.4.0",
-    "angular-animate": "~1.4.7"
+    "lodash": "~3.10.1"
+  },
+  "resolutions": {
+    "lodash": "~2.4.1"
   }
 }

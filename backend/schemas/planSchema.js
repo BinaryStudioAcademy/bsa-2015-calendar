@@ -11,7 +11,7 @@ var planSchema = new Schema({
     price : Number,
     dateStart: Date, 
     dateEnd: Date,
-    timeStart: Date, 
+    timeStart: Date,
     timeEnd: Date,
     intervals: [Number],
     isPrivate: Boolean, /* for public events */
