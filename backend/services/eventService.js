@@ -3,6 +3,7 @@ var eventRepository = require('../repositories/eventRepository');
 var userRepository = require('../repositories/userRepository');
 var roomRepository = require('../repositories/roomRepository');
 var deviceRepository = require('../repositories/deviceRepository');
+var groupRepository = require('../repositories/groupRepository');
 var roomService = require('./roomService');
 var deviceService = require('./deviceService');
 var userService = require('./userService');

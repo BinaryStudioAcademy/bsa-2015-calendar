@@ -5,6 +5,96 @@ var async = require('async');
 
 var planService = function(){};
 
+var pService = new planService;
+
+planService.prototype.availability = function(data, callback){
+
+	var eventTimeStart = Date.parse(data.timeStart).valueOf();
+	var planDateEnd = Date.parse(data.dateEnd).valueOf();
+	var eventDuration  = Date.parse(data.timeEnd).valueOf() - Date.parse(data.timeStart).valueOf();
+	var intervalsIterator = 0;
+
+	async.whilst(function () {
+			return eventTimeStart <= planDateEnd;
+	},
+
+	function (cb) {
+		var eventTimeEnd = eventTimeStart + eventDuration;
+
+		async.waterfall([
+			function(cb){
+				if(data.rooms){
+					eventRepository.checkRoomAvailability(data.rooms[intervalsIterator], eventTimeStart, eventTimeEnd, function(err, result){
+						if(err){
+							return cb(err);
+						}
+						if(result.length){
+							return cb(new Error('date/time conflict with room ' + data.rooms[intervalsIterator]
+								+ '\nstart:' + eventTimeStart + ' \nend:' + eventTimeEnd), result);
+						}
+						cb();
+					});
+				}
+				else{
+					cb();
+				}
+			},
+
+			function(cb){
+				async.forEach(data.devices, function(deviceId, forEachCb) { 
+					eventRepository.checkDeviceAvailability(deviceId, eventTimeStart, eventTimeEnd, function(err, result){
+						if(err){
+							return cb(err);
+						}
+						if(result.length){
+							return cb(new Error('date/time conflict with device ' + deviceId 
+								+ '\nstart:' + data.start + ' \nend:' + data.end), result);
+						}
+						cb();
+					});
+				//cb();
+				}, 
+				function(err, result){
+					if(err){
+						//console.log(err);
+						return cb(err, result);	
+					}
+					// else?? bp
+					return cb();	
+				});
+			}, 
+			function(cb){
+
+				eventTimeStart += Number(data.intervals[intervalsIterator]);
+				eventTimeStart += eventDuration;
+
+				intervalsIterator++;
+
+				if (intervalsIterator >= data.intervals.length)
+				{	
+					intervalsIterator = 0;
+				}
+				cb();
+			}
+		], function(err){
+			if(err){
+				//console.log(err);
+				return cb(err);	
+			}
+			cb();	
+			// // else?? bp
+			// return next();	
+		});	
+
+		}, function(err, result) {
+			if (err) {
+				return callback(err, {success: false});
+			}
+			return callback(null, {success: true});
+		});
+};
+
+
 planService.prototype.add = function(data, callback){
 
 	// if(data.rooms != null){
@@ -18,7 +108,7 @@ planService.prototype.add = function(data, callback){
 	async.waterfall([
 
 	function (cb){
-		planService.availability(data, function(err, result){
+		pService.availability(data, function(err, result){
 			if(err){
 				return cb(err, result);
 			}
@@ -118,92 +208,6 @@ planService.prototype.add = function(data, callback){
 
 };
 
-planService.prototype.availability = function(data, callback){
-
-	var eventTimeStart = Date.parse(data.timeStart).valueOf();
-	var planDateEnd = Date.parse(data.dateEnd).valueOf();
-	var eventDuration  = Date.parse(data.timeEnd).valueOf() - Date.parse(data.timeStart).valueOf();
-	var intervalsIterator = 0;
-
-	async.whilst(function () {
-			return eventTimeStart <= planDateEnd;
-	},
-
-	function (cb) {
-		var eventTimeEnd = eventTimeStart + eventDuration;
-
-		async.waterfall([
-			function(cb){
-				if(data.rooms){
-					eventRepository.checkRoomAvailability(data.rooms[intervalsIterator], eventTimeStart, eventTimeEnd, function(err, result){
-						if(err){
-							return cb(err);
-						}
-						if(result.length){
-							return cb(new Error('date/time conflict with room ' + data.rooms[intervalsIterator]
-								+ '\nstart:' + eventTimeStart + ' \nend:' + eventTimeEnd), result);
-						}
-						cb();
-					});
-				}
-				else{
-					cb();
-				}
-			},
-
-			function(cb){
-				async.forEach(data.devices, function(deviceId, forEachCb) { 
-					eventRepository.checkDeviceAvailability(deviceId, eventTimeStart, eventTimeEnd, function(err, result){
-						if(err){
-							return cb(err);
-						}
-						if(result.length){
-							return cb(new Error('date/time conflict with device ' + deviceId 
-								+ '\nstart:' + data.start + ' \nend:' + data.end), result);
-						}
-						cb();
-					});
-				//cb();
-				}, 
-				function(err, result){
-					if(err){
-						//console.log(err);
-						return cb(err, result);	
-					}
-					// else?? bp
-					return cb();	
-				});
-			}, 
-			function(cb){
-
-				eventTimeStart += Number(data.intervals[intervalsIterator]);
-				eventTimeStart += eventDuration;
-
-				intervalsIterator++;
-
-				if (intervalsIterator >= data.intervals.length)
-				{	
-					intervalsIterator = 0;
-				}
-				cb();
-			}
-		], function(err){
-			if(err){
-				//console.log(err);
-				return cb(err);	
-			}
-			cb();	
-			// // else?? bp
-			// return next();	
-		});	
-
-		}, function(err, result) {
-			if (err) {
-				return callback(err, {success: false});
-			}
-			return callback(null, {success: true});
-		});
-};
 
 planService.prototype.delete = function(planId, callback){
 
@@ -254,7 +258,7 @@ planService.prototype.update = function(planId, data, callback){
 	async.waterfall([
 
 	function (cb){
-		planService.availability(data, function(err, result){
+		pService.availability(data, function(err, result){
 			if(err){
 				return cb(err, result);
 			}
@@ -263,7 +267,7 @@ planService.prototype.update = function(planId, data, callback){
 	},
 
 	function (cb){
-		planService.delete(planId, function(err, result){
+		pService.delete(planId, function(err, result){
 			if(err){
 				return cb(err, result);
 			}
