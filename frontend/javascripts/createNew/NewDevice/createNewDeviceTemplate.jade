@@ -1,32 +1,22 @@
 .products_list(ng-controller='createNewDeviceController')
   .form-group
-    label.col-sm-2(for="device") device: 
+    label.col-sm-2(for="device") title: 
     .col-sm-10
-      input(type='text', class="form-control", id="device", placeholder="Enter device", ng-model='device.title')
+      input(type='text', class="form-control", id="device", placeholder="Enter title", ng-model='device.title')
     .dfbfdbdbdf
-    label.col-sm-2(for="description" class="form-control4") description: 
+    label.col-sm-2(for="events" class="form-control4") events: 
     .col-sm-10
-      input(type='text', class="form-control", id="description", placeholder="Enter description", ng-model='device.description')
+      input(type='text', class="form-control", id="events", placeholder="Enter events", ng-model='device.events')
     
-  //- .type Type: 
-  //- .typelist
-  //-   label.col-sm-2(for="device")  device
-  //-     input(type='radio', ng-model='user.gender', value='device') 
-  //-   label.col-sm-12(for="device") room
-  //-     input(type='radio', ng-model='user.gender', value='room')
-
   br
   .button-div(align='center')
     button(ng-click='reset()') RESET
     button(ng-click='addDevice()') SAVE
-    button(ng-click='toggleViewDevice()') Скрыть/отобразить DevicesList
+    button(ng-click='toggleViewDevice()') hide/display DevicesList
 
-
-  //- .print device.title = {{device.title}}
-  //- .print device.description = {{device.description}}
 
   div(align='center', ng-show='showDevicesList')
-    b Поиск:
+    b Search:
     input(type='text', size='19', border='1', ng-model='search')
 
   table.col-sm-12(border='1', align='center', ng-show='showDevicesList')
@@ -35,33 +25,12 @@
         td(colspan='2', align='center')
           b Oll devices      
       tr
-        td(colspan='2', align='center') Количество device: {{ devices.length }}
+        td(colspan='2', align='center') Quantity device: {{ devices.length }}
       tr
-        th.col-sm-4 device
-        th.col-sm-8 description
+        th.col-sm-4 title
+        th.col-sm-8 events
     tbody
       tr(ng-repeat='device in devices | filter: search')
         td  {{ device.title }} 
         td  {{ device.events }} 
-
-
-  //- div(align='center')
-  //-   button(ng-click='addProduct()') Добавить товар
-  //-   button(ng-click='toggleViewProducts()') Скрыть товары
-
-
-
-
-//- span разделитель==============================
-//- form(role="form")
-//- 	.form-group
-//- 		#newDevice
-//- 			label New Device
-//- 			input(type="newDevice" placeholder="New Device")
-
-//- 		#Description
-//- 			label Description
-//- 			input(type="newDevice" placeholder="Description")
-
-//- 	button#addDevice(type="submit") SaveDevice
 

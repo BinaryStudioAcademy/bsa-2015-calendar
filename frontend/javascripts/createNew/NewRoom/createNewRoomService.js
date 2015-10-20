@@ -6,23 +6,30 @@ createNewRoomService.$inject = ['$resource'];
 
 function createNewRoomService ($resource) {
 
-	function getRooms(callback){
 	var dbrooms = $resource('http://localhost:3080/api/room/', {});
+	var rooms = dbrooms.query();
 
-	dbrooms.query(function(data){
-		console.log(data);
-		callback(data);
-	}, function(error, status){
-			console.log(error, status);
-	});
+	function getRooms(){
+		return rooms;
+	}
+	// function getRooms(callback){
+	// var dbrooms = $resource('http://localhost:3080/api/room/', {});
+	// dbrooms.query(function(data){
+	// 	console.log(data);
+	// 	callback(data);
+	// }, function(error, status){
+	// 		console.log(error, status);
+	// });
+	// }
+
+
+
+	function saveRoom(newroom) {
+		return dbrooms.save(newroom);
 	}
 
-
-
 	return  {
-		getRooms: getRooms
+		getRooms: getRooms,
+		saveRoom: saveRoom
 	};
 }
-
-
-
