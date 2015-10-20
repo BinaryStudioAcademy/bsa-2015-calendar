@@ -6,7 +6,7 @@
           ul.nav.navbar-nav.text-center
             li.active: a(ui-sref='.dayView' ng-click="calendarCtrl.toggleMode()") Day
             li: a(href='#') Week
-            li: a(href='#') Month
+            li: a(ui-sref='.monthView') Month
             li: a(href='#') Year
             li: a(ui-sref='.eventsView' ng-click="calendarCtrl.toggleMode()") Events
       .filters
