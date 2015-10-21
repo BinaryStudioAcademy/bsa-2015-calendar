@@ -5,7 +5,7 @@ var async = require('async');
 
 var planService = function(){};
 
-var pService = new planService;
+var pService = new planService();
 
 planService.prototype.availability = function(data, callback){
 
@@ -29,8 +29,7 @@ planService.prototype.availability = function(data, callback){
 							return cb(err);
 						}
 						if(result.length){
-							return cb(new Error('date/time conflict with room ' + data.rooms[intervalsIterator]
-								+ '\nstart:' + eventTimeStart + ' \nend:' + eventTimeEnd), result);
+							return cb(new Error('date/time conflict with room ' + data.rooms[intervalsIterator] + '\nstart:' + eventTimeStart + ' \nend:' + eventTimeEnd), result);
 						}
 						cb();
 					});
@@ -41,14 +40,13 @@ planService.prototype.availability = function(data, callback){
 			},
 
 			function(cb){
-				async.forEach(data.devices, function(deviceId, forEachCb) { 
+				async.forEach(data.devices, function(deviceId, cb) { 
 					eventRepository.checkDeviceAvailability(deviceId, eventTimeStart, eventTimeEnd, function(err, result){
 						if(err){
 							return cb(err);
 						}
 						if(result.length){
-							return cb(new Error('date/time conflict with device ' + deviceId 
-								+ '\nstart:' + data.start + ' \nend:' + data.end), result);
+							return cb(new Error('date/time conflict with device ' + deviceId + '\nstart:' + data.start + ' \nend:' + data.end), result);
 						}
 						cb();
 					});

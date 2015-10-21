@@ -1,6 +1,5 @@
-var Event = require('../schemas/eventSchema');
 var Plan = require('../schemas/planSchema');
-
+var Event = require('../schemas/eventSchema');
 
 var Repository = function(){
 
