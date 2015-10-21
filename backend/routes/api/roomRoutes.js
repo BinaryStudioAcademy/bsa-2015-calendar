@@ -1,5 +1,7 @@
 var apiResponse = require('express-api-response');
 var roomRepository = require('../../repositories/roomRepository');
+var eventRepository = require('../../repositories/eventRepository');
+var roomService = require('../../services/roomService');
 
 module.exports = function(app) {
 
@@ -46,8 +48,29 @@ module.exports = function(app) {
 	}, apiResponse);
 
 	app.delete('/api/room/:id', function(req, res, next){
-		roomRepository.delete(req.params.id, function(err, data){
+		roomService.delete(req.params.id, function(err, data){
 			res.data = data;
+			res.err = err;
+			next();
+		});
+	}, apiResponse);	
+
+	app.get('/apiold/room/:id/:dateStart/:dateEnd', function(req, res, next){
+		roomService.availability(req.params.id, req.params.dateStart, req.params.dateEnd, function(err, data){
+			res.data = data;
+			res.err = err;
+			next();
+		});
+	}, apiResponse);	
+
+	app.get('/api/room/:id/:dateStart/:dateEnd', function(req, res, next){
+		eventRepository.checkRoomAvailability(req.params.id, req.params.dateStart, req.params.dateEnd, function(err, data){
+			if (data.length){
+				res.data = data;
+			}
+			else {
+				res.data = {success: true};
+			}
 			res.err = err;
 			next();
 		});

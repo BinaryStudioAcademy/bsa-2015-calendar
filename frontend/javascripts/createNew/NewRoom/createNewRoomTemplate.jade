@@ -1,0 +1,35 @@
+.products_list(ng-controller='createNewRoomController')
+  .form-group
+    label.col-sm-2(for="title") title: 
+    .col-sm-10
+      input(type='text', class="form-control", id="title", placeholder="Enter title", ng-model='room.title')
+    .dfbfdbdbdf
+    label.col-sm-2(for="events" class="form-control4") events: 
+    .col-sm-10
+      input(type='text', class="form-control", id="events", placeholder="Enter events", ng-model='room.events')
+
+  br
+  .button-div(align='center')
+    button(ng-click='reset()') RESET
+    button(ng-click='addRoom()') SAVE
+    button(ng-click='toggleViewRoom()') hide/display RoomsList
+
+
+  div(align='center', ng-show='showRoomsList')
+    b Search:
+    input(type='text', size='19', border='1', ng-model='search')
+
+  table.col-sm-12(border='1', align='center', ng-show='showRoomsList')
+    thead
+      tr
+        td(colspan='2', align='center')
+          b Oll rooms      
+      tr
+        td(colspan='2', align='center') Quantity room: {{ rooms.length }}
+      tr
+        th.col-sm-4 title
+        th.col-sm-8 events
+    tbody
+      tr(ng-repeat='room in rooms | filter: search')
+        td  {{ room.title }} 
+        td  {{ room.events }} 

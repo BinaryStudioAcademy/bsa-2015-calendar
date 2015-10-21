@@ -1,5 +1,6 @@
 var apiResponse = require('express-api-response');
 var deviceRepository = require('../../repositories/deviceRepository');
+var deviceService = require('../../services/deviceService');
 
 module.exports = function(app) {
 
@@ -48,11 +49,27 @@ module.exports = function(app) {
 
 
 	app.delete('/api/device/:id', function(req, res, next){
-		deviceRepository.delete(req.params.id, function(err, data){
+		deviceService.delete(req.params.id, function(err, data){
 			res.data = data;
 			res.err = err;
 			next();
 		});
 	}, apiResponse);
+
+	app.get('/apiold/device/:id/:dateStart/:dateEnd', function(req, res, next){
+		deviceService.availability(req.params.id, req.params.dateStart, req.params.dateEnd, function(err, data){
+			res.data = data;
+			res.err = err;
+			next();
+		});
+	}, apiResponse);
+
+	app.get('/api/device/:id/:dateStart/:dateEnd', function(req, res, next){
+		eventRepository.checkRoomAvailability(req.params.id, req.params.dateStart, req.params.dateEnd, function(err, data){
+			res.data = data;
+			res.err = err;
+			next();
+		});
+	}, apiResponse);	
 
 };

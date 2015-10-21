@@ -15,8 +15,8 @@ var eventSchema = new Schema({
     isPrivate : Boolean,
     start: Date, 
     end: Date, 
-    users: [{type: Schema.Types.ObjectId, ref: 'User'}],
     usersFundrasing: [String], //accepter, declined, later, paid
+    users: [{type: Schema.Types.ObjectId, ref: 'User'}],
     room: {type: Schema.Types.ObjectId, ref: 'Room'},
     devices: [{type: Schema.Types.ObjectId, ref: 'Device'}]
 });

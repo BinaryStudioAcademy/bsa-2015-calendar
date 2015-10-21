@@ -1,31 +1,104 @@
 #calendarOneDayView(ng-cloak)
-  .container
-    .col-sm-2.left-sidebar
-      .sidebar-nav
-        .navbar.navbar-default(role="navigation")
-          ul.nav.navbar-nav.text-center
-            li.active: a(ui-sref='.dayView' ng-click="calendarCtrl.toggleMode()") Day
-            li: a(href='#') Week
-            li: a(ui-sref='.monthView') Month
-            li: a(href='#') Year
-            li: a(ui-sref='.eventsView' ng-click="calendarCtrl.toggleMode()") Events
-      .filters
-        h3 Filters
-        ul
-          li
-            input(type="checkbox", id="events")
-            label(for="events") Events
-          li 
-            input(type="checkbox", id="googleEvents")
-            label(for="googleEvents") G Events
-          li 
-            input(type="checkbox", id="roomBooking")
-            label(for="roomBooking") Rooms
-          li 
-            input(type="checkbox", id="deviceBooking")
-            label(for="deviceBooking") Devices
-          li 
-            input(type="checkbox", id="bDays")
-            label(for="bDays") Birthdays
-    .col-sm-10
-      ui-view#calendar-content
+	.container
+		.col-sm-2.col-md-2.left-sidebar
+			.sidebar-nav
+				nav.navbar.navbar-default
+					.navbar-header.visible-xs
+						button.navbar-toggle.collapsed(type="button", data-toggle="collapse", data-target="#navbar")
+							span.sr-only Toggle navigation
+							span.icon-bar
+							span.icon-bar
+							span.icon-bar
+						a.navbar-brand(href="")
+							| Logo
+						ul.nav.pull-left.nav-filters
+							li.dropdown.pull-left
+								a.dropdown-toggle(href="#", data-toggle="dropdown", role="button", aria-expanded="false")
+									| Filters
+									span.caret
+								ul.dropdown-menu(role="menu")
+									li
+										.checkbox
+											label
+												input(type="checkbox")
+												| Events
+									li 
+										.checkbox
+											label
+												input(type="checkbox")
+												| Google Events
+									li 
+										.checkbox
+											label
+												input(type="checkbox")
+												| Rooms
+									li 
+										.checkbox
+											label
+												input(type="checkbox")
+												| Devices
+									li 
+										.checkbox
+											label
+												input(type="checkbox") 
+												| Birthdays
+							li
+								.datepicker(style="position: relative")
+									button.btn.btn-default#header-pickdate
+										{{calendarCtrl.selectedDate | date: 'd EEE yyyy'}}
+									date-picker.nav-datepicker(for="header-pickdate")
+							li
+								.checkbox
+									label
+										input(type="checkbox") 
+										| Show all events	
+					#navbar.navbar-collapse.collapse
+						nav-menu
+						//- ul.nav.navbar-nav
+						//- 	li
+						//- 		a(ui-sref='.dayView' ng-click="calendarCtrl.toggleMode()") Day
+						//- 	li
+						//- 		a(href="#") Week
+						//- 	li
+						//- 		a(href="#") Month
+						//- 	li
+						//- 		a(href="#") Year
+						
+
+			.filters.hidden-xs
+				h3 Filters
+				ul
+					li
+						.checkbox
+							label
+								input(type="checkbox")
+								| Events
+					li 
+						.checkbox
+							label
+								input(type="checkbox")
+								| Google Events
+					li 
+						.checkbox
+							label
+								input(type="checkbox")
+								| Rooms
+					li 
+						.checkbox
+							label
+								input(type="checkbox")
+								| Devices
+					li 
+						.checkbox
+							label
+								input(type="checkbox") 
+								| Birthdays
+			h3 Creates
+			.navbar.navbar-default(role="navigation")
+				ul.nav.navbar-nav.text-center
+					li
+						a(ui-sref=".createNewDevice" ng-click="calendarCtrl.toggleMode()") new Device
+					li
+						a(ui-sref=".createNewRoom" ng-click="calendarCtrl.toggleMode()") new Room
+		.col-sm-10
+			ui-view#calendar-content
