@@ -1,8 +1,8 @@
 div(ng-controller='MonthController')
     div.month-header
-        button.pull-left(ng-click='previous()') Previous
+        img.pull-left.month-toggle(ng-click='previous()', ng-src='../../images/arrow-left.png')
         span.month-header-title {{month.format("MMMM, YYYY")}}
-        button.pull-right(ng-click='next()') Next
+        img.pull-right.month-toggle(ng-click='next()', ng-src='../../images/arrow-right.png')
     div
         table.month-table-grid(width="100%")
             col(width='14.28%')
