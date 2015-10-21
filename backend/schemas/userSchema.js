@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+var Event = require('./eventSchema');
 var passportLocalMongoose = require('passport-local-mongoose');
 
 var userSchema = new Schema({
