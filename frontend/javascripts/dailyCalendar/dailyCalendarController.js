@@ -15,32 +15,7 @@ function DayViewController(DailyCalendarService, $timeout) {
 
 	vm.selectRoom = function(title) {
 		vm.event.room = title;
-
-
-
-	// vm.timeStamps = DailyCalendarService.getTimeStamps();
-	// var todayDate = Date.now();
-	// var date1 = new Date(2015, 9, 9, 8);
-	// var date2 = new Date(2015, 9, 9, 13);
-
-	
-	// vm.selectedDate = todayDate;
-	// vm.eventSelected = false;
-	// vm.event = getEvents(date1, date2);
-	
-	// vm.toggleEventInfo = function() {
-	// 	vm.eventSelected = !vm.eventSelected;
-
-
-
 	};
-
-
-
-
-	
-
-
 
 	vm.toggleModal = function() {
 		vm.modalShown = !vm.modalShown;
@@ -136,7 +111,7 @@ function DayViewController(DailyCalendarService, $timeout) {
 
 	function getRooms() {
 		DailyCalendarService.getAllRooms()
-			.then(
+			.$promise.then(
 				function(response) {
 					console.log('success Total rooms: ', response.length);
 					vm.availableRooms = response;
@@ -171,21 +146,21 @@ function DayViewController(DailyCalendarService, $timeout) {
 					console.log('failure', response);
 				}
 			);
-
-
-
-
-
-	// function getEvents(date1, date2) {
-	// 	return {
-	// 		name: 'Angular Deep Dive',
-	// 		description: 'Nice course about angular directives, casestudies and many practical problems',
-	// 		author: 'Alex C',
-	// 		room: 3,
-	// 		participants: 10,
-	// 		startTime: date1,
-	// 		endTime: date2
-	// 	};
-
 	}
+
+	// function getLatestCurrencyRateByCode(code, callback){
+	// 		var fxRatesResource = $resource(appConfig.apiUrl + 'metadata/fx/:code', {code: code}, null);
+
+	// 		if (currencies[code]){
+	// 			return $q.resolve(currencies[code]);
+	// 		} else {
+
+	// 			return fxRatesResource.get().$promise.then(function(res){
+	// 				currencies[code] = res;
+	// 				return res;
+	// 			}, function(error, status){
+	// 				return $q.reject(error);
+	// 			});	
+	// 		}
+	// 	}
 }
