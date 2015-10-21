@@ -15,8 +15,7 @@ function DayViewController(DailyCalendarService, $timeout) {
 	vm.selectRoom = function(title) {
 		vm.event.room = title;
 	};
-	
-<<<<<<< HEAD
+
 	vm.toggleModal = function() {
 		vm.modalShown = !vm.modalShown;
 		vm.formSuccess = false;
@@ -111,7 +110,7 @@ function DayViewController(DailyCalendarService, $timeout) {
 
 	function getRooms() {
 		DailyCalendarService.getAllRooms()
-			.then(
+			.$promise.then(
 				function(response) {
 					console.log('success Total rooms: ', response.length);
 					vm.availableRooms = response;
@@ -146,7 +145,8 @@ function DayViewController(DailyCalendarService, $timeout) {
 					console.log('failure', response);
 				}
 			);
-=======
+	}
+
 	function getEvents(date1, date2) {
 		return {
 			name: 'Angular Deep Dive',
@@ -157,6 +157,21 @@ function DayViewController(DailyCalendarService, $timeout) {
 			startTime: date1,
 			endTime: date2
 		};
->>>>>>> 4ed5b33cfd7e4cc748b7116a061ed2692b74fdba
 	}
+
+	// function getLatestCurrencyRateByCode(code, callback){
+	// 		var fxRatesResource = $resource(appConfig.apiUrl + 'metadata/fx/:code', {code: code}, null);
+
+	// 		if (currencies[code]){
+	// 			return $q.resolve(currencies[code]);
+	// 		} else {
+
+	// 			return fxRatesResource.get().$promise.then(function(res){
+	// 				currencies[code] = res;
+	// 				return res;
+	// 			}, function(error, status){
+	// 				return $q.reject(error);
+	// 			});	
+	// 		}
+	// 	}
 }
