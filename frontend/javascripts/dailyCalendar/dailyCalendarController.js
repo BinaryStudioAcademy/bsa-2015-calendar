@@ -110,7 +110,7 @@ function DayViewController(DailyCalendarService, $timeout) {
 
 	function getRooms() {
 		DailyCalendarService.getAllRooms()
-			.then(
+			.$promise.then(
 				function(response) {
 					console.log('success Total rooms: ', response.length);
 					vm.availableRooms = response;

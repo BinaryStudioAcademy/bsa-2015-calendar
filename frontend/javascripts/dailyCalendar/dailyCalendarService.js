@@ -41,14 +41,9 @@ function DailyCalendarService($resource, $timeout, $q) {
 		return resEvent.save(event);
 	}
 
-	// function getAllRooms() {
-	// 	var deffered = $q.defer();
-	// 	setTimeout(function () {
-	// 		deffered.resolve(resourceRooms.query());
-	// 	}, 2000);
-
-	// 	return deffered.promise;
-	// }
+	function getAllRooms() {
+		return resourceRooms.query();
+	}
 
 	function getAllDevices() {
 		return resourceDevices.query();
