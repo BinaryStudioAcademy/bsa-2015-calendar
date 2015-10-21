@@ -1,8 +1,8 @@
 div(ng-controller='MonthController')
     div.month-header
-        img.pull-left.month-toggle(ng-click='previous()', ng-src='../../images/arrow-left.png')
+        i.fa.fa-chevron-left.pull-left.fa-3x.month-chevron(ng-click='previous()')
         span.month-header-title {{month.format("MMMM, YYYY")}}
-        img.pull-right.month-toggle(ng-click='next()', ng-src='../../images/arrow-right.png')
+        i.fa.fa-chevron-right.pull-right.fa-3x.month-chevron(ng-click='next()')
     div
         table.month-table-grid(width="100%")
             col(width='14.28%')
@@ -22,6 +22,10 @@ div(ng-controller='MonthController')
                 th.tg-month-yw4l.month-day-header Sat
             tr(ng-repeat='week in weeks')
                 td.tg-month-yw4l.month-day(ng-class="{ 'month-day-today': day.isToday, 'different-month': !day.isCurrentMonth }", ng-repeat='day in week.days') {{day.number}}
-                    div.month-event(ng-repeat='event in day.events | limitTo: (maxDisplayEventsNumber - 1)', ng-click='showEventDetails(event)') {{event.name | limitTo: maxEventNameLength}}
+                    div.month-event(ng-repeat='event in day.events | limitTo: (maxDisplayEventsNumber - 1)',
+                        ng-click='showEventDetails(event)', uib-popover='Strating at {{event.date.format("HH:mm")}}',
+                        popover-trigger='mouseenter', popover-title="{{event.name | limitTo: maxEventNameLength}}") {{event.name | limitTo: maxEventNameLength}}
                     div.month-event(ng-show='day.events.length == maxDisplayEventsNumber') {{day.events[2]}}
-                    a.month-more-events(ng-show='day.events.length > maxDisplayEventsNumber', ng-click='showAllDayEvents(day)') +{{day.events.length - 2}} More
+                    button.btn-link.month-all-events(ng-show='day.events.length > maxDisplayEventsNumber', ng-click='showAllDayEvents(day)',
+                        uib-popover-template='allDayEventsTemplateUrl', popover-trigger='focus', popover-title="Events for {{day.date.format('MMMM Do')}}") Show all&nbsp;
+                        span.badge.month-badge {{day.events.length}}

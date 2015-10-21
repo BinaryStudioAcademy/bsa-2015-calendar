@@ -6,9 +6,11 @@ html(lang="en")
 		link(href="images/favicon.png", rel="icon" type="image/png")
 		link(href="styles/css/libs.css", rel="stylesheet")
 		link(href="styles/css/style.css", rel="stylesheet")
+		link(href='https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css', rel='stylesheet')
 	body
 		block content
 		script(src="javascripts/libs.js")
 		script(src='javascripts/main.js')
+		script(src='//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.14.2.js')
 		script.
 			angular.bootstrap(document, ['calendar-app']);
