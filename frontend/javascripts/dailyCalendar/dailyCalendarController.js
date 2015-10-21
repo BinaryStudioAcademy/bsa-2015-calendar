@@ -6,6 +6,7 @@ DayViewController.$inject = ['DailyCalendarService', '$timeout', '$q'];
 function DayViewController(DailyCalendarService, $timeout) {
 	var vm = this;
 	
+
 	init();
 
 	vm.selectEventType = function(type) {
@@ -14,9 +15,33 @@ function DayViewController(DailyCalendarService, $timeout) {
 
 	vm.selectRoom = function(title) {
 		vm.event.room = title;
-	};
+
+
+
+	// vm.timeStamps = DailyCalendarService.getTimeStamps();
+	// var todayDate = Date.now();
+	// var date1 = new Date(2015, 9, 9, 8);
+	// var date2 = new Date(2015, 9, 9, 13);
+
 	
-<<<<<<< HEAD
+	// vm.selectedDate = todayDate;
+	// vm.eventSelected = false;
+	// vm.event = getEvents(date1, date2);
+	
+	// vm.toggleEventInfo = function() {
+	// 	vm.eventSelected = !vm.eventSelected;
+
+
+
+	};
+
+
+
+
+	
+
+
+
 	vm.toggleModal = function() {
 		vm.modalShown = !vm.modalShown;
 		vm.formSuccess = false;
@@ -146,17 +171,21 @@ function DayViewController(DailyCalendarService, $timeout) {
 					console.log('failure', response);
 				}
 			);
-=======
-	function getEvents(date1, date2) {
-		return {
-			name: 'Angular Deep Dive',
-			description: 'Nice course about angular directives, casestudies and many practical problems',
-			author: 'Alex C',
-			room: 3,
-			participants: 10,
-			startTime: date1,
-			endTime: date2
-		};
->>>>>>> 4ed5b33cfd7e4cc748b7116a061ed2692b74fdba
+
+
+
+
+
+	// function getEvents(date1, date2) {
+	// 	return {
+	// 		name: 'Angular Deep Dive',
+	// 		description: 'Nice course about angular directives, casestudies and many practical problems',
+	// 		author: 'Alex C',
+	// 		room: 3,
+	// 		participants: 10,
+	// 		startTime: date1,
+	// 		endTime: date2
+	// 	};
+
 	}
 }

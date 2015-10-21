@@ -1,0 +1,28 @@
+var app = require('../../app');
+
+app.factory('NavDirectiveService', NavDirectiveService);
+NavDirectiveService.$inject = ['$resource'];
+
+function NavDirectiveService($resource) {
+
+  var days = [	{ name: 'Day',
+								link: '.dayView'}, 
+             	{ name: 'Week',
+								link: '.weekView'}, 
+             	{ name: 'Month',
+								link: '#'},
+							{ name: 'Year',
+								link: '#'}, 
+              { name: 'Events',
+								link: '#'}, 
+            ];
+
+	function getDays(){
+		return days;
+	}
+
+	return {
+		getDays: getDays
+	};
+
+}
