@@ -20,6 +20,7 @@
     "lodash": "~3.10.1"
   },
   "resolutions": {
-    "lodash": "~2.4.1"
+    "lodash": "~2.4.1",
+    "angular": "~1.4.3"
   }
 }

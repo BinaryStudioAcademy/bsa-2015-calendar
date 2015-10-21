@@ -6,6 +6,7 @@ DayViewController.$inject = ['DailyCalendarService', '$timeout', '$q'];
 function DayViewController(DailyCalendarService, $timeout) {
 	var vm = this;
 	
+
 	init();
 
 	vm.selectEventType = function(type) {
@@ -145,18 +146,6 @@ function DayViewController(DailyCalendarService, $timeout) {
 					console.log('failure', response);
 				}
 			);
-	}
-
-	function getEvents(date1, date2) {
-		return {
-			name: 'Angular Deep Dive',
-			description: 'Nice course about angular directives, casestudies and many practical problems',
-			author: 'Alex C',
-			room: 3,
-			participants: 10,
-			startTime: date1,
-			endTime: date2
-		};
 	}
 
 	// function getLatestCurrencyRateByCode(code, callback){
