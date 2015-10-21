@@ -28,7 +28,21 @@ ul
   text-align center
   width auto
 
-.events-block
+.day-event-blocks
   position absolute
-  width 85%
-  float right
+  width 92%
+  padding-left 15%
+  background grey
+  opacity 0.3
+  box-sizing border-box
+  border 1px solid black
+  color white
+  cursor pointer
+  -webkit-transition: box-shadow 0.1s linear;
+  -moz-transition: box-shadow 0.1s linear;
+  -o-transition: box-shadow 0.1s linear;
+  transition: box-shadow 0.1s linear;
+  &:hover
+    box-shadow 0 0 15px black
+#day-events-place
+  overflow hidden

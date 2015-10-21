@@ -50,7 +50,7 @@ Repository.prototype.getByDateEnd = function(date, callback){
 
 Repository.prototype.getByInterval = function(gteDate,lteDate, callback){
 	var model = this.model;
-	var query = model.find( {"dateStart": {"$gte": gteDate, "$lte": lteDate}});
+	var query = model.find( {"start": {"$gte": gteDate, "$lte": lteDate}});
 	query.exec(callback);
 };
 

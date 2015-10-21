@@ -7,7 +7,8 @@ var repositories = {
 	device: require('../repositories/deviceRepository'),
 	room: require('../repositories/roomRepository'),
 	group: require('../repositories/groupRepository'),
-	user: require('../repositories/userRepository')
+	user: require('../repositories/userRepository'),
+	event: require('../repositories/eventRepository')
 };
 
 
@@ -23,4 +24,5 @@ module.exports = function (amount) {
 	generate.call(null, 'room', amount.room);
 	generate.call(null, 'user', amount.user);
 	generate.call(null, 'group', amount.group);
+	generate.call(null, 'event', amount.event);
 };
