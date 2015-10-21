@@ -9,10 +9,4 @@ function PlanRepository() {
 
 PlanRepository.prototype = new Repository();
 
-PlanRepository.prototype.add = function(data, callback){
-	var model = this.model;
-	var newitem = new model(data);
-	newitem.save(callback);
-};
-
 module.exports = new PlanRepository();
