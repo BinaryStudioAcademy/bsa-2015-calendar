@@ -16,6 +16,7 @@ function DayViewController(DailyCalendarService, $timeout) {
 		vm.event.room = title;
 	};
 	
+<<<<<<< HEAD
 	vm.toggleModal = function() {
 		vm.modalShown = !vm.modalShown;
 		vm.formSuccess = false;
@@ -145,5 +146,17 @@ function DayViewController(DailyCalendarService, $timeout) {
 					console.log('failure', response);
 				}
 			);
+=======
+	function getEvents(date1, date2) {
+		return {
+			name: 'Angular Deep Dive',
+			description: 'Nice course about angular directives, casestudies and many practical problems',
+			author: 'Alex C',
+			room: 3,
+			participants: 10,
+			startTime: date1,
+			endTime: date2
+		};
+>>>>>>> 4ed5b33cfd7e4cc748b7116a061ed2692b74fdba
 	}
 }
