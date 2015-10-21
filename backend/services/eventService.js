@@ -4,9 +4,6 @@ var userRepository = require('../repositories/userRepository');
 var roomRepository = require('../repositories/roomRepository');
 var deviceRepository = require('../repositories/deviceRepository');
 var groupRepository = require('../repositories/groupRepository');
-var roomService = require('./roomService');
-var deviceService = require('./deviceService');
-var userService = require('./userService');
 var _ = require('lodash');
 
 var eventService = function(){};
@@ -24,8 +21,7 @@ eventService.prototype.add = function(data, callback){
 						return cb(err);
 					}
 					if(result.length){
-						return cb(new Error('date/time conflict with room ' + data.room 
-							+ '\nstart:' + data.start + ' \nend:' + data.end), result);
+						return cb(new Error('date/time conflict with room ' + data.room + '\nstart:' + data.start + ' \nend:' + data.end), result);
 					}
 					cb();
 				});
@@ -42,8 +38,7 @@ eventService.prototype.add = function(data, callback){
 						return cb(err);
 					}
 					if(result.length){
-						return cb(new Error('date/time conflict with device ' + deviceId 
-							+ '\nstart:' + data.start + ' \nend:' + data.end), result);
+						return cb(new Error('date/time conflict with device ' + deviceId + '\nstart:' + data.start + ' \nend:' + data.end), result);
 					}
 					next();
 				});
@@ -65,11 +60,11 @@ eventService.prototype.add = function(data, callback){
 			});
 		},
 		function(cb){
-			if (event.room != undefined){
+			if (event.room !== undefined){
 				roomRepository.addEvent(event.room, event._id, function(err, data){
 	 				if(err){
 	 					return cb(err, null);
-	 				};
+	 				}
 	 				console.log('added to room');
 	 				cb();
 				});
@@ -85,7 +80,7 @@ eventService.prototype.add = function(data, callback){
 					userRepository.addEvent(userId, event._id, function(err, data){
 	 					if(err){				
 	 						return cb(err, null);
-	 					};
+	 					}
 	 					console.log('added to user');
 					});
 
@@ -103,7 +98,7 @@ eventService.prototype.add = function(data, callback){
 					deviceRepository.addEvent(deviceId, event._id, function(err, data){
 	 					if(err){
 	 						return cb(err, null);
-	 					};
+	 					}
 					});
 					console.log('added to device');
 				});
@@ -141,11 +136,11 @@ eventService.prototype.delete = function(eventId, callback){
 			});
 		},
 		function(cb){
-			if (event.room != undefined){
+			if (event.room !== undefined){
 				roomRepository.removeEvent(event.room, eventId, function(err, data){
 	 				if(err){
 	 					return	cb(err, null);
-	 				};
+	 				}
 	 				console.log('delete from room');
 				});
 	
@@ -161,7 +156,7 @@ eventService.prototype.delete = function(eventId, callback){
 					userRepository.removeEvent(userId, eventId, function(err, data){
 	 					if(err){
 	 						return	cb(err, null);
-	 					};
+	 					}
 	 					console.log('delete from user');
 					});	
 				});
@@ -177,7 +172,7 @@ eventService.prototype.delete = function(eventId, callback){
 					deviceRepository.removeEvent(deviceId, eventId, function(err, data){
 	 					if(err){
 	 						return	cb(err, null);
-	 					};
+	 					}
 	 					console.log('delete from device');
 					});
 				});
@@ -192,7 +187,7 @@ eventService.prototype.delete = function(eventId, callback){
 			groupRepository.removeEvent(eventId, function(err, data){
 				if(err){
 					return	cb(err, null);
-				};
+				}
 				console.log('delete from groups');
 			});
 			cb();
@@ -235,8 +230,7 @@ eventService.prototype.update = function(eventId, newEvent, callback){
 						return cb(err);
 					}
 					if(result.length){
-						return cb(new Error('date/time conflict with room ' + newEvent.room 
-							+ '\nstart:' + newEvent.start + ' \nend:' + newEvent.end), result);
+						return cb(new Error('date/time conflict with room ' + newEvent.room + '\nstart:' + newEvent.start + ' \nend:' + newEvent.end), result);
 					}
 					cb();
 				});
@@ -253,8 +247,7 @@ eventService.prototype.update = function(eventId, newEvent, callback){
 						return cb(err);
 					}
 					if(result.length){
-						return cb(new Error('date/time conflict with device ' + deviceId 
-							+ '\nstart:' + newEvent.start + ' \nend:' + newEvent.end), result);
+						return cb(new Error('date/time conflict with device ' + deviceId + '\nstart:' + newEvent.start + ' \nend:' + newEvent.end), result);
 					}
 					next();
 				});
