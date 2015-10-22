@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var Event = require('./eventSchema');
+var Group = require('./groupSchema');
 var passportLocalMongoose = require('passport-local-mongoose');
 
 var userSchema = new Schema({
@@ -64,7 +65,8 @@ var userSchema = new Schema({
     preModeration: {
         type: 'string'
     },
-    events: [{type: Schema.Types.ObjectId, ref: 'Event'}]
+    events: [{type: Schema.Types.ObjectId, ref: 'Event'}],
+    groups: [{type: Schema.Types.ObjectId, ref: 'Group'}]
 });
 
 userSchema.plugin(passportLocalMongoose);

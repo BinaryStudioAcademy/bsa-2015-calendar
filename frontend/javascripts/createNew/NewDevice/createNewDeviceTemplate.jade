@@ -1,0 +1,36 @@
+.products_list(ng-controller='createNewDeviceController')
+  .form-group
+    label.col-sm-2(for="device") title: 
+    .col-sm-10
+      input(type='text', class="form-control", id="device", placeholder="Enter title", ng-model='device.title')
+    .dfbfdbdbdf
+    label.col-sm-2(for="events" class="form-control4") events: 
+    .col-sm-10
+      input(type='text', class="form-control", id="events", placeholder="Enter events", ng-model='device.events')
+    
+  br
+  .button-div(align='center')
+    button(ng-click='reset()') RESET
+    button(ng-click='addDevice()') SAVE
+    button(ng-click='toggleViewDevice()') hide/display DevicesList
+
+
+  div(align='center', ng-show='showDevicesList')
+    b Search:
+    input(type='text', size='19', border='1', ng-model='search')
+
+  table.col-sm-12(border='1', align='center', ng-show='showDevicesList')
+    thead
+      tr
+        td(colspan='2', align='center')
+          b Oll devices      
+      tr
+        td(colspan='2', align='center') Quantity device: {{ devices.length }}
+      tr
+        th.col-sm-4 title
+        th.col-sm-8 events
+    tbody
+      tr(ng-repeat='device in devices | filter: search')
+        td  {{ device.title }} 
+        td  {{ device.events }} 
+

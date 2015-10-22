@@ -1,4 +1,5 @@
 #calendarOneDayView(ng-cloak)
+
 	.container
 		.col-sm-2.col-md-2.left-sidebar
 			.sidebar-nav
@@ -53,15 +54,16 @@
 										input(type="checkbox") 
 										| Show all events	
 					#navbar.navbar-collapse.collapse
-						ul.nav.navbar-nav
-							li
-								a(ui-sref='.dayView' ng-click="calendarCtrl.toggleMode()") Day
-							li
-								a(href="#") Week
-							li
-								a(href="#") Month
-							li
-								a(href="#") Year
+						nav-menu
+						//- ul.nav.navbar-nav
+						//- 	li
+						//- 		a(ui-sref='.dayView' ng-click="calendarCtrl.toggleMode()") Day
+						//- 	li
+						//- 		a(href="#") Week
+						//- 	li
+						//- 		a(href="#") Month
+						//- 	li
+						//- 		a(href="#") Year
 						
 
 			.filters.hidden-xs
@@ -92,5 +94,12 @@
 							label
 								input(type="checkbox") 
 								| Birthdays
+			h3 Creates
+			.navbar.navbar-default(role="navigation")
+				ul.nav.navbar-nav.text-center
+					li
+						a(ui-sref=".createNewDevice" ng-click="calendarCtrl.toggleMode()") new Device
+					li
+						a(ui-sref=".createNewRoom" ng-click="calendarCtrl.toggleMode()") new Room
 		.col-sm-10
 			ui-view#calendar-content

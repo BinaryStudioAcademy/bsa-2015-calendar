@@ -1,13 +1,11 @@
-var Event = require('../schemas/eventSchema');
 var Plan = require('../schemas/planSchema');
-
+var Event = require('../schemas/eventSchema');
 
 var Repository = function(){
 
 };
 
-Repository.prototype.add = function(data, callback){
-	console.log('repository', data);
+Repository.prototype.add = function(data, callback){	
 	var model = this.model;
 	var newitem = new model(data);
 	newitem.save(callback);
@@ -33,24 +31,6 @@ Repository.prototype.getAll = function(callback){
 Repository.prototype.getById = function(id, callback){
 	var model = this.model;
 	var query = model.findOne({_id:id});
-	query.exec(callback);
-};
-
-Repository.prototype.getByDateStart = function(date, callback){
-	var model = this.model;
-	var query = model.findOne({dateStart:date});
-	query.exec(callback);
-};
-
-Repository.prototype.getByDateEnd = function(date, callback){
-	var model = this.model;
-	var query = model.findOne({dateEnd:date});
-	query.exec(callback);
-};
-
-Repository.prototype.getByInterval = function(gteDate,lteDate, callback){
-	var model = this.model;
-	var query = model.find( {"dateStart": {"$gte": gteDate, "$lte": lteDate}});
 	query.exec(callback);
 };
 

@@ -6,6 +6,7 @@ DayViewController.$inject = ['DailyCalendarService', '$timeout', '$q'];
 function DayViewController(DailyCalendarService, $timeout) {
 	var vm = this;
 	
+
 	init();
 
 	vm.selectEventType = function(type) {
@@ -15,7 +16,7 @@ function DayViewController(DailyCalendarService, $timeout) {
 	vm.selectRoom = function(title) {
 		vm.event.room = title;
 	};
-	
+
 	vm.toggleModal = function() {
 		vm.modalShown = !vm.modalShown;
 		vm.formSuccess = false;
@@ -146,4 +147,20 @@ function DayViewController(DailyCalendarService, $timeout) {
 				}
 			);
 	}
+
+	// function getLatestCurrencyRateByCode(code, callback){
+	// 		var fxRatesResource = $resource(appConfig.apiUrl + 'metadata/fx/:code', {code: code}, null);
+
+	// 		if (currencies[code]){
+	// 			return $q.resolve(currencies[code]);
+	// 		} else {
+
+	// 			return fxRatesResource.get().$promise.then(function(res){
+	// 				currencies[code] = res;
+	// 				return res;
+	// 			}, function(error, status){
+	// 				return $q.reject(error);
+	// 			});	
+	// 		}
+	// 	}
 }

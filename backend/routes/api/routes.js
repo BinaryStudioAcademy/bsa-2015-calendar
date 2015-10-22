@@ -16,6 +16,6 @@ module.exports = function(app) {
 		deviceRoutes: deviceRoutes(app),
 		groupRoutes: groupRoutes(app),
 		planRoutes: planRoutes(app),
-		userRoutes: userRoutes(app),
+		userRoutes: userRoutes(app)
 	};
 };
