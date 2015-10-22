@@ -9,6 +9,19 @@ function createNewDeviceService ($resource) {
 	var dbdevices = $resource('http://localhost:3080/api/device/', {});
 	var devices = dbdevices.query();
 	
+
+
+	function update(device){
+		var dbdeviceById = $resource('http://localhost:3080/api/device/:id', {id: device._id}, {'update': { method:'PUT' }});
+		var one_device = dbdeviceById.update(device)
+	}
+
+
+
+
+
+
+
 	function getDevices(){
 		return devices;
 	}
@@ -32,6 +45,10 @@ function createNewDeviceService ($resource) {
 
 	return  {
 		getDevices: getDevices,
-		saveDevice: saveDevice
+		saveDevice: saveDevice,
+		update: update
 	};
 }
+
+
+

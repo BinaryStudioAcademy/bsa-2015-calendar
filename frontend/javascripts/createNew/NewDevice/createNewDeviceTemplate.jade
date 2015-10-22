@@ -1,4 +1,5 @@
 .products_list(ng-controller='createNewDeviceController')
+  .headed_products_list Создание нового девайса
   .form-group
     label.col-sm-2(for="device") title: 
     .col-sm-10
@@ -22,15 +23,24 @@
   table.col-sm-12(border='1', align='center', ng-show='showDevicesList')
     thead
       tr
-        td(colspan='2', align='center')
+        td(colspan='4', align='center')
           b Oll devices      
       tr
-        td(colspan='2', align='center') Quantity device: {{ devices.length }}
+        td(colspan='4', align='center') Quantity device: {{ devices.length }}
       tr
-        th.col-sm-4 title
-        th.col-sm-8 events
+        th.col-sm-3 title
+        th.col-sm-6 events
+        th.col-sm-1 id
+        th.col-sm-2 change
     tbody
       tr(ng-repeat='device in devices | filter: search')
         td  {{ device.title }} 
-        td  {{ device.events }} 
+        td  {{ device.events }}
+        td  {{ device._id }}
+        td       
+          a(ng-click="cndCtrl.edit(device)") click to change
+ 
+
+        //- td(align='center')
+        //-   a(ui-sref=".deviceId" ng-click="calendarCtrl.toggleMode()") изменить
 

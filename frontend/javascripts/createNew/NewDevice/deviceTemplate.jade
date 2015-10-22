@@ -1,0 +1,34 @@
+.deviceId(ng-controller='createNewDeviceController')
+  .headed_deviceId Изменение девайса
+  .form-group
+    label.col-sm-2(for="device") title: 
+    .col-sm-10
+      input(type='text', class="form-control", id="device", placeholder='{{device.title}}', ng-model='device.title')
+    .dfbfdbdbdf
+    label.col-sm-2(for="events" class="form-control4") events: 
+    .col-sm-10
+      input(type='text', class="form-control", id="events", placeholder="{{device.events}}", ng-model='device.events')
+    
+  br
+  .button-div(align='center')
+    button(ng-click='deleteDeviceId()') DELETE
+    button(ng-click='changeDeviceId()') SAVE CHANGE
+
+
+
+  table.col-sm-12(border='1', align='center')
+    thead
+      tr
+        td(colspan='2', align='center')
+          b Oll devices      
+      tr
+        th.col-sm-3 title
+        th.col-sm-7 events
+    tbody
+      tr
+        td  {{ device.title }} 
+        td  {{ device.events }} + {{ device._id }}
+ 
+
+
+ //- 5620ddbf16ed12386b2d75bf

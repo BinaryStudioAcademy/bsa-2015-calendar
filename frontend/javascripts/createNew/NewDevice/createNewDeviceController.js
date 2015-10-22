@@ -6,12 +6,45 @@ createNewDeviceController.$inject = ['$scope', 'createNewDeviceService'];
 
 function createNewDeviceController($scope, createNewDeviceService){
 
-  $scope.showDevicesList = true;
 
+  $scope.showDevicesList = true;
   $scope.devices = createNewDeviceService.getDevices();
   // createNewDeviceService.getDevices(function(data){
   //   $scope.devices = data;
   // });
+
+
+
+// для получения по Id
+//   $scope.devicesId = createNewDeviceService.dbdeviceById();
+//   console.log(devicesId);
+
+  $scope.edit = function (device){
+    createNewDeviceService.update(device);
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   $scope.addDevice = function (){
@@ -42,6 +75,27 @@ function createNewDeviceController($scope, createNewDeviceService){
   $scope.toggleViewDevice = function(){
       $scope.showDevicesList = !$scope.showDevicesList;
   };
+
+
+
+
+
+
+
+  $scope.changeDeviceId = function (){
+    return true;
+  };
+  $scope.deleteDeviceId = function (){
+    return true;
+  };
+
+
+
 }
 
 
+// app.directive("demoId", function(){
+//     return function(scope, element, attrs){
+//             scope.id = attrs.demoId;
+//     }
+// })
