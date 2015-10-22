@@ -6,49 +6,26 @@ createNewDeviceController.$inject = ['$scope', 'createNewDeviceService'];
 
 function createNewDeviceController($scope, createNewDeviceService){
 
+  var vm = this;
 
-  $scope.showDevicesList = true;
-  $scope.devices = createNewDeviceService.getDevices();
+  vm.showDevicesList = true;
+  vm.devices = createNewDeviceService.getDevices();
   // createNewDeviceService.getDevices(function(data){
-  //   $scope.devices = data;
+  //   vm.devices = data;
   // });
 
 
 
 // для получения по Id
-//   $scope.devicesId = createNewDeviceService.dbdeviceById();
+//   vm.devicesId = createNewDeviceService.dbdeviceById();
 //   console.log(devicesId);
 
-  $scope.edit = function (device){
-    createNewDeviceService.update(device);
-  }
+  vm.updateDevice = function(device){
+    createNewDeviceService.updateDevice(device);
+  };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  $scope.addDevice = function (){
-      var newdevice = {title: $scope.device.title, events: $scope.device.events};
+  vm.addDevice = function(){
+      var newdevice = {title: vm.device.title, events: vm.device.events};
       console.log(newdevice); 
       createNewDeviceService.saveDevice(newdevice)
         .$promise.then(
@@ -60,20 +37,20 @@ function createNewDeviceController($scope, createNewDeviceService){
           } 
       );
 
-      $scope.devices.push(newdevice);
-      $scope.device.title = '';
-      $scope.device.events = '';
+      vm.devices.push(newdevice);
+      vm.device.title = '';
+      vm.device.events = '';
   };
-  $scope.reset = function (){
-      $scope.device.title = '';
-      $scope.device.events = '';
+  vm.reset = function (){
+      vm.device.title = '';
+      vm.device.events = '';
   };
-  // $scope.removeProduct = function (index){
-  //     $scope.products.splice(index,1);
+  // vm.removeProduct = function (index){
+  //     vm.products.splice(index,1);
   // };
 
-  $scope.toggleViewDevice = function(){
-      $scope.showDevicesList = !$scope.showDevicesList;
+  vm.toggleViewDevice = function(){
+      vm.showDevicesList = !vm.showDevicesList;
   };
 
 
@@ -82,10 +59,10 @@ function createNewDeviceController($scope, createNewDeviceService){
 
 
 
-  $scope.changeDeviceId = function (){
+  vm.changeDeviceId = function (){
     return true;
   };
-  $scope.deleteDeviceId = function (){
+  vm.deleteDeviceId = function (){
     return true;
   };
 

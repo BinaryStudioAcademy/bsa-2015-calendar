@@ -3,24 +3,24 @@
   .form-group
     label.col-sm-2(for="device") title: 
     .col-sm-10
-      input(type='text', class="form-control", id="device", placeholder="Enter title", ng-model='device.title')
+      input(type='text', class="form-control", id="device", placeholder="Enter title", ng-model='cndCtrl.device.title')
     .dfbfdbdbdf
     label.col-sm-2(for="events" class="form-control4") events: 
     .col-sm-10
-      input(type='text', class="form-control", id="events", placeholder="Enter events", ng-model='device.events')
+      input(type='text', class="form-control", id="events", placeholder="Enter events", ng-model='cndCtrl.device.events')
     
   br
   .button-div(align='center')
-    button(ng-click='reset()') RESET
-    button(ng-click='addDevice()') SAVE
-    button(ng-click='toggleViewDevice()') hide/display DevicesList
+    button(ng-click='cndCtrl.reset()') RESET
+    button(ng-click='cndCtrl.addDevice()') SAVE
+    button(ng-click='cndCtrl.toggleViewDevice()') hide/display DevicesList
 
 
-  div(align='center', ng-show='showDevicesList')
+  div(align='center', ng-show='cndCtrl.showDevicesList')
     b Search:
-    input(type='text', size='19', border='1', ng-model='search')
+    input(type='text', size='19', border='1', ng-model='cndCtrl.search')
 
-  table.col-sm-12(border='1', align='center', ng-show='showDevicesList')
+  table.col-sm-12(border='1', align='center', ng-show='cndCtrl.showDevicesList')
     thead
       tr
         td(colspan='4', align='center')
@@ -33,12 +33,13 @@
         th.col-sm-1 id
         th.col-sm-2 change
     tbody
-      tr(ng-repeat='device in devices | filter: search')
-        td  {{ device.title }} 
+      tr(ng-repeat='device in cndCtrl.devices | filter: cndCtrl.search')
+        td  
+          input(ng-model='device.title')
         td  {{ device.events }}
         td  {{ device._id }}
         td       
-          a(ng-click="cndCtrl.edit(device)") click to change
+          a(ng-click='cndCtrl.updateDevice(device)') click to change
  
 
         //- td(align='center')
