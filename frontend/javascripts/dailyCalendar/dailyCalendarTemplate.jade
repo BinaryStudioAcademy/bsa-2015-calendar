@@ -10,15 +10,15 @@
         .row.text-center
             ul.list-inline.datepicker-section
                 li
-                    a(href='#')#dayPrev
+                    a(href='' ng-click="dvCtrl.showDay(-1)")#dayPrev
                         i.glyphicon.glyphicon-chevron-left.bigger-icon
                 li
                     #datepicker(style="position: relative")
                         button.btn.btn-default#pickDate
-                            {{dvCtrl.selectedDate | date: 'd EEE yyyy'}}
+                            | {{dvCtrl.selectedDate | date: 'd MMM yyyy'}}
                         date-picker.sidebar-datepicker(for="pickDate")
                 li
-                    a(href='#')#dayNext
+                    a(href='' ng-click="dvCtrl.showDay(1)")#dayNext
                         i.glyphicon.glyphicon-chevron-right.bigger-icon
         #showAllEvents.text-center
             .checkbox

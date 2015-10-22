@@ -22,6 +22,19 @@ function DayViewController(DailyCalendarService, $timeout) {
 		vm.formSuccess = false;
 	};
 
+	vm.showDay = function(step) {
+		var date = new Date(vm.selectedDate);
+
+		date.setDate(
+			step === 1 ?
+				date.getDate() + 1
+					:
+				date.getDate() - 1
+		);
+
+		vm.selectedDate = date;
+	};
+
 	// vm.toggleEventInfo = function() {
 	// 	vm.eventSelected = !vm.eventSelected;
 	// };
