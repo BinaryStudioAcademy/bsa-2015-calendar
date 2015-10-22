@@ -4,6 +4,26 @@ app.factory('calendarService', calendarService);
 
 function calendarService($http) {
 
+    var redDays = [{day:1, month:1}, {day:7, month:1}, {day:8, month:3}, {day:1, month:5}, {day:9, month:5}, {day:28, month:6}, {day:24, month:8}, {day:14, month:10}];
+
+    function setRedDay(date) {
+        //convert date
+        redDays.push(date);
+    }
+
+    function deleteRedDay(date) {
+        //convert date
+        var day;
+        var month;
+        for (var i=0; i<redDays.length; i++) {
+            if (redDays[i].day == day && redDays[i].month == month) {
+                redDays.splice(i,1);
+                break;
+            }
+        }
+    }
+
+
     function getYearObj(year) {
         var yearObj = {};
         yearObj.year = year;
@@ -35,9 +55,14 @@ function calendarService($http) {
                 monthArr.push(dayObj);
                 dateMonth.setDate(dateMonth.getDate() + 1); //Day date increment
                 dayObj = {}; //clear day object
-            }
-            monthsYear.push(monthArr);     
+            } 
+        monthsYear.push(monthArr);    
         }
+        //add holidays
+        for (var y=0; y<redDays.length; y++) {
+            monthsYear[redDays[y].month-1][redDays[y].day-1].dayOff = true;
+        }
+
         yearObj.months = monthsYear; 
         return yearObj;  
     }
@@ -89,3 +114,4 @@ function calendarService($http) {
         getYearObj: getYearObj,
         getEventsObj: getEventsObj
     };
+}

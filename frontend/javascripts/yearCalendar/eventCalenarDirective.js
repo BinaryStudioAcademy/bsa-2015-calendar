@@ -6,9 +6,28 @@ function eventCalendarDirective($compile, $templateCache) {
     return {
         restrict: 'A',
         link: function ($scope, element, attr) {
-            
-            $scope.$watch('YCtrl.events', function(value) {
-                var eventObj = value;
+            var watched = 'YCtrl.events["' + attr.id +'"]';
+            //console.log(watched);
+            $scope.$watch(watched, function(eventObj) {
+                if (eventObj.length > 0) {
+                    element.addClass('event');
+                    var tmpl = '<ul>';
+                    for (var i=0; i<eventObj.length; i++) {
+                        tmpl += '<li>'+eventObj[i].title + '</li>';
+                    }
+                    tmpl +='</ul>';
+                    $templateCache.put(attr.id+'.html', tmpl);
+
+                    //add popover
+                    element.attr('popover-template', '"'+attr.id+'.html"');
+                    element.attr('popover-title', "Events");
+                    element.attr('popover-append-to-body', "true");
+                    element.attr('trigger', 'click');
+
+                    $compile(element)($scope);
+                }
+
+                /*var eventObj = value;
                 for (var day in eventObj) {
                     if (eventObj[day].length > 0) {
                         var dayCell = angular.element(document.getElementById(day));
@@ -32,6 +51,7 @@ function eventCalendarDirective($compile, $templateCache) {
 
                     }
                 }
+                */
             }, true);
             
         }

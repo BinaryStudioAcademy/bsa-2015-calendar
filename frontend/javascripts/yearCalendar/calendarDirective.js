@@ -29,8 +29,11 @@ function calendarDirective($compile) {
                 var monthLenght = monthArr.length;
                 for (var y=0; y < monthLenght; y++) { //add day to table with day off checking
                     var dayId = monthArr[y].dayDate+'_'+(+attr.monthNum +1)+'_'+calendarObj.year; //id as DD-MM-YYYY, but without leading 0
-                    var dayCell = angular.element('<td id='+ dayId +'></td>');
+                    var dayCell = angular.element('<td></td>');
                     dayCell.html(monthArr[y].dayDate);
+                    dayCell.attr('id', dayId);
+                    dayCell.attr('event-calendar-directive', 'dayId');
+                    //$compile(dayCell)($scope);
 
                     //add class for day off
                     if (monthArr[y].dayOff) { 
@@ -79,6 +82,7 @@ function calendarDirective($compile) {
                        break; 
                 }
                 //insert element in directive container
+
                 element.empty();
                 element.append(tableMonth);
             }, true);
