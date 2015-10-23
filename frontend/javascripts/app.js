@@ -54,11 +54,6 @@ var app = angular.module('calendar-app', ['ui.router', 'ngResource', 'ui.bootstr
                     controller: 'createNewDeviceController',
                     controllerAs: 'cndCtrl',
                 })      
-                // .state('calendar.deviceId', {
-                //     url: '/deviceId',
-                //     templateUrl: './templates/createNew/NewDevice/deviceTemplate.html',
-                //     controller: 'cndCtrl'
-                // })
                 .state('calendar.createNewRoom', {
                     url: '/createNewRoom',
                     templateUrl: './templates/createNew/NewRoom/createNewRoomTemplate.html',
@@ -68,18 +63,6 @@ var app = angular.module('calendar-app', ['ui.router', 'ngResource', 'ui.bootstr
 
         }
     ]);
-
-
-			// .state('calendar.dayView', {
-			// 	url: '/dayView',
-			// 	templateUrl: './templates/dailyCalendar/dailyCalendarTemplate.html',
-			// 	controller: 'DayViewController',
-			// 	controllerAs: 'dvCtrl',
-			// })
-
-
-
-
 
 
 app.run(['$rootScope', '$state', function($rootScope, $state) {

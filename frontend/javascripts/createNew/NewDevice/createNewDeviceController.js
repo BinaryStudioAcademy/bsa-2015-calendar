@@ -1,27 +1,24 @@
 var app = require('../../app');
 
-
 app.controller('createNewDeviceController', createNewDeviceController);
 createNewDeviceController.$inject = ['$scope', 'createNewDeviceService'];
 
 function createNewDeviceController($scope, createNewDeviceService){
-
   var vm = this;
-
-  vm.showDevicesList = true;
+  vm.showDevicesList = false;
   vm.devices = createNewDeviceService.getDevices();
+  // alternativa str 9
   // createNewDeviceService.getDevices(function(data){
   //   vm.devices = data;
   // });
 
+  vm.toggleViewDevice = function(){
+      vm.showDevicesList = !vm.showDevicesList;
+  };
 
-
-// для получения по Id
-//   vm.devicesId = createNewDeviceService.dbdeviceById();
-//   console.log(devicesId);
-
-  vm.updateDevice = function(device){
-    createNewDeviceService.updateDevice(device);
+  vm.reset = function (){
+      vm.device.title = '';
+      vm.device.events = '';
   };
 
   vm.addDevice = function(){
@@ -30,49 +27,32 @@ function createNewDeviceController($scope, createNewDeviceService){
       createNewDeviceService.saveDevice(newdevice)
         .$promise.then(
           function(response) {
-            console.log('success', response);
+            console.log('success function addDevice', response);
           },
           function(response) {
-            console.log('failure', response);
+            console.log('failure function addDevice', response);
           } 
-      );
-
+        );
       vm.devices.push(newdevice);
       vm.device.title = '';
-      vm.device.events = '';
-  };
-  vm.reset = function (){
-      vm.device.title = '';
-      vm.device.events = '';
-  };
-  // vm.removeProduct = function (index){
-  //     vm.products.splice(index,1);
-  // };
-
-  vm.toggleViewDevice = function(){
-      vm.showDevicesList = !vm.showDevicesList;
+      // vm.device.events = '';
   };
 
-
-
-
-
-
-
-  vm.changeDeviceId = function (){
-    return true;
-  };
-  vm.deleteDeviceId = function (){
-    return true;
+  vm.updateDevice = function(device){
+    console.log(device); 
+    createNewDeviceService.updateDevice(device);
   };
 
-
-
+  vm.deleteDevice = function(device, $index){
+    createNewDeviceService.deleteDevice(device)
+      .$promise.then(
+        function(response) {
+          console.log('success function deleteDevice', response);
+          vm.devices.splice($index, 1);
+        },
+        function(response) {
+          console.log('failure function deleteDevice', response);
+        } 
+      );
+  };
 }
-
-
-// app.directive("demoId", function(){
-//     return function(scope, element, attrs){
-//             scope.id = attrs.demoId;
-//     }
-// })

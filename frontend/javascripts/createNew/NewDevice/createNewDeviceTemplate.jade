@@ -1,5 +1,8 @@
-.products_list(ng-controller='createNewDeviceController')
-  .headed_products_list Создание нового девайса
+.device_list(ng-controller='createNewDeviceController')
+
+  .headed_device_list
+    h1(align='center') Creating a new Device
+
   .form-group
     label.col-sm-2(for="device") title: 
     .col-sm-10
@@ -7,41 +10,35 @@
     .dfbfdbdbdf
     label.col-sm-2(for="events" class="form-control4") events: 
     .col-sm-10
-      input(type='text', class="form-control", id="events", placeholder="Enter events", ng-model='cndCtrl.device.events')
-    
+      input(type='text', class="form-control", id="events", disabled, placeholder="Enter events", ng-model='cndCtrl.device.events')  
   br
-  .button-div(align='center')
+
+  .button-div1(align='center')
     button(ng-click='cndCtrl.reset()') RESET
     button(ng-click='cndCtrl.addDevice()') SAVE
+  .button-div2
+    h3 Quantity device: {{ cndCtrl.devices.length }}
     button(ng-click='cndCtrl.toggleViewDevice()') hide/display DevicesList
 
-
   div(align='center', ng-show='cndCtrl.showDevicesList')
-    b Search:
+    b Search device:
     input(type='text', size='19', border='1', ng-model='cndCtrl.search')
 
-  table.col-sm-12(border='1', align='center', ng-show='cndCtrl.showDevicesList')
+  table.col-sm-12.table-responsive.table-hover(border='1', ng-show='cndCtrl.showDevicesList')
     thead
       tr
-        td(colspan='4', align='center')
-          b Oll devices      
-      tr
-        td(colspan='4', align='center') Quantity device: {{ devices.length }}
-      tr
-        th.col-sm-3 title
+        th.col-sm-4 device title
         th.col-sm-6 events
-        th.col-sm-1 id
-        th.col-sm-2 change
+        th.col-sm-1 change
+        th.col-sm-1 delete
     tbody
       tr(ng-repeat='device in cndCtrl.devices | filter: cndCtrl.search')
-        td  
-          input(ng-model='device.title')
+        td
+          input#inputDeviceTitle(class="form-control", ng-model='device.title')
         td  {{ device.events }}
-        td  {{ device._id }}
-        td       
-          a(ng-click='cndCtrl.updateDevice(device)') click to change
- 
-
-        //- td(align='center')
-        //-   a(ui-sref=".deviceId" ng-click="calendarCtrl.toggleMode()") изменить
-
+        td(align='center')   
+          button(class="btn btn-primary" class="btn btn-primary btn-xs" ng-click='cndCtrl.updateDevice(device)') save            
+          //- a(ng-click='cndCtrl.updateDevice(device)') save
+        td(align='center')  
+          button(class="btn btn-warning" class="btn btn-primary btn-xs" ng-click='cndCtrl.deleteDevice(device, $index)') delete
+          //- a(ng-click='cndCtrl.deleteDevice(device, $index)') delete 
