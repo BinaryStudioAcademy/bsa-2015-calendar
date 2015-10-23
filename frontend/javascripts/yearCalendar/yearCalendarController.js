@@ -19,8 +19,6 @@ function yearCalendarController(calendarService) {
             vm.currentYear--;
             vm.calendar = calendarService.getYearObj(vm.currentYear);
             vm.events = calendarService.getEventsObj(vm.currentYear);
-            //vm.slides.pop();
-            //vm.slides.unshift(vm.currentYear-1);
         }
     };
 
@@ -28,10 +26,6 @@ function yearCalendarController(calendarService) {
         vm.currentYear++;
         vm.calendar = calendarService.getYearObj(vm.currentYear);
         vm.events = calendarService.getEventsObj(vm.currentYear);
-        //vm.slides.shift();
-        //vm.slides.push(vm.currentYear+1);
     };
-
-    //vm.slides = [vm.currentYear-1, vm.currentYear, vm.currentYear+1];
 
 }
