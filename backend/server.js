@@ -40,16 +40,8 @@ var routes = require('./routes/api/routes')(app);
 http.globalAgent.maxSockets = Infinity;
 
 var server = app.listen(3080);
-var io = socketio.listen(server);
 
-io.on('connection', function(socket){
-	console.log('client connected');
-	socket.on('disconnect', function(){
-		console.log('client disconnected');
-	});
-
-});
-
+var socketio = require('./notifications/notifications')(server);
 
 
 console.log('server start on port 3080');
