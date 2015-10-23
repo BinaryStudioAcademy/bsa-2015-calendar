@@ -8,6 +8,7 @@ var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+var socketio = require('socket.io');
 
 app.use(cookieParser());
 app.use(bodyParser());
@@ -39,6 +40,18 @@ var routes = require('./routes/api/routes')(app);
 http.globalAgent.maxSockets = Infinity;
 
 var server = app.listen(3080);
+var io = socketio.listen(server);
+
+io.on('connection', function(socket){
+	console.log('client connected');
+	socket.on('disconnect', function(){
+		console.log('client disconnected');
+	});
+
+});
+
+
+
 console.log('server start on port 3080');
 
 module.exports = app;
