@@ -42,7 +42,7 @@
             #eventParticipants
                 strong Participants: 
                 span.badge {{dvCtrl.event.participants}}
-    modal(title='New event', visible='dvCtrl.modalShown')
+    modal(visible='dvCtrl.modalShown', events='dvCtrl.allEvents')
 
 
 
