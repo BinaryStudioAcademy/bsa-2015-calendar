@@ -9,4 +9,16 @@ function UserRepository() {
 
 UserRepository.prototype = new Repository();
 
+UserRepository.prototype.removeEvent = function(userId, eventId, callback) {
+	var model = this.model;
+	var query = model.findByIdAndUpdate({_id:userId}, { $pull: { events:  eventId } } );
+	query.exec(callback);
+};
+
+UserRepository.prototype.addEvent = function(userId, eventId, callback) {
+	var model = this.model;
+	var query = model.findByIdAndUpdate({_id:userId}, { $push: { events:  eventId } } );
+	query.exec(callback);
+};
+
 module.exports = new UserRepository();

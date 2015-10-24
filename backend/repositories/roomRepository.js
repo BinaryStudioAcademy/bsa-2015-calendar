@@ -9,4 +9,16 @@ function RoomRepository() {
 
 RoomRepository.prototype = new Repository();
 
+RoomRepository.prototype.addEvent = function(roomId, eventId, callback) {
+	var model = this.model;
+	var query = model.findByIdAndUpdate({_id:roomId}, { $push: { events:  eventId } } );
+	query.exec(callback);
+};
+
+RoomRepository.prototype.removeEvent = function(roomId, eventId, callback) {
+	var model = this.model;
+	var query = model.findByIdAndUpdate({_id:roomId}, { $pull: { events:  eventId } } );
+	query.exec(callback);
+};
+
 module.exports = new RoomRepository();

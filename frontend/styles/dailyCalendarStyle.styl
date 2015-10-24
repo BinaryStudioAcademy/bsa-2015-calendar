@@ -1,29 +1,71 @@
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak
-  display none !important
+    display none !important
 
 .right-sidebar
-  padding 0
+    padding 0
 
 ul
-  list-style-type none
-  padding 0
+    list-style-type none
+    padding 0
 
 .bigger-icon 
-  font-size 20px
+    font-size 1em
+    color black
+
+.right-sidebar > .row > ul > li > a:hover
+    color #FFD604
 
 .eventInfo 
-  padding 10px
+    padding 10px
 
 #eventName, #eventDescription,#eventAuthor, #eventRoom, #eventParticipants 
-  margin 5px 0
-
-.table 
-  table-layout fixed
-  word-wrap break-word
+    margin 5px 0
 
 .hourCell 
-  width 15%
+    width 15%
 
 .eventCell 
-  text-align center
-  width auto
+    text-align center
+    width 85%
+
+.table-responsive
+    height 450px
+    overflow-x auto
+    overflow-y scroll
+    -webkit-overflow-scrolling touch
+    -ms-overflow-style -ms-autohiding-scrollbar
+    border: 1px solid #ddd;
+    border-right 0
+
+.table-responsive > #calendar > tbody > tr:last-child > th,
+.table-responsive > #calendar > tfoot > tr:last-child > th,
+.table-responsive > #calendar > tbody > tr:last-child > td,
+.table-responsive > #calendar > tfoot > tr:last-child > td
+    border-bottom: 0;
+
+
+.input-group
+    margin-bottom 5px
+
+.main-content
+    padding 0
+
+#navbar > ul > li > a:hover,
+.datepicker-section > li > a#dayPrev:hover,
+.datepicker-section > li > a#dayPrev:hover
+    color #FFD604
+
+.datepicker-section
+    box-sizing border-box
+    padding 5px
+
+#datepicker> button:hover
+    background #FFD604
+    color white
+
+#datepicker > button:focus
+    background #DEB900
+    color white
+
+.save-area
+    text-align center

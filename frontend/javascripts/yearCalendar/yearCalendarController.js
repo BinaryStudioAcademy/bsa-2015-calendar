@@ -12,7 +12,7 @@ function yearCalendarController(calendarService) {
     vm.currentYear = currentDate.getFullYear();
     vm.calendar = calendarService.getYearObj(vm.currentYear);
     
-    var 14 = calendarService.getEventsObj(vm.currentYear);
+    var evtPromise = calendarService.getEventsObj(vm.currentYear);
     evtPromise.then(function(dataObj) {
         vm.events = dataObj;
     }, function(error) {

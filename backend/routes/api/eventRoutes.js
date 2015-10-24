@@ -1,5 +1,6 @@
 var apiResponse = require('express-api-response');
 var eventRepository = require('../../repositories/eventRepository');
+var eventService = require('../../services/eventService');
 
 module.exports = function(app) {
 	app.get('/api/event/:id', function(req, res, next) {
@@ -10,6 +11,21 @@ module.exports = function(app) {
 		});
 	}, apiResponse);
 
+	app.get('/api/event/plan/:id', function(req, res, next) {
+		eventRepository.getByPlanId(req.params.id, function(err, data) {
+			res.data = data;
+			res.err = err;
+			next();
+		});
+	}, apiResponse);
+
+	app.get('/api/event/room/:id', function(req, res, next) {
+		eventRepository.getByRoomId(req.params.id, function(err, data) {
+			res.data = data;
+			res.err = err;
+			next();
+		});
+	}, apiResponse);
 
 	app.get('/api/event/', function(req, res, next){
 		eventRepository.getAll(function(err, data){
@@ -60,8 +76,7 @@ module.exports = function(app) {
 	}, apiResponse);	
 
 	app.post('/api/event/', function(req, res, next) {
-		eventRepository.add(req.body, function(err, data) {
-			console.log('rout', req.body['title']);
+		eventService.add(req.body, function(err, data) {
 			res.data = data;
 			res.err = err;
 			next();
@@ -69,7 +84,7 @@ module.exports = function(app) {
 	}, apiResponse);
 
 	app.put('/api/event/:id', function(req, res, next){
-		eventRepository.update(req.params.id, req.body, function(err, data){
+		eventService.update(req.params.id, req.body, function(err, data){
 			res.data = data;
 			res.err = err;
 			next();
@@ -77,7 +92,7 @@ module.exports = function(app) {
 	}, apiResponse);
 
 	app.delete('/api/event/:id', function(req, res, next){
-		eventRepository.delete(req.params.id, function(err, data){
+		eventService.delete(req.params.id, function(err, data){
 			res.data = data;
 			res.err = err;
 			next();

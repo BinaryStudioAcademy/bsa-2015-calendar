@@ -1,0 +1,27 @@
+//- add your class depending on position and modify css
+.date-picker(ng-show='showDatePicker' ng-class="dvCtrl.sidebarStyle ? 'sidebar-datepicker' : 'nav-datepicker' ")
+    .calendar.no-select
+        .row.calendar-nav
+            .calendar-nav-left.pointer(ng-click='previousYear()')
+                i.glyphicon.glyphicon-chevron-left
+            .calendar-hdr
+                | {{calendar.year}}
+            .calendar-nav-right.pointer(ng-click='nextYear()')
+                i.glyphicon.glyphicon-chevron-right
+        .row.calendar-nav
+            .calendar-nav-left.pointer(ng-click='previousMonth()')
+                i.glyphicon.glyphicon-chevron-left
+            .calendar-hdr
+                | {{calendar.monthName}}
+            .calendar-nav-right.pointer(ng-click='nextMonth()')
+                i.glyphicon.glyphicon-chevron-right
+        .row
+            div Sun
+            div Mon
+            div Tue
+            div Wed
+            div Thu
+            div Fri
+            div Sat
+        .row
+            .pointer(ng-repeat='day in days track by $index', ng-click='selectDate(day)') {{day}}

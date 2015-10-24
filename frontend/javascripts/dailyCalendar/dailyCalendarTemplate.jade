@@ -1,40 +1,91 @@
 #dayView(ng-cloak)
-  .col-sm-8.main-content
-    table#calendar.table
-      tr(ng-repeat="timeSt in dvCtrl.timeStamps")
-        td.hourCell {{timeSt}}
-        td.eventCell
-  .col-sm-4.right-sidebar
-    .row.text-center
-      ul.list-inline
-        li
-          a(href='#')
-            i.glyphicon.glyphicon-chevron-left.bigger-icon
-        li 
-          span {{dvCtrl.selectedDate | date: 'd EEE yyyy'}}
-        li
-          a(href='#')
-            i.glyphicon.glyphicon-chevron-right.bigger-icon
-    #showAllEvents.text-center
-      input(type="checkbox", id="showEvents")
-      label(for="showEvents") Show all events
-      br
-      button.btn.btn-primary(ng-click="dvCtrl.toggleEventInfo()") Toggle Info
-    .eventInfo.well(ng-show="dvCtrl.eventSelected")
-      #eventName
-        strong Event name:
-        br
-        span {{dvCtrl.event.name}}
-      #eventDescription
-        strong Description:
-        p {{dvCtrl.event.description}}
-      #eventAuthor
-        strong Created by:
-        br
-        span {{dvCtrl.event.author}}
-      #eventRoom
-        strong Room #
-        span {{dvCtrl.event.room}}
-      #eventParticipants
-        strong Participants: 
-        span.badge {{dvCtrl.event.participants}}
+
+    .col-md-9.col-sm-8.main-content.table-responsive
+        table#calendar.table
+            tbody
+                tr(ng-repeat="timeSt in dvCtrl.timeStamps")
+                    td.hourCell {{timeSt}}
+                    td.eventCell(ng-dblclick="dvCtrl.toggleModal()" ng-click="dvCtrl.toggleEventInfo()")
+    .col-md-3.col-sm-4.right-sidebar.hidden-xs
+        .row.text-center
+            ul.list-inline.datepicker-section
+                li
+                    a(href='#')#dayPrev
+                        i.glyphicon.glyphicon-chevron-left.bigger-icon
+                li
+                    #datepicker(style="position: relative")
+                        button.btn.btn-default#pickDate
+                            {{dvCtrl.selectedDate | date: 'd EEE yyyy'}}
+                        date-picker.sidebar-datepicker(for="pickDate")
+                li
+                    a(href='#')#dayNext
+                        i.glyphicon.glyphicon-chevron-right.bigger-icon
+        #showAllEvents.text-center
+            .checkbox
+                label
+                    input(type="checkbox") 
+                    | Show all events
+        .eventInfo.well(ng-show="dvCtrl.eventSelected")
+            #eventName
+                strong Event name:
+                span {{dvCtrl.event.name}}
+            #eventDescription
+                strong Description:
+                p {{dvCtrl.event.description}}
+            #eventAuthor
+                strong Created by:
+                span {{dvCtrl.event.author}}
+            #eventRoom
+                strong Room #
+                span {{dvCtrl.event.room}}
+            #eventParticipants
+                strong Participants: 
+                span.badge {{dvCtrl.event.participants}}
+    modal(title='New event', visible='dvCtrl.modalShown')
+
+
+
+
+
+
+//-   .col-sm-8.main-content
+//-     table#calendar.table
+//-       tr(ng-repeat="timeSt in dvCtrl.timeStamps")
+//-         td.hourCell {{timeSt}}
+//-         td.eventCell
+
+//-   .col-sm-4.right-sidebar
+//-     .row.text-center
+//-       ul.list-inline
+//-         li
+//-           a(href='#')
+//-             i.glyphicon.glyphicon-chevron-left.bigger-icon
+//-         li 
+//-           span {{dvCtrl.selectedDate | date: 'd EEE yyyy'}}
+//-         li
+//-           a(href='#')
+//-             i.glyphicon.glyphicon-chevron-right.bigger-icon
+//-     #showAllEvents.text-center
+//-       input(type="checkbox", id="showEvents")
+//-       label(for="showEvents") Show all events
+//-       br
+//-       button.btn.btn-primary(ng-click="dvCtrl.toggleEventInfo()") Toggle Info
+//-     .eventInfo.well(ng-show="dvCtrl.eventSelected")
+//-       #eventName
+//-         strong Event name:
+//-         br
+//-         span {{dvCtrl.event.name}}
+//-       #eventDescription
+//-         strong Description:
+//-         p {{dvCtrl.event.description}}
+//-       #eventAuthor
+//-         strong Created by:
+//-         br
+//-         span {{dvCtrl.event.author}}
+//-       #eventRoom
+//-         strong Room #
+//-         span {{dvCtrl.event.room}}
+//-       #eventParticipants
+//-         strong Participants: 
+//-         span.badge {{dvCtrl.event.participants}}
+
