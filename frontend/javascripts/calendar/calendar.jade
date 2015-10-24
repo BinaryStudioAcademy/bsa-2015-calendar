@@ -1,5 +1,4 @@
 #calendarOneDayView(ng-cloak)
-
 	.container
 		.col-sm-2.col-md-2.left-sidebar
 			.sidebar-nav
@@ -22,22 +21,32 @@
 										.checkbox
 											label
 												input(type="checkbox")
-												| Events
+												| Basic Events
+									li
+										.checkbox
+											label
+												input(type="checkbox")
+												| General Events
+									li
+										.checkbox
+											label
+												input(type="checkbox")
+												| Activity Events
 									li 
 										.checkbox
 											label
 												input(type="checkbox")
 												| Google Events
-									li 
-										.checkbox
-											label
-												input(type="checkbox")
-												| Rooms
-									li 
-										.checkbox
-											label
-												input(type="checkbox")
-												| Devices
+									//-li 
+									//-	.checkbox
+									//-		label
+									//-			input(type="checkbox")
+									//-			| Rooms
+									//-li 
+									//-	.checkbox
+									//-		label
+									//-			input(type="checkbox")
+									//-			| Devices
 									li 
 										.checkbox
 											label
@@ -63,7 +72,7 @@
 						//- 	li
 						//- 		a(href="#") Month
 						//- 	li
-						//- 		a(href="#") Year
+						//- 		a(ui-sref='.yearView') Year
 						
 
 			.filters.hidden-xs
@@ -73,22 +82,32 @@
 						.checkbox
 							label
 								input(type="checkbox")
-								| Events
+								| Basic Events
+					li
+						.checkbox
+							label
+								input(type="checkbox")
+								| General Events
+					li
+						.checkbox
+							label
+								input(type="checkbox")
+								| Activity Events
 					li 
 						.checkbox
 							label
 								input(type="checkbox")
 								| Google Events
-					li 
-						.checkbox
-							label
-								input(type="checkbox")
-								| Rooms
-					li 
-						.checkbox
-							label
-								input(type="checkbox")
-								| Devices
+					//-li 
+					//-	.checkbox
+					//-		label
+					//-			input(type="checkbox")
+					//-			| Rooms
+					//-li 
+					//-	.checkbox
+					//-		label
+					//-			input(type="checkbox")
+					//-			| Devices
 					li 
 						.checkbox
 							label
@@ -103,3 +122,4 @@
 						a(ui-sref=".createNewRoom" ng-click="calendarCtrl.toggleMode()") new Room
 		.col-sm-10
 			ui-view#calendar-content
+
