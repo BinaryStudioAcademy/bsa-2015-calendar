@@ -34,13 +34,13 @@ function WeekCalendarService($resource) {
 
 
 
-	var days = [	{ name: 'Monday'}, 
-		           	{ name: 'Tuesday'}, 
-		           	{ name: 'Wednesday'},
-								{ name: 'Thursday'}, 
-		            { name: 'Friday'}, 
-		            { name: 'Saturday'},
-		            { name: 'Sunday'},
+	var days = [	{ name: 'Mon'}, 
+		           	{ name: 'Tue'}, 
+		           	{ name: 'Wed'},
+								{ name: 'Thu'}, 
+		            { name: 'Fri'}, 
+		            { name: 'Sat'},
+		            { name: 'Sun'},
 		          ];
 
 	function getTimeStamps(){
