@@ -77,37 +77,22 @@ function calendarService($http) {
             dateStart.setDate(dateStart.getDate() + 1);
         }
 
-        /*NOT TESTED
-        $http.get('api/event/'+dateStart.toISOString()+'/'+dateEnd.toISOString())
+        //GET ALL EVENTS!
+        var evtPromise = $http.get('/api/event')       
         .then(function (response) {
             var events = response.data;
             for (var i = 0; i < events.length; i++) {
-                var eventStartDate = events[i].start;
+                var eventStartDate = new Date(events[i].start);
                 var evDate = eventStartDate.getDate()+'_'+(eventStartDate.getMonth()+1)+'_'+eventStartDate.getFullYear();
                 eventObj[evDate].push(events[i]);
             }
+            console.log(eventObj);
             return eventObj;
 
         }, function(reason) {
             console.log(reason);    
-        });
-        */
-
-        //test return
-        var dateOne = new Date(2015, 9, 17);
-        var dateTwo = new Date(2015, 10, 10);
-        var dateThree = new Date(2014, 5, 3);
-        switch(year) {
-            case 2015:
-                eventObj['17_10_2015'].push({title: 'Event one', start: dateOne});
-                eventObj['17_10_2015'].push({title: 'Event two', start: dateOne});
-                eventObj['10_11_2015'].push({title: 'Event three', start: dateTwo});
-                break;
-            case 2014:
-                eventObj['3_5_2014'].push({title: 'Event zero', start: dateThree});
-                break;
-        }
-        return eventObj;
+        });       
+        return evtPromise;
     }
 
     return {

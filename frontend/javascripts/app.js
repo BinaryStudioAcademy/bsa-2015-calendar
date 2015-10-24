@@ -36,14 +36,8 @@ var app = angular.module('calendar-app', ['ui.router', 'ngResource', 'ui.bootstr
                     templateUrl: './templates/home/signUp.html',
                     controller: 'LoginController',
                 })
-                .state('calendar2', {
-                    url: '/calendarYearView',
-                    templateUrl: './templates/calendarYearView/calendar.html',
-                    controller: 'CalendarController',
-                    controllerAs: 'CCtrl',
-                })
-                .state('calendar2.yearView', {
-                    url: '/calendar2/yearView',
+                .state('calendar.yearView', {
+                    url: '/calendar/yearView',
                     templateUrl: './templates/yearCalendar/yearCalendarTemplate.html',
                     controller: 'yearCalendarController',
                     controllerAs: 'YCtrl',

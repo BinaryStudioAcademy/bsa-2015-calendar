@@ -41,13 +41,14 @@ http.globalAgent.maxSockets = Infinity;
 
 var server = app.listen(3080);
 console.log('server start on port 3080');
-
+/*
 var generateFakes = require('./faker/generate');
 generateFakes({
 	device: 10,
 	room: 5,
 	user: 20,
-	group: 3
+	group: 40,
+    event: 40
 });
-
+*/
 module.exports = app;

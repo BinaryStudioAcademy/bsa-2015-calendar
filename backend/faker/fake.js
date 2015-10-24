@@ -67,3 +67,35 @@ casual.define('group_', function () {
 		events: []
 	};
 });
+
+
+casual.define('event_', function () {
+	var id = casual.mongo_id;
+	context.event_ids.push(id);
+
+	var numOfUsers = casual.integer(from = 0, to = context.user_ids.length);
+	var usersArr = [];
+	for(var i = 0; i < numOfUsers; i++){
+		usersArr.push(casual.random_element(context.user_ids));
+	}
+
+	var startDate = new Date(2015, casual.month_number-1, casual.day_of_month, casual.random_element([6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]));
+	var endDate = new Date(+startDate + casual.random_element([3600000, 7200000, 10800000]));
+
+	return {
+		_id: id,
+    	ownerId : casual.random_element(context.user_ids),
+    	title : casual.title,
+    	description : casual.short_description,
+    	type : casual.random_element(['basic', 'general', 'activity']), 
+    	price : casual.integer(from=0, to=300),
+    	//plan : {type: Schema.Types.ObjectId, ref: 'Plan'}, /* plan id */
+    	isPrivate : casual.random_element([true, false]),
+    	start: startDate,
+    	end: endDate,
+    	users: usersArr,
+    	usersFundrasing: casual.random_element(['accepter', 'declined', 'later', 'paid']), 
+    	room: casual.random_element(context.room_ids),
+    	devices: casual.random_element(context.device_ids)
+	};
+});

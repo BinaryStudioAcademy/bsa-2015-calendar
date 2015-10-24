@@ -2,7 +2,7 @@ var app = require('../app');
 
 app.directive('calendarDirective', calendarDirective);
 
-function calendarDirective($compile) {
+function calendarDirective($compile, $animate) {
     return {
         restrict: 'A',
 
@@ -10,7 +10,6 @@ function calendarDirective($compile) {
 
             $scope.$watch('YCtrl.calendar', function(value) { //add binding to calendar object
                 var calendarObj = value;
-                console.log('value');
                 var monthArr = calendarObj.months[+attr.monthNum];
                 //Add table header
                 var tableMonth = angular.element('<table class="year-month-table">'+
@@ -67,10 +66,16 @@ function calendarDirective($compile) {
                 }
 
                 //insert element in directive container
-
+                
                 element.empty();
-                element.append(tableMonth);
-                $compile(element.contents())($scope);
+                //element.append(tableMonth);
+                //$compile(tableMonth)($scope);
+
+                $animate.enter($compile(tableMonth)($scope), element);
+
+
+                //$animate.leave(element);
+                
                 
             }, true);
         }
