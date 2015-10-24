@@ -1,0 +1,83 @@
+div#calendar2.container(ng-cloak)
+	header.row
+		div.logo.col-xs-2.col-sm-2.col-md-2.col-lg-2
+			img.img-responsive(src='images/logo.png')
+		div.col-xs-10.col-sm-3.col-md-3.col-lg-3
+			div.input-group
+				input.form-control(type='text', placeholder='Search input')
+				span.input-group-btn
+					button.btn.btn-default Search
+	//Desktop
+	div.row.hidden-xs
+		div.sidebar.col-sm-4.col-md-3.col-lg-2
+			nav.tabs
+				ul.nav.nav-stacked.nav-tabs
+					li: a(href='#day') Day
+					li: a(href='#week') Week
+					li: a(href='#month') Month
+					li: a.active(ui-sref='.yearView') Year
+					li: a(href='#events') Events
+			div.filters: h4 Filters:
+				ul
+					li: label
+						input(type='checkbox', name='events')
+						| Events
+					li: label
+						input(type='checkbox', name='google-events')
+						| Google events
+					li: label
+						input(type='checkbox', name='room-booking')
+						| Room booking
+					li: label
+						input(type='checkbox', name='device-booking')
+						| Device booking
+					li: label
+						input(type='checkbox', name='b-days')
+						| B-days
+			div.create.list-group: h4 Create new:
+				button.list-group-item Event
+				button.list-group-item B-day
+				button.list-group-item Room booking
+				button.list-group-item Device booking
+		div.col-sm-8.col-md-9.col-lg-10
+			ui-view#calendar-content.row-fluid
+	//Mobile
+	nav.navbar.navbar-default.visible-xs
+		ul.nav.nav-pills
+			li.dropdown(dropdown)
+				a.dropdown-toggle(dropdown-toggle) Calendar menu
+				ul.dropdown-menu(dropdown-menu)
+					li: a(href='#day') Day
+					li: a(href='#week') Week
+					li: a(href='#month') Month
+					li: a.active(ui-sref='.yearView') Year
+					li: a(href='#events') Events
+			li.dropdown(dropdown)
+				a.dropdown-toggle(dropdown-toggle) Filters
+				ul.dropdown-menu(dropdown-menu)
+					li: label
+						input(type='checkbox', name='events')
+						| Events
+					li: label
+						input(type='checkbox', name='google-events')
+						| Google events
+					li: label
+						input(type='checkbox', name='room-booking')
+						| Room booking
+					li: label
+						input(type='checkbox', name='device-booking')
+						| Device booking
+					li: label
+						input(type='checkbox', name='b-days')
+						| B-days
+			li.dropdown(dropdown)
+				a.dropdown-toggle(href='', dropdown-toggle) Create
+				ul.dropdown-menu(dropdown-menu)
+					button.list-group-item Event
+					button.list-group-item B-day
+					button.list-group-item Room booking
+					button.list-group-item Device booking
+		div.col-lg-12.visible-xs
+			ui-view#calendar-content.row-fluid
+
+
