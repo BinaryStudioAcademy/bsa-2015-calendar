@@ -14,7 +14,7 @@ angular
 				table: '@'
 			},
 			controller: timeIndicatorController,
-			link: function($scope, $element, $attrs, $interval) {
+			link: function($scope, $element, $attrs) {
 
 				var tableSel = $attrs.table;
 				var rowHeight = $scope.calcRowHeight(tableSel);
@@ -22,7 +22,7 @@ angular
 				
 				$scope.moveIndicator($element, rowHeight);
 				
-				$scope.changePosition();
+				$scope.changePosition($element, rowHeight);
 			}
 		};
 
@@ -33,9 +33,10 @@ angular
 			$scope.moveIndicator = moveIndicator;
 			$scope.changePosition = changePosition;
 
-			function changePosition() {
+			function changePosition(element, rowHeight) {
+
 				$interval(function() {
-					$scope.moveIndicator($element, rowHeight);
+					$scope.moveIndicator(element, rowHeight);
 				}, 60000);
 			}
 
@@ -44,15 +45,14 @@ angular
 			}
 			
 			function calcPosition(rowHeight) {
+
 				var today = new Date();
 				var currentHour = today.getHours();
 				var currentMinutes = today.getMinutes();
 				var oneMinHeight = rowHeight / 60;
 				var newPosY = currentHour * rowHeight + (oneMinHeight * currentMinutes) + 'px';
 				console.log(newPosY);
-				
 				return newPosY;
-				
 			}
 			
 			function moveIndicator(element, rowHeight) {

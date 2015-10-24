@@ -22,8 +22,7 @@
 							| New plan
 				.tab-content
 					.tab-pane(role="tabpanel" id="plan")
-						span
-							| New plan form goes here
+						uib-timepicker(ng-model='dvCtrl.event.start')
 					.tab-pane.active(role="tabpanel" id="event")
 						form(role='form' name='newEventForm')
 							form.form-horizontal
@@ -32,9 +31,10 @@
 									.col-md-10.col-sm-10
 										.col-md-6.col-sm-6.col-xs-6
 											.input-group
-												.input-group-addon
-													i.glyphicon.glyphicon-time
-												input.form-control(type='text', placeholder='From...', required, ng-pattern='/^(?:0?[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/', ng-model='dvCtrl.event.start')
+												//- .input-group-addon
+												//- 	i.glyphicon.glyphicon-time
+												//- input.form-control(type='text', placeholder='From...', required, ng-pattern='/^(?:0?[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/', ng-model='dvCtrl.event.start')
+											uib-timepicker(ng-model='dvCtrl.event.start')
 										.col-md-6.col-sm-6.col-xs-6
 											.input-group
 												.input-group-addon

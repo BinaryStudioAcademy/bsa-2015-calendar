@@ -55,8 +55,7 @@ angular
                 scope.element = forElement;
 
                 forElement.on('focus', function() {
-                    scope.$apply(function() { 
-                        console.log(scope.sidebarStyle);
+                    scope.$apply(function() {
                         scope.showDatePicker = true;
                     });  
                 });
