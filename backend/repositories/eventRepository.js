@@ -21,6 +21,12 @@ EventRepository.prototype.getByDateEnd = function(date, callback){
 	query.exec(callback);
 };
 
+EventRepository.prototype.getByType = function(type, callback){
+	var model = this.model;
+	var query = model.find({"type":type});
+	query.exec(callback);
+};
+
 EventRepository.prototype.getByInterval = function(gteDate,lteDate, callback){
 	var model = this.model;
 	var query = model.find( {"start": {"$gte": gteDate, "$lte": lteDate}});
