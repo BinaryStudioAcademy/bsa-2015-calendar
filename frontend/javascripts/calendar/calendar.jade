@@ -1,5 +1,4 @@
 #calendarOneDayView(ng-cloak)
-
 	.container
 		.col-sm-2.col-md-2.left-sidebar
 			.sidebar-nav
@@ -63,7 +62,7 @@
 						//- 	li
 						//- 		a(href="#") Month
 						//- 	li
-						//- 		a(href="#") Year
+						//- 		a(ui-sref='.yearView') Year
 						
 
 			.filters.hidden-xs
@@ -103,3 +102,4 @@
 						a(ui-sref=".createNewRoom" ng-click="calendarCtrl.toggleMode()") new Room
 		.col-sm-10
 			ui-view#calendar-content
+
