@@ -11,13 +11,13 @@ var planSchema = new Schema({
     price : Number,
     dateStart: Date, 
     dateEnd: Date,
-    timeStart: Date,
+    timeStart: Date, 
     timeEnd: Date,
     intervals: [Number],
     isPrivate: Boolean, /* for public events */
     isExludeUsers : Boolean, /* method forming a userlist */
     users: [{type: Schema.Types.ObjectId, ref: 'User'}],
-    rooms: [{type: Schema.Types.ObjectId, ref: 'Room'}], /* arr[intervalsCount] */
+    rooms: [{type: Schema.Types.ObjectId, ref: 'Room'}], 
     devices: [{type: Schema.Types.ObjectId, ref: 'Device'}],
 });
 

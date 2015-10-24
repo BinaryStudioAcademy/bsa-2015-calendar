@@ -1,6 +1,7 @@
 var eventRoutes = require('./eventRoutes');
 var roomRoutes = require('./roomRoutes');
 var deviceRoutes = require('./deviceRoutes');
+var eventRoutes = require('./eventRoutes');
 var planRoutes = require('./planRoutes');
 var groupRoutes = require('./groupRoutes');
 var authRoutes = require('./authRoutes');
@@ -15,6 +16,6 @@ module.exports = function(app) {
 		deviceRoutes: deviceRoutes(app),
 		groupRoutes: groupRoutes(app),
 		planRoutes: planRoutes(app),
-		userRoutes: userRoutes(app),
+		userRoutes: userRoutes(app)
 	};
 };

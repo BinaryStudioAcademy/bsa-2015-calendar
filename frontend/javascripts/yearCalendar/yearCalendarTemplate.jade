@@ -1,0 +1,42 @@
+div#year-content(ng-cloak).row
+  div.row
+    div.col-xs-12.col-sm-12.col-md-12.col-lg-12 
+        div.col-xs-12.col-sm-12.col-md-8.col-lg-6.col-lg-offset-3.col-md-offset-2
+          div.year-slider
+            button.btn.btn-link.btn-left(ng-click='YCtrl.yearDecrement(); ')
+              span.glyphicon.glyphicon-menu-left
+            div.slider-container
+              div.slide(ng-repeat='slide in [YCtrl.currentYear-1,YCtrl.currentYear, YCtrl.currentYear+1]')
+                div.font-animate(ng-class='{"animate-big": $middle}') {{slide}}
+            button.btn.btn-link.btn-right(ng-click='YCtrl.yearIncrement(); ')
+              span.glyphicon.glyphicon-menu-right
+            
+
+  div.row
+    div.col-xs-12.col-sm-12.col-md-12.col-lg-12(event-calendar-directive)
+        div.month.col-xs-12.col-sm-6.col-md-4.col-lg-3.text-center#jan January
+          div(calendar-directive month-num='0')
+        div.month.col-xs-12.col-sm-6.col-md-4.col-lg-3.text-center#feb February
+          div(calendar-directive month-num='1')
+        div.month.col-xs-12.col-sm-6.col-md-4.col-lg-3.text-center#mar March
+          div(calendar-directive month-num='2')
+        div.month.col-xs-12.col-sm-6.col-md-4.col-lg-3.text-center#apr April
+          div(calendar-directive month-num='3')
+        div.month.col-xs-12.col-sm-6.col-md-4.col-lg-3.text-center#may May
+          div(calendar-directive month-num='4')
+        div.month.col-xs-12.col-sm-6.col-md-4.col-lg-3.text-center#jun June
+          div(calendar-directive month-num='5')
+        div.month.col-xs-12.col-sm-6.col-md-4.col-lg-3.text-center#jul July
+          div(calendar-directive month-num='6')
+        div.month.col-xs-12.col-sm-6.col-md-4.col-lg-3.text-center#aug August
+          div(calendar-directive month-num='7')
+        div.month.col-xs-12.col-sm-6.col-md-4.col-lg-3.text-center#sep September
+          div(calendar-directive month-num='8')
+        div.month.col-xs-12.col-sm-6.col-md-4.col-lg-3.text-center#oct October
+          div(calendar-directive month-num='9')
+        div.month.col-xs-12.col-sm-6.col-md-4.col-lg-3.text-center#nov November
+          div(calendar-directive month-num='10')
+        div.month.col-xs-12.col-sm-6.col-md-4.col-lg-3.text-center#dec December
+          div(calendar-directive month-num='11')
+
+
