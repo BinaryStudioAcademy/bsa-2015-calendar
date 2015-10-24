@@ -51,7 +51,6 @@ angular
 				var currentMinutes = today.getMinutes();
 				var oneMinHeight = rowHeight / 60;
 				var newPosY = currentHour * rowHeight + (oneMinHeight * currentMinutes) + 'px';
-				console.log(newPosY);
 				return newPosY;
 			}
 			
