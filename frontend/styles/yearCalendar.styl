@@ -1,0 +1,76 @@
+#year-content
+    border 1px solid black
+
+.month
+    height 200px
+
+table tr td.dayoff
+    color red
+
+table tr td.day-now
+    background-color lightgrey
+
+
+table tr td.day-past
+    opacity 0.5
+    
+table tr td.event
+    border 1px solid black
+    
+.year-month-table
+    width 100%
+    margin 5% 0 10% 0
+
+.year-slider
+    display flex
+    justify-content space-between
+    height 100px
+
+.slider-container
+    display inline-block
+    text-align center
+
+.btn-right
+    float right
+
+.btn-left
+    float left
+  
+.slide
+    display inline-block
+    vertical-align middle
+    margin 10px
+
+.slide.ng-move, .slide.ng-enter, .slide.ng-leave
+    -webkit-transition all linear 0.5s
+    -moz-transition all linear 0.5s
+    -o-transition all linear 0.5s
+    transition all linear 0.5s
+
+.slide.ng-leave.ng-leave-active, .slide.ng-move, .slide.ng-enter
+    left -100%
+    opacity 0
+
+
+.slide.ng-leave .slide.hg-move.ng-move-active, .slide.ng-enter.ng-enter-active
+    opacity 1
+    left 0
+
+.font-animate
+    font normal 1em sans-serif
+    -webkit-transition all linear 0.5s
+    -moz-transition all linear o.5s
+    -o-transition all linear 0.5s
+    transition all linear 0.5s
+
+.animate-big
+    font bold 2em sans-serif
+    color red
+
+
+
+
+
+
+    
+    

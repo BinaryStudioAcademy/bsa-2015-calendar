@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 var app = angular.module('calendar-app', ['ui.router', 'ngResource', 'ui.bootstrap', 'ngAnimate', 'angularjs-dropdown-multiselect'])
     .config(['$stateProvider', '$urlRouterProvider', '$resourceProvider', '$httpProvider', '$locationProvider',
@@ -59,22 +60,21 @@ var app = angular.module('calendar-app', ['ui.router', 'ngResource', 'ui.bootstr
                     templateUrl: './templates/createNew/NewRoom/createNewRoomTemplate.html',
                     controller: 'createNewRoomController',
                     controllerAs: 'cnrCtrl',
-                });
-        }
-    ]);
-
-
-			// .state('calendar.dayView', {
-			// 	url: '/dayView',
-			// 	templateUrl: './templates/dailyCalendar/dailyCalendarTemplate.html',
-			// 	controller: 'DayViewController',
-			// 	controllerAs: 'dvCtrl',
-			// })
-
-
-
-
-
+                })
+				.state('calendar2', {
+					url: '/calendarYearView',
+					templateUrl: './templates/calendarYearView/calendar.html',
+					controller: 'CalendarController',
+					controllerAs: 'CCtrl',
+				})
+				.state('calendar2.yearView', {
+					url: '/calendar2/yearView',
+					templateUrl: './templates/yearCalendar/yearCalendarTemplate.html',
+					controller: 'yearCalendarController',
+					controllerAs: 'YCtrl',
+				});
+		}
+	]);
 
 app.run(['$rootScope', '$state', function($rootScope, $state) {
 	$rootScope.$on('$stateChangeStart', function(evt, to, params) {
