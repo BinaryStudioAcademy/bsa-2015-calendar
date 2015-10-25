@@ -9,6 +9,7 @@ var repositories = {
 	group: require('../repositories/groupRepository'),
 	user: require('../repositories/userRepository'),
 	event: require('../repositories/eventRepository')
+	eventType: require('../repositories/eventTypeRepository')
 };
 
 
@@ -25,4 +26,5 @@ module.exports = function (amount) {
 	generate.call(null, 'user', amount.user);
 	generate.call(null, 'group', amount.group);
 	generate.call(null, 'event', amount.event);
+	generate.call(null, 'eventType', amount.eventType);
 };

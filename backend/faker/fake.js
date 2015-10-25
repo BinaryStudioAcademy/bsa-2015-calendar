@@ -99,3 +99,14 @@ casual.define('event_', function () {
     	devices: casual.random_element(context.device_ids)
 	};
 });
+
+casual.define('eventType_', function () {
+	var id = casual.mongo_id;
+	context.eventType_ids.push(id);
+
+	return {
+		_id: id,
+		title: casual.title,
+		events: []
+	};
+});
