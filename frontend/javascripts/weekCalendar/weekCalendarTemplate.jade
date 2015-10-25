@@ -7,9 +7,9 @@
       button.week_next(class="btn btn-large btn-info" ng-click='next()') Next
 
     .content_for_week
-      table.week_in_table
-        col.header
-        col.days
+      table.week_in_table(width='100%')
+        col.header(width='12,5%')
+        col.days(width='12,5%' span='7')
         tr
           th
           th(ng-repeat="day in wCtrl.days")
