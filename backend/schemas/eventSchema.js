@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var Plan = require('./planSchema');
 var Room = require('./roomSchema');
 var Device = require('./deviceSchema');
+var EventType = require('./eventTypeSchema');
 
 var Schema = mongoose.Schema;
 
@@ -9,7 +10,8 @@ var eventSchema = new Schema({
     ownerId : {type: Schema.Types.ObjectId, ref: 'User'},
     title : String,
     description : String,
-    type : String, // 'basic', 'general', 'activity',
+    type : {type: Schema.Types.ObjectId, ref: 'EventType'},
+    // type : String, // 'basic', 'general', 'activity',
     price : Number,
     plan : {type: Schema.Types.ObjectId, ref: 'Plan'}, /* plan id */
     isPrivate : Boolean,

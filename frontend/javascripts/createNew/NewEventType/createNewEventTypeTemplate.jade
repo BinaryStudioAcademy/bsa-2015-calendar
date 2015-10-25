@@ -1,0 +1,42 @@
+.device_list(ng-controller='createNewEventTypeController')
+
+  .device_list_header
+    h1(align='center') Creating a new type for Event
+
+    .form-group
+      label.col-sm-1(for="device") title: 
+      .col-sm-11
+        input(type='text', class="form-control", id="device", placeholder="Enter title", ng-model='cnetCtrl.device.title')
+
+
+    .button-div1(align='center')
+      button(ng-click='cnetCtrl.reset()' class="btn btn-warning") RESET
+      button(ng-click='cnetCtrl.addDevice()' class='btn btn-info') SAVE
+    .button-div2
+      h4 We have {{ cnetCtrl.devices.length }} devices.
+      button(ng-click='cnetCtrl.toggleViewDevice()') display/hide Oll Devices
+    br
+
+
+  device_list_body(align='center', ng-show='cnetCtrl.showDevicesList')
+    .div_search
+      b Search device:
+      input(type='text', size='19', border='1', ng-model='cnetCtrl.search')
+
+    .content_for_device_list
+      table.col-sm-12.table-responsive.table-hover.table.deviceTable(border='1', ng-show='cnetCtrl.showDevicesList')
+
+        tr(ng-repeat='device in cnetCtrl.devices | filter: cnetCtrl.search')
+          td {{ device.title }}
+          td {{ device.events }}
+          td {{ device.users }}
+
+//        tr(ng-repeat='device in cnetCtrl.devices | filter: cnetCtrl.search')
+//          td
+//            input#inputDeviceTitle(class="form-control", ng-model='device.title')
+//          td  {{ device.events }}
+//          td(align='center')   
+//            button(class="btn btn-info btn-xs" ng-click='cnetCtrl.updateDevice(device)') save            
+//          td(align='center')  
+//            button(class="btn btn-primary btn-xs btn-danger" ng-click='cnetCtrl.deleteDevice(device, $index)') delete
+
