@@ -1,36 +1,44 @@
-.products_list(ng-controller='createNewDeviceController')
-  .form-group
-    label.col-sm-2(for="device") title: 
-    .col-sm-10
-      input(type='text', class="form-control", id="device", placeholder="Enter title", ng-model='device.title')
-    .dfbfdbdbdf
-    label.col-sm-2(for="events" class="form-control4") events: 
-    .col-sm-10
-      input(type='text', class="form-control", id="events", placeholder="Enter events", ng-model='device.events')
-    
-  br
-  .button-div(align='center')
-    button(ng-click='reset()') RESET
-    button(ng-click='addDevice()') SAVE
-    button(ng-click='toggleViewDevice()') hide/display DevicesList
+.device_list(ng-controller='createNewDeviceController')
+
+  .device_list_header
+    h1(align='center') Creating a new Device
+
+    .form-group
+      label.col-sm-1(for="device") title: 
+      .col-sm-11
+        input(type='text', class="form-control", id="device", placeholder="Enter title", ng-model='cndCtrl.device.title')
+      label.col-sm-1(for="events" class="form-control4") events: 
+      .col-sm-11
+        input(type='text', class="form-control", id="events", disabled, placeholder="Enter events", ng-model='cndCtrl.device.events')  
+
+    .button-div1(align='center')
+      button(ng-click='cndCtrl.reset()' class="btn btn-warning") RESET
+      button(ng-click='cndCtrl.addDevice()' class='btn btn-info') SAVE
+    .button-div2
+      h4 We have {{ cndCtrl.devices.length }} devices.
+      button(ng-click='cndCtrl.toggleViewDevice()') display/hide Oll Devices
+    br
 
 
-  div(align='center', ng-show='showDevicesList')
-    b Search:
-    input(type='text', size='19', border='1', ng-model='search')
+  device_list_body(align='center', ng-show='cndCtrl.showDevicesList')
+    .div_search
+      b Search device:
+      input(type='text', size='19', border='1', ng-model='cndCtrl.search')
 
-  table.col-sm-12(border='1', align='center', ng-show='showDevicesList')
-    thead
-      tr
-        td(colspan='2', align='center')
-          b Oll devices      
-      tr
-        td(colspan='2', align='center') Quantity device: {{ devices.length }}
-      tr
-        th.col-sm-4 title
-        th.col-sm-8 events
-    tbody
-      tr(ng-repeat='device in devices | filter: search')
-        td  {{ device.title }} 
-        td  {{ device.events }} 
-
+    .content_for_device_list
+      table.col-sm-12.table-responsive.table-hover.table.deviceTable(border='1', ng-show='cndCtrl.showDevicesList')
+        tr
+          th.col-sm-4 device title
+          th.col-sm-6 events
+          th.col-sm-1 change
+          th.col-sm-1 delete
+        tr(ng-repeat='device in cndCtrl.devices | filter: cndCtrl.search')
+          td
+            input#inputDeviceTitle(class="form-control", ng-model='device.title')
+          td  {{ device.events }}
+          td(align='center')   
+            button(class="btn btn-info btn-xs" ng-click='cndCtrl.updateDevice(device)') save            
+            //- a(ng-click='cndCtrl.updateDevice(device)') save
+          td(align='center')  
+            button(class="btn btn-primary btn-xs btn-danger" ng-click='cndCtrl.deleteDevice(device, $index)') delete
+            //- a(ng-click='cndCtrl.deleteDevice(device, $index)') delete 
