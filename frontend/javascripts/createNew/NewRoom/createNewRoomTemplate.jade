@@ -1,44 +1,43 @@
 .room_list(ng-controller='createNewRoomController')
 
-  .headed_room_list
+  .room_list_header
     h1(align='center') Creating a new Room
 
-  .form-group
-    label.col-sm-2(for="room") title: 
-    .col-sm-10
-      input(type='text', class="form-control", id="room", placeholder="Enter title", ng-model='cnrCtrl.room.title')
-    .dfbfdbdbdf
-    label.col-sm-2(for="events" class="form-control4") events: 
-    .col-sm-10
-      input(type='text', class="form-control", id="events", disabled, placeholder="Enter events", ng-model='cnrCtrl.room.events')
-  br
+    .form-group
+      label.col-sm-1(for="room") title: 
+      .col-sm-11
+        input(type='text', class="form-control", id="room", placeholder="Enter title", ng-model='cnrCtrl.room.title')
+      label.col-sm-1(for="events" class="form-control4") events: 
+      .col-sm-11
+        input(type='text', class="form-control", id="events", disabled, placeholder="Enter events", ng-model='cnrCtrl.room.events')
 
-  .button-div1(align='center')
-    button(ng-click='cnrCtrl.reset()') RESET
-    button(ng-click='cnrCtrl.addRoom()') SAVE
-  .button-div2
-    h3 Quantity room: {{ cnrCtrl.rooms.length }}    
-    button(ng-click='cnrCtrl.toggleViewRoom()') hide/display RoomsList
+    .button-div1(align='center')
+      button(ng-click='cnrCtrl.reset()' class="btn btn-warning") RESET
+      button(ng-click='cnrCtrl.addRoom()' class='btn btn-info') SAVE
+    .button-div2
+      h4 We have {{ cnrCtrl.rooms.length }} rooms   
+      button(ng-click='cnrCtrl.toggleViewRoom()') display/hide Oll Rooms
+    br
 
-  div(align='center', ng-show='cnrCtrl.showRoomsList')
-    b Search room:
-    input(type='text', size='19', border='1', ng-model='cnrCtrl.search')
+  room_list_body(align='center', ng-show='cnrCtrl.showRoomsList')
+    .div_search
+      b Search room:
+      input(type='text', size='19', border='1', ng-model='cnrCtrl.search')
 
-  table.col-sm-12.table-responsive.table-hover(border='1', ng-show='cnrCtrl.showRoomsList')
-    thead
-      tr
-        th.col-sm-4 room title
-        th.col-sm-6 events
-        th.col-sm-1 change
-        th.col-sm-1 delete
-    tbody
-      tr(ng-repeat='room in cnrCtrl.rooms | filter: cnrCtrl.search')
-        td  
-          input#inputRoomTitle(class="form-control", ng-model='room.title')
-        td  {{ room.events }}
-        td(align='center')  
-          button(class="btn btn-primary" class="btn btn-primary btn-xs" ng-click='cnrCtrl.updateRoom(room)') save            
-          //- a(ng-click='cnrCtrl.updateRoom(room)') save
-        td(align='center')  
-          button(class="btn btn-warning" class="btn btn-primary btn-xs" ng-click='cnrCtrl.deleteRoom(room, $index)') delete
-          //- a(ng-click='cnrCtrl.deleteRoom(room, $index)') delete 
+    .content_for_room_list
+      table.col-sm-12.table-responsive.table-hover.table.roomTable(border='1', ng-show='cnrCtrl.showRoomsList')
+          tr
+            th.col-sm-4 room title
+            th.col-sm-6 events
+            th.col-sm-1 change
+            th.col-sm-1 delete
+          tr(ng-repeat='room in cnrCtrl.rooms | filter: cnrCtrl.search')
+            td  
+              input#inputRoomTitle(class="form-control", ng-model='room.title')
+            td  {{ room.events }}
+            td(align='center')  
+              button(class="btn btn-info btn-xs" ng-click='cnrCtrl.updateRoom(room)') save            
+              //- a(ng-click='cnrCtrl.updateRoom(room)') save
+            td(align='center')  
+              button(class="btn btn-primary btn-xs btn-danger" ng-click='cnrCtrl.deleteRoom(room, $index)') delete
+              //- a(ng-click='cnrCtrl.deleteRoom(room, $index)') delete 

@@ -1,12 +1,12 @@
 #weekView(ng-cloak)
-  div.col-lg-8
+  .col-lg-8
 
-    div.week_header
+    .week_header
       button.week_prev(class="btn btn-large btn-info" ng-click='previous()') Previous
       span.week_header_title {{wCtrl.Start | date: 'd MMM yyyy'}} - {{wCtrl.End | date: 'd MMM yyyy'}}
       button.week_next(class="btn btn-large btn-info" ng-click='next()') Next
 
-    div.content_for_week
+    .content_for_week
       table.week_in_table
         col.header
         col.days
@@ -14,6 +14,8 @@
           th
           th(ng-repeat="day in wCtrl.days")
             span {{day.name}}
+            //br
+            //span {{wCtrl.Tue | date: 'd MMM'}}
         tr(ng-repeat="timeSt in wCtrl.timeStamps")
           td.hourCell {{timeSt.time}}
           td.eventCell
