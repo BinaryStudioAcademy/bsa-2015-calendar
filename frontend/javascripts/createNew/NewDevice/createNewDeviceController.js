@@ -1,47 +1,58 @@
 var app = require('../../app');
 
-
 app.controller('createNewDeviceController', createNewDeviceController);
 createNewDeviceController.$inject = ['$scope', 'createNewDeviceService'];
 
 function createNewDeviceController($scope, createNewDeviceService){
-
-  $scope.showDevicesList = true;
-
-  $scope.devices = createNewDeviceService.getDevices();
+  var vm = this;
+  vm.showDevicesList = false;
+  vm.devices = createNewDeviceService.getDevices();
+  // alternativa str 9
   // createNewDeviceService.getDevices(function(data){
-  //   $scope.devices = data;
+  //   vm.devices = data;
   // });
 
+  vm.toggleViewDevice = function(){
+      vm.showDevicesList = !vm.showDevicesList;
+  };
 
-  $scope.addDevice = function (){
-      var newdevice = {title: $scope.device.title, events: $scope.device.events};
+  vm.reset = function (){
+      vm.device.title = '';
+      vm.device.events = '';
+  };
+
+  vm.addDevice = function(){
+      var newdevice = {title: vm.device.title, events: vm.device.events};
       console.log(newdevice); 
       createNewDeviceService.saveDevice(newdevice)
         .$promise.then(
           function(response) {
-            console.log('success', response);
+            console.log('success function addDevice', response);
           },
           function(response) {
-            console.log('failure', response);
+            console.log('failure function addDevice', response);
           } 
+        );
+      vm.devices.push(newdevice);
+      vm.device.title = '';
+      // vm.device.events = '';
+  };
+
+  vm.updateDevice = function(device){
+    console.log(device); 
+    createNewDeviceService.updateDevice(device);
+  };
+
+  vm.deleteDevice = function(device, $index){
+    createNewDeviceService.deleteDevice(device)
+      .$promise.then(
+        function(response) {
+          console.log('success function deleteDevice', response);
+          vm.devices.splice($index, 1);
+        },
+        function(response) {
+          console.log('failure function deleteDevice', response);
+        } 
       );
-
-      $scope.devices.push(newdevice);
-      $scope.device.title = '';
-      $scope.device.events = '';
-  };
-  $scope.reset = function (){
-      $scope.device.title = '';
-      $scope.device.events = '';
-  };
-  // $scope.removeProduct = function (index){
-  //     $scope.products.splice(index,1);
-  // };
-
-  $scope.toggleViewDevice = function(){
-      $scope.showDevicesList = !$scope.showDevicesList;
   };
 }
-
-

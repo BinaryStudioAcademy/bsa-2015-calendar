@@ -1,42 +1,28 @@
 #weekView(ng-cloak)
-  .col-sm-10.main-content.col-lg-11
-    
-    ul.list-inline.text-center
-      li
-        a(href='#')
-          i.glyphicon.glyphicon-chevron-left.bigger-icon
-      li 
-        span {{wCtrl.Start | date: 'd MMM yyyy'}} ----- {{wCtrl.End | date: 'd MMM yyyy'}} 
-      li
-        a(href='#')
-          i.glyphicon.glyphicon-chevron-right.bigger-icon
+  .col-lg-8
 
+    .week_header
+      button.week_prev(class="btn btn-large btn-info" ng-click='previous()') Previous
+      span.week_header_title {{wCtrl.Start | date: 'd MMM yyyy'}} - {{wCtrl.End | date: 'd MMM yyyy'}}
+      button.week_next(class="btn btn-large btn-info" ng-click='next()') Next
 
-    table#calendar.table.table-bordered
-      tr.success.text-center 
-        td
-        td(ng-repeat="day in wCtrl.days")
-          span {{day.name}}
-
-
-      tr(ng-repeat="timeSt in wCtrl.timeStamps")
-        td.hourCell {{timeSt.time}}
-        td.eventCell
-        td.eventCell
-        td.eventCell
-        td.eventCell
-        td.eventCell
-        td.eventCell
-        td.eventCell
-
-
-  .col-sm-2.right-sidebar.col-lg-1.hidden-xs
-    .row.text-center
-    #showAllEvents.text-center
-      input(type="checkbox", id="showEvents")
-      label(for="showEvents") Show all events
-      br
-      button.btn.btn-primary(ng-click="wCtrl.toggleEventInfo()") Toggle Info
-    .eventInfo.well(ng-show="wCtrl.eventSelected")
-
+    .content_for_week
+      table.week_in_table(width='100%')
+        col.header(width='12,5%')
+        col.days(width='12,5%' span='7')
+        tr
+          th
+          th(ng-repeat="day in wCtrl.days")
+            span {{day.name}}
+            //br
+            //span {{wCtrl.Tue | date: 'd MMM'}}
+        tr(ng-repeat="timeSt in wCtrl.timeStamps")
+          td.hourCell {{timeSt.time}}
+          td.eventCell
+          td.eventCell
+          td.eventCell
+          td.eventCell
+          td.eventCell
+          td.eventCell
+          td.eventCell
 
