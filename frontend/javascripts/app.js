@@ -74,6 +74,11 @@ var app = angular.module('calendar-app', ['ui.router', 'btford.socket-io', 'ngRe
             console.log('SOCKETIO: NEW DEVICE');
         });
 
+        socket.on('add room notification', function(device){
+            console.log(device);
+            console.log('SOCKETIO: NEW DEVICE');
+        });
+
         return socket;
     }]);
 
