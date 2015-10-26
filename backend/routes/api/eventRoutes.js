@@ -91,6 +91,14 @@ module.exports = function(app) {
 		});
 	}, apiResponse);
 
+	app.put('/api/event/newdate/:id', function(req, res, next){
+		eventService.updateStartEnd(req.params.id, req.body, function(err, data){
+			res.data = data;
+			res.err = err;
+			next();
+		});
+	}, apiResponse);
+
 	app.delete('/api/event/:id', function(req, res, next){
 		eventService.delete(req.params.id, function(err, data){
 			res.data = data;
