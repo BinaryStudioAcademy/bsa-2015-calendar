@@ -10,7 +10,7 @@ function createNewDeviceService ($resource) {
 	var devices = dbdevices.query();
 	
 	function getDevices(){
-		return devices;
+		return dbdevices.query();
 	}
 	// function getDevices(callback){
 	// var dbdevices = $resource('http://localhost:3080/api/device/', {});

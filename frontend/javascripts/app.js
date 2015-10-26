@@ -1,4 +1,4 @@
-var app = angular.module('calendar-app', ['ui.router', 'ngResource', 'ui.bootstrap', 'ngAnimate', 'angularjs-dropdown-multiselect'])
+var app = angular.module('calendar-app', ['ui.router', 'btford.socket-io', 'ngResource', 'ui.bootstrap', 'ngAnimate', 'angularjs-dropdown-multiselect'])
     .config(['$stateProvider', '$urlRouterProvider', '$resourceProvider', '$httpProvider', '$locationProvider',
         function ($stateProvider, $urlRouterProvider, $resourceProvider, $httpProvider, $locationProvider) {
             $urlRouterProvider.otherwise('/');
@@ -66,7 +66,16 @@ var app = angular.module('calendar-app', ['ui.router', 'ngResource', 'ui.bootstr
 					controllerAs: 'YCtrl',
 				});
 		}
-	]);
+	]).factory('socketService', ['socketFactory', function(socketFactory){
+        var socket = socketFactory();
+
+        socket.on('add device notification', function(device){
+            console.log(device);
+            console.log('SOCKETIO: NEW DEVICE');
+        });
+
+        return socket;
+    }]);
 
 app.run(['$rootScope', '$state', function($rootScope, $state) {
 	$rootScope.$on('$stateChangeStart', function(evt, to, params) {
