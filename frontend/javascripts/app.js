@@ -20,6 +20,12 @@ var app = angular.module('calendar-app', ['ui.router', 'ngResource', 'ui.bootstr
                     controller: 'CalendarController',
                     controllerAs: 'calendarCtrl'
                 })
+                .state('googleAuth', {
+                    url: '/googleAuth',
+                    templateUrl: './templates/googleapi/googleAuth.html',
+                    /*controller: 'googleAuthController',
+                    controllerAs: 'googleAuthCtrl'*/
+                })
                 .state('signIn', {
                     url: '/signIn',
                     templateUrl: './templates/home/signIn.html',
