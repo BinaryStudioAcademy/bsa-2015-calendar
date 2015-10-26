@@ -84,6 +84,12 @@ module.exports = function(grunt) {
 
 		copy: {
 			libs: {files: [
+					{expand: false, src: ['bower_components/font-awesome/fonts/FontAwesome.otf'], dest: 'public/styles/fonts/FontAwesome.otf'},
+					{expand: false, src: ['bower_components/font-awesome/fonts/fontawesome-webfont.eot'], dest: 'public/styles/fonts/fontawesome-webfont.eot'},
+					{expand: false, src: ['bower_components/font-awesome/fonts/fontawesome-webfont.svg'], dest: 'public/styles/fonts/fontawesome-webfont.svg'},
+					{expand: false, src: ['bower_components/font-awesome/fonts/fontawesome-webfont.ttf'], dest: 'public/styles/fonts/fontawesome-webfont.ttf'},
+					{expand: false, src: ['bower_components/font-awesome/fonts/fontawesome-webfont.woff'], dest: 'public/styles/fonts/fontawesome-webfont.woff'},
+					{expand: false, src: ['bower_components/font-awesome/fonts/fontawesome-webfont.woff2'], dest: 'public/styles/fonts/fontawesome-webfont.woff2'},
 					{expand: false, src: ['bower_components/bootstrap/fonts/glyphicons-halflings-regular.eot'], dest: 'public/styles/fonts/glyphicons-halflings-regular.eot'},
 					{expand: false, src: ['bower_components/bootstrap/fonts/glyphicons-halflings-regular.svg'], dest: 'public/styles/fonts/glyphicons-halflings-regular.svg'},
 					{expand: false, src: ['bower_components/bootstrap/fonts/glyphicons-halflings-regular.ttf'], dest: 'public/styles/fonts/glyphicons-halflings-regular.ttf'},
