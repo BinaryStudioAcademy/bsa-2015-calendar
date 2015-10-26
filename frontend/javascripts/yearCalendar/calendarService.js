@@ -86,7 +86,6 @@ function calendarService($http) {
                 var evDate = eventStartDate.getDate()+'_'+(eventStartDate.getMonth()+1)+'_'+eventStartDate.getFullYear();
                 eventObj[evDate].push(events[i]);
             }
-            console.log(eventObj);
             return eventObj;
 
         }, function(reason) {
