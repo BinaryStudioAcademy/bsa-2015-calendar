@@ -5,48 +5,48 @@ createNewEventTypeController.$inject = ['$scope', 'createNewEventTypeService'];
 
 function createNewEventTypeController($scope, createNewEventTypeService){
   var vm = this;
-  vm.showDevicesList = false;
-  vm.devices = createNewEventTypeService.getDevices();
+  vm.showEventTypesList = false;
+  vm.eventTypes = createNewEventTypeService.getEventTypes();
 
-  vm.toggleViewDevice = function(){
-      vm.showDevicesList = !vm.showDevicesList;
+  vm.toggleViewEventType = function(){
+      vm.showEventTypesList = !vm.showEventTypesList;
   };
 
   vm.reset = function (){
-      vm.device.title = '';
-      vm.device.events = '';
+      vm.eventType.title = '';
+      // vm.eventType.events = '';
   };
 
-  vm.addDevice = function(){
-      var newdevice = {title: vm.device.title, events: vm.device.events};
-      console.log(newdevice); 
-      createNewDeviceService.saveDevice(newdevice)
+  vm.addEventType = function(){
+      var newEventType = {title: vm.eventType.title};
+      console.log(newEventType); 
+      createNewEventTypeService.saveEventType(newEventType)
         .$promise.then(
           function(response) {
-            console.log('success function addDevice', response);
+            console.log('success function addEventType', response);
           },
           function(response) {
-            console.log('failure function addDevice', response);
+            console.log('failure function addEventType', response);
           } 
         );
-      vm.devices.push(newdevice);
-      vm.device.title = '';
+      vm.eventTypes.push(newEventType);
+      vm.eventType.title = '';
   };
 
-  vm.updateDevice = function(device){
-    console.log(device); 
-    createNewEventTypeService.updateDevice(device);
+  vm.updateEventType = function(eventType){
+    console.log(eventType); 
+    createNewEventTypeService.updateEventType(eventType);
   };
 
-  vm.deleteDevice = function(device, $index){
-    createNewEventTypeService.deleteDevice(device)
+  vm.deleteEventType = function(eventType, $index){
+    createNewEventTypeService.deleteEventType(eventType)
       .$promise.then(
         function(response) {
-          console.log('success function deleteDevice', response);
-          vm.devices.splice($index, 1);
+          console.log('success function deleteEventType', response);
+          vm.eventTypes.splice($index, 1);
         },
         function(response) {
-          console.log('failure function deleteDevice', response);
+          console.log('failure function deleteEventType', response);
         } 
       );
   };

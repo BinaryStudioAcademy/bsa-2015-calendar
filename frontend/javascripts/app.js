@@ -60,7 +60,7 @@ var app = angular.module('calendar-app', ['ui.router', 'ngResource', 'ui.bootstr
                     controllerAs: 'cnrCtrl',
                 })
                 .state('calendar.createNewEventType', {
-                    url: '/calendar/NewEventType',
+                    url: '/createNewEventType',
                     templateUrl: './templates/createNew/NewEventType/createNewEventTypeTemplate.html',
                     controller: 'createNewEventTypeController',
                     controllerAs: 'cnetCtrl',

@@ -4,33 +4,33 @@ app.factory('createNewEventTypeService', createNewEventTypeService);
 createNewEventTypeService.$inject = ['$resource'];
 
 function createNewEventTypeService ($resource) {
-	var dbdevices = $resource('http://localhost:3080/api/group/', {});
-	var devices = dbdevices.query();
+	var dbEventTypes = $resource('http://localhost:3080/api/eventType/', {});
+	var eventTypes = dbEventTypes.query();
 	
-	function getDevices(){
-		return devices;
+	function getEventTypes(){
+		return eventTypes;
 	}
 
-	function saveDevice(newdevice) {
-		return dbdevices.save(newdevice);
+	function saveEventType(newEventType) {
+		return dbEventTypes.save(newEventType);
 	}
 
-	function updateDevice(device){	
-		var dbdeviceById = $resource('http://localhost:3080/api/event/:id', {id: device._id}, {'update': { method:'PUT'}});
-		delete device._id;
-		var one_device = dbdeviceById.update(device);
+	function updateEventType(eventType){	
+		var dbEventTypeById = $resource('http://localhost:3080/api/eventType/:id', {id: eventType._id}, {'update': { method:'PUT'}});
+		delete eventType._id;
+		var one_eventType = dbEventTypeById.update(eventType);
 	}
 
-	function deleteDevice(device) {
-		var dbdevicedel = $resource('http://localhost:3080/api/event/:id', {id: device._id});
-		console.log(device);
-		return dbdevicedel.delete(device);
+	function deleteEventType(eventType) {
+		var dbEventTypedel = $resource('http://localhost:3080/api/eventType/:id', {id: eventType._id});
+		console.log(eventType);
+		return dbEventTypedel.delete(eventType);
 	}
 
 	return  {
-		getDevices: getDevices,
-		saveDevice: saveDevice,
-		updateDevice: updateDevice,
-		deleteDevice: deleteDevice
+		getEventTypes: getEventTypes,
+		saveEventType: saveEventType,
+		updateEventType: updateEventType,
+		deleteEventType: deleteEventType
 	};
 }

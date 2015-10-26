@@ -68,6 +68,16 @@ casual.define('group_', function () {
 	};
 });
 
+casual.define('eventType_', function () {
+	var id = casual.mongo_id;
+	context.eventType_ids.push(id);
+
+	return {
+		_id: id,
+		title: casual.title,
+		events: []
+	};
+});
 
 casual.define('event_', function () {
 	var id = casual.mongo_id;
@@ -100,13 +110,3 @@ casual.define('event_', function () {
 	};
 });
 
-casual.define('eventType_', function () {
-	var id = casual.mongo_id;
-	context.eventType_ids.push(id);
-
-	return {
-		_id: id,
-		title: casual.title,
-		events: []
-	};
-});
