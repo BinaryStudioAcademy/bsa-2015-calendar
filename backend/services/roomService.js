@@ -54,7 +54,6 @@ roomService.prototype.delete = function(roomId, callback){
 			console.log(err);
 			return callback(err, {success: false});
 		}
-		io.sockets.emit('room deleted: ', room);
 		return callback(null, {success: true});
 	});
 };
