@@ -9,7 +9,20 @@ var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+
 var connection = require('./db/dbconnect');
+
+// var faker = require('./faker/generate.js');
+
+// faker({
+//   device: 1,
+//   user: 1,
+//   room: 1,
+//   group: 1,
+//   eventType: 1
+// });
+
+
 
 app.use(cookieParser());
 app.use(bodyParser());

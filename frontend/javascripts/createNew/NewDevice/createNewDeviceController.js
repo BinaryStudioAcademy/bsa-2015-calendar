@@ -20,11 +20,11 @@ function createNewDeviceController($scope, createNewDeviceService, socketService
 
   vm.reset = function (){
       vm.device.title = '';
-      vm.device.events = '';
+      vm.device.description = '';
   };
 
   vm.addDevice = function(){
-      var newdevice = {title: vm.device.title, events: vm.device.events};
+      var newdevice = {title: vm.device.title, description: vm.device.description};
       console.log(newdevice); 
       createNewDeviceService.saveDevice(newdevice)
         .$promise.then(
@@ -45,7 +45,7 @@ function createNewDeviceController($scope, createNewDeviceService, socketService
         );
       vm.devices.push(newdevice);
       vm.device.title = '';
-      // vm.device.events = '';
+      vm.device.description = '';
   };
 
   vm.updateDevice = function(device){

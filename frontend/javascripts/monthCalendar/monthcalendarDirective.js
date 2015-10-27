@@ -3,8 +3,9 @@
  */
 var app = require('../app'),
     moment = require('moment');
+    //monthCalendarService = require('./monthCalendarService');
 
-app.directive("calendar", function () {
+app.directive("calendar", function ($http) {
     return {
         restrict: "E",
         templateUrl: "templates/monthCalendar/monthCalendarDirectiveTemplate.html",
@@ -40,6 +41,7 @@ app.directive("calendar", function () {
     }
 
     function _buildMonth(scope, start, month) {
+        console.log(start);
         scope.weeks = [];
         var done = false, date = start.clone(), monthIndex = date.month(), count = 0;
         while (!done) {
@@ -50,16 +52,89 @@ app.directive("calendar", function () {
         }
     }
 
+    function getDateEvents(eventsObj, dateString) {
+        var events = [];
+
+        eventsObj[dateString].forEach( function(event){
+                console.log(event.title, event.start);
+                events.push({name:event.title, date: moment(event.start)});
+            });
+
+        return events;
+    }
+
+    function getEventsObj(gteDate,lteDate) {
+        // var dateStart = new Date(year, 0, 1);
+        // var dateEnd = new Date(year, 11, 32);
+        var eventObj = {};
+        // while (dateStart < dateEnd) {
+        //     var day = dateStart.getDate()+'_'+(dateStart.getMonth()+1)+'_'+year;
+        //     eventObj[day] = [];
+        //     dateStart.setDate(dateStart.getDate() + 1);
+        // }
+
+        //GET WEEK EVENTS
+        var evtPromise = $http.get('/api/eventByInterval/' + gteDate + '/' + lteDate)       
+        .then(function (response) {
+            var events = response.data;
+            console.log(events);
+            for (var i = 0; i < events.length; i++) {
+                var eventStartDate = new Date(events[i].start);
+                var evDate = eventStartDate.getDate()+'_'+(eventStartDate.getMonth()+1)+'_'+eventStartDate.getFullYear();
+                console.log(evDate);
+                eventObj[evDate] = eventObj[evDate] || [] ;
+                eventObj[evDate].push(events[i]);
+            }
+            console.log(eventObj);
+            return eventObj;
+
+        }, function(reason) {
+            console.log(reason);    
+        });       
+        return evtPromise;
+    }
+
     function _buildWeek(date, month) {
         var days = [];
+        var events = [];
+        var evtPromise =  getEventsObj(date.format("DD MMM YYYY HH:mm:ss"),moment(date).add(7, 'days').format("DD MMM YYYY HH:mm:ss"));
+            evtPromise.then(function(dataObj) {
+                events = dataObj;
+            }, function(error) {
+                console.log(error);
+            });
+
+        console.log(events);
+        //console.log(date);
+        //console.log(date.format("DD MMM YYYY HH:mm:ss"));
+
+        //console.log(date.format("DD_MM_YYYY"));
+
+        //console.log(date.format("DD MMM YYYY"));
+        //console.log(moment(date).add(7, 'days').format("DD MMM YYYY HH:mm:ss"));
+        //getEventsObj(date.format("DD MMM YYYY HH:mm:ss"),moment(date).add(7, 'days').format("DD MMM YYYY HH:mm:ss"));
+
         for (var i = 0; i < 7; i++) {
             days.push({
                 name: date.format("dd").substring(0, 1),
                 number: date.date(),
                 isCurrentMonth: date.month() === month.month(),
                 isToday: date.isSame(new Date(), "day"),
-                date: date
+                date: date,
+                events: []
             });
+
+            
+
+            //console.log(days[i].date.format("DD_MM_YYYY"));
+
+            // eventObj[days[i].date.format("DD_MM_YYYY")].forEach( function(event){
+            //     console.log(event.title, event.start);
+            //     days[i].events.push({name:event.title, date: moment(event.start)});
+            // });
+
+            //days[i].events = getDateEvents(eventsObj,days[i].date.format("DD_MM_YYYY"));
+
             if (days[i].isToday) {
                 var currentDate = date.clone(),
                     birthdayHours = currentDate.hours(9);

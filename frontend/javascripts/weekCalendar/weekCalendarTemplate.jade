@@ -1,21 +1,30 @@
 #weekView(ng-cloak)
-  .col-lg-8
-
+  div
     .week_header
-      button.week_prev(class="btn btn-large btn-info" ng-click='previous()') Previous
+      i.glyphicon.pull-left.week-chevron.glyphicon-chevron-left.bigger-icon.week_prev(class="btn btn-large btn-info"  ng-click='previous()') 
       span.week_header_title {{wCtrl.Start | date: 'd MMM yyyy'}} - {{wCtrl.End | date: 'd MMM yyyy'}}
-      button.week_next(class="btn btn-large btn-info" ng-click='next()') Next
+      i.glyphicon.pull-right.week-chevron.glyphicon-chevron-right.bigger-icon.week_next(class="btn btn-large btn-info" ng-click='next()')
 
     .content_for_week
       table.week_in_table(width='100%')
         col.header(width='12,5%')
         col.days(width='12,5%' span='7')
         tr
+                th.tg-month-yw4l.month-day-header 
+                th.tg-month-yw4l.month-day-header Sun
+                th.tg-month-yw4l.month-day-header Mon
+                th.tg-month-yw4l.month-day-header Tue
+                th.tg-month-yw4l.month-day-header Wed
+                th.tg-month-yw4l.month-day-header Thu
+                th.tg-month-yw4l.month-day-header Fri
+                th.tg-month-yw4l.month-day-header Sat
+        //-tr
           th
           th(ng-repeat="day in wCtrl.days")
             span {{day.name}}
             //br
             //span {{wCtrl.Tue | date: 'd MMM'}}
+
         tr(ng-repeat="timeSt in wCtrl.timeStamps")
           td.hourCell {{timeSt.time}}
           td.eventCell

@@ -31,7 +31,7 @@ var app = angular.module('calendar-app', ['ui.router', 'ngAlertify', 'btford.soc
                     controller: 'LoginController'
                 })
                 .state('calendar.dayView', {
-                    url: '/calendar/dayView',
+                    url: '/dayView',
                     templateUrl: './templates/dailyCalendar/dailyCalendarTemplate.html',
                     controller: 'DayViewController',
                     controllerAs: 'dvCtrl'
@@ -43,7 +43,7 @@ var app = angular.module('calendar-app', ['ui.router', 'ngAlertify', 'btford.soc
                     controllerAs: 'wCtrl',
                 })               
                 .state('calendar.monthView', {
-                    url: '/calendar/monthView',
+                    url: '/monthView',
                     templateUrl: './templates/monthCalendar/monthCalendar.html',
                     controller: ''
                 })
@@ -59,8 +59,14 @@ var app = angular.module('calendar-app', ['ui.router', 'ngAlertify', 'btford.soc
                     controller: 'createNewRoomController',
                     controllerAs: 'cnrCtrl',
                 })
+                .state('calendar.createNewEventType', {
+                    url: '/createNewEventType',
+                    templateUrl: './templates/createNew/NewEventType/createNewEventTypeTemplate.html',
+                    controller: 'createNewEventTypeController',
+                    controllerAs: 'cnetCtrl',
+                })
 				.state('calendar.yearView', {
-					url: '/calendar/yearView',
+					url: '/yearView',
 					templateUrl: './templates/yearCalendar/yearCalendarTemplate.html',
 					controller: 'yearCalendarController',
 					controllerAs: 'YCtrl',

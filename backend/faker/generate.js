@@ -8,7 +8,9 @@ var repositories = {
 	room: require('../repositories/roomRepository'),
 	group: require('../repositories/groupRepository'),
 	user: require('../repositories/userRepository'),
+	eventType: require('../repositories/eventTypeRepository'),
 	event: require('../repositories/eventRepository')
+
 };
 
 
@@ -20,9 +22,10 @@ var generate = function(type, count, callback) {
 };
 
 module.exports = function (amount) {
-	generate.call(null, 'device', amount.device);
+	generate.call(null, 'device', amount.room);
 	generate.call(null, 'room', amount.room);
 	generate.call(null, 'user', amount.user);
 	generate.call(null, 'group', amount.group);
-	generate.call(null, 'event', amount.group);
+	generate.call(null, 'eventType', amount.group);
+	generate.call(null, 'event', amount.event);
 };

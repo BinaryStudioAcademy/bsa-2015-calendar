@@ -18,11 +18,11 @@ function createNewRoomController($scope, createNewRoomService, socketService){
 
   vm.reset = function (){
       vm.room.title = '';
-      vm.room.events = '';
+      vm.room.description = '';
   };
 
   vm.addRoom = function (){
-      var newroom = {title: vm.room.title, events: vm.room.events };
+      var newroom = {title: vm.room.title, description: vm.room.description };
       console.log(newroom);
       createNewRoomService.saveRoom(newroom)
         .$promise.then(
@@ -36,7 +36,7 @@ function createNewRoomController($scope, createNewRoomService, socketService){
         );
       vm.rooms.push(newroom);
       vm.room.title = '';
-      // vm.room.events = '';
+      vm.room.description = '';
   };
 
   vm.updateRoom = function(room){

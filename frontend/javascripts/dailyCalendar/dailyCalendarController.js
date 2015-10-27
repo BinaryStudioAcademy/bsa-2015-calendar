@@ -65,7 +65,7 @@ function DayViewController(DailyCalendarService, $timeout) {
 		vm.formSuccess = false;
 
 		//will be pulled from server 
-		vm.eventTypes = ['Basic', 'Leisure', 'Private'];
+		vm.eventTypes = getEventTypes();
 		vm.availableRooms = getRooms();
 		vm.availableInventory = getInventory();
 		vm.users = getUsers();
@@ -105,7 +105,7 @@ function DayViewController(DailyCalendarService, $timeout) {
 		vm.event.users = [];
 		vm.event.room = null;
 		vm.event.isPrivate = false;
-		vm.event.type = '';
+		vm.event.type = [];
 		vm.event.price = null;
 	}
 
@@ -147,6 +147,20 @@ function DayViewController(DailyCalendarService, $timeout) {
 				}
 			);
 	}
+
+	function getEventTypes() {
+		DailyCalendarService.getAllEventTypes()
+			.$promise.then(
+				function(response) {
+					console.log('success Types for Events: ', response.length);
+					vm.eventTypes = response;
+				},
+				function(response) {
+					console.log('failure', response);
+				}
+			);
+	}
+
 
 	// function getLatestCurrencyRateByCode(code, callback){
 	// 		var fxRatesResource = $resource(appConfig.apiUrl + 'metadata/fx/:code', {code: code}, null);
