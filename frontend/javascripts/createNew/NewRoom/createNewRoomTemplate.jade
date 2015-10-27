@@ -7,12 +7,12 @@
       label.col-sm-1(for="room") title: 
       .col-sm-11
         input(type='text', class="form-control", id="room", placeholder="Enter title", ng-model='cnrCtrl.room.title')
-      label.col-sm-1(for="events" class="form-control4") events: 
+      label.col-sm-1(for="description" class="form-control4") description: 
       .col-sm-11
-        input(type='text', class="form-control", id="events", disabled, placeholder="Enter events", ng-model='cnrCtrl.room.events')
+        input(type='text', class="form-control", id="description", placeholder="Enter description", ng-model='cnrCtrl.room.description')
 
     .button-div1(align='center')
-      button(ng-click='cnrCtrl.reset()' class="btn btn-warning") RESET
+      button(ng-click='cnrCtrl.reset()' class="btn btn-warning") RESET FORM
       button(ng-click='cnrCtrl.addRoom()' class='btn btn-info') SAVE
     .button-div2
       h4 We have {{ cnrCtrl.rooms.length }} rooms.   
@@ -28,13 +28,14 @@
       table.col-sm-12.table-responsive.table-hover.table.roomTable(border='1', ng-show='cnrCtrl.showRoomsList')
           tr
             th.col-sm-4 room title
-            th.col-sm-6 events
+            th.col-sm-6 room description
             th.col-sm-1 change
             th.col-sm-1 delete
           tr(ng-repeat='room in cnrCtrl.rooms | filter: cnrCtrl.search')
             td  
               input#inputRoomTitle(class="form-control", ng-model='room.title')
-            td  {{ room.events }}
+            td  
+              input#inputRoomDescription(class="form-control", ng-model='room.description')
             td(align='center')  
               button(class="btn btn-info btn-xs" ng-click='cnrCtrl.updateRoom(room)') save            
               //- a(ng-click='cnrCtrl.updateRoom(room)') save

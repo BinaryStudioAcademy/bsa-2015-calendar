@@ -22,7 +22,7 @@ var generate = function(type, count, callback) {
 };
 
 module.exports = function (amount) {
-	generate.call(null, 'device', amount.device);
+	generate.call(null, 'device', amount.room);
 	generate.call(null, 'room', amount.room);
 	generate.call(null, 'user', amount.user);
 	generate.call(null, 'group', amount.group);

@@ -34,9 +34,11 @@ casual.define('device_', function () {
 	return {
 		_id: id,
 		title: casual.title,
+		description: casual.title,		
 		events: []
 	};
 });
+
 
 casual.define('room_', function () {
 	var id = casual.mongo_id;
@@ -45,6 +47,7 @@ casual.define('room_', function () {
 	return {
 		_id: id,
 		title: casual.title,
+		description: casual.title,	
 		events: []
 	};
 });

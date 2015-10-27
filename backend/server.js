@@ -11,10 +11,10 @@ var LocalStrategy = require('passport-local').Strategy;
 // var faker = require('./faker/generate.js');
 
 // faker({
-//   device: 20,
-//   user: 20,
-//   room: 20,
-//   group: 3,
+//   device: 1,
+//   user: 1,
+//   room: 1,
+//   group: 1,
 //   eventType: 1
 // });
 
