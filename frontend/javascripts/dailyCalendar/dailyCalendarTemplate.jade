@@ -13,12 +13,6 @@
                 tr(ng-repeat="timeSt in dvCtrl.timeStamps")
                     td.hourCell {{timeSt}}
                     td.eventCell(ng-dblclick="dvCtrl.toggleModal()" ng-click="dvCtrl.toggleEventInfo()")
-
-        #showAllEvents.text-center
-            .checkbox
-                label
-                    input(type="checkbox") 
-                    | Show all events
         .eventInfo.well(ng-show="dvCtrl.eventSelected")
             #eventName
                 strong Event name:
@@ -36,6 +30,11 @@
                 strong Participants: 
                 span.badge {{dvCtrl.event.participants}}
     
+    #showAllEvents.text-center
+        .checkbox
+            label
+                input(type="checkbox") 
+                | Show all events
     //-button.btn.btn-default#pickDate
     //-.col-md-9.col-sm-8.main-content.table-responsive
         table#calendar.table

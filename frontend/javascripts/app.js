@@ -31,7 +31,7 @@ var app = angular.module('calendar-app', ['ui.router', 'ngResource', 'ui.bootstr
                     controller: 'LoginController'
                 })
                 .state('calendar.dayView', {
-                    url: '/calendar/dayView',
+                    url: '/dayView',
                     templateUrl: './templates/dailyCalendar/dailyCalendarTemplate.html',
                     controller: 'DayViewController',
                     controllerAs: 'dvCtrl'
@@ -43,7 +43,7 @@ var app = angular.module('calendar-app', ['ui.router', 'ngResource', 'ui.bootstr
                     controllerAs: 'wCtrl',
                 })               
                 .state('calendar.monthView', {
-                    url: '/calendar/monthView',
+                    url: '/monthView',
                     templateUrl: './templates/monthCalendar/monthCalendar.html',
                     controller: ''
                 })
@@ -60,7 +60,7 @@ var app = angular.module('calendar-app', ['ui.router', 'ngResource', 'ui.bootstr
                     controllerAs: 'cnrCtrl',
                 })
 				.state('calendar.yearView', {
-					url: '/calendar/yearView',
+					url: '/yearView',
 					templateUrl: './templates/yearCalendar/yearCalendarTemplate.html',
 					controller: 'yearCalendarController',
 					controllerAs: 'YCtrl',
