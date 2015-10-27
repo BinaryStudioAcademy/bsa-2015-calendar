@@ -12,7 +12,7 @@
           i.glyphicon.glyphicon-chevron-right.bigger-icon
 
 
-    table#calendar.table.table-bordered
+    table#calendar.table.table-bordered(time-week-directive)
       tr.success.text-center 
         td
         td(ng-repeat="day in wCtrl.days")
@@ -21,13 +21,13 @@
 
       tr(ng-repeat="timeSt in wCtrl.timeStamps")
         td.hourCell {{timeSt.time}}
-        td.eventCell
-        td.eventCell
-        td.eventCell
-        td.eventCell
-        td.eventCell
-        td.eventCell
-        td.eventCell
+        td.eventCell.mon(ng-class='{{$index}}')
+        td.eventCell.tue(ng-class='{{$index}}')
+        td.eventCell.wed(ng-class='{{$index}}')
+        td.eventCell.thu(ng-class='{{$index}}')
+        td.eventCell.fri(ng-class='{{$index}}')
+        td.eventCell.sat(ng-class='{{$index}}')
+        td.eventCell.sun(ng-class='{{$index}}')
 
 
   .col-sm-2.right-sidebar.col-lg-1.hidden-xs
