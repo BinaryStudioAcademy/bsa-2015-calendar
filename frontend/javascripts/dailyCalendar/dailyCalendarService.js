@@ -66,5 +66,4 @@ function DailyCalendarService($resource, $timeout, $q) {
 		getAllUsers: getAllUsers,
 		getAllEventTypes: getAllEventTypes
 	};
-
 }
