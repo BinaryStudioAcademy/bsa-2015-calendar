@@ -8,11 +8,8 @@ module.exports = function(app) {
 	app.post('/api/register', function(req, res, next) {
 		console.log('registering new user: ' + req.body.username + ' | ' + req.body.password);
 
-		console.log('>>>>req body');
-		console.log(req.body);
-		console.log('<<<<req body end');
+		User.register(new User({ username: req.body.username, name: req.body.username, email: req.body.email }), req.body.password, function(err){
 
-		User.register(new User(req.body), req.body.password, function(err){
 			if(err){
 				console.log('error while user register', err);
 				return next(err);

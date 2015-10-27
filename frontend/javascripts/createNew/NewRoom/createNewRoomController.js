@@ -4,36 +4,55 @@ app.controller('createNewRoomController', createNewRoomController);
 createNewRoomController.$inject = ['$scope', 'createNewRoomService'];
 
 function createNewRoomController($scope, createNewRoomService){
-
-  $scope.showRoomsList = true;
-
-  $scope.rooms = createNewRoomService.getRooms();
+  var vm = this;
+  vm.showRoomsList = false;
+  vm.rooms = createNewRoomService.getRooms();
+  // alternativa str 9
   // createNewRoomService.getRooms(function(data){
-  //   $scope.rooms = data;
+  //   vmrooms = data;
   // });
 
+  vm.toggleViewRoom = function(){
+      vm.showRoomsList = !vm.showRoomsList;
+  };
 
-  $scope.addRoom = function (){
-      var newroom = {title: $scope.room.title, events: $scope.room.events };
+  vm.reset = function (){
+      vm.room.title = '';
+      vm.room.events = '';
+  };
+
+  vm.addRoom = function (){
+      var newroom = {title: vm.room.title, events: vm.room.events };
       console.log(newroom);
       createNewRoomService.saveRoom(newroom)
         .$promise.then(
           function(response) {
-            console.log('success', response);
+            console.log('success function addRoom', response);
           },
           function(response) {
-            console.log('failure', response);
+            console.log('failure function addRoom', response);
           } 
+        );
+      vm.rooms.push(newroom);
+      vm.room.title = '';
+      // vm.room.events = '';
+  };
+
+  vm.updateRoom = function(room){
+    console.log(room); 
+    createNewRoomService.updateRoom(room);
+  };
+
+  vm.deleteRoom = function(room, $index){
+    createNewRoomService.deleteRoom(room)
+      .$promise.then(
+        function(response) {
+          console.log('success function deleteRoom', response);
+          vm.rooms.splice($index, 1);
+        },
+        function(response) {
+          console.log('failure function deleteRom', response);
+        } 
       );
-      $scope.rooms.push(newroom);
-      $scope.room.title = '';
-      $scope.room.events = '';
-  };
-  $scope.reset = function (){
-      $scope.room.title = '';
-      $scope.room.events = '';
-  };
-  $scope.toggleViewRoom = function(){
-      $scope.showRoomsList = !$scope.showRoomsList;
   };
 }
