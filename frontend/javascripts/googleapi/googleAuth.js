@@ -1,11 +1,11 @@
 
 var OAUTHURL    =   'https://accounts.google.com/o/oauth2/auth?';
-var VALIDURL    =   'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=';
 var SCOPE       =   'https://www.googleapis.com/auth/calendar.readonly';
 var CLIENTID    =   '1013963100544-qijt8dlanmurpfk3n50hf0pjqo3qkt4n.apps.googleusercontent.com';
 var REDIRECT    =   'http://localhost:3080/googleAuth';
-var TYPE        =   'token';
-var URL        =   OAUTHURL + 'scope=' + SCOPE + '&client_id=' + CLIENTID + '&redirect_uri=' + REDIRECT + '&response_type=' + TYPE;
+var TYPE        =   'code';
+var ACCESS_TYPE =   'offline';
+var URL         =   OAUTHURL + "access_type" + ACCESS_TYPE + '&scope=' + SCOPE +  '&response_type=' + TYPE + '&client_id=' + CLIENTID + '&redirect_uri=' + REDIRECT;
 
 function login() {
 	var win = window.open(URL, "Google Authorization", 'width=800, height=600'); 
@@ -18,18 +18,19 @@ function login() {
 				var url = win.document.URL;
 				win.close();
 				
-				var token = getAccessToken(url);
-				sendUrl(token);
+				var code = getCode(url);
+
+				console.log(code);
+				sendUrl(code);
 			}
 		} catch(e) {}
 	}, 100);
 }
 
-function getAccessToken(url) {
-	var regexS = "[\\#&]"+ 'access_token' +"=([^&#]*)";
+function getCode(url) {
+	var regexS = "[\\#&\?]" + 'code' + "=([^&#]*)";
 	var regex = new RegExp( regexS );
 	var results = regex.exec( url );
-
 	if( results === null )
 		return "";
 	else
@@ -37,8 +38,9 @@ function getAccessToken(url) {
 }
 
 
-function sendUrl(token) {
+function sendUrl(code) {
 	var xmlhttp = new XMLHttpRequest();
-	xmlhttp.open("POST", 'http://localhost:3080/api/googleAuth', false);
-	xmlhttp.send(token);
+	xmlhttp.open("POST", 'http://localhost:3080/api/gAuth', false);
+	xmlhttp.setRequestHeader('Content-Type', 'application/json');
+	xmlhttp.send(JSON.stringify({ code : code}));
 }
