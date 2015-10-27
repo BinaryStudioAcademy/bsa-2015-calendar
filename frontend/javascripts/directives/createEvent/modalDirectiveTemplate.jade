@@ -47,8 +47,8 @@
 											ul.dropdown-menu
 												li(ng-repeat="type in dvCtrl.eventTypes" ng-click="dvCtrl.selectEventType(type)")
 													a(href="") 
-														| {{ type }}
-										input.form-control(type='text', aria-label='...' ng-model="dvCtrl.event.type" disabled)
+														| {{ type.title }}
+										input.form-control(type='text', aria-label='...' ng-model="dvCtrl.event.type.title" disabled)
 						.form-group
 							.col-md-10.col-sm-10.col-md-offset-2.col-sm-offset-2
 								.col-md-6.col-sm-6
