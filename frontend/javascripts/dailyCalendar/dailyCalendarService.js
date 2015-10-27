@@ -32,5 +32,4 @@ function DailyCalendarService($q, $resource) {
 		getTodaysEvents: getTodaysEvents,
 		updateEvent: updateEvent
 	};
-	
 }

@@ -40,7 +40,9 @@ function DayViewController(DailyCalendarService) {
 			block.id = vm.computedEvents[c].eventAsItIs._id;
 			document.getElementById('day-events-place').appendChild(block);
 		}
+
 		var blocks = document.getElementsByClassName('day-event-blocks');
+
 		for(var k = 0; k < blocks.length; k++) {
 			blocks[k].addEventListener('mousedown', function(e) {
 				var self = this;
@@ -72,7 +74,7 @@ function DayViewController(DailyCalendarService) {
 						var newElement = {
 							start: new Date(zeroDate.getTime() + todaysMilSec),
 							end: new Date(zeroDate.getTime() + todaysMilSec + durationMilSec)
-						}
+						};
 						DailyCalendarService.updateEvent(self.id, newElement);
 					});
 					self.addEventListener('mouseleave', function() {
@@ -85,7 +87,7 @@ function DayViewController(DailyCalendarService) {
 						var newElement = {
 							start: new Date(zeroDate.getTime() + todaysMilSec),
 							end: new Date(zeroDate.getTime() + todaysMilSec + durationMilSec)
-						}
+						};
 						DailyCalendarService.updateEvent(self.id, newElement);
 					});
 				}
@@ -101,7 +103,7 @@ function DayViewController(DailyCalendarService) {
 						var newElement = {
 							start: new Date(zeroDate.getTime() + todaysMilSec),
 							end: new Date(zeroDate.getTime() + todaysMilSec + durationMilSec)
-						}
+						};
 						DailyCalendarService.updateEvent(self.id, newElement);
 				});
 				self.addEventListener('mouseleave', function() {
@@ -114,7 +116,7 @@ function DayViewController(DailyCalendarService) {
 						var newElement = {
 							start: new Date(zeroDate.getTime() + todaysMilSec),
 							end: new Date(zeroDate.getTime() + todaysMilSec + durationMilSec)
-						}
+						};
 						DailyCalendarService.updateEvent(self.id, newElement);
 				});
 			});

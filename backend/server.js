@@ -6,12 +6,33 @@ var app = express();
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
+var MongoStore = require('connect-mongo')(session);
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
+var connection = require('./db/dbconnect');
+
+// var faker = require('./faker/generate.js');
+
+// faker({
+//   device: 1,
+//   user: 1,
+//   room: 1,
+//   group: 1,
+//   eventType: 1
+// });
+
+
+
 app.use(cookieParser());
 app.use(bodyParser());
-app.use(session({ secret: 'SECRET' }));
+
+var context = require('./io/context');
+context.mongoStore = new MongoStore({
+	mongoose_connection : connection.connection
+});
+
+app.use(session({ secret: 'SECRET', store: context.mongoStore }));
 
 staticPath = path.normalize(__dirname + '/../bower_components');
 
@@ -39,6 +60,10 @@ var routes = require('./routes/api/routes')(app);
 http.globalAgent.maxSockets = Infinity;
 
 var server = app.listen(3080);
+
+var socketio = require('./io/socketServer.js')(server);
+
+
 console.log('server start on port 3080');
 
 

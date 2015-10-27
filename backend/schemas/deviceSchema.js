@@ -4,6 +4,7 @@ var Schema = mongoose.Schema;
 
 var deviceSchema = new Schema({
     title : String,
+    description : String,
     events: [{type: Schema.Types.ObjectId, ref: 'Event'}]
 });
 

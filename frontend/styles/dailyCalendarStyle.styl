@@ -4,6 +4,10 @@
 .right-sidebar
     padding 0
 
+.content-for-day
+    height 550px
+    overflow-y scroll
+
 ul
     list-style-type none
     padding 0
@@ -22,11 +26,70 @@ ul
     margin 5px 0
 
 .hourCell 
-    width 15%
+    width 5%
+    background-color #f0f0f0
+    border-style solid
+    border-width 1px
+    border-color #ccc
 
 .eventCell 
+    text-align center
+    width 85%
+
+.table-responsive
+    height 450px
+    overflow-x auto
+    overflow-y scroll
+    -webkit-overflow-scrolling touch
+    -ms-overflow-style -ms-autohiding-scrollbar
+    border: 1px solid #ddd;
+    border-right 0
+
+.table-responsive > #calendar > tbody > tr:last-child > th,
+.table-responsive > #calendar > tfoot > tr:last-child > th,
+.table-responsive > #calendar > tbody > tr:last-child > td,
+.table-responsive > #calendar > tfoot > tr:last-child > td
+    border-bottom: 0;
+
+
+.input-group
+    margin-bottom 5px
+
+.main-content
+    padding 0
+
+.day-header
   text-align center
-  width auto
+  
+.current-day,
+.day-prev,
+.day-next
+  font-size 2em
+
+.current-day
+  line-height 2em
+
+.date-picker
+    font-size 1em !important
+// #navbar > ul > li > a:hover,
+// .datepicker-section > li > a#dayPrev:hover,
+// .datepicker-section > li > a#dayPrev:hover
+//     color #FFD604
+
+// .datepicker-section
+//     box-sizing border-box
+//     padding 5px
+
+// #datepicker> button:hover
+//     background #FFD604
+//     color white
+
+// #datepicker > button:focus
+//     background #DEB900
+//     color white
+
+.save-area
+    text-align center
 
 .day-event-blocks
   position absolute
@@ -46,3 +109,4 @@ ul
     box-shadow 0 0 15px black
 #day-events-place
   overflow hidden
+  
