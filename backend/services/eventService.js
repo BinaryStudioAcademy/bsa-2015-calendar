@@ -129,7 +129,7 @@ eventService.prototype.delete = function(eventId, callback){
 					return cb(err);
 				}
 				if (!data){
-					return cb(new Error("incorrect planId " + eventId));
+					return cb(new Error("incorrect eventId " + eventId));
 				}
 				event = data;
 				cb();
