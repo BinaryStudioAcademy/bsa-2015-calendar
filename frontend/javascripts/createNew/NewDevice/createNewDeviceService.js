@@ -8,7 +8,7 @@ function createNewDeviceService ($resource) {
 	var devices = dbdevices.query();
 	
 	function getDevices(){
-		return devices;
+		return dbdevices.query();
 	}
   // alternativa str 10-12
 	// function getDevices(callback){
