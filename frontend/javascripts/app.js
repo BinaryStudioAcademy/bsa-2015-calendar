@@ -1,4 +1,4 @@
-var app = angular.module('calendar-app', ['ui.router', 'btford.socket-io', 'ngResource', 'ui.bootstrap', 'ngAnimate', 'angularjs-dropdown-multiselect'])
+var app = angular.module('calendar-app', ['ui.router', 'ngAlertify', 'btford.socket-io', 'ngResource', 'ui.bootstrap', 'ngAnimate', 'angularjs-dropdown-multiselect'])
     .config(['$stateProvider', '$urlRouterProvider', '$resourceProvider', '$httpProvider', '$locationProvider',
         function ($stateProvider, $urlRouterProvider, $resourceProvider, $httpProvider, $locationProvider) {
             $urlRouterProvider.otherwise('/');
@@ -66,18 +66,48 @@ var app = angular.module('calendar-app', ['ui.router', 'btford.socket-io', 'ngRe
 					controllerAs: 'YCtrl',
 				});
 		}
-	]).factory('socketService', ['socketFactory', function(socketFactory){
+	]).factory('socketService', ['socketFactory', 'alertify', function(socketFactory, alertify){
         var socket = socketFactory();
 
         socket.on('add device notification', function(device){
+
             console.log(device);
             console.log('SOCKETIO: NEW DEVICE');
+            alertify.log("New device has been added");
         });
 
-        socket.on('add room notification', function(device){
+        socket.on('update device notification', function(device){
             console.log(device);
-            console.log('SOCKETIO: NEW DEVICE');
+            alertify.log("Device has been updated");
         });
+
+        socket.on('delete device notification', function(device){
+            alertify.log("Device has been deleted");
+        });
+
+        socket.on('add room notification', function(room){
+            alertify.log('New room has been added');
+        });
+
+        socket.on('update room notification', function(room){
+            alertify.log('Romm has been updated');
+        });
+
+        socket.on('delete room notification', function(room){
+            alertify.log('Room has been deleted');
+        });
+
+        socket.on('add event notification', function(event){
+            alertify.log('Event has been created');
+        }); 
+
+        socket.on('update event notification', function(event){
+            alertify.log('Event has been updated');
+        });
+        
+        socket.on('delete event notification', function(event){
+            alertify.log('Event has been deleted');
+        });                                    
 
         return socket;
     }]);

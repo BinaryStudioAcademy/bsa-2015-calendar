@@ -37,6 +37,39 @@ module.exports = function(server){
 			socket.broadcast.emit('add device notification', data.device);
 		});
 
+		socket.on('update device', function(data){
+			console.log('SOCKET.IO: Update device');
+			socket.broadcast.emit('update device notification', data.device);
+		});
+
+		socket.on('delete device', function(data){
+			socket.broadcast.emit('delete device notification', data.device);
+		});
+
+		socket.on('add room', function(data){
+			socket.broadcast.emit('add room notification', data.room);
+		});
+
+		socket.on('update room', function(data){
+			socket.broadcast.emit('update room notification', data.room);
+		});
+
+		socket.on('delete room', function(data){
+			socket.broadcast.emit('delete room notification', data.room);
+		});
+
+		socket.on('add event', function(data){
+			socket.broadcast.emit('add event notification', data.room);
+		});
+
+		socket.on('update event', function(data){
+			socket.broadcast.emit('update event notification', data.room);
+		});
+
+		socket.on('delete event', function(data){
+			socket.broadcast.emit('delete event notification', data.room);
+		});				
+
 		// socket.on('add-user-to-radio', function (radio_id) {
 		// 	mediator.publish("add-user-to-radio", radio_id, socket.request.user._id);
 		// 	roomManager.addRoomToUser(socket.request.user._id, 'radio_' + radio_id);

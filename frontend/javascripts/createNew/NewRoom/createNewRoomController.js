@@ -1,9 +1,9 @@
 var app = require('../../app');
 
 app.controller('createNewRoomController', createNewRoomController);
-createNewRoomController.$inject = ['$scope', 'createNewRoomService'];
+createNewRoomController.$inject = ['$scope', 'createNewRoomService', 'socketService'];
 
-function createNewRoomController($scope, createNewRoomService){
+function createNewRoomController($scope, createNewRoomService, socketService){
   var vm = this;
   vm.showRoomsList = false;
   vm.rooms = createNewRoomService.getRooms();
@@ -28,6 +28,7 @@ function createNewRoomController($scope, createNewRoomService){
         .$promise.then(
           function(response) {
             console.log('success function addRoom', response);
+            socketService.emit('add room', { room : newroom });
           },
           function(response) {
             console.log('failure function addRoom', response);
@@ -41,6 +42,7 @@ function createNewRoomController($scope, createNewRoomService){
   vm.updateRoom = function(room){
     console.log(room); 
     createNewRoomService.updateRoom(room);
+    socketService.emit('update room', { room : room });
   };
 
   vm.deleteRoom = function(room, $index){
@@ -48,6 +50,7 @@ function createNewRoomController($scope, createNewRoomService){
       .$promise.then(
         function(response) {
           console.log('success function deleteRoom', response);
+          socketService.emit('delete room', { room : room });
           vm.rooms.splice($index, 1);
         },
         function(response) {

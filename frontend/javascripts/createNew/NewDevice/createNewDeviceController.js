@@ -1,9 +1,9 @@
 var app = require('../../app');
 
 app.controller('createNewDeviceController', createNewDeviceController);
-createNewDeviceController.$inject = ['$scope', 'createNewDeviceService', 'socketService'];
+createNewDeviceController.$inject = ['$scope', 'createNewDeviceService', 'socketService', 'alertify'];
 
-function createNewDeviceController($scope, createNewDeviceService, socketService){
+function createNewDeviceController($scope, createNewDeviceService, socketService, alertify){
   var vm = this;
   vm.showDevicesList = false;
   vm.devices = createNewDeviceService.getDevices();
@@ -14,6 +14,8 @@ function createNewDeviceController($scope, createNewDeviceService, socketService
 
   vm.toggleViewDevice = function(){
       vm.showDevicesList = !vm.showDevicesList;
+      vm.devices = createNewDeviceService.getDevices();
+      //alertify.log('test alert');
   };
 
   vm.reset = function (){
@@ -29,7 +31,7 @@ function createNewDeviceController($scope, createNewDeviceService, socketService
           function(response) {
 
             console.log('success', response);
-            $scope.devices = createNewDeviceService.getDevices();
+            vm.devices = createNewDeviceService.getDevices();
 
             socketService.emit('add device', { device: newdevice });
 
@@ -49,6 +51,7 @@ function createNewDeviceController($scope, createNewDeviceService, socketService
   vm.updateDevice = function(device){
     console.log(device); 
     createNewDeviceService.updateDevice(device);
+    socketService.emit('update device', { device: device });
   };
 
   vm.deleteDevice = function(device, $index){
@@ -56,6 +59,7 @@ function createNewDeviceController($scope, createNewDeviceService, socketService
       .$promise.then(
         function(response) {
           console.log('success function deleteDevice', response);
+          socketService.emit('delete device', { device: device });
           vm.devices.splice($index, 1);
         },
         function(response) {
