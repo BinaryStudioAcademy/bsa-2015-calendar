@@ -2,9 +2,9 @@ var app = require('../app');
 
 app.controller('WeekViewController', WeekViewController);
 
-WeekViewController.$inject = ['WeekCalendarService'];
+WeekViewController.$inject = ['WeekCalendarService', '$scope'];
 
-function WeekViewController(WeekCalendarService) {
+function WeekViewController(WeekCalendarService, $scope) {
 	var vm = this;
 
 	vm.timeStamps = WeekCalendarService.getTimeStamps();
@@ -26,6 +26,24 @@ function WeekViewController(WeekCalendarService) {
 	vm.Start = weekStart;
 	// vm.Tue = weektue;
 	vm.End = weekEnd;
+
+
+
+
+
+  //- код для окна and scope в аргументе функции
+  $scope.modalShown = false;
+  $scope.toggleModal = function() {
+    $scope.modalShown = !$scope.modalShown;
+  };
+  //- код для окна
+
+
+
+
+
+
+
 }
 
 

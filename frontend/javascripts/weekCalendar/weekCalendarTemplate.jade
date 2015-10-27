@@ -1,26 +1,32 @@
-#weekView(ng-cloak)
+#weekView(ng-cloak, ng-controller='WeekViewController')
+  .week_content(ng-click='toggleModal()')
+    modal-dialog(show='modalShown' width='400px' height='60%')
+    //- выше идет код для окна
 
-  .week_header
-    button.week_prev(class="btn btn-large btn-info" ng-click='previous()') Previous
-    span.week_header_title {{wCtrl.Start | date: 'd MMM yyyy'}} - {{wCtrl.End | date: 'd MMM yyyy'}}
-    button.week_next(class="btn btn-large btn-info" ng-click='next()') Next
 
-  .content_for_week
-    table.week_in_table(width='100%')
-      col.header(width='12,5%')
-      col.days(width='12,5%' span='7')
-      tr
-        th
-        th(ng-repeat="day in wCtrl.days")
-          span {{day.name}}
-          //br
-          //span {{wCtrl.Tue | date: 'd MMM'}}
-      tr(ng-repeat="timeSt in wCtrl.timeStamps")
-        td.hourCell {{timeSt.time}}
-        td.eventCell
-        td.eventCell
-        td.eventCell
-        td.eventCell
-        td.eventCell
-        td.eventCell
-        td.eventCell
+    .week_header
+      button.week_prev(class="btn btn-large btn-info" ng-click='previous()') Previous
+      span.week_header_title {{wCtrl.Start | date: 'd MMM yyyy'}} - {{wCtrl.End | date: 'd MMM yyyy'}}
+      button.week_next(class="btn btn-large btn-info" ng-click='next()') Next
+
+    .content_for_week
+      table.week_in_table(width='100%')
+        col.header(width='12,5%')
+        col.days(width='12,5%' span='7')
+        tr
+          td
+          td(ng-repeat="day in wCtrl.days")
+            span {{day.name}}
+            //br
+            //span {{wCtrl.Tue | date: 'd MMM'}}
+        tr(ng-repeat="timeSt in wCtrl.timeStamps")
+          td.hourCell {{timeSt.time}}
+          td.eventCell
+          td.eventCell
+          td.eventCell
+          td.eventCell
+          td.eventCell
+          td.eventCell
+          td.eventCell
+
+

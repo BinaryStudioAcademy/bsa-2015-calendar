@@ -1,0 +1,7 @@
+.ng-modal(ng-show='show')
+	.ng-modal-overlay(ng-click='hideModal()')
+	.ng-modal-dialog(ng-style='dialogStyle')
+		.ng-modal-close(ng-click='scope.hideModal()') X
+		.ng-modal-dialog-content
+			h4 привет мир
+			h3 и тебе привет
