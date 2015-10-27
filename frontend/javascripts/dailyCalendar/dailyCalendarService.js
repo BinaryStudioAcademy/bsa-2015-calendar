@@ -11,8 +11,11 @@ function DailyCalendarService($q, $resource) {
 		return timeStamps;
 	}
 
+	function updateEvent(id, body) {
+		$resource('/api/event/:id').put(id, body);
+	}
 
-	function getTodaysEvents(){
+	function getTodaysEvents() {
 		var today = new Date();
 		today.setHours(0,0,0,0);
 		var tommorow = new Date(today.getTime() + 86400000);
@@ -26,7 +29,8 @@ function DailyCalendarService($q, $resource) {
 
 	return {
 		getTimeStamps: getTimeStamps,
-		getTodaysEvents: getTodaysEvents
+		getTodaysEvents: getTodaysEvents,
+		updateEvent: updateEvent
 	};
 	
 }
