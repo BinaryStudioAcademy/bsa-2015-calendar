@@ -72,5 +72,3 @@ function WeekCalendarService($resource) {
 		getDays: getDays
 	};	
 }
-
-

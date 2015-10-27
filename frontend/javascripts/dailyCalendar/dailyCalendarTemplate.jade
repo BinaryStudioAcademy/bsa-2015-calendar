@@ -1,12 +1,45 @@
 #dayView(ng-cloak)
 
-    .col-md-9.col-sm-8.main-content.table-responsive
-        table#calendar.table
+    
+    .day-header
+      i.glyphicon.pull-left.day-chevron.glyphicon-chevron-left.bigger-icon.day-prev(class="btn btn-large btn-info"  ng-click='previous()')
+      span.current-day#pickDate{{dvCtrl.selectedDate | date: 'd EEE yyyy'}}
+      date-picker.sidebar-datepicker(for="pickDate")
+      i.glyphicon.pull-right.day-chevron.glyphicon-chevron-right.bigger-icon.day-next(class="btn btn-large btn-info" ng-click='next()')
+      
+    .content-for-day
+      table.day-in-table(width='100%')#calendar.table
             tbody
                 tr(ng-repeat="timeSt in dvCtrl.timeStamps")
                     td.hourCell {{timeSt}}
                     td.eventCell(ng-dblclick="dvCtrl.toggleModal()" ng-click="dvCtrl.toggleEventInfo()")
-    .col-md-3.col-sm-4.right-sidebar.hidden-xs
+
+        #showAllEvents.text-center
+            .checkbox
+                label
+                    input(type="checkbox") 
+                    | Show all events
+        .eventInfo.well(ng-show="dvCtrl.eventSelected")
+            #eventName
+                strong Event name:
+                span {{dvCtrl.event.name}}
+            #eventDescription
+                strong Description:
+                p {{dvCtrl.event.description}}
+            #eventAuthor
+                strong Created by:
+                span {{dvCtrl.event.author}}
+            #eventRoom
+                strong Room #
+                span {{dvCtrl.event.room}}
+            #eventParticipants
+                strong Participants: 
+                span.badge {{dvCtrl.event.participants}}
+    
+    //-button.btn.btn-default#pickDate
+    //-.col-md-9.col-sm-8.main-content.table-responsive
+        table#calendar.table
+    //-.col-md-3.col-sm-4.right-sidebar.hidden-xs
         .row.text-center
             ul.list-inline.datepicker-section
                 li
@@ -88,4 +121,3 @@
 //-       #eventParticipants
 //-         strong Participants: 
 //-         span.badge {{dvCtrl.event.participants}}
-
