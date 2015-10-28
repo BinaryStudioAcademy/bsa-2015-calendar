@@ -28,6 +28,12 @@ module.exports = function(app) {
 		res.send('If you see this, you are authorized');
 	});
 
+	app.post('api/isAuth', function(req, res){
+		var response = req.isAuthenticated();
+
+		res.send(response);
+	});
+
 	app.get('/api/logout', function(req, res){
 		req.logout();
 		res.send({ unauthenticated: 'true' });
