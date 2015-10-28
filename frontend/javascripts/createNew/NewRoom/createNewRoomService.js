@@ -29,7 +29,7 @@ function createNewRoomService ($resource) {
 
 	function updateRoom(room){	
 		var dbroomById = $resource('http://localhost:3080/api/room/:id', {id: room._id}, {'update': { method:'PUT'}});
-		delete room._id;
+		// delete room._id;
 		return dbroomById.update(room);
 	}
 

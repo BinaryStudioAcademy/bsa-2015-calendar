@@ -10,6 +10,7 @@ function createNewEventTypeController($scope, createNewEventTypeService){
 
   vm.toggleViewEventType = function(){
       vm.showEventTypesList = !vm.showEventTypesList;
+      vm.eventTypes = createNewEventTypeService.getEventTypes();
   };
 
   vm.reset = function (){

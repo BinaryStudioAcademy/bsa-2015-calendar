@@ -25,7 +25,7 @@ function createNewEventTypeService ($resource) {
 
 	function updateEventType(eventType){	
 		var dbEventTypeById = $resource('http://localhost:3080/api/eventType/:id', {id: eventType._id}, {'update': { method:'PUT'}});
-		delete eventType._id;
+		// delete eventType._id;
 		return dbEventTypeById.update(eventType);
 	}
 
