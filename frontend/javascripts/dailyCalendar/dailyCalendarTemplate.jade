@@ -12,9 +12,6 @@
 				date-picker.sidebar-datepicker(for="pickDate")
 		.col-md-2.col-sm-2.col-xs-2
 			i.glyphicon.glyphicon-chevron-right.bigger-icon.day-next.pull-right(class="btn btn-large btn-info" ng-click='dvCtrl.showDay(1)')
-	.row
-		button.btn(ng-click='dvCtrl.showDate()')
-			| Show vm.selectedDate
 	.content-for-day
 		table.day-in-table(width='100%')#calendar.table
 			tbody

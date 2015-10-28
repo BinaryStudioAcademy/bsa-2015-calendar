@@ -4,7 +4,7 @@ app.controller('DayViewController', DayViewController);
 
 DayViewController.$inject = ['DailyCalendarService', '$timeout', '$q', '$uibModal'];
 
-function DayViewController(DailyCalendarService, $timeout, $uibModal) {
+function DayViewController(DailyCalendarService, $timeout, $q, $uibModal) {
 
 	var vm = this;
 
@@ -34,7 +34,25 @@ function DayViewController(DailyCalendarService, $timeout, $uibModal) {
 			animation: true,
 			templateUrl: 'templates/dailyCalendar/editEventTemplate.html',
 			controller: 'ModalController',
-			controllerAs: 'ModalCtrl'
+			controllerAs: 'ModalCtrl',
+			bindToController: true,
+			resolve: {
+				rooms: function () {
+					return vm.availableRooms;
+				},
+				devices: function () {
+					return vm.availableInventory;
+				},
+				users: function () {
+					return vm.users;
+				},
+				selectedDate: function () {
+					return vm.selectedDate;
+				},
+				eventTypes: function () {
+					return vm.eventTypes;
+				},
+			}
 		});
 	};
 
@@ -51,11 +69,11 @@ function DayViewController(DailyCalendarService, $timeout, $uibModal) {
 		vm.sidebarStyle = true;
 
 		//will be pulled from server 
-		vm.eventTypes = ['Basic', 'Leisure', 'Private'];
 		getRooms();
 		getInventory();
 		getUsers();
 		getAllEvents();
+		getEventTypes();
 
 	}
 
@@ -91,6 +109,19 @@ function DayViewController(DailyCalendarService, $timeout, $uibModal) {
 				function(response) {
 					console.log('success Number of Users: ', response.length);
 					vm.users = response;
+				},
+				function(response) {
+					console.log('failure', response);
+				}
+			);
+	}
+
+	function getEventTypes() {
+		DailyCalendarService.getAllEventTypes()
+			.$promise.then(
+				function(response) {
+					console.log('success Current number of types: ', response.length);
+					vm.eventTypes = response;
 				},
 				function(response) {
 					console.log('failure', response);
