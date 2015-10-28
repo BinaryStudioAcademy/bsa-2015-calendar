@@ -12,6 +12,7 @@ function DailyCalendarService($resource, $timeout, $q) {
 	var resourceRooms= $resource('/api/room/');
 	var resourceDevices = $resource('/api/device/');
 	var resourceUsers = $resource('/api/user/');
+	var resourceEventTypes = $resource('/api/eventType');
 
 
 
@@ -45,6 +46,10 @@ function DailyCalendarService($resource, $timeout, $q) {
 
 	function getAllUsers() {
 		return resourceUsers.query();
+	}
+
+	function getAllEventTypes() {
+		return resourceEventTypes.query();
 	}
 
 	return {

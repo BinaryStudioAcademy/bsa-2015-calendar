@@ -18,7 +18,8 @@ angular
 
 				var tableSel = $attrs.table;
 				var rowHeight = $scope.calcRowHeight(tableSel);
-				var borderWidth = $scope.calcPosition(tableSel);
+
+				console.log(rowHeight);
 				
 				$scope.moveIndicator($element, rowHeight);
 				
@@ -48,15 +49,19 @@ angular
 
 				var today = new Date();
 				var currentHour = today.getHours();
+				console.log(currentHour);
 				var currentMinutes = today.getMinutes();
+				console.log(currentMinutes);
 				var oneMinHeight = rowHeight / 60;
+				console.log(oneMinHeight);
 				var newPosY = currentHour * rowHeight + (oneMinHeight * currentMinutes) + 'px';
+				console.log(newPosY);
 				return newPosY;
 			}
 			
 			function moveIndicator(element, rowHeight) {
 				var newPos = $scope.calcPosition(rowHeight);
-				element.css('top', newPos);
+				// element.css('top', newPos);
 			}
 		}
 	}
