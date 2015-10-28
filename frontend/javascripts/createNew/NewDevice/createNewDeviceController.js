@@ -29,21 +29,15 @@ function createNewDeviceController($scope, createNewDeviceService, socketService
       createNewDeviceService.saveDevice(newdevice)
         .$promise.then(
           function(response) {
-
-            console.log('success', response);
-            vm.devices = createNewDeviceService.getDevices();
-
+            vm.devices.push(response); 
+            // vm.devices = createNewDeviceService.getDevices();
             socketService.emit('add device', { device: newdevice });
-
             console.log('success function addDevice', response);
-
           },
           function(response) {
             console.log('failure function addDevice', response);
           } 
-
         );
-      vm.devices.push(newdevice);
       vm.device.title = '';
       vm.device.description = '';
   };
