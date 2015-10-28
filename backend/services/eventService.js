@@ -4,6 +4,7 @@ var userRepository = require('../repositories/userRepository');
 var roomRepository = require('../repositories/roomRepository');
 var deviceRepository = require('../repositories/deviceRepository');
 var groupRepository = require('../repositories/groupRepository');
+var eventTypeRepository = require('../repositories/eventTypeRepository');
 var _ = require('lodash');
 //var io = require('../notifications/notifications');
 
@@ -110,6 +111,25 @@ eventService.prototype.add = function(data, callback){
 				cb();
 			}
 		}
+
+		function(cb){
+			if(event.type.length){
+				event.type.forEach(function(eventTypeId){
+					eventTypeRepository.addEvent(eventTypeId, event._id, function(err, data){
+	 					if(err){
+	 						return cb(err, null);
+	 					}
+					});
+					console.log('added to eventType');
+				});
+				cb();
+			}
+			else{
+				console.log('no eventType');
+				cb();
+			}
+		}
+
 	], function(err, result){
 		if(err){
 			//console.log(err.message);
@@ -184,6 +204,25 @@ eventService.prototype.delete = function(eventId, callback){
 			}
 			cb();
 		},
+
+
+		function(cb){
+			if(event.type.length){
+				event.type.forEach(function(eventTypeId){
+					eventTypeRepository.removeEvent(eventTypeId, eventId, function(err, data){
+	 					if(err){
+	 						return	cb(err, null);
+	 					}
+	 					console.log('delete from eventType');
+					});
+				});
+			}
+			else {
+				console.log('no eventType');
+			}
+			cb();
+		},
+
 
 		function(cb){
 			groupRepository.removeEvent(eventId, function(err, data){
