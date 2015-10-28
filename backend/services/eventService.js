@@ -115,7 +115,6 @@ eventService.prototype.add = function(data, callback){
 			//console.log(err.message);
 			return callback(err, result);
 		}
-		io.sockets.emit('event added', event);
 		return callback(null, {success: true});
 	});
 };

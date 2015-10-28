@@ -8,28 +8,33 @@ var app = angular.module('calendar-app', ['ui.router', 'ngAlertify', 'btford.soc
                     templateUrl: './templates/layout/layout.html',
                     controller: 'LayoutController',
                     controllerAs: 'LayoutCtrl',
-                    redirectTo: 'home.start'
+                    redirectTo: 'home.start',
+                    auth: false
                 })
                 .state('home.start', {
                     url: '/',
                     templateUrl: './templates/home/homepage.html',
-                    redirectTo: 'calendar.dayView'
+                    redirectTo: 'calendar.dayView',
+                    auth: false
                 })
                 .state('calendar', {
                     url: '/calendar',
                     templateUrl: './templates/calendar/calendar.html',
                     controller: 'CalendarController',
-                    controllerAs: 'calendarCtrl'
+                    controllerAs: 'calendarCtrl',
+                    auth: false
                 })
                 .state('signIn', {
                     url: '/signIn',
                     templateUrl: './templates/home/signIn.html',
-                    controller: 'LoginController'
+                    controller: 'LoginController',
+                    auth: false
                 })
                 .state('signUp', {
                     url: '/signUp',
                     templateUrl: './templates/home/signUp.html',
-                    controller: 'LoginController'
+                    controller: 'LoginController',
+                    auth: false
                 })
                 .state('calendar.dayView', {
                     url: '/dayView',
@@ -126,22 +131,34 @@ var app = angular.module('calendar-app', ['ui.router', 'ngAlertify', 'btford.soc
         return socket;
     }])
     .factory('AuthService', [function(){
-        var sdo = {
-            isLogged: false;
-            username: '',
-        }
+
+        var service = {};
+        var userInfo = null;
+
+        service.getUser = function(){
+            return userInfo;
+        };
+
+        service.setUser = function(user){
+            userInfo = user;
+        };
+
+        return service;
     }]);
 
-app.run(['$rootScope', '$state', function($rootScope, $state) {
+app.run(['$rootScope', '$state', 'AuthService', function($rootScope, $state, AuthService) {
 	$rootScope.$on('$stateChangeStart', function(evt, to, params) {
 		if (to.redirectTo) {
 			evt.preventDefault();
 			$state.go(to.redirectTo, params);
 		}
-        if(to.auth && !AuthService.isAuthenticated()){
-            //user isn't authenticated
+
+        console.log('STATECHANGE!');
+        console.log(AuthService.getUser());
+
+        if(to.auth && !AuthService.getUser()){
             evt.preventDefault();
-            $state.transitionTo('signIn');
+            $state.transitionTo('signIn');          
         }
 	});
 }]);

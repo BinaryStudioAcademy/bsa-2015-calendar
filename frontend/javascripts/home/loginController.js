@@ -3,7 +3,12 @@
  */
 var app = require('../app');
 
-app.controller('LoginController', function ($scope, LoginService) {
+app.controller('LoginController', function ($scope, $state, alertify, LoginService, AuthService) {
+
+    $scope.signOut = function(){
+        LoginService.signOut();
+        $state.go('signIn');
+    }
 
     $scope.signIn = function () {
         var userInfo = {
@@ -11,7 +16,24 @@ app.controller('LoginController', function ($scope, LoginService) {
             password: $scope.user.password
         };
 
-        LoginService.signIn(userInfo);
+        LoginService.signIn(userInfo)
+        .then(function(response){
+            console.log('RESPONSE: ', response);
+            if(response.data.user){
+                AuthService.setUser(response.data.user);
+
+                $state.go('calendar.dayView');               
+            } else {
+                alertify.error('Wrong username or password');
+            }
+
+        })
+        .then(function(response){
+            if(response){
+                console.log(response);
+                alertify.error('Error');
+            }
+        });
 
         $scope.user.username = '';
         $scope.user.password = '';
