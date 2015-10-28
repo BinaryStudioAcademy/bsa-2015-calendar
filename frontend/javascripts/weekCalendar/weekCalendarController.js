@@ -27,6 +27,3 @@ function WeekViewController(WeekCalendarService) {
 	// vm.Tue = weektue;
 	vm.End = weekEnd;
 }
-
-
-

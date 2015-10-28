@@ -5,7 +5,7 @@ angular
         return {
             restrict: "E",
             templateUrl: "templates/directives/datepicker/datepickerTemplate.html",
-            controller: function($scope, datepickerService, $timeout) {
+            controller: function($scope, datepickerService) {
                 $scope.showDatePicker = false;
 
                 $scope.calendar = {
@@ -39,12 +39,17 @@ angular
                 };
 
                 $scope.selectDate = function (day) {
-                    var newDate = new Date($scope.calendar.year, $scope.calendar.month, day);
-                    $timeout(function() {
-                        $scope.selectedDate = newDate;
+                    // $scope.element.val(($scope.calendar.month + 1) + "/" + day + "/" +  $scope.calendar.year);
+                    var that = this;
+
+                    that.$apply(function () {
+                        that.selectedDate = new Date($scope.calendar.year, $scope.calendar.month, day);
                         console.log($scope.selectedDate);
-                        $scope.showDatePicker = false; 
-                    }, 0);             
+                        that.showDatePicker = false;
+                    });
+                    // $scope.selectedDate = new Date($scope.calendar.year, $scope.calendar.month, day);
+                    // $scope.showDatePicker = false;
+                    
                 };
 
             },
@@ -54,8 +59,15 @@ angular
                 var forElement = angular.element("#" + attrs.for);
                 scope.element = forElement;
 
+                if (attrs.moveRelRight) {
+                    console.log(attrs.moveRelRight);
+                    alert(true);
+                    element.css({ 'left': attrs.moveRelRight });
+                }
+
                 forElement.on('focus', function() {
-                    scope.$apply(function() {
+                    scope.$apply(function() { 
+                        console.log(scope.sidebarStyle);
                         scope.showDatePicker = true;
                     });  
                 });

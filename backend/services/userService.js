@@ -2,7 +2,7 @@ var async = require('async');
 var userRepository = require('../repositories/userRepository');
 var eventRepository = require('../repositories/eventRepository');
 var groupRepository = require('../repositories/groupRepository');
-
+//var io = require('../notifications/notifications');
 var userService = function(){};
 
 userService.prototype.delete = function(userId, callback){

@@ -1,9 +1,9 @@
 var app = require('../../app');
 
 app.controller('createNewRoomController', createNewRoomController);
-createNewRoomController.$inject = ['$scope', 'createNewRoomService'];
+createNewRoomController.$inject = ['$scope', 'createNewRoomService', 'socketService'];
 
-function createNewRoomController($scope, createNewRoomService){
+function createNewRoomController($scope, createNewRoomService, socketService){
   var vm = this;
   vm.showRoomsList = false;
   vm.rooms = createNewRoomService.getRooms();
@@ -18,29 +18,31 @@ function createNewRoomController($scope, createNewRoomService){
 
   vm.reset = function (){
       vm.room.title = '';
-      vm.room.events = '';
+      vm.room.description = '';
   };
 
   vm.addRoom = function (){
-      var newroom = {title: vm.room.title, events: vm.room.events };
+      var newroom = {title: vm.room.title, description: vm.room.description };
       console.log(newroom);
       createNewRoomService.saveRoom(newroom)
         .$promise.then(
           function(response) {
+            vm.rooms.push(response);            
             console.log('success function addRoom', response);
+            socketService.emit('add room', { room : newroom });
           },
           function(response) {
             console.log('failure function addRoom', response);
           } 
         );
-      vm.rooms.push(newroom);
       vm.room.title = '';
-      // vm.room.events = '';
+      vm.room.description = '';
   };
 
   vm.updateRoom = function(room){
     console.log(room); 
     createNewRoomService.updateRoom(room);
+    socketService.emit('update room', { room : room });
   };
 
   vm.deleteRoom = function(room, $index){
@@ -48,6 +50,7 @@ function createNewRoomController($scope, createNewRoomService){
       .$promise.then(
         function(response) {
           console.log('success function deleteRoom', response);
+          socketService.emit('delete room', { room : room });
           vm.rooms.splice($index, 1);
         },
         function(response) {

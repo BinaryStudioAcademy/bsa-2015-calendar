@@ -7,6 +7,10 @@
 .right-sidebar
     padding 0
 
+.content-for-day
+    height 550px
+    overflow-y scroll
+
 ul
     list-style-type none
     padding 0
@@ -25,7 +29,11 @@ ul
     margin 5px 0
 
 .hourCell 
-    width 15%
+    width 5%
+    background-color #f0f0f0
+    border-style solid
+    border-width 1px
+    border-color #ccc
 
 .eventCell 
     text-align center
@@ -53,22 +61,35 @@ ul
 .main-content
     padding 0
 
-#navbar > ul > li > a:hover,
-.datepicker-section > li > a#dayPrev:hover,
-.datepicker-section > li > a#dayPrev:hover
-    color #FFD604
+.day-header
+  text-align center
+  
+.current-day,
+.day-prev,
+.day-next
+  font-size 2em
 
-.datepicker-section
-    box-sizing border-box
-    padding 5px
+.current-day
+  line-height 2em
 
-#datepicker> button:hover
-    background #FFD604
-    color white
+.date-picker
+    font-size 1em !important
+// #navbar > ul > li > a:hover,
+// .datepicker-section > li > a#dayPrev:hover,
+// .datepicker-section > li > a#dayPrev:hover
+//     color #FFD604
 
-#datepicker > button:focus
-    background #DEB900
-    color white
+// .datepicker-section
+//     box-sizing border-box
+//     padding 5px
+
+// #datepicker> button:hover
+//     background #FFD604
+//     color white
+
+// #datepicker > button:focus
+//     background #DEB900
+//     color white
 
 .save-area
     text-align center
