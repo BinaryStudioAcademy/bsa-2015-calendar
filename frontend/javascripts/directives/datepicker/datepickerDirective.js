@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 angular
     .module('calendar-app')
     .directive('datePicker', function () {
