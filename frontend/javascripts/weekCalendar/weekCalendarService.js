@@ -2,46 +2,46 @@ var app = require('../app');
 
 app.factory('WeekCalendarService', WeekCalendarService);
 
-WeekCalendarService.$inject = ['$resource'];
+WeekCalendarService.$inject = ['$http'];
 
-function WeekCalendarService($resource) {
+function WeekCalendarService($http) {
 
 	var timeSatmps = [	{ time: '12am'}, 
-					           	{ time: '1am'}, 
-					           	{ time: '2am'},
+								{ time: '1am'}, 
+								{ time: '2am'},
 											{ time: '3am'}, 
-					            { time: '4am'}, 
-					            { time: '5am'},
-					            { time: '6am'},
-					            { time: '7am'},
-					            { time: '8am'},
-					            { time: '9am'},
-					            { time: '10am'},
-					            { time: '11am'},
-					            { time: '12pm'},
-					            { time: '1pm'},
-					            { time: '2pm'},
-					            { time: '3pm'},
- 					            { time: '4pm'},
- 					            { time: '5pm'},
-					            { time: '6pm'},
-					            { time: '7pm'},
-					            { time: '8pm'},
-					            { time: '9pm'},
-					            { time: '10pm'},
-					            { time: '11pm'},
-						          ];
+								{ time: '4am'}, 
+								{ time: '5am'},
+								{ time: '6am'},
+								{ time: '7am'},
+								{ time: '8am'},
+								{ time: '9am'},
+								{ time: '10am'},
+								{ time: '11am'},
+								{ time: '12pm'},
+								{ time: '1pm'},
+								{ time: '2pm'},
+								{ time: '3pm'},
+								{ time: '4pm'},
+								{ time: '5pm'},
+								{ time: '6pm'},
+								{ time: '7pm'},
+								{ time: '8pm'},
+								{ time: '9pm'},
+								{ time: '10pm'},
+								{ time: '11pm'},
+								  ];
 
 
 
 	var days = [	{ name: 'Monday'}, 
-		           	{ name: 'Tuesday'}, 
-		           	{ name: 'Wednesday'},
+					{ name: 'Tuesday'}, 
+					{ name: 'Wednesday'},
 								{ name: 'Thursday'}, 
-		            { name: 'Friday'}, 
-		            { name: 'Saturday'},
-		            { name: 'Sunday'},
-		          ];
+					{ name: 'Friday'}, 
+					{ name: 'Saturday'},
+					{ name: 'Sunday'},
+				  ];
 
 	function getTimeStamps(){
 		return timeSatmps;
@@ -52,9 +52,20 @@ function WeekCalendarService($resource) {
 		return days;
 	}
 
+	function getEvents(start, stop) {
+		var eventsPromise = $http.get('api/eventByInterval/'+ (+start)+ '/'+ (+stop))       
+		.then(function (response) {
+			return response.data;
+		}, function(reason) {
+			return reason; 
+		});
+		return eventsPromise;
+	}
+
 	return {
 		getTimeStamps: getTimeStamps,
-		getDays: getDays
+		getDays: getDays,
+		getEvents: getEvents
 	};	
 }
 

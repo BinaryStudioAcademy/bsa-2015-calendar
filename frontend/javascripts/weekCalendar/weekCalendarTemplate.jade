@@ -12,7 +12,7 @@
           i.glyphicon.glyphicon-chevron-right.bigger-icon
 
 
-    table#calendar.table.table-bordered(time-week-directive)
+    table#calendar.table.table-bordered(time-week-directive events-week-directive)
       tr.success.text-center 
         td
         td(ng-repeat="day in wCtrl.days")
@@ -37,6 +37,14 @@
       label(for="showEvents") Show all events
       br
       button.btn.btn-primary(ng-click="wCtrl.toggleEventInfo()") Toggle Info
-    .eventInfo.well(ng-show="wCtrl.eventSelected")
+    .eventInfo.well.col-sm-12.col-lg-12(ng-show="wCtrl.eventSelected") 
+      div Title: {{wCtrl.currentEvent.title}}
+      div Description: {{wCtrl.currentEvent.description}}
+      div Start: {{wCtrl.currentEvent.start}}
+      div End: {{wCtrl.currentEvent.end}}
+      div Room: {{wCtrl.currentEvent.room}}
+
+
+
 
 
