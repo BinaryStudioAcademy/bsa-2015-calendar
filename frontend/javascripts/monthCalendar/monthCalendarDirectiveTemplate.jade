@@ -1,8 +1,8 @@
 div(ng-controller='MonthController')
     div.month-header
-        i.fa.fa-chevron-left.pull-left.fa-3x.month-chevron(ng-click='previous()')
+        i.glyphicon.pull-left.glyphicon-chevron-left.bigger-icon.month-chevron(class="btn btn-large btn-info" ng-click='previous()')
         span.month-header-title {{month.format("MMMM, YYYY")}}
-        i.fa.fa-chevron-right.pull-right.fa-3x.month-chevron(ng-click='next()')
+        i.glyphicon.pull-right.glyphicon-chevron-right.bigger-icon.month-chevron(class="btn btn-large btn-info" ng-click='next()')
     div
         table.month-table-grid(width="100%")
             col(width='14.28%')

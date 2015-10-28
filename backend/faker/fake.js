@@ -34,9 +34,11 @@ casual.define('device_', function () {
 	return {
 		_id: id,
 		title: casual.title,
+		description: casual.title,		
 		events: []
 	};
 });
+
 
 casual.define('room_', function () {
 	var id = casual.mongo_id;
@@ -45,6 +47,7 @@ casual.define('room_', function () {
 	return {
 		_id: id,
 		title: casual.title,
+		description: casual.title,	
 		events: []
 	};
 });
@@ -68,6 +71,16 @@ casual.define('group_', function () {
 	};
 });
 
+casual.define('eventType_', function () {
+	var id = casual.mongo_id;
+	context.eventType_ids.push(id);
+
+	return {
+		_id: id,
+		title: casual.title,
+		events: []
+	};
+});
 
 casual.define('event_', function () {
 	var id = casual.mongo_id;
@@ -99,3 +112,4 @@ casual.define('event_', function () {
     	devices: casual.random_element(context.device_ids)
 	};
 });
+

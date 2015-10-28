@@ -5,6 +5,7 @@ var roomRepository = require('../repositories/roomRepository');
 var deviceRepository = require('../repositories/deviceRepository');
 var groupRepository = require('../repositories/groupRepository');
 var _ = require('lodash');
+//var io = require('../notifications/notifications');
 
 var eventService = function(){};
 
@@ -114,6 +115,7 @@ eventService.prototype.add = function(data, callback){
 			//console.log(err.message);
 			return callback(err, result);
 		}
+		io.sockets.emit('event added', event);
 		return callback(null, {success: true});
 	});
 };
@@ -129,7 +131,7 @@ eventService.prototype.delete = function(eventId, callback){
 					return cb(err);
 				}
 				if (!data){
-					return cb(new Error("incorrect planId " + eventId));
+					return cb(new Error("incorrect eventId " + eventId));
 				}
 				event = data;
 				cb();
