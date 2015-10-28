@@ -2,44 +2,42 @@ angular
 	.module('calendar-app')
 	.directive('modal', modalDirective);
 
-modalDirective.$inject = ['DailyCalendarService', '$parse'];
+modalDirective.$inject = ['DailyCalendarService', 'DayViewController'];
 
-function modalDirective(DailyCalendarService, $timeout) {
+function modalDirective(DailyCalendarService, DayViewController, $timeout) {
 
 	return {
 	    templateUrl: 'templates/directives/createEvent/modalDirectiveTemplate.html',
 	    restrict: 'E',
 	    replace:true,
-	    // scope: {
-	    // 	events: '='
-	    // },
 	    scope: true,
 	    controller: modalController,
 	    link: function(scope, element, attrs) {
 
+	    	DayViewController.showDate();
+
 	        scope.$watch(attrs.visible, function(value){
-				if(value === true) {
-					$(element).modal('show');
-				} else {
-					$(element).modal('hide');
-				}
-	        });
+					if(value === true) {
+						$(element).modal('show');
+					} else {
+						$(element).modal('hide');
+					}
+		        });
 
-	        $(element).on('shown.bs.modal', function(){
-	        	scope.$parent[attrs.visible] = true;
-	        });
+		        $(element).on('shown.bs.modal', function(){
+		        	scope.$parent[attrs.visible] = true;
+		        });
 
-	        $(element).on('hidden.bs.modal', function(){
-	        	scope.$parent[attrs.visible] = false;
-	        });
-
+		        $(element).on('hidden.bs.modal', function(){
+		        	scope.$parent[attrs.visible] = false;
+		        });
 	    }
 	};
 
 	function modalController($scope, $timeout, $element) {
 
 		$scope.event = {};
-		dropEventInfo();
+		dropEventInfo($scope.newEventDate);
 		$scope.formSuccess = false;
 
 		$scope.selectConfigDevices = {
@@ -70,6 +68,10 @@ function modalDirective(DailyCalendarService, $timeout) {
 			$scope.event.room = title;
 		};
 
+		$scope.showEvent = function() {
+			console.log($scope.event);
+		};
+
 		$scope.submitEvent = function(event, newEventForm, date) {
 			DailyCalendarService.configureEventData(date, event);
 				if(newEventForm.$valid) {
@@ -96,12 +98,12 @@ function modalDirective(DailyCalendarService, $timeout) {
 				}
 		};
 
-		function dropEventInfo() {
+		function dropEventInfo(selDate) {
 
 			$scope.event.title = '';
 			$scope.event.description = '';
-			$scope.event.start = null;
-			$scope.event.end = null;
+			$scope.event.start = selDate;
+			$scope.event.end = selDate;
 			$scope.event.devices = [];
 			$scope.event.users = [];
 			$scope.event.room = null;

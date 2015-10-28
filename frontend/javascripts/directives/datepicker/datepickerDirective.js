@@ -40,11 +40,9 @@ angular
 
                 $scope.selectDate = function (day) {
                     var newDate = new Date($scope.calendar.year, $scope.calendar.month, day);
-                    $timeout(function() {
-                        $scope.selectedDate = newDate;
-                        console.log($scope.selectedDate);
-                        $scope.showDatePicker = false; 
-                    }, 0);             
+                    $scope.selectedDate = newDate;
+                    console.log($scope.selectedDate);
+                    $scope.showDatePicker = false;           
                 };
 
             },

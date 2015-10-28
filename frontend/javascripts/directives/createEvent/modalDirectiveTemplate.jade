@@ -111,3 +111,7 @@
 						button.btn.btn-primary(type='submit' ng-disabled="newEventForm.$invalid" ng-click="submitEvent(event, newEventForm, dvCtrl.selectedDate)") Save
 					.col-md-6.col-sm-6
 						button.btn.btn-default(ng-click="dvCtrl.toggleModal()") Cancel
+					button.btn(ng-click='dvCtrl.showDate()')
+						| Show vm.selectedDate
+					button.btn(ng-click='showEvent()')
+						| Show $scope.event

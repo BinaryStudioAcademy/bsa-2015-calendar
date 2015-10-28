@@ -2,9 +2,9 @@ var app = require('../app');
 
 app.controller('DayViewController', DayViewController);
 
-DayViewController.$inject = ['DailyCalendarService', '$timeout', '$q'];
+DayViewController.$inject = ['DailyCalendarService', '$timeout', '$q', '$uibModal'];
 
-function DayViewController(DailyCalendarService, $timeout) {
+function DayViewController(DailyCalendarService, $timeout, $uibModal) {
 
 	var vm = this;
 
@@ -21,8 +21,21 @@ function DayViewController(DailyCalendarService, $timeout) {
 		vm.selectedDate = date;
 	};
 
+	vm.showDate = function() {
+		console.log(vm.selectedDate);
+	};
+
 	vm.toggleModal = function() {
 		vm.modalShown = !vm.modalShown;
+	};
+
+	vm.showCloseModal = function() {
+		vm.modalInstance = $uibModal.open({
+			animation: true,
+			templateUrl: 'templates/dailyCalendar/editEventTemplate.html',
+			controller: 'ModalController',
+			controllerAs: 'ModalCtrl'
+		});
 	};
 
 	init();
