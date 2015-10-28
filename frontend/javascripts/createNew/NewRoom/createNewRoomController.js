@@ -27,6 +27,7 @@ function createNewRoomController($scope, createNewRoomService, socketService){
       createNewRoomService.saveRoom(newroom)
         .$promise.then(
           function(response) {
+            vm.rooms.push(response);            
             console.log('success function addRoom', response);
             socketService.emit('add room', { room : newroom });
           },
@@ -34,7 +35,6 @@ function createNewRoomController($scope, createNewRoomService, socketService){
             console.log('failure function addRoom', response);
           } 
         );
-      vm.rooms.push(newroom);
       vm.room.title = '';
       vm.room.description = '';
   };
