@@ -2,8 +2,6 @@
 	.day-header.row
 		.col-md-2.col-sm-2.col-xs-2
 			i.glyphicon.glyphicon-chevron-left.bigger-icon.day-prev.pull-left(class="btn btn-large btn-info"  ng-click='dvCtrl.showDay(-1)')
-		//- 
-		//- date-picker.sidebar-datepicker(for="pickDate")
 		.col-md-8.col-sm-8.col-xs-8.text-center
 			#datepicker(style="position: relative")
 				a.current-day#pickDate(href='')
@@ -40,4 +38,3 @@
 			label
 				input(type="checkbox") 
 				| Show all events
-	//- modal(visible='dvCtrl.modalShown' new-event-date='dvCtrl.selectedDate')
