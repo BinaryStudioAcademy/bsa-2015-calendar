@@ -66,6 +66,7 @@ var socketio = require('./io/socketServer.js')(server);
 
 console.log('server start on port 3080');
 
+
 var generateFakes = require('./faker/generate');
 // generateFakes({
 // 	device: 10,
