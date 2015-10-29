@@ -23,7 +23,7 @@ function eventCalendarDirective($compile, $templateCache) {
                         $templateCache.put(day+'.html', tmpl);
 
                         //add popover
-                        dayCell.attr('popover-template', '"'+day+'.html"');
+                        dayCell.attr('uib-popover-template', '"'+day+'.html"');
                         dayCell.attr('popover-title', "Events");
                         dayCell.attr('popover-append-to-body', "true");
                         dayCell.attr('trigger', 'click');
