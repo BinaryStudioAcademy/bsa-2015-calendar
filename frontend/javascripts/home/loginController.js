@@ -50,7 +50,21 @@ app.controller('LoginController', function ($scope, $state, alertify, LoginServi
             email: $scope.user.newEmail
         };
 
-        LoginService.signUp(userInfo);
+        console.log('in signup');
+
+        LoginService.signUp(userInfo)
+        .then(function(response){
+            console.log('RESPONSE: ', response);
+            $state.go('calendar.dayView');
+            alertify.success('registered successfully');        
+
+        })
+        .then(function(response){
+            if(response){
+                console.log(response);
+                alertify.error('Error');
+            }
+        });
 
         $scope.user.newUsername = '';
         $scope.user.newEmail = '';
