@@ -8,68 +8,81 @@ var app = angular.module('calendar-app', ['ui.router', 'ngAlertify', 'btford.soc
                     templateUrl: './templates/layout/layout.html',
                     controller: 'LayoutController',
                     controllerAs: 'LayoutCtrl',
-                    redirectTo: 'home.start'
+                    redirectTo: 'home.start',
+                    auth: false
                 })
                 .state('home.start', {
                     url: '/',
-                    templateUrl: './templates/home/homepage.html'
+                    templateUrl: './templates/home/homepage.html',
+                    redirectTo: 'calendar.dayView',
+                    auth: false
                 })
                 .state('calendar', {
                     url: '/calendar',
                     templateUrl: './templates/calendar/calendar.html',
                     controller: 'CalendarController',
-                    controllerAs: 'calendarCtrl'
+                    controllerAs: 'calendarCtrl',
+                    auth: false
                 })
                 .state('signIn', {
                     url: '/signIn',
                     templateUrl: './templates/home/signIn.html',
-                    controller: 'LoginController'
+                    controller: 'LoginController',
+                    auth: false
                 })
                 .state('signUp', {
                     url: '/signUp',
                     templateUrl: './templates/home/signUp.html',
-                    controller: 'LoginController'
+                    controller: 'LoginController',
+                    auth: false
                 })
                 .state('calendar.dayView', {
                     url: '/dayView',
                     templateUrl: './templates/dailyCalendar/dailyCalendarTemplate.html',
                     controller: 'DayViewController',
-                    controllerAs: 'dvCtrl'
+                    controllerAs: 'dvCtrl',
+                    auth: true
                 })
                 .state('calendar.weekView', {
                     url: '/weekView',
                     templateUrl: './templates/weekCalendar/weekCalendarTemplate.html',
                     controller: 'WeekViewController',
                     controllerAs: 'wCtrl',
+                    auth: true
                 })               
                 .state('calendar.monthView', {
                     url: '/monthView',
                     templateUrl: './templates/monthCalendar/monthCalendar.html',
-                    controller: ''
+                    controller: '',
+                    auth: true
                 })
                 .state('calendar.createNewDevice', {
                     url: '/createNewDevice',
                     templateUrl: './templates/createNew/NewDevice/createNewDeviceTemplate.html',
                     controller: 'createNewDeviceController',
                     controllerAs: 'cndCtrl',
+                    auth: true
                 })      
                 .state('calendar.createNewRoom', {
                     url: '/createNewRoom',
                     templateUrl: './templates/createNew/NewRoom/createNewRoomTemplate.html',
                     controller: 'createNewRoomController',
                     controllerAs: 'cnrCtrl',
+                    auth: true
                 })
                 .state('calendar.createNewEventType', {
                     url: '/createNewEventType',
                     templateUrl: './templates/createNew/NewEventType/createNewEventTypeTemplate.html',
                     controller: 'createNewEventTypeController',
                     controllerAs: 'cnetCtrl',
+                    auth: true
                 })
 				.state('calendar.yearView', {
 					url: '/yearView',
 					templateUrl: './templates/yearCalendar/yearCalendarTemplate.html',
 					controller: 'yearCalendarController',
 					controllerAs: 'YCtrl',
+                    auth: true
 				});
 		}
 	]).factory('socketService', ['socketFactory', 'alertify', function(socketFactory, alertify){
@@ -116,14 +129,37 @@ var app = angular.module('calendar-app', ['ui.router', 'ngAlertify', 'btford.soc
         });                                    
 
         return socket;
+    }])
+    .factory('AuthService', [function(){
+
+        var service = {};
+        var userInfo = null;
+
+        service.getUser = function(){
+            return userInfo;
+        };
+
+        service.setUser = function(user){
+            userInfo = user;
+        };
+
+        return service;
     }]);
 
-app.run(['$rootScope', '$state', function($rootScope, $state) {
+app.run(['$rootScope', '$state', 'AuthService', function($rootScope, $state, AuthService) {
 	$rootScope.$on('$stateChangeStart', function(evt, to, params) {
 		if (to.redirectTo) {
 			evt.preventDefault();
 			$state.go(to.redirectTo, params);
 		}
+
+        console.log('STATECHANGE!');
+        console.log(AuthService.getUser());
+
+        if(to.auth && !AuthService.getUser()){
+            evt.preventDefault();
+            $state.transitionTo('signIn');          
+        }
 	});
 }]);
 

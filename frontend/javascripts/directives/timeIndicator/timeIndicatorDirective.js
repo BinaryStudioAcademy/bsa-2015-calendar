@@ -2,36 +2,36 @@ angular
 	.module('calendar-app')
 	.directive('timeIndicator', TimeIndicator);
 
-	TimeIndicator.$inject = ['$interval'];
+	TimeIndicator.$inject = ['$interval', '$timeout'];
 
-	function TimeIndicator($interval) {
+	function TimeIndicator($interval, $timeout) {
 
 		return {
 			restrict: 'EA',
 			replace: true,
 			templateUrl: "templates/directives/timeIndicator/timeIndicatorTemplate.html",
 			scope: {
-				table: '@'
+				table: '@',
 			},
 			controller: timeIndicatorController,
 			link: function($scope, $element, $attrs) {
+				$timeout(function () {
 
-				var tableSel = $attrs.table;
-				var rowHeight = $scope.calcRowHeight(tableSel);
-				var borderWidth = $scope.calcPosition(tableSel);
-				
-				$scope.moveIndicator($element, rowHeight);
-				
-				$scope.changePosition($element, rowHeight);
+					$scope.rowHeight = $scope.calcRowHeight($scope.tableSel);
+					$scope.moveIndicator($element, $scope.rowHeight);	
+					$scope.changePosition($element, $scope.rowHeight);
+
+				}, 0);
 			}
 		};
 
-		function timeIndicatorController($scope, $interval) {
+		function timeIndicatorController($scope, $interval, $attrs) {
 			
 			$scope.calcRowHeight = calcRowHeight;
 			$scope.calcPosition = calcPosition;
 			$scope.moveIndicator = moveIndicator;
 			$scope.changePosition = changePosition;
+			$scope.tableSel = $attrs.table;
 
 			function changePosition(element, rowHeight) {
 
@@ -41,16 +41,22 @@ angular
 			}
 
 			function calcRowHeight(tableSelector) {
-				return $('' + tableSelector + ' tr').outerHeight();
+				var table = $('' + tableSelector + ' tr');
+				return table.outerHeight();
 			}
 			
 			function calcPosition(rowHeight) {
+
+				if(!rowHeight) {
+					rowHeight = $scope.calcRowHeight($scope.tableSel);
+				}
 
 				var today = new Date();
 				var currentHour = today.getHours();
 				var currentMinutes = today.getMinutes();
 				var oneMinHeight = rowHeight / 60;
 				var newPosY = currentHour * rowHeight + (oneMinHeight * currentMinutes) + 'px';
+				console.log(newPosY);
 				return newPosY;
 			}
 			
