@@ -30,13 +30,14 @@ function createNewDeviceService ($resource) {
 
 	function updateDevice(device){	
 		var dbdeviceById = $resource('http://localhost:3080/api/device/:id', {id: device._id}, {'update': { method:'PUT'}});
-		// delete device._id;
 		var one_device = dbdeviceById.update(device);
 	}
 
 	function deleteDevice(device) {
 		var dbdevicedel = $resource('http://localhost:3080/api/device/:id', {id: device._id});
-		console.log(device);
+		console.log('DEVICE ID: ' + device._id);
+		// var dbdevicedel = $resource('http://localhost:3080/api/device/' + device._id);
+		// console.log(device);
 		return dbdevicedel.delete(device);
 	}
 
