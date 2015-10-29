@@ -4,7 +4,7 @@ app.controller('LayoutController', LayoutController);
 
 LayoutController.$inject = [];
 
-function LayoutController() {
+function LayoutController(socketService) {
 	var vm = this;
 	
 	vm.init = function(){

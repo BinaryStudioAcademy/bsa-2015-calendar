@@ -15,4 +15,6 @@ app.controller("MonthController", function ($scope) {
     $scope.showAllDayEvents = function (day) {
         console.log(day.events);
     };
+
+    $scope.allDayEventsTemplateUrl = 'templates/monthCalendar/monthCalendarAllDaysEventTemplate.html';
 });

@@ -21,22 +21,32 @@
 										.checkbox
 											label
 												input(type="checkbox")
-												| Events
+												| Basic Events
+									li
+										.checkbox
+											label
+												input(type="checkbox")
+												| General Events
+									li
+										.checkbox
+											label
+												input(type="checkbox")
+												| Activity Events
 									li 
 										.checkbox
 											label
 												input(type="checkbox")
 												| Google Events
-									li 
-										.checkbox
-											label
-												input(type="checkbox")
-												| Rooms
-									li 
-										.checkbox
-											label
-												input(type="checkbox")
-												| Devices
+									//-li 
+									//-	.checkbox
+									//-		label
+									//-			input(type="checkbox")
+									//-			| Rooms
+									//-li 
+									//-	.checkbox
+									//-		label
+									//-			input(type="checkbox")
+									//-			| Devices
 									li 
 										.checkbox
 											label
@@ -45,7 +55,7 @@
 							li
 								.datepicker(style="position: relative")
 									button.btn.btn-default#header-pickdate
-										{{calendarCtrl.selectedDate | date: 'd EEE yyyy'}}
+										| {{calendarCtrl.selectedDate | date: 'd EEE yyyy'}}
 									date-picker.nav-datepicker(for="header-pickdate")
 							li
 								.checkbox
@@ -72,22 +82,32 @@
 						.checkbox
 							label
 								input(type="checkbox")
-								| Events
+								| Basic Events
+					li
+						.checkbox
+							label
+								input(type="checkbox")
+								| General Events
+					li
+						.checkbox
+							label
+								input(type="checkbox")
+								| Activity Events
 					li 
 						.checkbox
 							label
 								input(type="checkbox")
 								| Google Events
-					li 
-						.checkbox
-							label
-								input(type="checkbox")
-								| Rooms
-					li 
-						.checkbox
-							label
-								input(type="checkbox")
-								| Devices
+					//-li 
+					//-	.checkbox
+					//-		label
+					//-			input(type="checkbox")
+					//-			| Rooms
+					//-li 
+					//-	.checkbox
+					//-		label
+					//-			input(type="checkbox")
+					//-			| Devices
 					li 
 						.checkbox
 							label
@@ -100,6 +120,8 @@
 						a(ui-sref=".createNewDevice" ng-click="calendarCtrl.toggleMode()") new Device
 					li
 						a(ui-sref=".createNewRoom" ng-click="calendarCtrl.toggleMode()") new Room
+					li
+						a(ui-sref=".createNewEventType" ng-click="calendarCtrl.toggleMode()") new Event Type
 		.col-sm-10
 			ui-view#calendar-content
 

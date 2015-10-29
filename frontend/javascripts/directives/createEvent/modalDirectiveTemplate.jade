@@ -1,95 +1,113 @@
 .modal
 	.modal-dialog
 		.modal-content
-			.modal-header
-				button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
-				h4.modal-title {{ title }}
 			.modal-body.clearfix
-				form(role='form' name='newEventForm')
-					form.form-horizontal
-						.form-group
-							label.col-md-2.col-sm-2.control-label Time:
-							.col-md-10.col-sm-10
-								.col-md-6.col-sm-6.col-xs-6
-									.input-group
-										.input-group-addon
-											i.glyphicon.glyphicon-time
-										input.form-control(type='text', placeholder='From...', required, ng-pattern='/^(?:0?[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/', ng-model='dvCtrl.event.start')
-								.col-md-6.col-sm-6.col-xs-6
-									.input-group
-										.input-group-addon
-											i.glyphicon.glyphicon-time
-										input.form-control(type='text', placeholder='Till...', required, ng-pattern='/^(?:0?[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/', ng-model='dvCtrl.event.end')                                
-						.form-group
-							label.col-md-2.control-label(for="eventTitle") Title:
-							.col-md-10
-								.col-md-12
-									input.form-control(type='text', id="eventTitle" placeholder='Name the event...', ng-model="dvCtrl.event.title")
-						.form-group
-							label.col-md-2.control-label(for="eventDescription") About:
-							.col-md-10
-								.col-md-12
-									textarea.form-control(rows='5', id="eventDescription" placeholder='Description...', ng-model="dvCtrl.event.description")
-						.form-group
-							label.col-md-2.col-sm-2.control-label Organization:
-							.col-md-10.col-sm-10
-								.col-md-6.col-sm-6.col-xs-6
-									.input-group
-										.input-group-addon 
-											i.glyphicon.glyphicon-piggy-bank
-										input.form-control(type='text', placeholder='Price...', ng-model='dvCtrl.event.price')
-								.col-md-6.col-sm-6.col-xs-6
-									.input-group
-										.input-group-btn
-											button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-												| Type 
-												span.caret
-											ul.dropdown-menu
-												li(ng-repeat="type in dvCtrl.eventTypes" ng-click="dvCtrl.selectEventType(type)")
-													a(href="") 
-														| {{ type }}
-										input.form-control(type='text', aria-label='...' ng-model="dvCtrl.event.type" disabled)
-						.form-group
-							.col-md-10.col-sm-10.col-md-offset-2.col-sm-offset-2
-								.col-md-6.col-sm-6
-									.input-group
-										.input-group-btn
-											button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-												span
-													i.glyphicon.glyphicon-home
-											ul.dropdown-menu
-												li(ng-repeat="room in dvCtrl.availableRooms" ng-click="dvCtrl.selectRoom(room)")
-													a(href='') 
-														| {{ room.title }}
-										input.form-control(type='text', aria-label='...' ng-model="dvCtrl.event.room.title" placeholder="Room..." disabled)
-								.col-md-6.col-sm-6
-									.checkbox
-										label
-											input(type='checkbox', value='', ng-model='dvCtrl.event.isPrivate')
-											&nbsp;Private
-						.form-group
-							.col-md-10.col-sm-10.col-md-offset-2.col-sm-offset-2
-								.col-md-6.col-sm-6
-									div(ng-dropdown-multiselect='', 
-										translation-texts='dvCtrl.selectConfigDevices', 
-										selected-model='dvCtrl.event.devices', 
-										options='dvCtrl.availableInventory', 
-										extra-settings='dvCtrl.selectConfigDevices')
-								.col-md-6.col-sm-6
-									div(ng-dropdown-multiselect='', 
-										translation-texts='dvCtrl.selectConfigUsers', 
-										selected-model='dvCtrl.event.users', 
-										options='dvCtrl.users', 
-										extra-settings='dvCtrl.selectConfigUsers')
+				button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+				ul.nav.nav-tabs(role='tablist')
+					li.active(role='presentation')
+						a(href="#event" aria-controls="event" role="tab" data-toggle="tab")
+							| New event
+					li(role='presentation')
+						a(href="#plan" aria-controls="plan" role="tab" data-toggle="tab")
+							| New plan
+				.tab-content
+					.tab-pane(role="tabpanel" id="plan")
+						span
+							| New plan form goes here
+					.tab-pane.active(role="tabpanel" id="event")
+						form(role='form' name='newEventForm')
+							form.form-horizontal
+								.form-group
+									label.col-md-2.col-sm-2.control-label Time:
+									.col-md-10.col-sm-10
+										.col-md-6.col-sm-6.col-xs-6
+											.input-group
+												.input-group-addon
+													i.glyphicon.glyphicon-time
+												uib-timepicker(ng-model='event.start', show-spinners='false', minute-step=5)
+										.col-md-6.col-sm-6.col-xs-6
+											.input-group
+												.input-group-addon
+													i.glyphicon.glyphicon-time
+												uib-timepicker(ng-model='event.end', show-spinners='false', minute-step=5)
+								.form-group.text-center
+									.col-md-10.col-sm-10.col-md-offset-2.col-sm-offset-2
+										.col-md-6.col-sm-6.col-xs-6
+											span.badge
+												| {{event.start | date: 'short'}}
+										.col-md-6.col-sm-6.col-xs-6
+											span.badge
+												| {{event.end | date: 'short' }}
+								.form-group
+									label.col-md-2.control-label(for="eventTitle") Title:
+									.col-md-10
+										.col-md-12
+											input.form-control(type='text', id="eventTitle" placeholder='Name the event...', ng-model="event.title")
+								.form-group
+									label.col-md-2.control-label(for="eventDescription") About:
+									.col-md-10
+										.col-md-12
+											textarea.form-control(rows='5', id="eventDescription" placeholder='Description...', ng-model="event.description")
+								.form-group
+									label.col-md-2.col-sm-2.control-label Organization:
+									.col-md-10.col-sm-10
+										.col-md-6.col-sm-6.col-xs-6
+											.input-group
+												.input-group-addon 
+													i.glyphicon.glyphicon-piggy-bank
+												input.form-control(type='text', placeholder='Price...', ng-model='event.price')
+										.col-md-6.col-sm-6.col-xs-6
+											.input-group
+												.input-group-btn
+													button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+														| Type 
+														span.caret
+													ul.dropdown-menu
+														li(ng-repeat="type in dvCtrl.eventTypes" ng-click="selectEventType(type)")
+															a(href="") 
+																| {{ type }}
+												input.form-control(type='text', aria-label='...' ng-model="event.type" disabled)
+								.form-group
+									.col-md-10.col-sm-10.col-md-offset-2.col-sm-offset-2
+										.col-md-6.col-sm-6
+											.input-group
+												.input-group-btn
+													button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+														span
+															i.glyphicon.glyphicon-home
+													ul.dropdown-menu.scrollable-menu
+														li(ng-repeat="room in dvCtrl.availableRooms" ng-click="selectRoom(room)")
+															a(href='') 
+																| {{ room.title }}
+												input.form-control(type='text', aria-label='...' ng-model="event.room.title" placeholder="Room..." disabled)
+										.col-md-6.col-sm-6
+											.checkbox
+												label
+													input(type='checkbox', value='', ng-model='event.isPrivate')
+													| &nbsp;Private
+								.form-group
+									.col-md-10.col-sm-10.col-md-offset-2.col-sm-offset-2
+										.col-md-6.col-sm-6
+											div(ng-dropdown-multiselect='', 
+												translation-texts='selectConfigDevices', 
+												selected-model='event.devices', 
+												options='dvCtrl.availableInventory', 
+												extra-settings='selectConfigDevices')
+										.col-md-6.col-sm-6
+											div(ng-dropdown-multiselect='', 
+												translation-texts='selectConfigUsers', 
+												selected-model='event.users', 
+												options='dvCtrl.users', 
+												extra-settings='selectConfigUsers')
 			.modal-footer
 				.save-area
-					.alert.alert-success.alert-dismissible(role='alert' ng-show='dvCtrl.formSuccess')
+					.alert.alert-success.alert-dismissible(role='alert' ng-show='formSuccess')
 						button.close(type='button', data-dismiss='alert', aria-label='Close')
 							span(aria-hidden='true')
 								i.glyphicon.glyphicon-remove
 						strong Success!
 						|  You've just saved the event! Check the calendar now.
 					.col-md-6.col-sm-6.col-xs-6
-						button.btn.btn-primary(type='submit' ng-disabled="newEventForm.$invalid" ng-click="dvCtrl.submitEvent(dvCtrl.event, newEventForm, dvCtrl.selectedDate)") Save
+						button.btn.btn-primary(type='submit' ng-disabled="newEventForm.$invalid" ng-click="submitEvent(event, newEventForm, dvCtrl.selectedDate)") Save
 					.col-md-6.col-sm-6
-						button.btn.btn-default(type='submit' ng-click="dvCtrl.toggleModal()") Cancel
+						button.btn.btn-default(ng-click="dvCtrl.toggleModal()") Cancel
