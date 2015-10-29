@@ -1,8 +1,8 @@
 var app = require('../app');
-
+moment = require('moment');
 app.directive('eventsWeekDirective', eventsWeekDirective);
 
-function eventsWeekDirective($compile) {
+function eventsWeekDirective($compile, $templateCache) {
     return {
         restrict: 'A',
 
@@ -15,14 +15,23 @@ function eventsWeekDirective($compile) {
                     var evtStart = new Date(currEvt.start);
                     var evtHour = evtStart.getHours();
                     var evtDay = evtStart.getDay();
-                    if (evtDay === 0) {evtDay = 7;}
                     //get hour cell with event start
-                    var evtCell = angular.element(element[0].querySelectorAll('[ng-class="'+ evtHour +'"].'+ daysNames[evtDay-1]));
+                    var evtCell = angular.element(element[0].querySelectorAll('[ng-class="'+ evtHour +'"].'+ daysNames[evtDay]));
+                    console.log(currEvt.title);
+                    console.log(evtHour);
+                    console.log(currEvt.start);
 
-                    var eventDiv = angular.element('<div class="event-cell-week" ng-click=wCtrl.showEvent('+ i +')></div>'); //ng-click=wCtrl.showEvent("events")
+
+                    var eventDiv = angular.element('<div class="event-cell-week"></div>'); 
                     eventDiv.text(currEvt.title);
-
+                    var tmpl = '<div>'+currEvt.description+'</div><div>Start at: '+moment(currEvt.start).format('hh:mm')+'</div><div>End at: '+moment(currEvt.end).format('hh:mm')+'</div>';
+                    $templateCache.put('evtTmpl'+i+'.html', tmpl);
                     
+                    eventDiv.attr('uib-popover-template', '"evtTmpl'+i+'.html"');
+                    eventDiv.attr('popover-title', currEvt.title);
+                    eventDiv.attr('popover-append-to-body', "true");
+                    eventDiv.attr('trigger', 'click');
+
                     //background color for different types of events
                     switch(currEvt.type) {
                         case('basic'):

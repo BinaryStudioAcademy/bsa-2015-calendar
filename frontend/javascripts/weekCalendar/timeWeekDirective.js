@@ -20,7 +20,7 @@ function timeWeekDirective($interval, $timeout) {
                 if (dayNumber === 0) {
                     dayNumber = 7;
                 }
-                var daysNames = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+                var daysNames = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
                 var currHour = currTime.getHours();
                 var currMin = currTime.getMinutes();
                 //minutes as margin from top of hour cell

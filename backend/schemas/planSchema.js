@@ -7,7 +7,8 @@ var Schema = mongoose.Schema;
 var planSchema = new Schema({
     title : String,
     description : String,
-    type : String, // 'basic', 'general', 'activity',
+    type : {type: Schema.Types.ObjectId, ref: 'EventType'},
+    // type : String, // 'basic', 'general', 'activity',
     price : Number,
     dateStart: Date, 
     dateEnd: Date,
