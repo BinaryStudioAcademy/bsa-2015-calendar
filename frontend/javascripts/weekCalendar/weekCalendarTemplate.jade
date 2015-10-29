@@ -5,7 +5,7 @@
       span.week_header_title {{wCtrl.Start | date: 'd MMM yyyy'}} - {{wCtrl.End | date: 'd MMM yyyy'}}
       i.glyphicon.pull-right.week-chevron.glyphicon-chevron-right.bigger-icon.week_next(class="btn btn-large btn-info" ng-click='next()')
 
-    .content_for_week
+    .content_for_week(time-week-directive events-week-directive)
       table.week_in_table(width='100%')
         col.header(width='12,5%')
         col.days(width='12,5%' span='7')
@@ -27,11 +27,11 @@
 
         tr(ng-repeat="timeSt in wCtrl.timeStamps")
           td.hourCell {{timeSt.time}}
-          td.eventCell
-          td.eventCell
-          td.eventCell
-          td.eventCell
-          td.eventCell
-          td.eventCell
-          td.eventCell
+          td.eventCell.sun(ng-class='{{$index}}')
+          td.eventCell.mon(ng-class='{{$index}}')
+          td.eventCell.tue(ng-class='{{$index}}')
+          td.eventCell.wed(ng-class='{{$index}}')
+          td.eventCell.thu(ng-class='{{$index}}')
+          td.eventCell.fri(ng-class='{{$index}}')
+          td.eventCell.sat(ng-class='{{$index}}')
 
