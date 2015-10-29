@@ -8,7 +8,7 @@ app.controller('LoginController', function ($scope, $state, alertify, LoginServi
     $scope.signOut = function(){
         LoginService.signOut();
         $state.go('signIn');
-    }
+    };
 
     $scope.signIn = function () {
         var userInfo = {
