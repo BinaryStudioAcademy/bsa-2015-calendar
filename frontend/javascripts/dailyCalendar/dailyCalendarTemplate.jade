@@ -6,36 +6,14 @@
 			#datepicker(style="position: relative")
 				a.current-day#pickDate(href='')
 					span
-						| {{ dvCtrl.selectedDate | date: 'd EEE yyyy' }}
+						| {{ dvCtrl.selectedDate | date: 'd MMM yyyy' }}
 				date-picker.sidebar-datepicker(for="pickDate")
 		.col-md-2.col-sm-2.col-xs-2
 			i.glyphicon.glyphicon-chevron-right.bigger-icon.day-next.pull-right(class="btn btn-large btn-info" ng-click='dvCtrl.showDay(1)')
 	.content-for-day
-		table.day-in-table(width='100%')#calendar.table
-			time-indicator(table='#calendar')
+		table#calendar.table.day-in-table
+			time-indicator(table='#calendar' table-row-height='dvCtrl.rowHeight')
 			tbody
 				tr(ng-repeat="timeSt in dvCtrl.timeStamps")
 					td.hourCell {{timeSt}}
 					td.eventCell(ng-dblclick="dvCtrl.showCloseModal()")
-		.eventInfo.well(ng-show="dvCtrl.eventSelected")
-			#eventName
-				strong Event name:
-				span {{dvCtrl.event.name}}
-			#eventDescription
-				strong Description:
-				p {{dvCtrl.event.description}}
-			#eventAuthor
-				strong Created by:
-				span {{dvCtrl.event.author}}
-			#eventRoom
-				strong Room #
-				span {{dvCtrl.event.room}}
-			#eventParticipants
-				strong Participants: 
-				span.badge {{dvCtrl.event.participants}}
-
-	#showAllEvents.text-center
-		.checkbox
-			label
-				input(type="checkbox") 
-				| Show all events

@@ -56,13 +56,19 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal) {
 		});
 	};
 
+	// vm.getRowHeight = function () {
+	// 	var tableRow = $('#calendar tr');
+	// 	vm.rowHeight = tableRow.outerHeight();
+	// 	alert(vm.rowHeight);
+	// };
+
 	init();
 
 	function init() {
 
 		vm.timeStamps = DailyCalendarService.getTimeStamps();
 		var todayDate = new Date();
-		
+
 		vm.selectedDate = vm.selectedDate || todayDate;
 		vm.eventSelected = false;
 		vm.modalShown = false;
@@ -74,7 +80,6 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal) {
 		getUsers();
 		getAllEvents();
 		getEventTypes();
-
 	}
 
 	function getRooms() {
@@ -159,3 +164,15 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal) {
 	// 		}
 	// 	}
 }
+
+app.directive('afterRender', ['$timeout', function ($timeout) {
+	var def = {
+		restrict: 'A',
+		terminal: true,
+		transclude: false,
+		link: function (scope, element, attrs) {
+			$timeout(scope.$eval(attrs.afterRender), 0);
+		}
+	};
+	return def;
+}]);

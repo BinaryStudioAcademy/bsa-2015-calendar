@@ -65,7 +65,7 @@ module.exports = function(app) {
 	}, apiResponse);
 
 	app.get('/api/device/:id/:dateStart/:dateEnd', function(req, res, next){
-		eventRepository.checkRoomAvailability(req.params.id, req.params.dateStart, req.params.dateEnd, function(err, data){
+		eventRepository.checkDeviceAvailability(req.params.id, req.params.dateStart, req.params.dateEnd, function(err, data){
 			res.data = data;
 			res.err = err;
 			next();
