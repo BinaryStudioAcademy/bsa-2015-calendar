@@ -56,12 +56,6 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal) {
 		});
 	};
 
-	// vm.getRowHeight = function () {
-	// 	var tableRow = $('#calendar tr');
-	// 	vm.rowHeight = tableRow.outerHeight();
-	// 	alert(vm.rowHeight);
-	// };
-
 	init();
 
 	function init() {
@@ -164,15 +158,3 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal) {
 	// 		}
 	// 	}
 }
-
-app.directive('afterRender', ['$timeout', function ($timeout) {
-	var def = {
-		restrict: 'A',
-		terminal: true,
-		transclude: false,
-		link: function (scope, element, attrs) {
-			$timeout(scope.$eval(attrs.afterRender), 0);
-		}
-	};
-	return def;
-}]);

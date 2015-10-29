@@ -7,7 +7,7 @@ DailyCalendarService.$inject = ['$resource', '$q', '$timeout'];
 function DailyCalendarService($resource, $timeout, $q) {
 
 	var timeStamps = '12am|1am|2am|3am|4am|5am|6am|7am|8am|9am|10am|11am|12pm|1pm|2pm|3pm|4pm|5pm|6pm|7pm|8pm|9pm|10pm|11pm'.split('|');
-	var resAllEvents;
+
 	var resourceEvent = $resource('/api/event/');
 	var resourceRooms= $resource('/api/room/');
 	var resourceDevices = $resource('/api/device/');
@@ -17,7 +17,23 @@ function DailyCalendarService($resource, $timeout, $q) {
 
 
 	function getTimeStamps() {
-		return timeStamps;
+
+		var timeStampsObj = [];
+
+		var workingHours = [9, 18];
+
+		for(var i=0; i<timeStamps.length; i+=1) {
+			var timeObj = {};
+			timeObj.value = timeStamps[i];
+			if(i >= 9 && i <= 18) {
+				timeObj.isWorkingHour = true;
+			} else {
+				timeObj.isWorkingHour = false;
+			}
+			timeStampsObj.push(timeObj);
+		}
+
+		return timeStampsObj;
 	}
 
 	function configureEventData(date, event) {

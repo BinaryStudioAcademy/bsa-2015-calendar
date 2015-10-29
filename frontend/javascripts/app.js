@@ -118,13 +118,14 @@ var app = angular.module('calendar-app', ['ui.router', 'ngAlertify', 'btford.soc
         return socket;
     }]);
 
-app.run(['$rootScope', '$state', function($rootScope, $state) {
+app.run(['$rootScope', '$state', '$anchorScroll', function($rootScope, $state, $anchorScroll) {
 	$rootScope.$on('$stateChangeStart', function(evt, to, params) {
 		if (to.redirectTo) {
 			evt.preventDefault();
 			$state.go(to.redirectTo, params);
 		}
 	});
+    $anchorScroll.yOffset = 100;
 }]);
 
 module.exports = app;
