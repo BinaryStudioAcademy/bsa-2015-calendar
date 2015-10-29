@@ -14,6 +14,7 @@ function createNewRoomController($scope, createNewRoomService, socketService){
 
   vm.toggleViewRoom = function(){
       vm.showRoomsList = !vm.showRoomsList;
+      vm.rooms = createNewRoomService.getRooms();
   };
 
   vm.reset = function (){
