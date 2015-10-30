@@ -56,11 +56,20 @@ ul
     -webkit-box-shadow 0px 5px 3px 0px rgba(50, 50, 50, 0.62)
     -moz-box-shadow 0px 5px 3px 0px rgba(50, 50, 50, 0.62)
     box-shadow 0px 5px 3px 0px rgba(50, 50, 50, 0.62)
+    transition all .2s ease-in-out
+    cursor pointer
+
+.event:hover
+    -webkit-box-shadow 0px 8px 3px 1px rgba(50, 50, 50, 0.62)
+    -moz-box-shadow 0px 8px 3px 1px rgba(50, 50, 50, 0.62)
+    box-shadow 0px 8px 3px 1px rgba(50, 50, 50, 0.62)
+    transform scale(1.05)
+    z-index 2
 
 .working-hour
     background #D9EAF5
 
-.table-responsive
+.event-table
     height 450px
     overflow-x auto
     overflow-y scroll
@@ -69,10 +78,10 @@ ul
     border: 1px solid #ddd;
     border-right 0
 
-.table-responsive > #calendar > tbody > tr:last-child > th,
-.table-responsive > #calendar > tfoot > tr:last-child > th,
-.table-responsive > #calendar > tbody > tr:last-child > td,
-.table-responsive > #calendar > tfoot > tr:last-child > td
+.event-table > #calendar > tbody > tr:last-child > th,
+.event-table > #calendar > tfoot > tr:last-child > th,
+.event-table > #calendar > tbody > tr:last-child > td,
+.event-table > #calendar > tfoot > tr:last-child > td
     border-bottom: 0;
 
 

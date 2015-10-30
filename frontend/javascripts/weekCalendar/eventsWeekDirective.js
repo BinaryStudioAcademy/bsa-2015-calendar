@@ -17,11 +17,6 @@ function eventsWeekDirective($compile, $templateCache) {
                     var evtDay = evtStart.getDay();
                     //get hour cell with event start
                     var evtCell = angular.element(element[0].querySelectorAll('[ng-class="'+ evtHour +'"].'+ daysNames[evtDay]));
-                    console.log(currEvt.title);
-                    console.log(evtHour);
-                    console.log(currEvt.start);
-
-
                     var eventDiv = angular.element('<div class="event-cell-week"></div>'); 
                     eventDiv.text(currEvt.title);
                     var tmpl = '<div>'+currEvt.description+'</div><div>Start at: '+moment(currEvt.start).format('hh:mm')+'</div><div>End at: '+moment(currEvt.end).format('hh:mm')+'</div>';
@@ -30,7 +25,7 @@ function eventsWeekDirective($compile, $templateCache) {
                     eventDiv.attr('uib-popover-template', '"evtTmpl'+i+'.html"');
                     eventDiv.attr('popover-title', currEvt.title);
                     eventDiv.attr('popover-append-to-body', "true");
-                    eventDiv.attr('trigger', 'click');
+                    eventDiv.attr('trigger', 'focus');
 
                     //background color for different types of events
                     switch(currEvt.type) {

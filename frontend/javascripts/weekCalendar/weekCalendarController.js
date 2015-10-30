@@ -2,9 +2,9 @@ var app = require('../app');
 
 app.controller('WeekViewController', WeekViewController);
 
-WeekViewController.$inject = ['WeekCalendarService', '$scope'];
+WeekViewController.$inject = ['WeekCalendarService', '$scope', '$uibModal'];
 
-function WeekViewController(WeekCalendarService, $scope) {
+function WeekViewController(WeekCalendarService, $scope, $uibModal) {
 	var vm = this;
 
 	vm.timeStamps = WeekCalendarService.getTimeStamps();
@@ -31,6 +31,15 @@ function WeekViewController(WeekCalendarService, $scope) {
 		vm.eventObj = data;
 		$scope.$broadcast('eventsUpdated');
 	});
+
+	vm.newEvent = function(day, hour) {
+		console.log(day);
+		console.log(hour);
+		var createEventModal = $uibModal.open({
+			templateUrl: 'templates/weekCalendar/createEventModal.html',
+			size: 'lg'
+			});
+	};
 
 }
 

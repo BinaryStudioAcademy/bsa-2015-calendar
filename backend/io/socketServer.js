@@ -30,6 +30,13 @@ module.exports = function(server){
 			console.log('user disconnected: ' + socket.request.user.username);
 		});
 
+		socket.on('add event', function(data){
+			console.log(data);
+			console.log('SOCKET.IO: NEW event: ' + data.event.title);
+
+			socket.broadcast.emit('add event notification', data.event);
+		});
+
 		socket.on('add device', function(data){
 			console.log(data);
 			console.log('SOCKET.IO: NEW device: ' + data.device.title);
@@ -56,10 +63,6 @@ module.exports = function(server){
 
 		socket.on('delete room', function(data){
 			socket.broadcast.emit('delete room notification', data.room);
-		});
-
-		socket.on('add event', function(data){
-			socket.broadcast.emit('add event notification', data.room);
 		});
 
 		socket.on('update event', function(data){
