@@ -113,19 +113,16 @@ eventService.prototype.add = function(data, callback){
 		},
 
 		function(cb){
-			if(event.type){
-				if(event.type.length) {event.type.forEach(function(eventTypeId){
-					eventTypeRepository.addEvent(eventTypeId, event._id, function(err, data){
-	 					if(err){
-	 						return cb(err, null);
-	 					}
-					});
-					console.log('added to eventType');
+			if (event.type !== undefined){
+				eventTypeRepository.addEvent(event.type, event._id, function(err, data){
+	 				if(err){
+	 					return cb(err, null);
+	 				}
+	 				console.log('added to eventType');
+	 				cb();
 				});
-				cb();
 			}
-			}
-			else{
+			else {
 				console.log('no eventType');
 				cb();
 			}
@@ -164,13 +161,15 @@ eventService.prototype.delete = function(eventId, callback){
 	 					return	cb(err, null);
 	 				}
 	 				console.log('delete from room');
+	 				cb();
 				});
 	
 			}
 			else {
 				console.log('no room');
+				cb();
 			}
-			cb();
+
 		},
 		function(cb){
 			if(event.users.length){
@@ -180,13 +179,15 @@ eventService.prototype.delete = function(eventId, callback){
 	 						return	cb(err, null);
 	 					}
 	 					console.log('delete from user');
+	 					cb();
 					});	
 				});
 			}
 			else {
 				console.log('no users');
+				cb();
 			}
-			cb();
+
 		},
 		function(cb){
 			if(event.devices.length){
@@ -196,31 +197,32 @@ eventService.prototype.delete = function(eventId, callback){
 	 						return	cb(err, null);
 	 					}
 	 					console.log('delete from device');
+	 					cb();
 					});
 				});
 			}
 			else {
 				console.log('no devices');
+				cb();
 			}
-			cb();
 		},
 
 
 		function(cb){
-			if(event.type.length){
-				event.type.forEach(function(eventTypeId){
-					eventTypeRepository.removeEvent(eventTypeId, eventId, function(err, data){
-	 					if(err){
-	 						return	cb(err, null);
-	 					}
-	 					console.log('delete from eventType');
-					});
+			if (event.type !== undefined){
+				eventTypeRepository.removeEvent(event.type, eventId, function(err, data){
+ 					if(err){
+ 						return	cb(err, null);
+ 					}
+ 					console.log('delete from eventType');
+ 					cb();
 				});
 			}
 			else {
 				console.log('no eventType');
+				cb();
 			}
-			cb();
+
 		},
 
 

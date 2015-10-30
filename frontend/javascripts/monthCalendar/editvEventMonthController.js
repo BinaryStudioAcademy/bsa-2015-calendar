@@ -2,9 +2,9 @@ var app = require('../app');
 
 app.controller('editEventMonthController', editEventMonthController);
 
-editEventMonthController.$inject = ['monthEventService', '$timeout', '$modalInstance', 'rooms', 'devices', 'users', 'selectedDate', 'eventTypes'];
+editEventMonthController.$inject = ['$rootScope','monthEventService', '$timeout', '$modalInstance', 'rooms', 'devices', 'users', 'selectedDate', 'eventTypes'];
 
-function editEventMonthController(monthEventService, $timeout, $modalInstance, rooms, devices, users, selectedDate, eventTypes) {
+function editEventMonthController($rootScope, monthEventService, $timeout, $modalInstance, rooms, devices, users, selectedDate, eventTypes) {
 
 	var vm = this;
 
@@ -20,6 +20,7 @@ function editEventMonthController(monthEventService, $timeout, $modalInstance, r
 
 	vm.submitModal = function() {
 		submitEvent(vm.event);
+		$rootScope.$broadcast('sendModal', vm.event);
 		console.log('Modal submited');
 	};
 
@@ -58,7 +59,7 @@ function editEventMonthController(monthEventService, $timeout, $modalInstance, r
 
 	function submitEvent(event) {
 		console.log('submiting an event...');
-		DailyCalendarService.saveEvent(event)
+		monthEventService.saveEvent(event)
 			.$promise.then(
 
 				function(response) {
@@ -81,7 +82,7 @@ function editEventMonthController(monthEventService, $timeout, $modalInstance, r
 
 	function dropEventInfo(selDate) {
 
-		var newEventDate = new Date();
+		var newEventDate = selDate || new Date();
 		newEventDate.setHours(0);
 		newEventDate.setMinutes(0);
 
@@ -91,9 +92,9 @@ function editEventMonthController(monthEventService, $timeout, $modalInstance, r
 		vm.event.end = newEventDate;
 		vm.event.devices = [];
 		vm.event.users = [];
-		vm.event.room = null;
+		vm.event.room = undefined;
 		vm.event.isPrivate = false;
-		vm.event.type = '';
-		vm.event.price = null;
+		vm.event.type = undefined;
+		vm.event.price = undefined;
 	}
 }

@@ -5,9 +5,9 @@ var app = require('../app'),
 
 app.controller('MonthController', MonthController);
 
-MonthController.$inject = ['$scope','DailyCalendarService', '$timeout', '$q', '$uibModal'];
+MonthController.$inject = ['$scope', 'monthEventService', '$timeout', '$q', '$uibModal'];
 
-function MonthController($scope ,DailyCalendarService,  $timeout, $q, $uibModal) {
+function MonthController($scope, monthEventService,  $timeout, $q, $uibModal) {
 
 // app.controller("MonthController", function ($scope) {
     //$scope.day = moment();
@@ -52,7 +52,8 @@ function MonthController($scope ,DailyCalendarService,  $timeout, $q, $uibModal)
         $scope.modalShown = !$scope.modalShown;
     };
 
-    $scope.showCloseModal = function() {
+    $scope.showCloseModal = function(dayDate) {
+        $scope.selectedDate = new Date(dayDate.format("DD MMM YYYY HH:mm:ss"));
         $scope.modalInstance = $uibModal.open({
             animation: true,
             templateUrl: 'templates/monthCalendar/editEventMonthTemplate.html',
@@ -89,7 +90,7 @@ function MonthController($scope ,DailyCalendarService,  $timeout, $q, $uibModal)
 
     function init() {
 
-        $scope.timeStamps = DailyCalendarService.getTimeStamps();
+        $scope.timeStamps = monthEventService.getTimeStamps();
         var todayDate = new Date();
 
         $scope.selectedDate = $scope.selectedDate || todayDate;
@@ -106,7 +107,7 @@ function MonthController($scope ,DailyCalendarService,  $timeout, $q, $uibModal)
     }
     
     function getRooms() {
-        DailyCalendarService.getAllRooms()
+        monthEventService.getAllRooms()
             .$promise.then(
                 function(response) {
                     console.log('success Total rooms: ', response.length);
@@ -119,7 +120,7 @@ function MonthController($scope ,DailyCalendarService,  $timeout, $q, $uibModal)
     }
 
     function getInventory() {
-        DailyCalendarService.getAllDevices()
+        monthEventService.getAllDevices()
             .$promise.then(
                 function(response) {
                     console.log('success Inventory items: ', response.length);
@@ -132,7 +133,7 @@ function MonthController($scope ,DailyCalendarService,  $timeout, $q, $uibModal)
     }
 
     function getUsers() {
-        DailyCalendarService.getAllUsers()
+        monthEventService.getAllUsers()
             .$promise.then(
                 function(response) {
                     console.log('success Number of Users: ', response.length);
@@ -145,7 +146,7 @@ function MonthController($scope ,DailyCalendarService,  $timeout, $q, $uibModal)
     }
 
     function getEventTypes() {
-        DailyCalendarService.getAllEventTypes()
+        monthEventService.getAllEventTypes()
             .$promise.then(
                 function(response) {
                     console.log('success Current number of types: ', response.length);
@@ -158,7 +159,7 @@ function MonthController($scope ,DailyCalendarService,  $timeout, $q, $uibModal)
     }
 
     function getAllEvents() {
-        DailyCalendarService.getAllEvents()
+        monthEventService.getAllEvents()
             .$promise.then(
                 function(response) {
                     console.log('success Number of Events: ', response.length);

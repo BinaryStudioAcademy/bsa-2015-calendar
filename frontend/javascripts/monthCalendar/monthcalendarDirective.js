@@ -5,7 +5,7 @@ var app = require('../app'),
     moment = require('moment');
     //monthCalendarService = require('./monthCalendarService');
 
-app.directive("calendar", function ($http) {
+app.directive("calendar", function ($http,$rootScope) {
     return {
         restrict: "E",
         templateUrl: "templates/monthCalendar/monthCalendarDirectiveTemplate.html",
@@ -34,6 +34,46 @@ app.directive("calendar", function ($http) {
                 scope.month.month(scope.month.month() - 1);
                 _buildMonth(scope, previous, scope.month);
             };
+        },
+        controller: function ($scope){
+            $scope.$on('sendModal', function(event, eventfromsend){
+                //scope.events.push(event);
+                //_buildMonth();
+                //console.log('some event', eventfromsend);
+                //console.log($scope.month);
+                //console.log($scope.events);
+                var a = moment([2007, 0, 29]);
+                var b = moment([2007, 1, 1]);
+                console.log('difference');
+                console.log(a.diff(b, 'days'));
+
+                var newEventDate = new moment(eventfromsend.start);
+                evDate = newEventDate.format("D_M_YYYY");
+
+
+                //console.log($scope.start);
+                //console.log($scope.end);
+
+                var daysDiff = newEventDate.diff($scope.start,'days');
+                //console.log(daysDiff);
+                var weekindex = Math.floor(daysDiff / 7);
+                var dayindex = daysDiff % 7;
+
+                //console.log(weekindex, ' ', dayindex);
+                // console.log(evDate);
+                // console.log(event);
+                // if($scope.events[evDate]){
+                //         $scope.events[evDate].push(eventfromsend/*{name:eventfromsend.title, date: moment(eventfromsend.start)}*/);
+                //         //console.log(days[i]);
+                // }
+                // else{
+                //     $scope.events[evDate] = [];
+                //     $scope.events[evDate].push({name:eventfromsend.title, date: moment(eventfromsend.start)});
+                // }
+                //console.log($scope.events); 
+                $scope.weeks[weekindex].days[dayindex].events.push({name:eventfromsend.title, date: moment(eventfromsend.start)});
+
+            });
         }
     };
     function _removeTime(date) {
@@ -45,9 +85,11 @@ app.directive("calendar", function ($http) {
         scope.weeks = [];
         scope.events = [];
         var end = start.clone().add(1, 'month').endOf('month');
-        console.log(start);
-        console.log(end);
-        console.log(month);
+        // console.log(start);
+        // console.log(end);
+        // console.log(month);
+        scope.start = start;
+        scope.end = end;
 
         var done = false, date = start.clone(), monthIndex = date.month(), count = 0;
         var evtPromise =  getEventsObj(start.format("DD MMM YYYY HH:mm:ss"),end.format("DD MMM YYYY HH:mm:ss"));

@@ -92,9 +92,9 @@ function ModalController(DailyCalendarService, $timeout, $modalInstance, rooms, 
 		vm.event.end = newEventDate;
 		vm.event.devices = [];
 		vm.event.users = [];
-		vm.event.room = null;
+		vm.event.room = undefined;
 		vm.event.isPrivate = false;
-		vm.event.type = '';
-		vm.event.price = null;
+		vm.event.type = undefined;
+		vm.event.price = undefined;
 	}
 }
