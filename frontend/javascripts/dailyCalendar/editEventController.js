@@ -94,9 +94,9 @@ function ModalController(DailyCalendarService, socketService, $timeout, $modalIn
 		vm.event.end = newEventDate;
 		vm.event.devices = [];
 		vm.event.users = [];
-		vm.event.room = null;
+		vm.event.room = undefined;
 		vm.event.isPrivate = false;
-		vm.event.type = '';
+		vm.event.type = undefined;
 		vm.event.price = null;
 	}
 }
