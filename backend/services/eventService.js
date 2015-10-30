@@ -110,7 +110,7 @@ eventService.prototype.add = function(data, callback){
 				console.log('no devices');
 				cb();
 			}
-		}
+		},
 
 		function(cb){
 			if(event.type.length){
@@ -128,7 +128,7 @@ eventService.prototype.add = function(data, callback){
 				console.log('no eventType');
 				cb();
 			}
-		}
+		},
 
 	], function(err, result){
 		if(err){

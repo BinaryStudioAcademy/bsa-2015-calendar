@@ -1,0 +1,43 @@
+div.event-create-modal
+    div.modal-header
+        h4 
+            strong Create new Event
+    div.modal-body
+        div.form-control
+            label(for='event-name') Event name: 
+            input(type='text', id='event-name', placeholder='Enter event name')
+        div.form-control 
+            label(for='event-description') Event description 
+            input(type='text', name='event-description', placeholder='Enter event description')
+        div.form-group
+            label Select event type
+                select 
+                    option Room booking
+                    option Device reservation
+                    option Birthday
+        div.form-inline 
+            label Select start time
+                uib-timepicker(ng-model='click-cell')
+            label Select end time
+                uib-timepicker(ng-model='end-time')
+        div.form-inline
+            label Select room
+                select 
+                    option Room 1
+                    option Room 2
+                    option Room 3
+            label Select device
+                select Device
+                    option Device 1
+                    option Device 2
+                    option Device 3
+            label Select participants
+                select 
+                    option User 1
+                    option User 2
+                    option User 3
+
+    div.modal-footer
+        button.btn.btn-primary(ng-click='') OK
+        button.btn.btn-warning(ng-click='') Cancel
+
