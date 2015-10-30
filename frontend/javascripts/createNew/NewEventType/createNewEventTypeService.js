@@ -11,14 +11,22 @@ function createNewEventTypeService ($resource) {
 		return eventTypes;
 	}
 
+	// function getEventTypeByTitle(eventType){
+	// 	var dbEventTypeByTitle = $resource('http://localhost:3080/api/eventTypeByTitle/:title', {title: eventType.title});
+	// 	var newType = dbEventTypeByTitle.get(eventType);
+	// 	console.log(newType);
+	// 	return newType;
+	// }
+
+
 	function saveEventType(newEventType) {
 		return dbEventTypes.save(newEventType);
 	}
 
 	function updateEventType(eventType){	
 		var dbEventTypeById = $resource('http://localhost:3080/api/eventType/:id', {id: eventType._id}, {'update': { method:'PUT'}});
-		delete eventType._id;
-		var one_eventType = dbEventTypeById.update(eventType);
+		// delete eventType._id;
+		return dbEventTypeById.update(eventType);
 	}
 
 	function deleteEventType(eventType) {

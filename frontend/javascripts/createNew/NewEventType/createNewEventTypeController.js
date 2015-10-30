@@ -10,6 +10,7 @@ function createNewEventTypeController($scope, createNewEventTypeService){
 
   vm.toggleViewEventType = function(){
       vm.showEventTypesList = !vm.showEventTypesList;
+      vm.eventTypes = createNewEventTypeService.getEventTypes();
   };
 
   vm.reset = function (){
@@ -23,19 +24,28 @@ function createNewEventTypeController($scope, createNewEventTypeService){
       createNewEventTypeService.saveEventType(newEventType)
         .$promise.then(
           function(response) {
+            vm.eventTypes.push(response);         
             console.log('success function addEventType', response);
           },
           function(response) {
             console.log('failure function addEventType', response);
           } 
-        );
-      vm.eventTypes.push(newEventType);
+        );  
       vm.eventType.title = '';
   };
 
-  vm.updateEventType = function(eventType){
-    console.log(eventType); 
-    createNewEventTypeService.updateEventType(eventType);
+
+  vm.updateEventType = function(eventType){  
+    console.log('element', eventType); 
+    createNewEventTypeService.updateEventType(eventType)   
+      .$promise.then(
+        function(response) {   
+          console.log('success function updateEventType', response);
+        },
+        function(response) {
+          console.log('failure function updateEventType', response);
+        } 
+      ); 
   };
 
   vm.deleteEventType = function(eventType, $index){

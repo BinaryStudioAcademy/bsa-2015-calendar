@@ -4,8 +4,9 @@ var userRepository = require('../repositories/userRepository');
 var roomRepository = require('../repositories/roomRepository');
 var deviceRepository = require('../repositories/deviceRepository');
 var groupRepository = require('../repositories/groupRepository');
+var eventTypeRepository = require('../repositories/eventTypeRepository');
 var _ = require('lodash');
-//var io = require('../notifications/notifications');
+// var io = require('../notifications/notifications');
 
 var eventService = function(){};
 
@@ -109,13 +110,32 @@ eventService.prototype.add = function(data, callback){
 				console.log('no devices');
 				cb();
 			}
-		}
+		},
+
+		function(cb){
+			if(event.type.length){
+				event.type.forEach(function(eventTypeId){
+					eventTypeRepository.addEvent(eventTypeId, event._id, function(err, data){
+	 					if(err){
+	 						return cb(err, null);
+	 					}
+					});
+					console.log('added to eventType');
+				});
+				cb();
+			}
+			else{
+				console.log('no eventType');
+				cb();
+			}
+		},
+
 	], function(err, result){
 		if(err){
 			//console.log(err.message);
 			return callback(err, result);
 		}
-		//io.sockets.emit('event added', event);
+
 		return callback(null, {success: true});
 	});
 };
@@ -131,7 +151,7 @@ eventService.prototype.delete = function(eventId, callback){
 					return cb(err);
 				}
 				if (!data){
-					return cb(new Error("incorrect planId " + eventId));
+					return cb(new Error("incorrect eventId " + eventId));
 				}
 				event = data;
 				cb();
@@ -184,6 +204,25 @@ eventService.prototype.delete = function(eventId, callback){
 			}
 			cb();
 		},
+
+
+		function(cb){
+			if(event.type.length){
+				event.type.forEach(function(eventTypeId){
+					eventTypeRepository.removeEvent(eventTypeId, eventId, function(err, data){
+	 					if(err){
+	 						return	cb(err, null);
+	 					}
+	 					console.log('delete from eventType');
+					});
+				});
+			}
+			else {
+				console.log('no eventType');
+			}
+			cb();
+		},
+
 
 		function(cb){
 			groupRepository.removeEvent(eventId, function(err, data){

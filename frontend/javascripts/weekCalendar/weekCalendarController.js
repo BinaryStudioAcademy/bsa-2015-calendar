@@ -2,9 +2,9 @@ var app = require('../app');
 
 app.controller('WeekViewController', WeekViewController);
 
-WeekViewController.$inject = ['WeekCalendarService'];
+WeekViewController.$inject = ['WeekCalendarService', '$scope'];
 
-function WeekViewController(WeekCalendarService) {
+function WeekViewController(WeekCalendarService, $scope) {
 	var vm = this;
 
 	vm.timeStamps = WeekCalendarService.getTimeStamps();
@@ -26,4 +26,11 @@ function WeekViewController(WeekCalendarService) {
 	vm.Start = weekStart;
 	// vm.Tue = weektue;
 	vm.End = weekEnd;
+
+	WeekCalendarService.getEvents(weekStart, weekEnd).then(function(data) {
+		vm.eventObj = data;
+		$scope.$broadcast('eventsUpdated');
+	});
+
 }
+

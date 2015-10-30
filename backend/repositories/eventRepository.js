@@ -29,7 +29,7 @@ EventRepository.prototype.getByType = function(type, callback){
 
 EventRepository.prototype.getByInterval = function(gteDate,lteDate, callback){
 	var model = this.model;
-	var query = model.find( {"start": {"$gte": gteDate, "$lte": lteDate}});
+	var query = model.find( {"start": {"$gte": gteDate, "$lte": lteDate}}).sort({"start": 1});
 	query.exec(callback);
 };
 
