@@ -1,10 +1,10 @@
 var app = require('../app');
 
-app.controller('ModalController', ModalController);
+app.controller('editEventMonthController', editEventMonthController);
 
-ModalController.$inject = ['DailyCalendarService', '$timeout', '$modalInstance', 'rooms', 'devices', 'users', 'selectedDate', 'eventTypes'];
+editEventMonthController.$inject = ['monthEventService', '$timeout', '$modalInstance', 'rooms', 'devices', 'users', 'selectedDate', 'eventTypes'];
 
-function ModalController(DailyCalendarService, $timeout, $modalInstance, rooms, devices, users, selectedDate, eventTypes) {
+function editEventMonthController(monthEventService, $timeout, $modalInstance, rooms, devices, users, selectedDate, eventTypes) {
 
 	var vm = this;
 
@@ -49,9 +49,9 @@ function ModalController(DailyCalendarService, $timeout, $modalInstance, rooms, 
 	};
 
 	vm.selectEventType = function(type) {
-  		vm.event.type = type['_id'];
-  		vm.eventType = type.title;
- 	};
+		vm.event.type = type['_id'];
+	};
+
 	vm.selectRoom = function(title) {
 		vm.event.room = title;
 	};
@@ -81,7 +81,7 @@ function ModalController(DailyCalendarService, $timeout, $modalInstance, rooms, 
 
 	function dropEventInfo(selDate) {
 
-		var newEventDate = selDate || new Date();
+		var newEventDate = new Date();
 		newEventDate.setHours(0);
 		newEventDate.setMinutes(0);
 

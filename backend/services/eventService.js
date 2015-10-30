@@ -113,8 +113,8 @@ eventService.prototype.add = function(data, callback){
 		},
 
 		function(cb){
-			if(event.type.length){
-				event.type.forEach(function(eventTypeId){
+			if(event.type){
+				if(event.type.length) {event.type.forEach(function(eventTypeId){
 					eventTypeRepository.addEvent(eventTypeId, event._id, function(err, data){
 	 					if(err){
 	 						return cb(err, null);
@@ -123,6 +123,7 @@ eventService.prototype.add = function(data, callback){
 					console.log('added to eventType');
 				});
 				cb();
+			}
 			}
 			else{
 				console.log('no eventType');

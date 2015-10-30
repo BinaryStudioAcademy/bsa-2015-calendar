@@ -53,7 +53,8 @@ var app = angular.module('calendar-app', ['ui.router', 'ngAlertify', 'btford.soc
                 .state('calendar.monthView', {
                     url: '/monthView',
                     templateUrl: './templates/monthCalendar/monthCalendar.html',
-                    controller: '',
+                    controller: 'MonthController',
+                    controllerAs: 'mCtrl',
                     auth: true
                 })
                 .state('calendar.createNewDevice', {
