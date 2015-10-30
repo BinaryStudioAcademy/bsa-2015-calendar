@@ -53,7 +53,8 @@ var app = angular.module('calendar-app', ['ui.router', 'ngAlertify', 'btford.soc
                 .state('calendar.monthView', {
                     url: '/monthView',
                     templateUrl: './templates/monthCalendar/monthCalendar.html',
-                    controller: '',
+                    controller: 'MonthController',
+                    controllerAs: 'mCtrl',
                     auth: true
                 })
                 .state('calendar.createNewDevice', {
@@ -117,6 +118,7 @@ var app = angular.module('calendar-app', ['ui.router', 'ngAlertify', 'btford.soc
         });
 
         socket.on('add event notification', function(event){
+            console.log('event has been added');
             alertify.log('Event has been created');
         }); 
 
@@ -136,10 +138,22 @@ var app = angular.module('calendar-app', ['ui.router', 'ngAlertify', 'btford.soc
         var userInfo = null;
 
         service.getUser = function(){
-            return userInfo;
+            //console.log('localstorage.userInfo: ', localStorage.userInfo);
+
+            if(localStorage.userInfo){
+                //console.log('JSON parse userinfo', JSON.parse(localStorage.userInfo));
+                return JSON.parse(localStorage.userInfo);  
+            }
+
+            return null;
+
         };
 
         service.setUser = function(user){
+            console.log(user);
+
+            localStorage.userInfo = JSON.stringify(user);
+            //console.log('SET localstorage.userinfo', localStorage.userInfo);
             userInfo = user;
         };
 
@@ -154,7 +168,7 @@ app.run(['$rootScope', '$state', 'AuthService', '$anchorScroll', function($rootS
 		}
 
         console.log('STATECHANGE!');
-        console.log(AuthService.getUser());
+        //console.log('AUTHService.getUser(): ', AuthService.getUser());
 
         if(to.auth && !AuthService.getUser()){
             evt.preventDefault();

@@ -11,13 +11,13 @@
         col.days(width='12,5%' span='7')
         tr
                 th.tg-month-yw4l.month-day-header 
-                th.tg-month-yw4l.month-day-header Sun
                 th.tg-month-yw4l.month-day-header Mon
                 th.tg-month-yw4l.month-day-header Tue
                 th.tg-month-yw4l.month-day-header Wed
                 th.tg-month-yw4l.month-day-header Thu
                 th.tg-month-yw4l.month-day-header Fri
-                th.tg-month-yw4l.month-day-header Sat
+                th.tg-month-yw4l.month-day-header.dayoff Sat
+                th.tg-month-yw4l.month-day-header.dayoff Sun
         //-tr
           th
           th(ng-repeat="day in wCtrl.days")
@@ -27,11 +27,11 @@
 
         tr(ng-repeat="timeSt in wCtrl.timeStamps")
           td.hourCell {{timeSt.time}}
-          td.eventCell.sun(ng-class='{{$index}}')
-          td.eventCell.mon(ng-class='{{$index}}')
-          td.eventCell.tue(ng-class='{{$index}}')
-          td.eventCell.wed(ng-class='{{$index}}')
-          td.eventCell.thu(ng-class='{{$index}}')
-          td.eventCell.fri(ng-class='{{$index}}')
-          td.eventCell.sat(ng-class='{{$index}}')
+          td.eventCell.mon(ng-class='{{$index}}', ng-dblclick = 'wCtrl.newEvent("mon", $index)')
+          td.eventCell.tue(ng-class='{{$index}}', ng-dblclick = 'wCtrl.newEvent("tue", $index)')
+          td.eventCell.wed(ng-class='{{$index}}', ng-dblclick = 'wCtrl.newEvent("wed", $index)')
+          td.eventCell.thu(ng-class='{{$index}}', ng-dblclick = 'wCtrl.newEvent("thu", $index)')
+          td.eventCell.fri(ng-class='{{$index}}', ng-dblclick = 'wCtrl.newEvent("fri", $index)')
+          td.eventCell.sat(ng-class='{{$index}}', ng-dblclick = 'wCtrl.newEvent("sat", $index)')
+          td.eventCell.sun(ng-class='{{$index}}', ng-dblclick = 'wCtrl.newEvent("sun", $index)')
 

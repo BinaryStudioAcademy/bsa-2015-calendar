@@ -2,9 +2,9 @@ var app = require('../app');
 
 app.controller('DayViewController', DayViewController);
 
-DayViewController.$inject = ['DailyCalendarService', '$timeout', '$q', '$uibModal'];
+DayViewController.$inject = ['DailyCalendarService', '$timeout', '$q', '$uibModal', 'socketService'];
 
-function DayViewController(DailyCalendarService, $timeout, $q, $uibModal) {
+function DayViewController(DailyCalendarService, $timeout, $q, $uibModal, socketService) {
 
 	var vm = this;
 

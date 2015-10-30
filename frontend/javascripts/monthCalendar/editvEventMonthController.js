@@ -1,27 +1,26 @@
 var app = require('../app');
 
-app.controller('ModalController', ModalController);
+app.controller('editEventMonthController', editEventMonthController);
 
-ModalController.$inject = ['DailyCalendarService', 'socketService', '$timeout', '$modalInstance', 'event', 'rooms', 'devices', 'users', 'selectedDate', 'eventTypes', 'todayEvents'];
+editEventMonthController.$inject = ['$rootScope','monthEventService', '$timeout', '$modalInstance', 'rooms', 'devices', 'users', 'selectedDate', 'eventTypes'];
 
-function ModalController(DailyCalendarService, socketService, $timeout, $modalInstance, event, rooms, devices, users, selectedDate, eventTypes, todayEvents) {
+function editEventMonthController($rootScope, monthEventService, $timeout, $modalInstance, rooms, devices, users, selectedDate, eventTypes) {
 
 	var vm = this;
 
 	vm.formSuccess = false;
-	vm.event = event;
+	vm.event = {};
 	vm.rooms = rooms;
 	vm.devices = devices;
 	vm.users = users;
 	vm.selectedDate = selectedDate;
 	vm.eventTypes = eventTypes;
-	vm.todayEvents = todayEvents;
 
-	
 	dropEventInfo(vm.selectedDate);
 
 	vm.submitModal = function() {
 		submitEvent(vm.event);
+		$rootScope.$broadcast('sendModal', vm.event);
 		console.log('Modal submited');
 	};
 
@@ -52,7 +51,6 @@ function ModalController(DailyCalendarService, socketService, $timeout, $modalIn
 
 	vm.selectEventType = function(type) {
 		vm.event.type = type['_id'];
-		vm.eventType = type.title;
 	};
 
 	vm.selectRoom = function(title) {
@@ -61,19 +59,14 @@ function ModalController(DailyCalendarService, socketService, $timeout, $modalIn
 
 	function submitEvent(event) {
 		console.log('submiting an event...');
-		DailyCalendarService.saveEvent(event)
+		monthEventService.saveEvent(event)
 			.$promise.then(
 
 				function(response) {
 
 					vm.formSuccess = true;
+					dropEventInfo();
 					console.log('success', response);
-
-					$timeout(function () {
-						vm.todayEvents.push(event);
-					}, 0);
-					
-					socketService.emit('add event', { event : event });	
 
 					$timeout(function() {
 						$modalInstance.close();

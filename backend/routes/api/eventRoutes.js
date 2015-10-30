@@ -76,6 +76,7 @@ module.exports = function(app) {
 	}, apiResponse);	
 
 	app.post('/api/event/', function(req, res, next) {
+		console.log(req.body);
 		eventService.add(req.body, function(err, data) {
 			res.data = data;
 			res.err = err;
