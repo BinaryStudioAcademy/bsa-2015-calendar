@@ -37,7 +37,7 @@ app.directive("calendar", function ($http) {
         }
     };
     function _removeTime(date) {
-        return date.day(0).hour(0).minute(0).second(0).millisecond(0);
+        return date.day(1).hour(0).minute(0).second(0).millisecond(0);
     }
 
     function _buildMonth(scope, start, month) {

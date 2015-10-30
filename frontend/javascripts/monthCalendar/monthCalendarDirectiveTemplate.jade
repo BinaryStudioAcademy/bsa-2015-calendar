@@ -13,15 +13,15 @@ div(ng-controller='MonthController')
             col(width='14.29%')
             col(width='14.29%')
             tr
-                th.tg-month-yw4l.month-day-header.dayoff Sun
                 th.tg-month-yw4l.month-day-header Mon
                 th.tg-month-yw4l.month-day-header Tue
                 th.tg-month-yw4l.month-day-header Wed
                 th.tg-month-yw4l.month-day-header Thu
                 th.tg-month-yw4l.month-day-header Fri
                 th.tg-month-yw4l.month-day-header.dayoff Sat
+                th.tg-month-yw4l.month-day-header.dayoff Sun
             tr(ng-repeat='week in weeks')
-                td.tg-month-yw4l.month-day(ng-class="{ 'month-day-today': day.isToday, 'different-month': !day.isCurrentMonth, 'dayoff': $last || $first}", ng-repeat='day in week.days') {{day.number}}
+                td.tg-month-yw4l.month-day(ng-class="{ 'month-day-today': day.isToday, 'different-month': !day.isCurrentMonth, 'dayoff': $last || $last-1}", ng-repeat='day in week.days') {{day.number}}
                     div.month-event(ng-repeat='event in day.events | limitTo: (maxDisplayEventsNumber - 1)',
                         ng-click='showEventDetails(event)', uib-popover='Strating at {{event.date.format("HH:mm")}}',
                         popover-trigger='mouseenter', popover-title="{{event.name | limitTo: maxEventNameLength}}") {{event.name | limitTo: maxEventNameLength}}
