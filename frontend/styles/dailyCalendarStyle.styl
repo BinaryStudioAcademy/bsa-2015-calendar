@@ -93,20 +93,27 @@ ul
 
 .day-event-blocks
   position absolute
-  width 92%
-  padding-left 15%
+  width 95%
   background grey
   opacity 0.3
   box-sizing border-box
   border 1px solid black
   color white
   cursor pointer
-  -webkit-transition: box-shadow 0.1s linear;
-  -moz-transition: box-shadow 0.1s linear;
-  -o-transition: box-shadow 0.1s linear;
-  transition: box-shadow 0.1s linear;
+  -webkit-transition box-shadow 0.1s linear
+  -moz-transition box-shadow 0.1s linear
+  -o-transition box-shadow 0.1s linear
+  transition box-shadow 0.1s linear
+  resize vertical
   &:hover
     box-shadow 0 0 15px black
 #day-events-place
   overflow hidden
+  height 888px !important
+  -webkit-user-select none
+  -khtml-user-select none
+  -moz-user-select none
+  -ms-user-select none
+  -o-user-select none
+  user-select none
   

@@ -70,7 +70,7 @@ casual.define('group_', function () {
 		events: []
 	};
 });
-
+/*
 casual.define('event_', function(){
 	var id = casual.mongo_id;
 	var title = 'Title of the eve No ' + id;
@@ -86,7 +86,7 @@ casual.define('event_', function(){
 		end: end
 	};
 });
-
+*/
 casual.define('eventType_', function () {
 	var id = casual.mongo_id;
 	context.eventType_ids.push(id);
