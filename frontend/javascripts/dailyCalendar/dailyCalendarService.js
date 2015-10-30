@@ -73,7 +73,7 @@ function DailyCalendarService($q, $resource, $http) {
 	return {
 		getTimeStamps: getTimeStamps,
 		getTodaysEvents: getTodaysEvents,
-		updateEvent: updateEvent
+		updateEvent: updateEvent,
 		saveEvent: saveEvent,
 		configureEventData: configureEventData,
 		getAllRooms: getAllRooms,
