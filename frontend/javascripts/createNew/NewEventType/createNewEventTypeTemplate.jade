@@ -1,20 +1,21 @@
 .eventType_list(ng-controller='createNewEventTypeController')
 
   .eventType_list_header
-    h1(align='center') Creating a new type for Event
+    h1(align='center') Create a new event type
 
     .form-group
-      label.col-sm-1(for="eventType") title: 
-      .col-sm-11
+      label.col-sm-2(for="eventType") title: 
+      .col-sm-10
         input(type='text', class="form-control", id="eventType", placeholder="Enter title", ng-model='cnetCtrl.eventType.title')
 
 
-    .button-div1(align='center')
-      button(ng-click='cnetCtrl.reset()' class="btn btn-warning") RESET
-      button(ng-click='cnetCtrl.addEventType()' class='btn btn-info') SAVE
+    .form-group
+      .col-sm-offset-2.col-sm-10
+        button(ng-click='cnetCtrl.reset()' class="btn btn-warning form-btn") Reset form
+        button(ng-click='cnetCtrl.addEventType()' class='btn btn-info form-btn') Save
     .button-div2
-      h4 We have {{ cnetCtrl.eventTypes.length }} types for Events.
-      button(ng-click='cnetCtrl.toggleViewEventType()') display/hide Oll types for Events.
+      h4 Event types: {{ cnetCtrl.eventTypes.length }}.
+      button(ng-click='cnetCtrl.toggleViewEventType()') Display/hide all event types
     br
 
 

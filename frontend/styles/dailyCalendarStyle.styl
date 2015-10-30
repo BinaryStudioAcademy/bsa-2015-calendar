@@ -36,11 +36,40 @@ ul
     border-width 1px
     border-color #ccc
 
-.eventCell 
+.eventCell
     text-align center
     width 85%
+    position relative
 
-.table-responsive
+
+.event-wrapper
+    height 100%
+
+.event
+    background yellow
+    position absolute
+    top 0
+    left 0
+    z-index 1
+    border-radius 5px
+    padding 5px
+    -webkit-box-shadow 0px 5px 3px 0px rgba(50, 50, 50, 0.62)
+    -moz-box-shadow 0px 5px 3px 0px rgba(50, 50, 50, 0.62)
+    box-shadow 0px 5px 3px 0px rgba(50, 50, 50, 0.62)
+    transition all .2s ease-in-out
+    cursor pointer
+
+.event:hover
+    -webkit-box-shadow 0px 8px 3px 1px rgba(50, 50, 50, 0.62)
+    -moz-box-shadow 0px 8px 3px 1px rgba(50, 50, 50, 0.62)
+    box-shadow 0px 8px 3px 1px rgba(50, 50, 50, 0.62)
+    transform scale(1.05)
+    z-index 2
+
+.working-hour
+    background #D9EAF5
+
+.event-table
     height 450px
     overflow-x auto
     overflow-y scroll
@@ -49,10 +78,10 @@ ul
     border: 1px solid #ddd;
     border-right 0
 
-.table-responsive > #calendar > tbody > tr:last-child > th,
-.table-responsive > #calendar > tfoot > tr:last-child > th,
-.table-responsive > #calendar > tbody > tr:last-child > td,
-.table-responsive > #calendar > tfoot > tr:last-child > td
+.event-table > #calendar > tbody > tr:last-child > th,
+.event-table > #calendar > tfoot > tr:last-child > th,
+.event-table > #calendar > tbody > tr:last-child > td,
+.event-table > #calendar > tfoot > tr:last-child > td
     border-bottom: 0;
 
 
