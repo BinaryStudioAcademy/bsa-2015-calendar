@@ -14,6 +14,13 @@
 		table#calendar.table.day-in-table
 			time-indicator(table='#calendar' table-row-height='dvCtrl.rowHeight')
 			tbody
-				tr(ng-repeat="timeSt in dvCtrl.timeStamps track by $index" id='$index')
+				tr(ng-repeat="timeSt in dvCtrl.timeStamps track by $index")
 					td.hourCell {{timeSt.value}}
 					td.eventCell(ng-dblclick="dvCtrl.showCloseModal()" ng-class="{ 'working-hour': timeSt.isWorkingHour }")
+						.event-wrapper(ng-if="timeSt.hasEvents")
+							day-view-event.event(
+							ng-repeat="event in dvCtrl.getEventsByStart(timeSt.index) track by $index" 
+							event="event" 
+							table='#calendar' 
+							events-in-row='timeSt.totalEvents'
+							index='{{ $index+1 }}')

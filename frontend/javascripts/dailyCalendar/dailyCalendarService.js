@@ -30,6 +30,7 @@ function DailyCalendarService($resource, $timeout, $q) {
 			} else {
 				timeObj.isWorkingHour = false;
 			}
+			timeObj.index = i;
 			timeStampsObj.push(timeObj);
 		}
 

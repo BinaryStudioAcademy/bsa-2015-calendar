@@ -29,6 +29,18 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal) {
 		vm.modalShown = !vm.modalShown;
 	};
 
+	vm.rangeForEvents = function(num) {
+		return new Array(num);
+	};
+
+	vm.getEventsByStart = function(index) {
+		var eventArr = vm.todayEvents.filter(function (event) {
+			var date = new Date(event.start);
+			return date.getHours() === index;
+		});
+		return eventArr;
+	};
+
 	vm.showCloseModal = function() {
 		vm.modalInstance = $uibModal.open({
 			animation: true,
@@ -74,6 +86,7 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal) {
 		getUsers();
 		getAllEvents();
 		getEventTypes();
+		
 	}
 
 	function getRooms() {
@@ -134,11 +147,47 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal) {
 				function(response) {
 					console.log('success Number of Events: ', response.length);
 					vm.allEvents = response;
+					filterEventsByTodayDate();
+					console.log(vm.todayEvents);
+
+					mapTimeStamps(vm.timeStamps, vm.todayEvents);
+					
 				},
 				function(response) {
 					console.log('failure', response);
 				}
 			);
+	}
+
+	function filterEventsByTodayDate() {
+		vm.todayEvents = vm.allEvents.filter(function(event) {
+			if(event.start) {
+				var date = new Date(event.start);
+				return date.getDate() === vm.selectedDate.getDate();
+			}
+		});
+	}
+
+	function mapTimeStamps(timeSts, events) {
+		var i,
+			counter;
+
+		for (i=0; i<timeSts.length; i+=1) {
+			counter = 0;
+			events.forEach(function (elem) {
+				var evHour = new Date(elem.start).getHours();
+				if (i===evHour) {
+					counter+=1;
+				}
+			});
+			if (counter > 0) {
+				timeSts[i].hasEvents = true;
+				timeSts[i].totalEvents = counter;
+			} else {
+				timeSts[i].hasEvents = false;
+				timeSts[i].totalEvents = 0;
+			}
+		}
 	}
 
 	//TODO: implement example approach to API calls
