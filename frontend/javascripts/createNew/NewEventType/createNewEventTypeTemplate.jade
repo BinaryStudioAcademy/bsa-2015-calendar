@@ -1,7 +1,7 @@
 .eventType_list(ng-controller='createNewEventTypeController')
 
   .eventType_list_header
-    h1(align='center') Creating a new type for Event
+    h1(align='center') Create a new event type
 
     .form-group
       label.col-sm-1(for="eventType") title: 
@@ -10,11 +10,11 @@
 
 
     .button-div1(align='center')
-      button(ng-click='cnetCtrl.reset()' class="btn btn-warning") RESET
-      button(ng-click='cnetCtrl.addEventType()' class='btn btn-info') SAVE
+      button(ng-click='cnetCtrl.reset()' class="btn btn-warning") Reset form
+      button(ng-click='cnetCtrl.addEventType()' class='btn btn-info') Save
     .button-div2
-      h4 We have {{ cnetCtrl.eventTypes.length }} types for Events.
-      button(ng-click='cnetCtrl.toggleViewEventType()') display/hide Oll types for Events.
+      h4 Event types: {{ cnetCtrl.eventTypes.length }}.
+      button(ng-click='cnetCtrl.toggleViewEventType()') Display/hide all event types
     br
 
 

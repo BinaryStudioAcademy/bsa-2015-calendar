@@ -117,6 +117,7 @@ var app = angular.module('calendar-app', ['ui.router', 'ngAlertify', 'btford.soc
         });
 
         socket.on('add event notification', function(event){
+            console.log('event has been added');
             alertify.log('Event has been created');
         }); 
 

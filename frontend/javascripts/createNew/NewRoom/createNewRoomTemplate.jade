@@ -1,7 +1,7 @@
 .room_list(ng-controller='createNewRoomController')
 
   .room_list_header
-    h1(align='center') Creating a new Room
+    h1(align='center') Create a new room
 
     .form-group
       label.col-sm-1(for="room") title: 
@@ -12,11 +12,11 @@
         input(type='text', class="form-control", id="description", placeholder="Enter description", ng-model='cnrCtrl.room.description')
 
     .button-div1(align='center')
-      button(ng-click='cnrCtrl.reset()' class="btn btn-warning") RESET FORM
-      button(ng-click='cnrCtrl.addRoom()' class='btn btn-info') SAVE
+      button(ng-click='cnrCtrl.reset()' class="btn btn-warning") Reset form
+      button(ng-click='cnrCtrl.addRoom()' class='btn btn-info') Save
     .button-div2
-      h4 We have {{ cnrCtrl.rooms.length }} rooms.   
-      button(ng-click='cnrCtrl.toggleViewRoom()') display/hide Oll Rooms
+      h4 Rooms: {{ cnrCtrl.rooms.length }}.   
+      button(ng-click='cnrCtrl.toggleViewRoom()') Display/hide all rooms
     br
 
   room_list_body(align='center', ng-show='cnrCtrl.showRoomsList')

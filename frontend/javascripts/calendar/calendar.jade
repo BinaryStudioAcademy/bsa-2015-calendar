@@ -103,15 +103,17 @@
 							label
 								input(type="checkbox") 
 								| Birthdays
-			h3 Creates
+			h3 CRUD
 			.navbar.navbar-default(role="navigation")
 				ul.nav.navbar-nav.text-center
 					li
-						a(ui-sref=".createNewDevice" ng-click="calendarCtrl.toggleMode()") new Device
+						a(ui-sref=".createNewDevice" ng-click="calendarCtrl.toggleMode()") Devices
+					br
 					li
-						a(ui-sref=".createNewRoom" ng-click="calendarCtrl.toggleMode()") new Room
+						a(ui-sref=".createNewRoom" ng-click="calendarCtrl.toggleMode()") Rooms
+					br
 					li
-						a(ui-sref=".createNewEventType" ng-click="calendarCtrl.toggleMode()") new Event Type
+						a(ui-sref=".createNewEventType" ng-click="calendarCtrl.toggleMode()") Event types
 		.col-sm-10
 			ui-view#calendar-content
 
