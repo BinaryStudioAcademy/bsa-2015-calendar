@@ -4,16 +4,17 @@
     h1(align='center') Create a new room
 
     .form-group
-      label.col-sm-1(for="room") title: 
-      .col-sm-11
+      label.col-sm-2(for="room") title: 
+      .col-sm-10
         input(type='text', class="form-control", id="room", placeholder="Enter title", ng-model='cnrCtrl.room.title')
-      label.col-sm-1(for="description" class="form-control4") description: 
-      .col-sm-11
+      label.col-sm-2(for="description" class="form-control4") description: 
+      .col-sm-10
         input(type='text', class="form-control", id="description", placeholder="Enter description", ng-model='cnrCtrl.room.description')
 
-    .button-div1(align='center')
-      button(ng-click='cnrCtrl.reset()' class="btn btn-warning") Reset form
-      button(ng-click='cnrCtrl.addRoom()' class='btn btn-info') Save
+    .form-group
+      .col-sm-offset-2.col-sm-10
+        button(ng-click='cnrCtrl.reset()' class="btn btn-warning form-btn") Reset form
+        button(ng-click='cnrCtrl.addRoom()' class='btn btn-info form-btn') Save
     .button-div2
       h4 Rooms: {{ cnrCtrl.rooms.length }}.   
       button(ng-click='cnrCtrl.toggleViewRoom()') Display/hide all rooms

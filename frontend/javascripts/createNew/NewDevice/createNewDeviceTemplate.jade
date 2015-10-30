@@ -4,16 +4,17 @@
     h1(align='center') Create a new device
 
     .form-group
-      label.col-sm-1(for="device") title: 
-      .col-sm-11
+      label.col-sm-2(for="device") title: 
+      .col-sm-10
         input(type='text', class="form-control", id="device", placeholder="Enter title", ng-model='cndCtrl.device.title')
-      label.col-sm-1(for="description" class="form-control4") description: 
-      .col-sm-11
+      label.col-sm-2(for="description" class="form-control4") description: 
+      .col-sm-10
         input(type='text', class="form-control", id="description", placeholder="Enter description", ng-model='cndCtrl.device.description')  
 
-    .button-div1(align="center")
-      button(ng-click='cndCtrl.reset()' class="btn btn-warning") Reset form
-      button(ng-click='cndCtrl.addDevice()' class='btn btn-info') Save
+    .form-group
+      .col-sm-offset-2.col-sm-10
+        button(ng-click='cndCtrl.reset()' class="btn btn-warning form-btn") Reset form
+        button(ng-click='cndCtrl.addDevice()' class='btn btn-info form-btn') Save
     .button-div2
       h4 Devices: {{ cndCtrl.devices.length }}.
       button(ng-click='cndCtrl.toggleViewDevice()') Display/hide all devices
