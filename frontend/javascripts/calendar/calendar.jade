@@ -115,3 +115,20 @@
 		.col-sm-10
 			ui-view#calendar-content
 
+	.container_calendar_footer
+		h4(align='center' style="color: blue") Press  F1 to help window.
+
+	div(class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel")
+		div(class="modal-dialog" role="document")
+			div(class="modal-content")
+				div(class="modal-header")
+					button(type="button" class="close" data-dismiss="modal" aria-label="Close")
+						span(aria-hidden="true") &times;
+					h2(class="modal-title" id="myModalLabel" align='center' style="color: blue") Welcome to Calendar    
+				div(class="modal-body")
+					h2 Today  {{calendarCtrl.selectedDate | date: 'd MMMM yyyy'}}
+					h3 For creating a new event you should double-click on time in Day calendar.
+					h3 
+					h3 Will bee the power with us!
+				div(class="modal-footer")
+					h5(align='center') If you want to get out of the help window, press ESC or click on the &times.
