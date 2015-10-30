@@ -2,9 +2,9 @@ angular
 	.module('calendar-app')
 	.directive('timeIndicator', TimeIndicator);
 
-	TimeIndicator.$inject = ['$interval', '$timeout'];
+	TimeIndicator.$inject = ['$interval', '$timeout', '$location', '$anchorScroll'];
 
-	function TimeIndicator($interval, $timeout) {
+	function TimeIndicator($interval, $timeout, $location, $anchorScroll) {
 
 		return {
 			restrict: 'EA',
@@ -15,11 +15,13 @@ angular
 			},
 			controller: timeIndicatorController,
 			link: function($scope, $element, $attrs) {
+
 				$timeout(function () {
 
 					$scope.rowHeight = $scope.calcRowHeight($scope.tableSel);
 					$scope.moveIndicator($element, $scope.rowHeight);	
 					$scope.changePosition($element, $scope.rowHeight);
+					$scope.goToIndicator($element);
 
 				}, 0);
 			}
@@ -31,7 +33,13 @@ angular
 			$scope.calcPosition = calcPosition;
 			$scope.moveIndicator = moveIndicator;
 			$scope.changePosition = changePosition;
+			$scope.goToIndicator = goToIndicator;
 			$scope.tableSel = $attrs.table;
+
+			function goToIndicator() {
+				$location.hash('time-indicator');
+				$anchorScroll();
+			}
 
 			function changePosition(element, rowHeight) {
 

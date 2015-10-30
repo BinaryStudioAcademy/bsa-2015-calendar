@@ -49,9 +49,10 @@ function ModalController(DailyCalendarService, $timeout, $modalInstance, rooms, 
 	};
 
 	vm.selectEventType = function(type) {
-  		vm.event.type = type['_id'];
-  		vm.eventType = type.title;
- 	};
+		vm.event.type = type['_id'];
+		vm.eventType = type.title;
+	};
+
 	vm.selectRoom = function(title) {
 		vm.event.room = title;
 	};

@@ -147,7 +147,7 @@ var app = angular.module('calendar-app', ['ui.router', 'ngAlertify', 'btford.soc
         return service;
     }]);
 
-app.run(['$rootScope', '$state', 'AuthService', function($rootScope, $state, AuthService) {
+app.run(['$rootScope', '$state', 'AuthService', '$anchorScroll', function($rootScope, $state, AuthService, $anchorScroll) {
 	$rootScope.$on('$stateChangeStart', function(evt, to, params) {
 		if (to.redirectTo) {
 			evt.preventDefault();
@@ -162,6 +162,7 @@ app.run(['$rootScope', '$state', 'AuthService', function($rootScope, $state, Aut
             $state.transitionTo('signIn');          
         }
 	});
+    $anchorScroll.yOffset = 100;
 }]);
 
 module.exports = app;
