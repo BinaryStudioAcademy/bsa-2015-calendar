@@ -21,7 +21,7 @@ div(ng-controller='MonthController')
                 th.tg-month-yw4l.month-day-header.dayoff Sat
                 th.tg-month-yw4l.month-day-header.dayoff Sun
             tr(ng-repeat='week in weeks')
-                td.tg-month-yw4l.month-day(ng-dblClick="showCloseModal(day.date)", ng-class="{ 'month-day-today': day.isToday, 'different-month': !day.isCurrentMonth }", ng-repeat='day in week.days') {{day.number}} 
+                td.tg-month-yw4l.month-day(ng-dblClick="showCloseModal(day.date)", ng-class="{ 'month-day-today': day.isToday, 'different-month': !day.isCurrentMonth, 'dayoff': $last || $index == 5}", ng-repeat='day in week.days') {{day.number}}
                     div.month-event(ng-repeat='event in day.events | limitTo: (maxDisplayEventsNumber - 1)',
                         uib-popover='Strating at {{event.date.format("HH:mm")}}',
                         popover-trigger='mouseenter', popover-title="{{event.name | limitTo: maxEventNameLength}}") {{event.name | limitTo: maxEventNameLength}}
