@@ -21,6 +21,14 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal, socket
 		);
 
 		vm.selectedDate = date;
+
+		filterEventsByTodayDate();
+
+		mapTimeStamps(vm.timeStamps, vm.todayEvents);
+
+		mapEventsByStartTime(vm.timeStamps);
+		console.log(vm.eventsByStart);
+
 	};
 
 	vm.showDate = function() {
@@ -192,7 +200,6 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal, socket
 					mapTimeStamps(vm.timeStamps, vm.todayEvents);
 
 					mapEventsByStartTime(vm.timeStamps);
-					console.log(vm.eventsByStart);
 				},
 				function(response) {
 					console.log('failure', response);
@@ -215,13 +222,10 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal, socket
 			var rowEventArr = vm.todayEvents.filter(function (event) {
 				var date;
 				if(typeof event.start !== 'object') {
-					console.log('event with time string' + event.start);
 					date = new Date(event.start);
 					return date.getHours() === i;
 				} else {
-					console.log('event with time obj' + event.start.toString());
 					date = new Date(event.start.toString());
-					console.log(date.getHours());
 					return date.getHours() === i;
 				}
 				
