@@ -8,6 +8,8 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal) {
 
 	var vm = this;
 
+	vm.computedEvents = [];
+
 	vm.showDay = function(step) {
 		var date = new Date(vm.selectedDate);
 
@@ -33,12 +35,34 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal) {
 		return new Array(num);
 	};
 
+	vm.showTodayEvents = function() {
+		console.log(vm.todayEvents);
+	};
+
 	vm.getEventsByStart = function(index) {
 		var eventArr = vm.todayEvents.filter(function (event) {
 			var date = new Date(event.start);
 			return date.getHours() === index;
 		});
 		return eventArr;
+	};
+
+	vm.dropEventInfo = function(selDate) {
+
+		var newEventDate = selDate || new Date();
+		newEventDate.setHours(0);
+		newEventDate.setMinutes(0);
+
+		vm.event.title = '';
+		vm.event.description = '';
+		vm.event.start = newEventDate;
+		vm.event.end = newEventDate;
+		vm.event.devices = [];
+		vm.event.users = [];
+		vm.event.room = undefined;
+		vm.event.isPrivate = false;
+		vm.event.type = undefined;
+		vm.event.price = null;
 	};
 
 	vm.showCloseModal = function() {
@@ -49,6 +73,9 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal) {
 			controllerAs: 'ModalCtrl',
 			bindToController: true,
 			resolve: {
+				event: function () {
+					return vm.event;
+				},
 				rooms: function () {
 					return vm.availableRooms;
 				},
@@ -64,7 +91,17 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal) {
 				eventTypes: function () {
 					return vm.eventTypes;
 				},
+				todayEvents: function () {
+					return vm.todayEvents;
+				},
 			}
+		});
+
+		vm.modalInstance.result.then(function () {
+			mapTimeStamps(vm.timeStamps, vm.todayEvents);
+			mapEventsByStartTime(vm.timeStamps);
+			// vm.dropEventInfo(vm.selectedDate);
+			console.log(vm.eventsByStart);
 		});
 	};
 
@@ -79,6 +116,8 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal) {
 		vm.eventSelected = false;
 		vm.modalShown = false;
 		vm.sidebarStyle = true;
+		vm.todayEvents = [];
+		vm.event = {};
 
 		//will be pulled from server 
 		getRooms();
@@ -147,11 +186,13 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal) {
 				function(response) {
 					console.log('success Number of Events: ', response.length);
 					vm.allEvents = response;
+
 					filterEventsByTodayDate();
-					console.log(vm.todayEvents);
 
 					mapTimeStamps(vm.timeStamps, vm.todayEvents);
-					
+
+					mapEventsByStartTime(vm.timeStamps);
+					console.log(vm.eventsByStart);
 				},
 				function(response) {
 					console.log('failure', response);
@@ -166,6 +207,27 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal) {
 				return date.getDate() === vm.selectedDate.getDate();
 			}
 		});
+	}
+
+	function mapEventsByStartTime(timeSts) {
+		vm.eventsByStart = [];
+		for (var i=0; i<timeSts.length; i+=1) {
+			var rowEventArr = vm.todayEvents.filter(function (event) {
+				var date;
+				if(typeof event.start !== 'object') {
+					console.log('event with time string' + event.start);
+					date = new Date(event.start);
+					return date.getHours() === i;
+				} else {
+					console.log('event with time obj' + event.start.toString());
+					date = new Date(event.start.toString());
+					console.log(date.getHours());
+					return date.getHours() === i;
+				}
+				
+			});
+			vm.eventsByStart.push(rowEventArr);
+		}
 	}
 
 	function mapTimeStamps(timeSts, events) {

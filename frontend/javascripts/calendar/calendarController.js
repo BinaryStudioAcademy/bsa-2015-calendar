@@ -9,8 +9,7 @@ function CalendarController($document, $modal) {
 	vm.selectedDate = todayDate;
 
 	$document.bind("keypress", function(event) {
-		console.log(event.keyCode);
-		if (event.keyCode == 112) {
+		if (event.keyCode == 104) {
 			$("#myModal").modal("show");
 		}
 		if (event.keyCode == 27) {

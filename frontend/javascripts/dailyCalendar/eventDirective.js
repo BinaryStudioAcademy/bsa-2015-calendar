@@ -30,6 +30,12 @@ function DayViewEvent($timeout) {
 
 		vm.tableSel = $attrs.table;
 
+		vm.COLORS = [
+		'#e21400', '#91580f', '#f8a700', '#f78b00',
+		'#58dc00', '#287b00', '#a8f07a', '#4ae8c4',
+		'#3b88eb', '#3824aa', '#a700ff', '#d300e7'
+		];
+
 		vm.rowHeight = calcRowHeight(vm.tableSel);
 		vm.eventCellHeight = calcEventCellHeight(vm.rowHeight);
 		vm.rowWidth = calcRowWidth(vm.tableSel);
@@ -40,10 +46,15 @@ function DayViewEvent($timeout) {
 		$element.css('height', vm.eventCellHeight);
 		$element.css('width', vm.eventCellWidth);
 		$element.css('left', vm.offsetCell + (vm.index - 1) * (vm.eventCellWidth + vm.offsetCell));
+		$element.css('background', vm.COLORS[getRandomInt(0, vm.COLORS.length)]);
 
 		function calcRowHeight(tableSelector) {
 			var tableRow = $('' + tableSelector + ' tr');
 			return tableRow.outerHeight();
+		}
+
+		function getRandomInt(min, max) {
+			return Math.floor(Math.random() * (max - min)) + min;
 		}
 
 		function calcRowWidth() {

@@ -2,20 +2,22 @@ var app = require('../app');
 
 app.controller('ModalController', ModalController);
 
-ModalController.$inject = ['DailyCalendarService', '$timeout', '$modalInstance', 'rooms', 'devices', 'users', 'selectedDate', 'eventTypes'];
+ModalController.$inject = ['DailyCalendarService', '$timeout', '$modalInstance', 'event', 'rooms', 'devices', 'users', 'selectedDate', 'eventTypes', 'todayEvents'];
 
-function ModalController(DailyCalendarService, $timeout, $modalInstance, rooms, devices, users, selectedDate, eventTypes) {
+function ModalController(DailyCalendarService, $timeout, $modalInstance, event, rooms, devices, users, selectedDate, eventTypes, todayEvents) {
 
 	var vm = this;
 
 	vm.formSuccess = false;
-	vm.event = {};
+	vm.event = event;
 	vm.rooms = rooms;
 	vm.devices = devices;
 	vm.users = users;
 	vm.selectedDate = selectedDate;
 	vm.eventTypes = eventTypes;
+	vm.todayEvents = todayEvents;
 
+	
 	dropEventInfo(vm.selectedDate);
 
 	vm.submitModal = function() {
@@ -65,8 +67,13 @@ function ModalController(DailyCalendarService, $timeout, $modalInstance, rooms, 
 				function(response) {
 
 					vm.formSuccess = true;
-					dropEventInfo();
 					console.log('success', response);
+
+					$timeout(function () {
+						vm.todayEvents.push(event);
+					}, 0);
+					
+					console.log(vm.todayEvents);
 
 					$timeout(function() {
 						$modalInstance.close();
