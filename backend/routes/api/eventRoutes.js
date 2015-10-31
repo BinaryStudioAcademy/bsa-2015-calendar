@@ -107,4 +107,12 @@ module.exports = function(app) {
 			next();
 		});
 	}, apiResponse);
+
+	app.delete('api/event/removeUser/:userId/:eventId', function(req, res, next){
+		eventRepository.removeUser(req.params.eventId, req.params.userId, function(err, data){
+			res.data = data;
+			res.err = err;
+			next();
+		);
+	}, apiResponse);
 };
