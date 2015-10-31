@@ -22,7 +22,7 @@ module.exports = function(auth) {
 		} else {
 			for (var i = 0; i < events.length; i++) {
 				var event = events[i];
-				console.log(event.summary);
+				console.log(event);
 			}
 		}
 
