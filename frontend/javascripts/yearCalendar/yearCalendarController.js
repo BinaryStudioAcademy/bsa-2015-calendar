@@ -12,8 +12,7 @@ function yearCalendarController(calendarService) {
     vm.currentYear = currentDate.getFullYear();
     vm.calendar = calendarService.getYearObj(vm.currentYear);
     
-    var evtPromise = calendarService.getEventsObj(vm.currentYear);
-    evtPromise.then(function(dataObj) {
+    calendarService.getEventsObj(vm.currentYear).then(function(dataObj) {
         vm.events = dataObj;
     }, function(error) {
         console.log(error);
@@ -23,8 +22,7 @@ function yearCalendarController(calendarService) {
         if (vm.currentYear > 1970) {
             vm.currentYear--;
             vm.calendar = calendarService.getYearObj(vm.currentYear);
-            var evtPromise = calendarService.getEventsObj(vm.currentYear);
-            evtPromise.then(function(dataObj) {
+            calendarService.getEventsObj(vm.currentYear).then(function(dataObj) {
                 vm.events = dataObj;
             }, function(error) {
                 console.log(error);
@@ -36,8 +34,7 @@ function yearCalendarController(calendarService) {
         vm.currentYear++;
         vm.calendar = calendarService.getYearObj(vm.currentYear);
         vm.events = calendarService.getEventsObj(vm.currentYear);
-        var evtPromise = calendarService.getEventsObj(vm.currentYear);
-        evtPromise.then(function(dataObj) {
+        calendarService.getEventsObj(vm.currentYear).then(function(dataObj) {
             vm.events = dataObj;
         }, function(error) {
             console.log(error);

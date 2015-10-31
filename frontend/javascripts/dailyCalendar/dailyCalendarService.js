@@ -7,38 +7,50 @@ DailyCalendarService.$inject = ['$resource', '$q', '$timeout'];
 function DailyCalendarService($resource, $timeout, $q) {
 
 	var timeStamps = '12am|1am|2am|3am|4am|5am|6am|7am|8am|9am|10am|11am|12pm|1pm|2pm|3pm|4pm|5pm|6pm|7pm|8pm|9pm|10pm|11pm'.split('|');
-	var resAllEvents;
-	var resEvent = $resource('/api/event/');
+
+	var resourceEvent = $resource('/api/event/');
 	var resourceRooms= $resource('/api/room/');
 	var resourceDevices = $resource('/api/device/');
 	var resourceUsers = $resource('/api/user/');
+	var resourceEventTypes = $resource('/api/eventType');
+
 
 
 	function getTimeStamps() {
-		return timeStamps;
+
+		var timeStampsObj = [];
+
+		var workingHours = [9, 18];
+
+		for(var i=0; i<timeStamps.length; i+=1) {
+			var timeObj = {};
+			timeObj.value = timeStamps[i];
+			if(i >= 9 && i <= 18) {
+				timeObj.isWorkingHour = true;
+			} else {
+				timeObj.isWorkingHour = false;
+			}
+			timeObj.index = i;
+			timeStampsObj.push(timeObj);
+		}
+
+		return timeStampsObj;
 	}
 
 	function configureEventData(date, event) {
 
-		var eventStartPartials = event.start.split(':');
-		var eventEndPartials = event.end.split(':');
+		var selDay = date.getDate();
 
-		var startTime = new Date(date);
-			startTime.setHours(eventStartPartials[0]);
-			startTime.setMinutes(eventStartPartials[1]);
-
-		var endTime = new Date(date);
-			endTime.setHours(eventEndPartials[0]);
-			endTime.setMinutes(eventEndPartials[1]);
-
-		event.start = startTime;
-		event.end = endTime;
-
-		console.log(event);
+		event.start.setDate(selDay);
+		event.end.setDate(selDay);
 	}
 
 	function saveEvent(event) {
-		return resEvent.save(event);
+		return resourceEvent.save(event);
+	}
+
+	function getAllEvents() {
+		return resourceEvent.query();
 	}
 
 	function getAllRooms() {
@@ -53,6 +65,10 @@ function DailyCalendarService($resource, $timeout, $q) {
 		return resourceUsers.query();
 	}
 
+	function getAllEventTypes() {
+		return resourceEventTypes.query();
+	}
+
 	return {
 		getTimeStamps: getTimeStamps,
 		saveEvent: saveEvent,
@@ -60,6 +76,7 @@ function DailyCalendarService($resource, $timeout, $q) {
 		getAllRooms: getAllRooms,
 		getAllDevices: getAllDevices,
 		getAllUsers: getAllUsers,
+		getAllEvents: getAllEvents,
+		getAllEventTypes: getAllEventTypes,
 	};
-	
 }

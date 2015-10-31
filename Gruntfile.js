@@ -84,6 +84,12 @@ module.exports = function(grunt) {
 
 		copy: {
 			libs: {files: [
+					{expand: false, src: ['bower_components/font-awesome/fonts/FontAwesome.otf'], dest: 'public/styles/fonts/FontAwesome.otf'},
+					{expand: false, src: ['bower_components/font-awesome/fonts/fontawesome-webfont.eot'], dest: 'public/styles/fonts/fontawesome-webfont.eot'},
+					{expand: false, src: ['bower_components/font-awesome/fonts/fontawesome-webfont.svg'], dest: 'public/styles/fonts/fontawesome-webfont.svg'},
+					{expand: false, src: ['bower_components/font-awesome/fonts/fontawesome-webfont.ttf'], dest: 'public/styles/fonts/fontawesome-webfont.ttf'},
+					{expand: false, src: ['bower_components/font-awesome/fonts/fontawesome-webfont.woff'], dest: 'public/styles/fonts/fontawesome-webfont.woff'},
+					{expand: false, src: ['bower_components/font-awesome/fonts/fontawesome-webfont.woff2'], dest: 'public/styles/fonts/fontawesome-webfont.woff2'},
 					{expand: false, src: ['bower_components/bootstrap/fonts/glyphicons-halflings-regular.eot'], dest: 'public/styles/fonts/glyphicons-halflings-regular.eot'},
 					{expand: false, src: ['bower_components/bootstrap/fonts/glyphicons-halflings-regular.svg'], dest: 'public/styles/fonts/glyphicons-halflings-regular.svg'},
 					{expand: false, src: ['bower_components/bootstrap/fonts/glyphicons-halflings-regular.ttf'], dest: 'public/styles/fonts/glyphicons-halflings-regular.ttf'},
@@ -145,16 +151,21 @@ module.exports = function(grunt) {
 			},
 			js: {
 				src: [
+
+					'bower_components/socket.io-client/socket.io.js',					
 					'bower_components/jquery/dist/jquery.min.js',
 					'bower_components/bootstrap/dist/js/bootstrap.min.js',
 					'bower_components/angular/angular.js',
 					'bower_components/angular-animate/angular-animate.min.js',
-					'bower_components/lodash/dist/lodash.min.js',
+					'bower_components/lodash/dist/lodash.js',
 					'bower_components/angularjs-dropdown-multiselect/dist/angularjs-dropdown-multiselect.min.js',
 					'bower_components/angular-ui-router/release/angular-ui-router.min.js',
 					'bower_components/angular-resource/angular-resource.js',
 					'bower_components/angular-bootstrap/ui-bootstrap.min.js',
-					'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js'
+					'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
+					'bower_components/angular-socket-io/socket.js',
+					'bower_components/alertify.js/dist/js/alertify.js',
+					'bower_components/alertify.js/dist/js/ngAlertify.js'
 				],
 				dest: 'public/javascripts/libs.js',
 			},

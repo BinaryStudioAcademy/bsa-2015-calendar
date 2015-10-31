@@ -1,7 +1,7 @@
 var async = require('async');
 var roomRepository = require('../repositories/roomRepository');
 var eventRepository = require('../repositories/eventRepository');
-
+//var io = require('../notifications/notifications')();
 var roomService = function(){};
 
 roomService.prototype.delete = function(roomId, callback){
@@ -53,7 +53,7 @@ roomService.prototype.delete = function(roomId, callback){
 		if(err){
 			console.log(err);
 			return callback(err, {success: false});
-		}		
+		}
 		return callback(null, {success: true});
 	});
 };

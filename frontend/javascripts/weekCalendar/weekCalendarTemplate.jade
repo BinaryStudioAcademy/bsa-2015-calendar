@@ -1,42 +1,37 @@
 #weekView(ng-cloak)
-  .col-sm-10.main-content.col-lg-11
-    
-    ul.list-inline.text-center
-      li
-        a(href='#')
-          i.glyphicon.glyphicon-chevron-left.bigger-icon
-      li 
-        span {{wCtrl.Start | date: 'd MMM yyyy'}} ----- {{wCtrl.End | date: 'd MMM yyyy'}} 
-      li
-        a(href='#')
-          i.glyphicon.glyphicon-chevron-right.bigger-icon
+  div
+    .week_header
+      i.glyphicon.pull-left.week-chevron.glyphicon-chevron-left.bigger-icon.week_prev(class="btn btn-large btn-info"  ng-click='previous()') 
+      span.week_header_title {{wCtrl.Start | date: 'd MMM yyyy'}} - {{wCtrl.End | date: 'd MMM yyyy'}}
+      i.glyphicon.pull-right.week-chevron.glyphicon-chevron-right.bigger-icon.week_next(class="btn btn-large btn-info" ng-click='next()')
 
+    .content_for_week(time-week-directive events-week-directive)
+      table.week_in_table(width='100%')
+        col.header(width='12,5%')
+        col.days(width='12,5%' span='7')
+        tr
+                th.tg-month-yw4l.month-day-header 
+                th.tg-month-yw4l.month-day-header Mon
+                th.tg-month-yw4l.month-day-header Tue
+                th.tg-month-yw4l.month-day-header Wed
+                th.tg-month-yw4l.month-day-header Thu
+                th.tg-month-yw4l.month-day-header Fri
+                th.tg-month-yw4l.month-day-header.dayoff Sat
+                th.tg-month-yw4l.month-day-header.dayoff Sun
+        //-tr
+          th
+          th(ng-repeat="day in wCtrl.days")
+            span {{day.name}}
+            //br
+            //span {{wCtrl.Tue | date: 'd MMM'}}
 
-    table#calendar.table.table-bordered
-      tr.success.text-center 
-        td
-        td(ng-repeat="day in wCtrl.days")
-          span {{day.name}}
-
-
-      tr(ng-repeat="timeSt in wCtrl.timeStamps")
-        td.hourCell {{timeSt.time}}
-        td.eventCell
-        td.eventCell
-        td.eventCell
-        td.eventCell
-        td.eventCell
-        td.eventCell
-        td.eventCell
-
-
-  .col-sm-2.right-sidebar.col-lg-1.hidden-xs
-    .row.text-center
-    #showAllEvents.text-center
-      input(type="checkbox", id="showEvents")
-      label(for="showEvents") Show all events
-      br
-      button.btn.btn-primary(ng-click="wCtrl.toggleEventInfo()") Toggle Info
-    .eventInfo.well(ng-show="wCtrl.eventSelected")
-
+        tr(ng-repeat="timeSt in wCtrl.timeStamps")
+          td.hourCell {{timeSt.time}}
+          td.eventCell.mon(ng-class='{{$index}}', ng-dblclick = 'wCtrl.newEvent("mon", $index)')
+          td.eventCell.tue(ng-class='{{$index}}', ng-dblclick = 'wCtrl.newEvent("tue", $index)')
+          td.eventCell.wed(ng-class='{{$index}}', ng-dblclick = 'wCtrl.newEvent("wed", $index)')
+          td.eventCell.thu(ng-class='{{$index}}', ng-dblclick = 'wCtrl.newEvent("thu", $index)')
+          td.eventCell.fri(ng-class='{{$index}}', ng-dblclick = 'wCtrl.newEvent("fri", $index)')
+          td.eventCell.sat(ng-class='{{$index}}', ng-dblclick = 'wCtrl.newEvent("sat", $index)')
+          td.eventCell.sun(ng-class='{{$index}}', ng-dblclick = 'wCtrl.newEvent("sun", $index)')
 

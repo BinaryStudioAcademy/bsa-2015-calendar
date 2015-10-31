@@ -76,6 +76,7 @@ module.exports = function(app) {
 	}, apiResponse);	
 
 	app.post('/api/event/', function(req, res, next) {
+		console.log(req.body);
 		eventService.add(req.body, function(err, data) {
 			res.data = data;
 			res.err = err;
@@ -85,6 +86,14 @@ module.exports = function(app) {
 
 	app.put('/api/event/:id', function(req, res, next){
 		eventService.update(req.params.id, req.body, function(err, data){
+			res.data = data;
+			res.err = err;
+			next();
+		});
+	}, apiResponse);
+
+	app.put('/api/event/newdate/:id', function(req, res, next){
+		eventService.updateStartEnd(req.params.id, req.body, function(err, data){
 			res.data = data;
 			res.err = err;
 			next();

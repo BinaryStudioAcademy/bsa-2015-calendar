@@ -1,4 +1,4 @@
-var app = angular.module('calendar-app', ['ui.router', 'ngResource', 'ui.bootstrap', 'ngAnimate', 'angularjs-dropdown-multiselect'])
+var app = angular.module('calendar-app', ['ui.router', 'ngAlertify', 'btford.socket-io', 'ngResource', 'ui.bootstrap', 'ngAnimate', 'angularjs-dropdown-multiselect'])
     .config(['$stateProvider', '$urlRouterProvider', '$resourceProvider', '$httpProvider', '$locationProvider',
         function ($stateProvider, $urlRouterProvider, $resourceProvider, $httpProvider, $locationProvider) {
             $urlRouterProvider.otherwise('/');
@@ -8,17 +8,21 @@ var app = angular.module('calendar-app', ['ui.router', 'ngResource', 'ui.bootstr
                     templateUrl: './templates/layout/layout.html',
                     controller: 'LayoutController',
                     controllerAs: 'LayoutCtrl',
-                    redirectTo: 'home.start'
+                    redirectTo: 'home.start',
+                    auth: false
                 })
                 .state('home.start', {
                     url: '/',
-                    templateUrl: './templates/home/homepage.html'
+                    templateUrl: './templates/home/homepage.html',
+                    redirectTo: 'calendar.dayView',
+                    auth: false
                 })
                 .state('calendar', {
                     url: '/calendar',
                     templateUrl: './templates/calendar/calendar.html',
                     controller: 'CalendarController',
-                    controllerAs: 'calendarCtrl'
+                    controllerAs: 'calendarCtrl',
+                    auth: false
                 })
                 .state('googleAuth', {
                     url: '/googleAuth',
@@ -29,58 +33,155 @@ var app = angular.module('calendar-app', ['ui.router', 'ngResource', 'ui.bootstr
                 .state('signIn', {
                     url: '/signIn',
                     templateUrl: './templates/home/signIn.html',
-                    controller: 'LoginController'
+                    controller: 'LoginController',
+                    auth: false
                 })
                 .state('signUp', {
                     url: '/signUp',
                     templateUrl: './templates/home/signUp.html',
-                    controller: 'LoginController'
+                    controller: 'LoginController',
+                    auth: false
                 })
                 .state('calendar.dayView', {
-                    url: '/calendar/dayView',
+                    url: '/dayView',
                     templateUrl: './templates/dailyCalendar/dailyCalendarTemplate.html',
                     controller: 'DayViewController',
-                    controllerAs: 'dvCtrl'
+                    controllerAs: 'dvCtrl',
+                    auth: true
                 })
                 .state('calendar.weekView', {
                     url: '/weekView',
                     templateUrl: './templates/weekCalendar/weekCalendarTemplate.html',
                     controller: 'WeekViewController',
                     controllerAs: 'wCtrl',
+                    auth: true
                 })               
                 .state('calendar.monthView', {
-                    url: '/calendar/monthView',
+                    url: '/monthView',
                     templateUrl: './templates/monthCalendar/monthCalendar.html',
-                    controller: ''
+                    controller: 'MonthController',
+                    controllerAs: 'mCtrl',
+                    auth: true
                 })
                 .state('calendar.createNewDevice', {
                     url: '/createNewDevice',
                     templateUrl: './templates/createNew/NewDevice/createNewDeviceTemplate.html',
                     controller: 'createNewDeviceController',
                     controllerAs: 'cndCtrl',
+                    auth: true
                 })      
                 .state('calendar.createNewRoom', {
                     url: '/createNewRoom',
                     templateUrl: './templates/createNew/NewRoom/createNewRoomTemplate.html',
                     controller: 'createNewRoomController',
                     controllerAs: 'cnrCtrl',
+                    auth: true
+                })
+                .state('calendar.createNewEventType', {
+                    url: '/createNewEventType',
+                    templateUrl: './templates/createNew/NewEventType/createNewEventTypeTemplate.html',
+                    controller: 'createNewEventTypeController',
+                    controllerAs: 'cnetCtrl',
+                    auth: true
                 })
 				.state('calendar.yearView', {
-					url: '/calendar/yearView',
+					url: '/yearView',
 					templateUrl: './templates/yearCalendar/yearCalendarTemplate.html',
 					controller: 'yearCalendarController',
 					controllerAs: 'YCtrl',
+                    auth: true
 				});
 		}
-	]);
+	]).factory('socketService', ['socketFactory', 'alertify', function(socketFactory, alertify){
+        var socket = socketFactory();
 
-app.run(['$rootScope', '$state', function($rootScope, $state) {
+        socket.on('add device notification', function(device){
+
+            console.log(device);
+            console.log('SOCKETIO: NEW DEVICE');
+            alertify.log("New device has been added");
+        });
+
+        socket.on('update device notification', function(device){
+            console.log(device);
+            alertify.log("Device has been updated");
+        });
+
+        socket.on('delete device notification', function(device){
+            alertify.log("Device has been deleted");
+        });
+
+        socket.on('add room notification', function(room){
+            alertify.log('New room has been added');
+        });
+
+        socket.on('update room notification', function(room){
+            alertify.log('Romm has been updated');
+        });
+
+        socket.on('delete room notification', function(room){
+            alertify.log('Room has been deleted');
+        });
+
+        socket.on('add event notification', function(event){
+            console.log('event has been added');
+            alertify.log('Event has been created');
+        }); 
+
+        socket.on('update event notification', function(event){
+            alertify.log('Event has been updated');
+        });
+        
+        socket.on('delete event notification', function(event){
+            alertify.log('Event has been deleted');
+        });                                    
+
+        return socket;
+    }])
+    .factory('AuthService', [function(){
+
+        var service = {};
+        var userInfo = null;
+
+        service.getUser = function(){
+            //console.log('localstorage.userInfo: ', localStorage.userInfo);
+
+            if(localStorage.userInfo){
+                //console.log('JSON parse userinfo', JSON.parse(localStorage.userInfo));
+                return JSON.parse(localStorage.userInfo);  
+            }
+
+            return null;
+
+        };
+
+        service.setUser = function(user){
+            console.log(user);
+
+            localStorage.userInfo = JSON.stringify(user);
+            //console.log('SET localstorage.userinfo', localStorage.userInfo);
+            userInfo = user;
+        };
+
+        return service;
+    }]);
+
+app.run(['$rootScope', '$state', 'AuthService', '$anchorScroll', function($rootScope, $state, AuthService, $anchorScroll) {
 	$rootScope.$on('$stateChangeStart', function(evt, to, params) {
 		if (to.redirectTo) {
 			evt.preventDefault();
 			$state.go(to.redirectTo, params);
 		}
+
+        console.log('STATECHANGE!');
+        //console.log('AUTHService.getUser(): ', AuthService.getUser());
+
+        if(to.auth && !AuthService.getUser()){
+            evt.preventDefault();
+            $state.transitionTo('signIn');          
+        }
 	});
+    $anchorScroll.yOffset = 100;
 }]);
 
 module.exports = app;

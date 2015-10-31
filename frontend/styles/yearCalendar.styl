@@ -1,27 +1,58 @@
 #year-content
-    border 1px solid black
+    border 1px solid lightgray
 
 .month
     height 200px
-
-table tr td.dayoff
+    
+//Table cell decoration
+table tr td.dayoff, table tr th.dayoff
     color red
 
 table tr td.day-now
     border 1px solid black
 
-
 table tr td.day-past
     opacity 0.5
+
     
-table tr td.event
-    background-color lightgray
+//eventbar decoration    
+.event-low
+    margin auto
+    height 2px
+    width 5px
+    background-color green
+
+.event-medium
+    margin auto
+    height 2px
+    width 10px
+    background-color orange
+
+.event-high
+    margin auto
+    height 2px
+    width 15px
+    background-color darkred
+
     
-    
+//Month table animation   
 .year-month-table
     width 100%
     margin 5% 0 10% 0
+    -webkit-transition all linear 0.5s
+    -moz-transition all linear 0.5s
+    -o-transition all linear 0.5s
+    transition all linear 0.5s
 
+.year-month-table.ng-enter
+    opacity 0
+    top -100%
+
+.year-month-table.ng-enter.ng-enter-active
+    opacity 1 
+    top 0   
+
+//Slider animation
 .year-slider
     display flex
     justify-content space-between
@@ -65,20 +96,14 @@ table tr td.event
     transition all linear 0.5s
 
 .animate-big
-    font bold 2em sans-serif
-    color red
+    font-weight bold 
+    font-size 2em
 
-.table-month
-    -webkit-transition all linear 0.5s
-    -moz-transition all linear 0.5s
-    -o-transition all linear 0.5s
-    transition all linear 0.5s
 
-.table-month.ng-enter
-    opacity 0
 
-.table-month.ng-enter.ng-enter-active
-    opacity 1
+
+
+
 
 
 

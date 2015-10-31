@@ -5,7 +5,7 @@ angular
         return {
             restrict: "E",
             templateUrl: "templates/directives/datepicker/datepickerTemplate.html",
-            controller: function($scope, datepickerService) {
+            controller: function($scope, datepickerService, $timeout) {
                 $scope.showDatePicker = false;
 
                 $scope.calendar = {
@@ -39,17 +39,10 @@ angular
                 };
 
                 $scope.selectDate = function (day) {
-                    // $scope.element.val(($scope.calendar.month + 1) + "/" + day + "/" +  $scope.calendar.year);
-                    var that = this;
-
-                    that.$apply(function () {
-                        that.selectedDate = new Date($scope.calendar.year, $scope.calendar.month, day);
-                        console.log($scope.selectedDate);
-                        that.showDatePicker = false;
-                    });
-                    // $scope.selectedDate = new Date($scope.calendar.year, $scope.calendar.month, day);
-                    // $scope.showDatePicker = false;
-                    
+                    var newDate = new Date($scope.calendar.year, $scope.calendar.month, day);
+                    $scope.selectedDate = newDate;
+                    console.log($scope.selectedDate);
+                    $scope.showDatePicker = false;           
                 };
 
             },
@@ -59,15 +52,8 @@ angular
                 var forElement = angular.element("#" + attrs.for);
                 scope.element = forElement;
 
-                if (attrs.moveRelRight) {
-                    console.log(attrs.moveRelRight);
-                    alert(true);
-                    element.css({ 'left': attrs.moveRelRight });
-                }
-
                 forElement.on('focus', function() {
-                    scope.$apply(function() { 
-                        console.log(scope.sidebarStyle);
+                    scope.$apply(function() {
                         scope.showDatePicker = true;
                     });  
                 });
@@ -87,4 +73,4 @@ angular
                 });
             }
         };
-});
+    });

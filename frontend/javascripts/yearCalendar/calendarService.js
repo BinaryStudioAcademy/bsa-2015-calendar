@@ -69,24 +69,29 @@ function calendarService($http) {
 
     function getEventsObj(year) {
         var dateStart = new Date(year, 0, 1);
+        var startMs = +dateStart;
         var dateEnd = new Date(year, 11, 32);
+        console.log(dateStart);
+        console.log(dateEnd);
         var eventObj = {};
+        //make hash object for events
         while (dateStart < dateEnd) {
             var day = dateStart.getDate()+'_'+(dateStart.getMonth()+1)+'_'+year;
             eventObj[day] = [];
             dateStart.setDate(dateStart.getDate() + 1);
         }
 
-        //GET ALL EVENTS!
-        var evtPromise = $http.get('/api/event')       
+        //get promise with events of year
+        var evtPromise = $http.get('/api/eventByInterval/'+startMs+'/'+(+dateEnd))       
         .then(function (response) {
             var events = response.data;
             for (var i = 0; i < events.length; i++) {
                 var eventStartDate = new Date(events[i].start);
                 var evDate = eventStartDate.getDate()+'_'+(eventStartDate.getMonth()+1)+'_'+eventStartDate.getFullYear();
+                //console.log(events[i].start);
                 eventObj[evDate].push(events[i]);
             }
-            console.log(eventObj);
+            console.log(events);
             return eventObj;
 
         }, function(reason) {

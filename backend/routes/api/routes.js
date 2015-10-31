@@ -8,6 +8,7 @@ var authRoutes = require('./authRoutes');
 var userRoutes = require('./userRoutes');
 var holidayRoutes = require('./holidayRoutes');
 var googleEventRoutes = require('./googleEventRoutes');
+var eventTypeRoutes = require('./eventTypeRoutes');
 
 
 module.exports = function(app) {
@@ -20,6 +21,7 @@ module.exports = function(app) {
 		deviceRoutes: deviceRoutes(app),
 		groupRoutes: groupRoutes(app),
 		planRoutes: planRoutes(app),
-		userRoutes: userRoutes(app)
+		userRoutes: userRoutes(app),
+		eventTypeRoutes: eventTypeRoutes(app)
 	};
 };
