@@ -4,7 +4,7 @@ var Holiday = require('../schemas/holidaySchema');
 
 function HolidayRepository() {
 	Repository.prototype.constructor.call(this);
-	this.model = Event;
+	this.model = Holiday;
 }
 
 HolidayRepository.prototype = new Repository();
@@ -21,4 +21,4 @@ HolidayRepository.prototype.getByDateEnd = function(date, callback){
 	query.exec(callback);
 };
 
-module.exports = new EventRepository();
+module.exports = new HolidayRepository();

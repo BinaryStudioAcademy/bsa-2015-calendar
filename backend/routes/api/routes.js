@@ -7,13 +7,13 @@ var groupRoutes = require('./groupRoutes');
 var authRoutes = require('./authRoutes');
 var userRoutes = require('./userRoutes');
 var holidayRoutes = require('./holidayRoutes');
-var googleAuthRoutes = require('./googleAuthRoutes');
+var googleEventRoutes = require('./googleEventRoutes');
 
 
 module.exports = function(app) {
 	return {
 		authRoutes: authRoutes(app),
-		googleAuthRoutes: googleAuthRoutes(app),
+		googleEventRoutes: googleEventRoutes(app),
 		holidayRoutes: holidayRoutes(app),
 		eventRoutes: eventRoutes(app),
 		roomRoutes: roomRoutes(app),
