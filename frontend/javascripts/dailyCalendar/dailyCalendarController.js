@@ -8,10 +8,46 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal) {
 	var vm = this;
 	
 	vm.timeStamps = DailyCalendarService.getTimeStamps();
+	var COLORS = [
+		'#e21400', '#91580f', '#f8a700', '#f78b00',
+		'#58dc00', '#287b00', '#a8f07a', '#4ae8c4',
+		'#3b88eb', '#3824aa', '#a700ff', '#d300e7'
+		];
 	var todayDate = new Date();
 	vm.computedEvents = [];
-	vm.selectedDate = todayDate;
+	vm.selectedDate = vm.selectedDate || todayDate;
 	vm.eventSelected = false;
+
+	function getRandomInt(min, max) {
+		return Math.floor(Math.random() * (max - min)) + min;
+	}
+
+	vm.showDay = function(step) {
+		var date = new Date(vm.selectedDate);
+
+		date.setDate(
+			step === 1 ?
+				date.getDate() + 1
+					:
+				date.getDate() - 1
+		);
+
+		
+		var children = $('.day-event-blocks');
+		for(var i = 0; i < children.length; i++){
+			var id = children[i].id;
+			document.getElementById(id).parentNode.removeChild(document.getElementById(id));
+		}
+		vm.computedEvents = [];
+		vm.selectedDate = date;
+
+		filterEventsByTodayDate();
+
+		console.log(vm.todayEvents);
+
+		mapEvents();
+
+	};
 
 	// function gets array of event objects and return the one with _id == criteria
 	function findById(array, criteria) {
@@ -22,29 +58,30 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal) {
 	}
 
 	// gets all the events that corrspond to the rodays date
-	DailyCalendarService.getTodaysEvents().then(function(data){
-		vm.events = data;
-
+	function mapEvents(){
+		console.log('mapping');
 		//computing top and height values for all geted events
-		for(var i = 0; i < vm.events.length; i++) {
+		for(var i = 0; i < vm.todayEvents.length; i++) {
 			// temp - object to save top and height values for further event displaying
 			var temp = {};
-			var eventEnd = new Date(vm.events[i].end);
-			var eventStart = new Date(vm.events[i].start);
-			temp.eventAsItIs = vm.events[i];
+			var eventEnd = new Date(vm.todayEvents[i].end);
+			var eventStart = new Date(vm.todayEvents[i].start);
+			temp.eventAsItIs = vm.todayEvents[i];
 			// calculate height value(888 is the height of the table; 86400000 amount of milliseconds in the 24 hours)
 			temp.heightVal = 888 * (eventEnd.getTime() - eventStart.getTime()) / 86400000;
 
-			var now = new Date();
+			var now = vm.selectedDate;
 			now.setHours(0,0,0,0);
 			// calculate top value as difference between event start and beginning of the day
 			temp.topVal = 888 * (eventStart.getTime() - now.getTime()) / 86400000;
 			// save computed values to the array
 			vm.computedEvents.push(temp);
+			console.log('counting values');
 		}
-
+		console.log('vm.computedEvents: ' + vm.computedEvents.length);
 		//creating and appending blocks which display events for today
 		for(var c = 0; c < vm.computedEvents.length; c++) {
+
 			// block is the div which represents the whole event
 			// resizeBlock is a little block in the bottom of event block which is created for resizeing event
 			// paragraph - small block which appears on event hover and contain title of the event
@@ -67,6 +104,7 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal) {
 			block.style.height = vm.computedEvents[c].heightVal.toPrecision(3) + 'px';
 			block.style.top = vm.computedEvents[c].topVal.toPrecision(4) + 'px';
 			block.id = vm.computedEvents[c].eventAsItIs._id;
+			block.style.background = COLORS[getRandomInt(0, COLORS.length)];
 			
 			// setting styles for resize block
 			resizeBlock.style.width = '100%';
@@ -125,7 +163,7 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal) {
 					newStart.setSeconds(0);
 					newStart.setMilliseconds(0);
 					// get event from the array to calculate its true duration
-					var thisEvent = findById(vm.events, self.id);
+					var thisEvent = findById(vm.todayEvents, self.id);
 					// calculating events end by the sum of start and calculated duration
 					var newEnd = new Date(newStart.getTime() + (new Date(thisEvent.end) - new Date(thisEvent.start)));
 					alert('newStart: ' + newStart + ';\nnewEnd: ' + newEnd);
@@ -265,107 +303,18 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal) {
 				self.addEventListener('mouseleave', resizeMouseAway);
 			}, true);
 		}
-	});
-/*
-	vm.showDay = function(step) {
-		var date = new Date(vm.selectedDate);
-
-		date.setDate(
-			step === 1 ?
-				date.getDate() + 1
-					:
-				date.getDate() - 1
-		);
-
-		vm.selectedDate = date;
-	};
-
-	vm.showDate = function() {
-		console.log(vm.selectedDate);
-	};
-
-	vm.toggleModal = function() {
-		vm.modalShown = !vm.modalShown;
-	};
-
-	vm.showCloseModal = function() {
-		vm.modalInstance = $uibModal.open({
-			animation: true,
-			templateUrl: 'templates/dailyCalendar/editEventTemplate.html',
-			controller: 'ModalController',
-			controllerAs: 'ModalCtrl',
-			bindToController: true,
-			resolve: {
-				rooms: function () {
-					return vm.availableRooms;
-				},
-				devices: function () {
-					return vm.availableInventory;
-				},
-				users: function () {
-					return vm.users;
-				},
-				selectedDate: function () {
-					return vm.selectedDate;
-				},
-				eventTypes: function () {
-					return vm.eventTypes;
-				},
-			}
-		});
-	};
-
-	init();
-
-	function init() {
-
-		vm.timeStamps = DailyCalendarService.getTimeStamps();
-		var todayDate = new Date();
-
-		vm.selectedDate = vm.selectedDate || todayDate;
-		vm.eventSelected = false;
-		vm.modalShown = false;
-		vm.sidebarStyle = true;
-
-		//will be pulled from server 
-		getRooms();
-		getInventory();
-		getUsers();
-		getAllEvents();
-		getEventTypes();
 	}
-
-	function getRooms() {
-		DailyCalendarService.getAllRooms()
-			.$promise.then(
-				function(response) {
-					console.log('success Total rooms: ', response.length);
-					vm.availableRooms = response;
-				},
-				function(response) {
-					console.log('failure', response);
-				});
-	}
-
-	function getEventTypes() {
-		DailyCalendarService.getAllEventTypes()
-			.$promise.then(
-				function(response) {
-					console.log('success Current number of types: ', response.length);
-					vm.eventTypes = response;
-				},
-				function(response) {
-					console.log('failure', response);
-				}
-			);
-	}
-
+	
 	function getAllEvents() {
 		DailyCalendarService.getAllEvents()
 			.$promise.then(
 				function(response) {
 					console.log('success Number of Events: ', response.length);
 					vm.allEvents = response;
+
+					filterEventsByTodayDate();
+
+					mapEvents();
 				},
 				function(response) {
 					console.log('failure', response);
@@ -373,33 +322,28 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal) {
 			);
 	}
 
-	//TODO: implement example approach to API calls
-	// function getLatestCurrencyRateByCode(code, callback){
-	// 		var fxRatesResource = $resource(appConfig.apiUrl + 'metadata/fx/:code', {code: code}, null);
+	function filterEventsByTodayDate() {
+		console.log('filter');
+		vm.todayEvents = vm.allEvents.filter(function(event) {
+			console.log(event);
+			if(event.start) {
+				var date = new Date(event.start);
+				console.log(date.getDate());
+				console.log(vm.selectedDate.getDate());
+				return date.getDate() === vm.selectedDate.getDate();
+			}
+		});
+	}
 
-	// 		if (currencies[code]){
-	// 			return $q.resolve(currencies[code]);
-	// 		} else {
+	function showWorkHours() {
+		
+	}
 
-	// 			return fxRatesResource.get().$promise.then(function(res){
-	// 				currencies[code] = res;
-	// 				return res;
-	// 			}, function(error, status){
-	// 				return $q.reject(error);
-	// 			});	
-	// 		}
-	// 	}
-	*/
+	init();
+
+	function init() {
+		showWorkHours();
+		getAllEvents();
+	}
+
 }
-
-app.directive('afterRender', ['$timeout', function ($timeout) {
-	var def = {
-		restrict: 'A',
-		terminal: true,
-		transclude: false,
-		link: function (scope, element, attrs) {
-			$timeout(scope.$eval(attrs.afterRender), 0);
-		}
-	};
-	return def;
-}]);
