@@ -13,6 +13,7 @@ function DailyCalendarService($resource, $timeout, $q) {
 	var resourceDevices = $resource('/api/device/');
 	var resourceUsers = $resource('/api/user/');
 	var resourceEventTypes = $resource('/api/eventType');
+	var resourcePlan = $resource('/api/plan/');
 
 
 
@@ -69,6 +70,10 @@ function DailyCalendarService($resource, $timeout, $q) {
 		return resourceEventTypes.query();
 	}
 
+	function savePlan(plan){
+		return resourcePlan.save(plan);
+	}
+
 	return {
 		getTimeStamps: getTimeStamps,
 		saveEvent: saveEvent,
@@ -78,5 +83,6 @@ function DailyCalendarService($resource, $timeout, $q) {
 		getAllUsers: getAllUsers,
 		getAllEvents: getAllEvents,
 		getAllEventTypes: getAllEventTypes,
+		savePlan: savePlan,
 	};
 }

@@ -64,7 +64,7 @@ planService.prototype.availability = function(data, callback){
 			function(cb){
 
 				eventTimeStart += Number(data.intervals[intervalsIterator]);
-				eventTimeStart += eventDuration;
+				//eventTimeStart += eventDuration;
 
 				intervalsIterator++;
 
@@ -165,7 +165,7 @@ planService.prototype.add = function(data, callback){
 					addEventsCount++;
 
 					eventTimeStart += plan.intervals[intervalsIterator];
-					eventTimeStart += eventDuration;
+					//eventTimeStart += eventDuration;
 
 					intervalsIterator++;
 

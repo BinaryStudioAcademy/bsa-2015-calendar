@@ -113,6 +113,6 @@ module.exports = function(app) {
 			res.data = data;
 			res.err = err;
 			next();
-		);
+		});
 	}, apiResponse);
 };
