@@ -72,16 +72,12 @@ function calendarService($http) {
         var dateStart = new Date(year, 0, 1);
         var startMs = +dateStart;
         var dateEnd = new Date(year, 11, 32);
-        var eventObj = [];
+        var eventObj = {};
         
-        for (var y = 0; y <12; y++) {
-            var monthEvnt = {};
-            while (dateStart.getMonth() == y) {
-                var day = dateStart.getDate()+'_'+(dateStart.getMonth()+1)+'_'+year;
-                monthEvnt[day] = [];
-                dateStart.setDate(dateStart.getDate() + 1);
-            }
-            eventObj.push(monthEvnt);
+        while (dateStart < dateEnd) {
+            var day = dateStart.getDate()+'_'+(dateStart.getMonth()+1)+'_'+year;
+            eventObj[day] = [];
+            dateStart.setDate(dateStart.getDate() + 1);
         }
 
         //get promise with events of year
@@ -91,7 +87,7 @@ function calendarService($http) {
             for (var i = 0; i < events.length; i++) {
                 var eventStartDate = new Date(events[i].start);
                 var evDate = eventStartDate.getDate()+'_'+(eventStartDate.getMonth()+1)+'_'+eventStartDate.getFullYear();
-                eventObj[eventStartDate.getMonth()][evDate].push(events[i]);
+                eventObj[evDate].push(events[i]);
             }
             return eventObj;
 

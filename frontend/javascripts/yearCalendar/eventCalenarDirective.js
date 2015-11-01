@@ -9,16 +9,16 @@ function eventCalendarDirective() {
             
             $scope.$on('eventsUpdated', function(event, dataObj) { 
                 var monthEvt = dataObj[+attr.monthNum];
-                for (var day in monthEvt) {
-                    if (monthEvt[day].length > 0) {
+                for (var day in dataObj) {
+                    if (dataObj[day].length > 0) {
                         var dayCell = $('#'+day);
 
                         //create popover template with events titles
-                        var tmpl = '<ul>';
-                        for (var i=0; i<monthEvt[day].length; i++) {
-                            tmpl += '<li>'+monthEvt[day][i].title + '</li>';
+                        var tmpl = '<ol>';
+                        for (var i=0; i<dataObj[day].length; i++) {
+                            tmpl += '<li>'+dataObj[day][i].title + '</li>';
                         }
-                        tmpl +='</ul>';
+                        tmpl +='</ol>';
 
                         //add popover
                         dayCell.popover({
@@ -33,7 +33,7 @@ function eventCalendarDirective() {
 
                         //add eventbar
                         var eventBar = angular.element('<div></div>');
-                        var evtNum = monthEvt[day].length;
+                        var evtNum = dataObj[day].length;
                         switch(true) {
                             case (evtNum < 3):
                                 eventBar.addClass('event-low');
