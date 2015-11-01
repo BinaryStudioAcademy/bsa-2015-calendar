@@ -1,0 +1,110 @@
+.modal-body.clearfix
+	button.close(type='button' ng-click='evMonthCtrl.closeModal()') ×
+	ul.nav.nav-tabs(role='tablist')
+		li.active(role='presentation')
+			a(href="#event" aria-controls="event" role="tab" data-toggle="tab")
+				| New event
+		li(role='presentation')
+			a(href="#plan" aria-controls="plan" role="tab" data-toggle="tab")
+				| New plan
+	.tab-content
+		.tab-pane(role="tabpanel" id="plan")
+			span
+				| New plan form goes here
+		.tab-pane.active(role="tabpanel" id="event")
+			form(role='form' name='newEventForm')
+				form.form-horizontal
+					.form-group
+						label.col-md-2.col-sm-2.control-label Time:
+						.col-md-10.col-sm-10
+							.col-md-6.col-sm-6.col-xs-6
+								.input-group
+									.input-group-addon
+										i.glyphicon.glyphicon-time
+									uib-timepicker(ng-model='evMonthCtrl.event.start', show-spinners='false', minute-step=5)
+							.col-md-6.col-sm-6.col-xs-6
+								.input-group
+									.input-group-addon
+										i.glyphicon.glyphicon-time
+									uib-timepicker(ng-model='evMonthCtrl.event.end', show-spinners='false', minute-step=5)
+					.form-group.text-center
+						.col-md-10.col-sm-10.col-md-offset-2.col-sm-offset-2
+							.col-md-6.col-sm-6.col-xs-6``
+								span.badge
+									| {{evMonthCtrl.event.start | date: 'short'}}
+							.col-md-6.col-sm-6.col-xs-6
+								span.badge
+									| {{evMonthCtrl.event.end | date: 'short' }}
+					.form-group
+						label.col-md-2.control-label(for="eventTitle") Title:
+						.col-md-10
+							.col-md-12
+								input.form-control(type='text', id="eventTitle" placeholder='Name the event...', ng-model="evMonthCtrl.event.title")
+					.form-group
+						label.col-md-2.control-label(for="eventDescription") About:
+						.col-md-10
+							.col-md-12
+								textarea.form-control(rows='5', id="eventDescription" placeholder='Description...', ng-model="evMonthCtrl.event.description")
+					.form-group
+						label.col-md-2.col-sm-2.control-label Organization:
+						.col-md-10.col-sm-10
+							.col-md-6.col-sm-6.col-xs-6
+								.input-group
+									.input-group-addon 
+										i.glyphicon.glyphicon-piggy-bank
+									input.form-control(type='text', placeholder='Price...', ng-model='evMonthCtrl.event.price')
+							.col-md-6.col-sm-6.col-xs-6
+								.input-group
+									.input-group-btn
+										button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+											| Type 
+											span.caret
+										ul.dropdown-menu
+											li(ng-repeat="type in evMonthCtrl.eventTypes" ng-click="evMonthCtrl.selectEventType(type)")
+												a(href="") 
+													| {{ type.title }}
+									input.form-control(type='text', aria-label='...' ng-model="evMonthCtrl.event.type.title" disabled)
+					.form-group
+						.col-md-10.col-sm-10.col-md-offset-2.col-sm-offset-2
+							.col-md-6.col-sm-6
+								.input-group
+									.input-group-btn
+										button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+											span
+												i.glyphicon.glyphicon-home
+										ul.dropdown-menu.scrollable-menu
+											li(ng-repeat="room in evMonthCtrl.rooms" ng-click="evMonthCtrl.selectRoom(room)")
+												a(href='') 
+													| {{ room.title }}
+									input.form-control(type='text', aria-label='...' ng-model="evMonthCtrl.event.room.title" placeholder="Room..." disabled)
+							.col-md-6.col-sm-6
+								.checkbox
+									label
+										input(type='checkbox', value='', ng-model='evMonthCtrl.event.isPrivate')
+										| &nbsp;Private
+					.form-group
+						.col-md-10.col-sm-10.col-md-offset-2.col-sm-offset-2
+							.col-md-6.col-sm-6
+								div(ng-dropdown-multiselect='', 
+									translation-texts='evMonthCtrl.selectConfigDevices', 
+									selected-model='evMonthCtrl.event.devices', 
+									options='evMonthCtrl.devices', 
+									extra-settings='evMonthCtrl.selectConfigDevices')
+							.col-md-6.col-sm-6
+								div(ng-dropdown-multiselect='', 
+									translation-texts='evMonthCtrl.selectConfigUsers', 
+									selected-model='evMonthCtrl.event.users', 
+									options='evMonthCtrl.users', 
+									extra-settings='evMonthCtrl.selectConfigUsers')
+.modal-footer
+	.save-area
+		.alert.alert-success.alert-dismissible(role='alert' ng-show='evMonthCtrl.formSuccess')
+			button.close(type='button', data-dismiss='alert', aria-label='Close')
+				span(aria-hidden='true')
+					i.glyphicon.glyphicon-remove
+			strong Success!
+			|  You've just saved the event! Check the calendar now.
+		.col-md-6.col-sm-6.col-xs-6
+			button.btn.btn-primary(type='submit' ng-disabled="newEventForm.$invalid" ng-click="evMonthCtrl.submitModal()") Save
+		.col-md-6.col-sm-6
+			button.btn.btn-default(ng-click="evMonthCtrl.closeModal()") Cancel

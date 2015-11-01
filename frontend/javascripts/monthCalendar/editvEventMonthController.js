@@ -1,10 +1,10 @@
 var app = require('../app');
 
-app.controller('ModalController', ModalController);
+app.controller('editEventMonthController', editEventMonthController);
 
-ModalController.$inject = ['DailyCalendarService', 'socketService', '$timeout', '$modalInstance', 'rooms', 'devices', 'users', 'selectedDate', 'eventTypes'];
+editEventMonthController.$inject = ['$rootScope','monthEventService', '$timeout', '$modalInstance', 'rooms', 'devices', 'users', 'selectedDate', 'eventTypes'];
 
-function ModalController(DailyCalendarService, socketService, $timeout, $modalInstance, rooms, devices, users, selectedDate, eventTypes) {
+function editEventMonthController($rootScope, monthEventService, $timeout, $modalInstance, rooms, devices, users, selectedDate, eventTypes) {
 
 	var vm = this;
 
@@ -20,6 +20,7 @@ function ModalController(DailyCalendarService, socketService, $timeout, $modalIn
 
 	vm.submitModal = function() {
 		submitEvent(vm.event);
+		$rootScope.$broadcast('sendModal', vm.event);
 		console.log('Modal submited');
 	};
 
@@ -50,7 +51,6 @@ function ModalController(DailyCalendarService, socketService, $timeout, $modalIn
 
 	vm.selectEventType = function(type) {
 		vm.event.type = type['_id'];
-		vm.eventType = type.title;
 	};
 
 	vm.selectRoom = function(title) {
@@ -59,7 +59,7 @@ function ModalController(DailyCalendarService, socketService, $timeout, $modalIn
 
 	function submitEvent(event) {
 		console.log('submiting an event...');
-		DailyCalendarService.saveEvent(event)
+		monthEventService.saveEvent(event)
 			.$promise.then(
 
 				function(response) {
@@ -67,8 +67,6 @@ function ModalController(DailyCalendarService, socketService, $timeout, $modalIn
 					vm.formSuccess = true;
 					dropEventInfo();
 					console.log('success', response);
-
-					socketService.emit('add event', { event : event });	
 
 					$timeout(function() {
 						$modalInstance.close();
