@@ -9,19 +9,20 @@ function eventsWeekDirective($compile, $templateCache) {
         link: function ($scope, element, attr) {
             var daysNames = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 
-            $scope.$on('eventsUpdated', function(event, data) {
+            $scope.$on('eventsUpdated', function() {
                 //console.log($scope.wCtrl.eventObj);
-                if (data){
-                    $scope.wCtrl.eventObj.push(data);
-                }
-                console.log($scope.wCtrl.eventObj);
-                for (var i=0; i < $scope.wCtrl.eventObj.length; i++) {
-                    
+                // if (data){
+                //     console.log(data);
+                //     $scope.wCtrl.eventObj.push(data);
+                // }
+                //console.log($scope.wCtrl.eventObj.length);
+                //console.log($scope.wCtrl.eventObj);
+                for (var i=0; i < $scope.wCtrl.eventObj.length; i++) { 
                     var currEvt = $scope.wCtrl.eventObj[i];
                     var evtStart = new Date(currEvt.start);
                     var evtHour = evtStart.getHours();
-                    var evtDay = evtStart.getDay() || 7 - 1;
-                    console.log(evtHour,evtDay, evtStart);
+                    var evtDay = (evtStart.getDay() || 7) - 1;
+                    //console.log(evtHour,evtDay, evtStart);
                     //get hour cell with event start
                     var evtCell = angular.element(element[0].querySelectorAll('[ng-class="'+ evtHour +'"].'+ daysNames[evtDay]));
                     var eventDiv = angular.element('<div class="event-cell-week"></div>'); 
@@ -51,8 +52,6 @@ function eventsWeekDirective($compile, $templateCache) {
 
                     $compile(eventDiv)($scope);
                     evtCell.append(eventDiv);
-
-
                 }
             });
 
@@ -64,7 +63,8 @@ function eventsWeekDirective($compile, $templateCache) {
                 var currEvt = data;
                 var evtStart = new Date(currEvt.start);
                 var evtHour = evtStart.getHours();
-                var evtDay = evtStart.getDay() || 7 - 1;
+                //console.log(evtStart.getDay());
+                var evtDay = (evtStart.getDay() || 7) - 1;
                 //get hour cell with event start
                 var evtCell = angular.element(element[0].querySelectorAll('[ng-class="'+ evtHour +'"].'+ daysNames[evtDay]));
                 var eventDiv = angular.element('<div class="event-cell-week"></div>'); 
@@ -93,10 +93,7 @@ function eventsWeekDirective($compile, $templateCache) {
                 }
 
                 $compile(eventDiv)($scope);
-                evtCell.append(eventDiv);
-
-
-                
+                evtCell.append(eventDiv);       
             });
     
         }

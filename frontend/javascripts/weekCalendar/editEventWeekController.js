@@ -64,11 +64,7 @@ function editEventWeekController($rootScope, $scope, weekEventService, $timeout,
 			.$promise.then(
 
 				function(response) {
-					//console.log('eventObj');
-					//console.log($scope.wCtrl.eventObj);
 					$rootScope.$broadcast('eventAdd', response);
-					//console.log(response);
-					//$rootScope.$broadcast('eventsUpdated', response);
 					vm.formSuccess = true;
 					dropEventInfo();
 					console.log('success', response);
