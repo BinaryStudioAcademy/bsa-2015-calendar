@@ -155,6 +155,7 @@ module.exports = function(grunt) {
 					'bower_components/socket.io-client/socket.io.js',					
 					'bower_components/jquery/dist/jquery.min.js',
 					'bower_components/bootstrap/dist/js/bootstrap.min.js',
+					'bower_components/interact/dist/interact.js',
 					'bower_components/angular/angular.js',
 					'bower_components/angular-animate/angular-animate.min.js',
 					'bower_components/lodash/lodash.js',
@@ -165,7 +166,7 @@ module.exports = function(grunt) {
 					'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
 					'bower_components/angular-socket-io/socket.js',
 					'bower_components/alertify.js/dist/js/alertify.js',
-					'bower_components/alertify.js/dist/js/ngAlertify.js'
+					'bower_components/alertify.js/dist/js/ngAlertify.js',
 				],
 				dest: 'public/javascripts/libs.js',
 			},

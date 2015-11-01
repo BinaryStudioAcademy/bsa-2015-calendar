@@ -22,12 +22,13 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal, socket
 
 		vm.selectedDate = date;
 
-		filterEventsByTodayDate();
+		// filterEventsByTodayDate();
 
-		mapTimeStamps(vm.timeStamps, vm.todayEvents);
+		// mapTimeStamps(vm.timeStamps, vm.todayEvents);
 
-		mapEventsByStartTime(vm.timeStamps);
-		console.log(vm.eventsByStart);
+		// mapEventsByStartTime(vm.timeStamps);
+
+		getAllEvents();
 
 	};
 
