@@ -100,7 +100,7 @@ casual.define('event_', function () {
     	ownerId : casual.random_element(context.user_ids),
     	title : casual.title,
     	description : casual.short_description,
-    	type : casual.random_element(['basic', 'general', 'activity']), 
+    	//type : casual.random_element(['basic', 'general', 'activity']), 
     	price : casual.integer(from=0, to=300),
     	//plan : {type: Schema.Types.ObjectId, ref: 'Plan'}, /* plan id */
     	isPrivate : casual.random_element([true, false]),

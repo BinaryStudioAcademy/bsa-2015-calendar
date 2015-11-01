@@ -2,56 +2,54 @@ var app = require('../app');
 
 app.directive('eventCalendarDirective', eventCalendarDirective);
 
-function eventCalendarDirective($compile, $templateCache) {
+function eventCalendarDirective() {
     return {
         restrict: 'A',
         link: function ($scope, element, attr) {
-
-            $scope.$watch('YCtrl.events', function(eventObj) {
-                for (var day in eventObj) {
-                    if (eventObj[day].length > 0) {
-                        var dayCell = angular.element(document.getElementById(day));
+            
+            $scope.$on('eventsUpdated', function(event, dataObj) { 
+                var monthEvt = dataObj[+attr.monthNum];
+                for (var day in dataObj) {
+                    if (dataObj[day].length > 0) {
+                        var dayCell = $('#'+day);
 
                         //create popover template with events titles
-                        var tmpl = '<ul>';
-                        for (var i=0; i<eventObj[day].length; i++) {
-                            tmpl += '<li>'+eventObj[day][i].title + '</li>';
+                        var tmpl = '<ol>';
+                        for (var i=0; i<dataObj[day].length; i++) {
+                            tmpl += '<li>'+dataObj[day][i].title + '</li>';
                         }
-                        tmpl +='</ul>';
-                        //var tmp = '<ul><li ng-repeat="evt in eventObj[day]">{{evt.title}}</li></ul>';
-
-                        $templateCache.put(day+'.html', tmpl);
+                        tmpl +='</ol>';
 
                         //add popover
-                        dayCell.attr('uib-popover-template', '"'+day+'.html"');
-                        dayCell.attr('popover-title', "Events");
-                        dayCell.attr('popover-append-to-body', "true");
-                        dayCell.attr('trigger', 'click');
+                        dayCell.popover({
+                            trigger: 'hover',
+                            delay: 300,
+                            container: 'body',
+                            placement: 'top',
+                            title: 'Events:',
+                            html: true,
+                            content: tmpl
+                        });
 
                         //add eventbar
                         var eventBar = angular.element('<div></div>');
-                        var evtNum = eventObj[day].length;
+                        var evtNum = dataObj[day].length;
                         switch(true) {
-                            case (evtNum < 2):
+                            case (evtNum < 3):
                                 eventBar.addClass('event-low');
                                 break;
-                            case (evtNum > 1 && evtNum < 3):
+                            case (evtNum > 2 && evtNum < 5):
                                 eventBar.addClass('event-medium');
                                 break;
-                            case (evtNum > 2):
+                            case (evtNum > 4):
                                 eventBar.addClass('event-high');
                                 break;
                         }
                         dayCell.append(eventBar);
-
-                        $compile(dayCell)($scope);
-
                     }
-                }
-                
-            }, true);
-            
+                }      
+            });
+
         }
     };
 }
-
