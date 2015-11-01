@@ -103,6 +103,17 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal, socket
 				todayEvents: function () {
 					return vm.todayEvents;
 				},
+				dayViewObject: function() {
+					return {
+						event: vm.event,
+						rooms: vm.availableRooms,
+						devices: vm.availableInventory,
+						users: vm.users,
+						selectedDate: vm.selectedDate,
+						eventTypes: vm.eventTypes,
+						todayEvents: vm.todayEvents,
+					};
+				}
 			}
 		});
 

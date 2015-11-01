@@ -2,7 +2,7 @@ var app = require('../app');
 
 app.controller('CalendarController', CalendarController);
 
-function CalendarController($document, $modal) {
+function CalendarController($document, $uibModal) {
 	var vm = this;
 	
 	var todayDate = Date.now();
@@ -13,7 +13,7 @@ function CalendarController($document, $modal) {
 			$("#myModal").modal("show");
 		}
 		if (event.keyCode == 27) {
-			$("#myModal").modal("hide");
+			$("#myModal").uibModal("hide");
 		}
 	});
 
