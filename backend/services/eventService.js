@@ -9,15 +9,15 @@ var _ = require('lodash');
 // var io = require('../notifications/notifications');
 
 var eventService = function(){};
+// сервис для обработки CRUD операций при работе с сущностью - событие
 
-
-eventService.prototype.add = function(data, callback){
-
+eventService.prototype.add = function(data, callback){ 
+	// операция добавления ивента
 	var event;
 
 	async.waterfall([
 		function(cb){
-			if(data.room){
+			if(data.room){ // проверяем доступность комнаты по требуемому интвервалу ивента
 				eventRepository.checkRoomAvailability(data.room, data.start, data.end, function(err, result){
 					if(err){
 						return cb(err);
@@ -34,7 +34,7 @@ eventService.prototype.add = function(data, callback){
 		},
 
 		function(cb){
-			async.forEach(data.devices, function(deviceId, next) { 
+			async.forEach(data.devices, function(deviceId, next) { // проверяем доступность каждого девайса по требуемому интвервалу ивента
 				eventRepository.checkDeviceAvailability(deviceId, data.start, data.end, function(err, result){
 					if(err){
 						return cb(err);
@@ -52,7 +52,7 @@ eventService.prototype.add = function(data, callback){
 				return cb();	
 			});
 		}, 
-		function(cb){
+		function(cb){ // после успешного прохождения проверок добавляем ивент в БД
 			eventRepository.add(data, function(err, data){
 				if(err){
 					return cb(err, null);
@@ -61,7 +61,7 @@ eventService.prototype.add = function(data, callback){
 				cb();
 			});
 		},
-		function(cb){
+		function(cb){ // добавляем запись об ивенте в сущность room
 			if (event.room !== undefined){
 				roomRepository.addEvent(event.room, event._id, function(err, data){
 	 				if(err){
@@ -76,7 +76,7 @@ eventService.prototype.add = function(data, callback){
 				cb();
 			}
 		},
-		function(cb){
+		function(cb){ // добавляем запись об ивенте каждлому подписанному юзеру
 			if(event.users.length){
 				event.users.forEach(function(userId){
 					userRepository.addEvent(userId, event._id, function(err, data){
@@ -94,7 +94,7 @@ eventService.prototype.add = function(data, callback){
 				cb();
 			}
 		},
-		function(cb){
+		function(cb){ // добавляем запись об ивенте в каждый экземпляр device
 			if(event.devices.length){
 				event.devices.forEach(function(deviceId){
 					deviceRepository.addEvent(deviceId, event._id, function(err, data){
@@ -112,19 +112,19 @@ eventService.prototype.add = function(data, callback){
 			}
 		},
 
-		function(cb){
+		function(cb){ // добавляем запись  об event в сущность eventType 
 			if (event.type !== undefined){
 				eventTypeRepository.addEvent(event.type, event._id, function(err, data){
 	 				if(err){
 	 					return cb(err, null);
 	 				}
 	 				console.log('added to eventType');
-	 				cb();
+	 				cb(null, event);
 				});
 			}
 			else {
 				console.log('no eventType');
-				cb();
+				cb(null, event);
 			}
 		},
 
@@ -133,12 +133,12 @@ eventService.prototype.add = function(data, callback){
 			//console.log(err.message);
 			return callback(err, result);
 		}
-		return callback(null, {success: true});
+		return callback(null, result);
 	});
 };
 
 eventService.prototype.delete = function(eventId, callback){
-
+	// операция удаления ивента
 	var event;
 
 	async.waterfall([
@@ -153,8 +153,8 @@ eventService.prototype.delete = function(eventId, callback){
 				event = data;
 				cb();
 			});
-		},
-		function(cb){
+		}, // получаем экземпляр удаляемого ивента
+		function(cb){ // удаляем запись о нем из room
 			if (event.room !== undefined){
 				roomRepository.removeEvent(event.room, eventId, function(err, data){
 	 				if(err){
@@ -171,8 +171,8 @@ eventService.prototype.delete = function(eventId, callback){
 			}
 
 		},
-		function(cb){
-			if(event.users.length){
+		function(cb){ // удаляем запись о нем из каждого user
+			if(event.users.length){ 
 				event.users.forEach(function(userId){
 					userRepository.removeEvent(userId, eventId, function(err, data){
 	 					if(err){
@@ -189,7 +189,7 @@ eventService.prototype.delete = function(eventId, callback){
 			}
 
 		},
-		function(cb){
+		function(cb){ // удалеяем запись о нем из каждого device
 			if(event.devices.length){
 				event.devices.forEach(function(deviceId){
 					deviceRepository.removeEvent(deviceId, eventId, function(err, data){
@@ -208,7 +208,7 @@ eventService.prototype.delete = function(eventId, callback){
 		},
 
 
-		function(cb){
+		function(cb){ // удаляем запись об ивенте из сущности eventType
 			if (event.type !== undefined){
 				eventTypeRepository.removeEvent(event.type, eventId, function(err, data){
  					if(err){
@@ -217,7 +217,7 @@ eventService.prototype.delete = function(eventId, callback){
  					console.log('delete from eventType');
  					cb();
 				});
-			}
+			} 
 			else {
 				console.log('no eventType');
 				cb();
@@ -226,7 +226,7 @@ eventService.prototype.delete = function(eventId, callback){
 		},
 
 
-		function(cb){
+		function(cb){ // удаляем запись об event из групповых попдисок
 			groupRepository.removeEvent(eventId, function(err, data){
 				if(err){
 					return	cb(err, null);
@@ -234,7 +234,7 @@ eventService.prototype.delete = function(eventId, callback){
 				console.log('delete from groups');
 			});
 			cb();
-		},
+		}, 
 
 		function(cb){
 			eventRepository.delete(event._id, function(err, data){
@@ -243,7 +243,7 @@ eventService.prototype.delete = function(eventId, callback){
 				}
 				cb(null, data);
 			});
-		}
+		} // удаляем event из БД
 
 	], function(err, result){
 		if(err){
@@ -256,6 +256,7 @@ eventService.prototype.delete = function(eventId, callback){
 
 
 eventService.prototype.update = function(eventId, newEvent, callback){
+	//операция обновления event
 	var usersToAdd = [],
 		usersToDelete = [],
 		devicesToAdd = [],
@@ -266,8 +267,8 @@ eventService.prototype.update = function(eventId, newEvent, callback){
 
 	async.waterfall([
 
-		function(cb){
-			if(newEvent.room){
+		function(cb){ // проверяем доступность команты для нового интверала ивента
+			if(newEvent.room){ 
 				eventRepository.checkRoomAvailability(newEvent.room, newEvent.start, newEvent.end, function(err, result){
 					if(err){
 						return cb(err);
@@ -283,7 +284,7 @@ eventService.prototype.update = function(eventId, newEvent, callback){
 			}	
 		},
 
-		function(cb){
+		function(cb){ // проверяем доступность каждого девайса для нового интверала ивента
 			async.forEach(newEvent.devices, function(deviceId, next) { 
 				eventRepository.checkDeviceAvailability(deviceId, newEvent.start, newEvent.end, function(err, result){
 					if(err){
@@ -302,7 +303,7 @@ eventService.prototype.update = function(eventId, newEvent, callback){
 			});
 		}, 
 
-		function(cb){
+		function(cb){ 
 			eventRepository.getById(eventId, function(err, data){
 				if(err){
 					return cb(err, null);
@@ -313,8 +314,8 @@ eventService.prototype.update = function(eventId, newEvent, callback){
 				oldEvent = data;
 				cb();
 			});
-		},
-		function(cb){
+		}, // получаем экземпляр старого event
+		function(cb){ // определяем различия старого и нового экземпляра по спискам девайсов и подписанных юзеров
 			usersToAdd = _.difference(newEvent.users, oldEvent.users);
 			usersToDelete = _.difference(oldEvent.users, newEvent.users);
 			devicesToAdd = _.difference(newEvent.devices, oldEvent.devices);
@@ -325,6 +326,7 @@ eventService.prototype.update = function(eventId, newEvent, callback){
 
 			console.log("devices to add: " + devicesToAdd);
 			console.log("devices to delete: " + devicesToDelete);
+
 
 			usersToDelete.forEach(function(userId){
 				userRepository.removeEvent(userId, eventId, function(err, data){
@@ -358,27 +360,27 @@ eventService.prototype.update = function(eventId, newEvent, callback){
 				});
 			});
 
-			if(oldEvent.room !== newEvent.room){
+			if(oldEvent.room !== newEvent.room){ // если комната для ивента изменилась
 				console.log("changing room");
 				roomRepository.removeEvent(oldEvent.room, eventId, function(err, data){
 					if(err){
 						return cb(err, null);
 					}
-				});
+				}); // удаляем запись о ивенте из старой комнтаы
 
 				roomRepository.addEvent(newEvent.room, eventId, function(err, data){
 					if(err){
 						return cb(err, null);
 					}
-				});
+				}); // добавляем запись об ивенте в новую комнату
 
 			}
 
 			eventRepository.update(eventId, newEvent, function(err, data){
 				if(err){
-					return cb(err, null);
+					return cb(err, data);
 				}
-			});
+			}); // обновляем экземпляр event
 
 			cb();
 		}
@@ -386,11 +388,13 @@ eventService.prototype.update = function(eventId, newEvent, callback){
 		if(err){
 			return callback(err, {success: false});
 		}
-		return callback(null, {success: true});
+		return callback(null, data);
 	});
 };
 
 eventService.prototype.updateStartEnd = function(eventId, data, callback){
+	// операция обновления интвервала ивента
+
 	var event;
 
 	console.log("eventID: " + eventId);
@@ -407,9 +411,9 @@ eventService.prototype.updateStartEnd = function(eventId, data, callback){
 				event = result;
 				cb();
 			});
-		},
+		}, // получаем экземпляр ивента
 
-		function(cb){
+		function(cb){ // проверяем доступность комнаты для нового инветрала
 			if(event.room){
 				eventRepository.checkRoomAvailability(event.room, data.start, data.end, function(err, result){
 					if(err){
@@ -426,7 +430,7 @@ eventService.prototype.updateStartEnd = function(eventId, data, callback){
 			}	
 		},
 
-		function(cb){
+		function(cb){ // проверяем доступность девайсов для нового инветрала
 			async.forEach(event.devices, function(deviceId, next) { 
 				eventRepository.checkDeviceAvailability(deviceId, data.start, data.end, function(err, result){
 					if(err){
@@ -452,7 +456,7 @@ eventService.prototype.updateStartEnd = function(eventId, data, callback){
 				if(err){
 					return cb(err, null);
 				}
-			});
+			}); // если проверки пройдены обновляем запись event
 
 			cb();
 		}
