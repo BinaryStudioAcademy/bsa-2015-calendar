@@ -21,7 +21,7 @@ function WeekViewController(WeekCalendarService, weekEventService, $scope, $uibM
 		console.log(hour);
 		var createEventModal = $uibModal.open({
 			templateUrl: 'templates/weekCalendar/createEventModal.html',
-			size: 'lg'
+			size: 'md'
 			});
 	};
 
