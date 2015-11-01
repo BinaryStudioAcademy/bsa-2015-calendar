@@ -167,7 +167,7 @@ app.run(['$rootScope', '$state', 'AuthService', '$anchorScroll', function($rootS
 			$state.go(to.redirectTo, params);
 		}
 
-        console.log('STATECHANGE!');
+        //console.log('STATECHANGE!');
         //console.log('AUTHService.getUser(): ', AuthService.getUser());
 
         if(to.auth && !AuthService.getUser()){
