@@ -1,0 +1,110 @@
+.modal-body.clearfix
+	button.close(type='button' ng-click='evWeekCtrl.closeModal()') ×
+	ul.nav.nav-tabs(role='tablist')
+		li.active(role='presentation')
+			a(href="#event" aria-controls="event" role="tab" data-toggle="tab")
+				| New event
+		li(role='presentation')
+			a(href="#plan" aria-controls="plan" role="tab" data-toggle="tab")
+				| New plan
+	.tab-content
+		.tab-pane(role="tabpanel" id="plan")
+			span
+				| New plan form goes here
+		.tab-pane.active(role="tabpanel" id="event")
+			form(role='form' name='newEventForm')
+				form.form-horizontal
+					.form-group
+						label.col-md-2.col-sm-2.control-label Time:
+						.col-md-10.col-sm-10
+							.col-md-6.col-sm-6.col-xs-6
+								.input-group
+									.input-group-addon
+										i.glyphicon.glyphicon-time
+									uib-timepicker(ng-model='evWeekCtrl.event.start', show-spinners='false', minute-step=5)
+							.col-md-6.col-sm-6.col-xs-6
+								.input-group
+									.input-group-addon
+										i.glyphicon.glyphicon-time
+									uib-timepicker(ng-model='evWeekCtrl.event.end', show-spinners='false', minute-step=5)
+					.form-group.text-center
+						.col-md-10.col-sm-10.col-md-offset-2.col-sm-offset-2
+							.col-md-6.col-sm-6.col-xs-6
+								span.badge
+									| {{evWeekCtrl.event.start | date: 'short'}}
+							.col-md-6.col-sm-6.col-xs-6
+								span.badge
+									| {{evWeekCtrl.event.end | date: 'short' }}
+					.form-group
+						label.col-md-2.control-label(for="eventTitle") Title:
+						.col-md-10
+							.col-md-12
+								input.form-control(type='text', id="eventTitle" placeholder='Name the event...', ng-model="evWeekCtrl.event.title")
+					.form-group
+						label.col-md-2.control-label(for="eventDescription") About:
+						.col-md-10
+							.col-md-12
+								textarea.form-control(rows='5', id="eventDescription" placeholder='Description...', ng-model="evWeekCtrl.event.description")
+					.form-group
+						label.col-md-2.col-sm-2.control-label Organization:
+						.col-md-10.col-sm-10
+							.col-md-6.col-sm-6.col-xs-6
+								.input-group
+									.input-group-addon 
+										i.glyphicon.glyphicon-piggy-bank
+									input.form-control(type='text', placeholder='Price...', ng-model='evWeekCtrl.event.price')
+							.col-md-6.col-sm-6.col-xs-6
+								.input-group
+									.input-group-btn
+										button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+											| Type 
+											span.caret
+										ul.dropdown-menu
+											li(ng-repeat="type in evWeekCtrl.eventTypes" ng-click="evWeekCtrl.selectEventType(type)")
+												a(href="") 
+													| {{ type.title }}
+									input.form-control(type='text', aria-label='...' ng-model="evWeekCtrl.event.type.title" disabled)
+					.form-group
+						.col-md-10.col-sm-10.col-md-offset-2.col-sm-offset-2
+							.col-md-6.col-sm-6
+								.input-group
+									.input-group-btn
+										button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+											span
+												i.glyphicon.glyphicon-home
+										ul.dropdown-menu.scrollable-menu
+											li(ng-repeat="room in evWeekCtrl.rooms" ng-click="evWeekCtrl.selectRoom(room)")
+												a(href='') 
+													| {{ room.title }}
+									input.form-control(type='text', aria-label='...' ng-model="evWeekCtrl.event.room.title" placeholder="Room..." disabled)
+							.col-md-6.col-sm-6
+								.checkbox
+									label
+										input(type='checkbox', value='', ng-model='evWeekCtrl.event.isPrivate')
+										| &nbsp;Private
+					.form-group
+						.col-md-10.col-sm-10.col-md-offset-2.col-sm-offset-2
+							.col-md-6.col-sm-6
+								div(ng-dropdown-multiselect='', 
+									translation-texts='evWeekCtrl.selectConfigDevices', 
+									selected-model='evWeekCtrl.event.devices', 
+									options='evWeekCtrl.devices', 
+									extra-settings='evWeekCtrl.selectConfigDevices')
+							.col-md-6.col-sm-6
+								div(ng-dropdown-multiselect='', 
+									translation-texts='evWeekCtrl.selectConfigUsers', 
+									selected-model='evWeekCtrl.event.users', 
+									options='evWeekCtrl.users', 
+									extra-settings='evWeekCtrl.selectConfigUsers')
+.modal-footer
+	.save-area
+		.alert.alert-success.alert-dismissible(role='alert' ng-show='evWeekCtrl.formSuccess')
+			button.close(type='button', data-dismiss='alert', aria-label='Close')
+				span(aria-hidden='true')
+					i.glyphicon.glyphicon-remove
+			strong Success!
+			|  You've just saved the event! Check the calendar now.
+		.col-md-6.col-sm-6.col-xs-6
+			button.btn.btn-primary(type='submit' ng-disabled="newEventForm.$invalid" ng-click="evWeekCtrl.submitModal()") Save
+		.col-md-6.col-sm-6
+			button.btn.btn-default(ng-click="evWeekCtrl.closeModal()") Cancel

@@ -4,7 +4,7 @@ var eventRepository = require('../repositories/eventRepository');
 
 var deviceService = function(){};
 
-
+// при удалении девайса, удаляем его идентификатор из все ивентов, которые его содержат
 deviceService.prototype.delete = function(deviceId, callback){
 
 	var device;
@@ -20,9 +20,9 @@ deviceService.prototype.delete = function(deviceId, callback){
 				device = data;
 				cb();
 			});
-		},
+		}, // получаем экземпляр девайса
 
-		function(cb){
+		function(cb){ // проходим по ивентам подписанным на этот девайс и удаляем запись о нем
 			console.log('working on events');
 
 			if(device.events.length){
@@ -41,7 +41,7 @@ deviceService.prototype.delete = function(deviceId, callback){
 				cb();
 			}
 		},
-		function(cb){
+		function(cb){ // удаляем девайс
 			deviceRepository.delete(device._id, function(err, data){
 				if(err){
 					return cb(err, null);
@@ -59,30 +59,5 @@ deviceService.prototype.delete = function(deviceId, callback){
 		return;
 	});
 };
-
-// deviceService.prototype.availability = function(deviceId, dateStart, dateEnd, callback){
-// 	var dateStartMs = Date.parse(dateStart).valueOf(),
-// 		dateEndMs = Date.parse(dateEnd).valueOf();
-	
-// 	eventRepository.getByDeviceId(deviceId, function(err, events){
-// 		async.forEach(events, function(event, next) { 
-// 			//console.log(dateStartMs +' '+ event.start.valueOf() + ' ' + dateEndMs +' '+ event.end.valueOf());
-//     		if ((dateStartMs <= event.end.valueOf()) && (dateStartMs >= event.start.valueOf())){
-// 				return next(new Error('startTimeConflict'));
-// 			}
-// 			if ((dateEndMs <= event.end.valueOf()) && (dateEndMs >= event.start.valueOf())){
-// 				return next(new Error('endTimeConflict'));
-// 			}
-// 			next();	
-// 		}, function(err){
-// 			if(err){
-// 				//console.log(err);
-// 				return callback(err, {availability: 'false'});	
-// 			}
-// 			// else?? bp
-// 			return callback(null, {availability: 'true'});	
-// 		});
-// 	});
-// };
 
 module.exports = new deviceService();
