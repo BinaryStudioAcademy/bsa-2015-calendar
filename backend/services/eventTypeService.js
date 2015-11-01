@@ -4,10 +4,11 @@ var eventRepository = require('../repositories/eventRepository');
 var eventTypeService = function(){};
 
 eventTypeService.prototype.delete = function(eventTypeId, callback){
+	// операция удаления сущности - тип ивента - eventType
 
 	var eventType;
 	async.waterfall([
-		function(cb){
+		function(cb){ // получаем экземпляр конкретного eventType
 			eventTypeRepository.getById(eventTypeId, function(err, data){
 				if(err){
 					return cb(err, null);
@@ -20,7 +21,7 @@ eventTypeService.prototype.delete = function(eventTypeId, callback){
 			});
 		},
 
-		function(cb){
+		function(cb){ // удаляем запись о типе из каждого ивента
 			if(eventType.events.length){
 				eventType.events.forEach(function(eventId){
 					eventRepository.removeEventType(eventId, eventType._id, function(err, data){
@@ -38,14 +39,14 @@ eventTypeService.prototype.delete = function(eventTypeId, callback){
 			}
 		},
 
-		function(cb){
+		function(cb){ 
 			eventTypeRepository.delete(eventType._id, function(err, data){
 				if(err){
 					return cb(err, null);
 				}
 				cb(null, data);
 			});
-		}
+		} // удаляем запись об eventType из БД
 
 	], function(err, result){
 		if(err){
