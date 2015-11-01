@@ -37,7 +37,7 @@ function WeekViewController(WeekCalendarService, $scope, $uibModal) {
 		console.log(hour);
 		var createEventModal = $uibModal.open({
 			templateUrl: 'templates/weekCalendar/createEventModal.html',
-			size: 'lg'
+			size: 'md'
 			});
 	};
 
