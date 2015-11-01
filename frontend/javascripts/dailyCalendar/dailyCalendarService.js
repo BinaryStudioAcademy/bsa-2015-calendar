@@ -79,7 +79,7 @@ function DailyCalendarService($q, $resource, $http) {
 		getAllRooms: getAllRooms,
 		getAllDevices: getAllDevices,
 		getAllUsers: getAllUsers,
-		getAllEvents: getAllEvents,
-		getAllEventTypes: getAllEventTypes,
+		getAllEvents: getAllEvents/*,
+		getAllEventTypes: getAllEventTypes,*/
 	};
 }

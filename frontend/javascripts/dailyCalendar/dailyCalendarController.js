@@ -22,7 +22,6 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal) {
 
 	DailyCalendarService.getTodaysEvents().then(function(data){
 		vm.events = data;
-		var containerTop = 56;
 
 		//computing top and height values for events
 		for(var i = 0; i < vm.events.length; i++) {
@@ -34,7 +33,7 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal) {
 			temp.heightVal = 888 * (eventEnd.getTime() - eventStart.getTime()) / 86400000;
 			var now = new Date();
 			now.setHours(0,0,0,0);
-			temp.topVal = 888 * (eventStart.getTime() - now.getTime()) / 86400000 + containerTop;
+			temp.topVal = 888 * (eventStart.getTime() - now.getTime()) / 86400000;
 			vm.computedEvents.push(temp);
 		}
 
@@ -45,8 +44,12 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal) {
 			var paragraph = document.createElement('div');
 
 			paragraph.innerHTML = vm.computedEvents[c].eventAsItIs.title;
+			paragraph.className = 'event-info';
 			paragraph.style.width = '85%';
-			paragraph.style.float = 'right';
+			paragraph.style.float = 'right';	
+			paragraph.style.opacity = '1';
+			paragraph.style.color = 'black';
+			paragraph.style.display = 'none';
 
 			block.className = 'day-event-blocks';
 			block.style.height = vm.computedEvents[c].heightVal.toPrecision(3) + 'px';
@@ -81,9 +84,15 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal) {
 					self.removeEventListener('mouseleave', mouseAway);
 					self.getElementsByClassName('resize-block')[0].style.display = 'block';
 					self.style.zIndex = '0';
+
 					var zeroDate = new Date();
 					zeroDate.setHours(0, 0, 0, 0);
-					var todaysMilSec = 86400000 * (Number(self.style.top.split('px')[0]) - containerTop) / 888;
+					var todaysMilSec = 86400000 * (Number(self.style.top.split('px')[0])) / 888;
+
+					if(todaysMilSec % 300000 !== 0)
+						todaysMilSec -= todaysMilSec % 300000;
+
+					self.style.top =  888 * todaysMilSec / 86400000 + 'px';
 					var newStart = new Date(zeroDate.getTime() + todaysMilSec);
 					newStart.setSeconds(0);
 					newStart.setMilliseconds(0);
@@ -104,24 +113,27 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal) {
 					topValue = Number(topValue[0]);
 
 					if ((topValue + ((topValue + changedMouseY) - (topValue + mouseY))) > Number(self.style.top.split('px')[0]))
-						if (Number(self.style.top.split('px')[0]) < ((containerTop + 888 - Number(self.style.height.split('px')[0])).toPrecision(3))){
+						if (Number(self.style.top.split('px')[0]) < ((888 - Number(self.style.height.split('px')[0])).toPrecision(3))){
 							self.style.top = topValue + ((topValue + changedMouseY) - (topValue + mouseY))  + 'px';
 						}
 
 					if ((topValue + ((topValue + changedMouseY) - (topValue + mouseY))) < Number(self.style.top.split('px')[0]))
-						if (Number(self.style.top.split('px')[0]) > containerTop)
+						if (Number(self.style.top.split('px')[0]) > 0)
 							self.style.top = topValue + ((topValue + changedMouseY) - (topValue + mouseY))  + 'px';
 
-					if (Number(self.style.top.split('px')[0]) < containerTop)
-						self.style.top = containerTop + 'px';
+					if (Number(self.style.top.split('px')[0]) < 0)
+						self.style.top = '0px';
 
-					if (Number(self.style.top.split('px')[0]) > ((containerTop + 888 - Number(self.style.height.split('px')[0])).toPrecision(3)))
-						self.style.top = containerTop + 888 - Number(self.style.height.split('px')[0]).toPrecision(3) + 'px';
+					if (Number(self.style.top.split('px')[0]) > ((888 - Number(self.style.height.split('px')[0])).toPrecision(3)))
+						self.style.top = 888 - Number(self.style.height.split('px')[0]).toPrecision(3) + 'px';
 				}
 
 				self.addEventListener('mousemove', trackMouse);
 				self.addEventListener('mouseup', mouseAway);
 				self.addEventListener('mouseleave', mouseAway);
+			});
+			blocks[k].addEventListener('mouseover', function(){
+				this.getElementsByClassName('event-info')[0].style.marginTop = '-' + this.getElementsByClassName('event-info')[0].offsetHeight + 'px';
 			});
 		}
 
@@ -142,11 +154,16 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal) {
 
 					var zeroDate = new Date();
 					zeroDate.setHours(0, 0, 0, 0);
-					var todaysMilSec = 86400000 * (Number(parent.style.top.split('px')[0]) - containerTop) / 888;
+					var todaysMilSec = 86400000 * (Number(parent.style.top.split('px')[0])) / 888;
 					var newStart = new Date(zeroDate.getTime() + todaysMilSec);
 					newStart.setSeconds(0);
 					newStart.setMilliseconds(0);
-					var newEnd = new Date(newStart.getTime() + 86400000 * Number(parent.style.height.split('px')[0]) / 888);
+
+					var newHeight = 86400000 * Number(parent.style.height.split('px')[0]) / 888;
+					if(newHeight % 300000 !== 0) newHeight -= newHeight % 300000;
+					if(newHeight === 600000) newHeight += 300000;
+					parent.style.height = 888 * newHeight / 86400000 + 'px';
+					var newEnd = new Date(newStart.getTime() + newHeight);
 					newEnd.setSeconds(0);
 					newEnd.setMilliseconds(0);
 					alert('newStart: ' + newStart + ';\nnewEnd: ' + newEnd);
@@ -161,7 +178,7 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal) {
 					var changedMouseY = e.offsetY === undefined ? e.layerY : e.offsetY;
 					
 					if(changedMouseY > mouseY)
-						if(Number(parent.style.height.split('px')[0]) + Number(parent.style.top.split('px')[0]) < containerTop + 888)
+						if(Number(parent.style.height.split('px')[0]) + Number(parent.style.top.split('px')[0]) < 888)
 							parent.style.height = Number(parent.style.height.split('px')[0]) + changedMouseY - mouseY + 'px';
 
 					if(changedMouseY < mouseY)
@@ -174,7 +191,7 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal) {
 			}, true);
 		}
 	});
-
+/*
 	vm.showDay = function(step) {
 		var date = new Date(vm.selectedDate);
 
@@ -297,7 +314,7 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal) {
 	// 			});	
 	// 		}
 	// 	}
-	
+	*/
 }
 
 app.directive('afterRender', ['$timeout', function ($timeout) {

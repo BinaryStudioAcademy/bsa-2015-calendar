@@ -81,7 +81,7 @@ ul
 
 .day-event-blocks
   position absolute
-  width 95%
+  width 100%
   background grey
   opacity 0.3
   box-sizing border-box
@@ -95,6 +95,12 @@ ul
   resize vertical
   &:hover
     box-shadow 0 0 15px black
+    .event-info
+      display block !important
+      -webkit-transition display 0.1s linear
+      -moz-transition display 0.1s linear
+      -o-transition display 0.1s linear
+      transition display 0.1s linear
 #day-events-place
   overflow hidden
   height 888px !important
@@ -104,4 +110,3 @@ ul
   -ms-user-select none
   -o-user-select none
   user-select none
-  

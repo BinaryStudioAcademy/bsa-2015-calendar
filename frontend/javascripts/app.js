@@ -161,11 +161,12 @@ app.run(['$rootScope', '$state', 'AuthService', function($rootScope, $state, Aut
 
         console.log('STATECHANGE!');
         console.log(AuthService.getUser());
-
+/*
         if(to.auth && !AuthService.getUser()){
             evt.preventDefault();
             $state.transitionTo('signIn');          
         }
+        */
 	});
 }]);
 
