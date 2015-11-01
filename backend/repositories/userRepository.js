@@ -21,4 +21,10 @@ UserRepository.prototype.addEvent = function(userId, eventId, callback) {
 	query.exec(callback);
 };
 
+UserRepository.prototype.getByUsername = function(username, callback) {
+	var model = this.model;
+	var query = model.findOne({username:username});
+	query.exec(callback);
+};
+
 module.exports = new UserRepository();
