@@ -59,9 +59,15 @@ function DailyCalendarService($q, $resource, $http) {
 	}
 
 	function getTodaysEvents() {
+		// create current moment date object
 		var today = new Date();
+
+		// set today date to the hours, minutes, seconds, milliseconds equal to 0, the beginning of the day
 		today.setHours(0,0,0,0);
+
+		// create tommorow date object which 24 hours(86400000 mls) more than today
 		var tommorow = new Date(today.getTime() + 86400000);
+
 		return $resource('/api/eventByInterval/:gteDate/:lteDate').query({gteDate: today, lteDate: tommorow}).$promise.then(function(data){ 
 				return data; 
 			},
