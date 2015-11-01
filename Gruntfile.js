@@ -173,7 +173,7 @@ module.exports = function(grunt) {
 				src: [
 					'bower_components/bootstrap/dist/css/bootstrap.css',
 					'bower_components/font-awesome/css/font-awesome.css',
-
+					'bower_components/bootstrap-social/bootstrap-social.css'
 				],
 				dest: 'public/styles/css/libs.css'
 			}

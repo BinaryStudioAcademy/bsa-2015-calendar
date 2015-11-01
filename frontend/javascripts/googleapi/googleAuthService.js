@@ -9,7 +9,7 @@ GoogleAuthService.$inject = ['$interval', '$q'];
 
 function GoogleAuthService ($interval, $q) {
 
-	function login() {
+	function getLoginCode() {
 		var deferred = $q.defer();
 		/*var auth = gapi.auth.authorize({
 			client_id : googleConfig.CLIENTID,
@@ -50,7 +50,7 @@ function GoogleAuthService ($interval, $q) {
 	}
 
 	return {
-		login : login
+		getLoginCode : getLoginCode
 	};
 
 }
