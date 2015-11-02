@@ -2,15 +2,27 @@ var app = require('../app');
 
 app.controller('WeekViewController', WeekViewController);
 
-WeekViewController.$inject = ['WeekCalendarService','weekEventService', '$scope', '$uibModal', '$element'];
+WeekViewController.$inject = ['helpEventService', '$scope', '$uibModal','$compile', '$templateCache'];
 
-function WeekViewController(WeekCalendarService, weekEventService, $scope, $uibModal, $element) {
-	
-    var vm = this;
+function WeekViewController(helpEventService, $scope, $uibModal, $compile, $templateCache) {
+	var vm = this;
 
-	vm.timeStamps = WeekCalendarService.getTimeStamps();
-	vm.days = WeekCalendarService.getDays();
+    vm.timeStamps = helpEventService.getTimeStamps();
+    vm.days = helpEventService.getDays();
 
+    vm.daysNames = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+
+    $scope.$on('eventsUpdated', function() {
+        vm.buildEventCells(0);
+    });
+
+    $scope.$on('eventAdded', function(event, data) {
+        if(data){
+            var index = vm.eventObj.length-1;
+            vm.eventObj.push(data);
+            vm.buildEventCells(index);
+        }    
+    });
 
     vm.toggleEventInfo = function() {
         vm.eventSelected = !vm.eventSelected;
@@ -25,10 +37,45 @@ function WeekViewController(WeekCalendarService, weekEventService, $scope, $uibM
 			});
 	};
 
+    vm.buildEventCells = function(index){
+        for (var i = index; i < vm.eventObj.length; i++) { 
+            var currEvt = vm.eventObj[i];
+            var evtStart = new Date(currEvt.start);
+            var evtHour = evtStart.getHours();
+            var evtDay = (evtStart.getDay() || 7) - 1;
+            var evtCell = angular.element($('[ng-class="'+ evtHour +'"].'+ vm.daysNames[evtDay]));
+            var eventDiv = angular.element('<div class="event-cell-week"></div>'); 
+            eventDiv.text(currEvt.title);
+            var tmpl = '<div>'+currEvt.description+'</div><div>Start at: '+moment(currEvt.start).format('hh:mm')+'</div><div>End at: '+moment(currEvt.end).format('hh:mm')+'</div>';
+            $templateCache.put('evtTmpl'+i+'.html', tmpl);
+            eventDiv.attr('uib-popover-template', '"evtTmpl'+i+'.html"');
+            eventDiv.attr('popover-title', currEvt.title);
+            eventDiv.attr('popover-append-to-body', "true");
+            eventDiv.attr('trigger', 'focus');
+
+            //background color for different types of events
+            switch(currEvt.type) {
+                case('basic'):
+                    eventDiv.css('background-color', 'rgba(255, 228, 196, 0.7)');
+                    break;
+                case('general'):
+                    eventDiv.css('background-color', 'rgba(135, 206, 250, 0.7)');
+                    break;
+                case('activity'):
+                    eventDiv.css('background-color', 'rgba(60, 179, 113, 0.7)');
+                    break;
+                default:
+                    eventDiv.css('background-color', 'rgba(205, 205, 193, 0.7)');
+            }
+
+            $compile(eventDiv)($scope);
+            evtCell.append(eventDiv);
+        }
+    };
+
     vm.clearCells = function(){
-        var daysNames = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
         for(var i = 0; i<7; i++){
-            var evtCells = angular.element($('.'+ daysNames[i]));
+            var evtCells = angular.element($('.'+ vm.daysNames[i]));
             for (var j = 0; j <24; j++){
                 evtCells[j].textContent = ''; 
             }
@@ -38,54 +85,54 @@ function WeekViewController(WeekCalendarService, weekEventService, $scope, $uibM
     vm.prevWeek = function(){
         vm.clearCells();
 
-        $scope.weekStartMoment.add(-7,'d');
-        $scope.weekEndMoment.add(-7,'d');
+        vm.weekStartMoment.add(-7,'d');
+        vm.weekEndMoment.add(-7,'d');
 
-        vm.Start = new Date($scope.weekStartMoment.format("DD MMM YYYY HH:mm:ss"));    
-        vm.End = new Date($scope.weekEndMoment.format("DD MMM YYYY HH:mm:ss"));
+        vm.Start = new Date(vm.weekStartMoment.format("DD MMM YYYY HH:mm:ss"));    
+        vm.End = new Date(vm.weekEndMoment.format("DD MMM YYYY HH:mm:ss"));
 
-        $scope.selectedDate = new Date($scope.weekStartMoment.format("DD MMM YYYY HH:mm:ss"));       
-        
-        //console.log($scope.weekStartMoment.format("DD MMM YYYY HH:mm:ss"));
-        //console.log($scope.weekEndMoment.format("DD MMM YYYY HH:mm:ss"));
-        
-        WeekCalendarService.getEvents(vm.Start, vm.End).then(function(data) {
-            vm.eventObj = data;
-            $scope.$broadcast('eventsUpdated');
+        vm.selectedDate = new Date(vm.weekStartMoment.format("DD MMM YYYY HH:mm:ss"));       
+   
+        helpEventService.getEvents(vm.Start, vm.End).then(function(data) {
+            if (data !== null){
+                vm.eventObj = data;
+                console.log(data);
+                $scope.$broadcast('eventsUpdated');
+            }
         });
     };
 
     vm.nextWeek = function(){
         vm.clearCells();
 
-        $scope.weekStartMoment.add(7,'d');
-        $scope.weekEndMoment.add(7,'d');
+        vm.weekStartMoment.add(7,'d');
+        vm.weekEndMoment.add(7,'d');
 
-        vm.Start = new Date($scope.weekStartMoment.format("DD MMM YYYY HH:mm:ss"));    
-        vm.End = new Date($scope.weekEndMoment.format("DD MMM YYYY HH:mm:ss"));
+        vm.Start = new Date(vm.weekStartMoment.format("DD MMM YYYY HH:mm:ss"));    
+        vm.End = new Date(vm.weekEndMoment.format("DD MMM YYYY HH:mm:ss"));
 
-        $scope.selectedDate = new Date( $scope.weekStartMoment.format("DD MMM YYYY HH:mm:ss"));     
-       
-        //console.log($scope.weekStartMoment.format("DD MMM YYYY HH:mm:ss"));
-        //console.log($scope.weekEndMoment.format("DD MMM YYYY HH:mm:ss"));
+        vm.selectedDate = new Date( vm.weekStartMoment.format("DD MMM YYYY HH:mm:ss"));     
 
-        WeekCalendarService.getEvents(vm.Start, vm.End).then(function(data) {
-            vm.eventObj = data;
-            $scope.$broadcast('eventsUpdated');
+        helpEventService.getEvents(vm.Start, vm.End).then(function(data) {
+            if (data !== null){
+                vm.eventObj = data;
+                console.log(data);
+                $scope.$broadcast('eventsUpdated');
+            }
         });
     };
 
-    $scope.showEventDetails = function (event) {
+    vm.showEventDetails = function (event) {
         console.log(event.name);
         console.log(event.date.format('DD/MM/YYYY'));
     };
 
-    $scope.showAllDayEvents = function (day) {
+    vm.showAllDayEvents = function (day) {
         console.log(day.events);
     };
 
-    $scope.showDay = function(step) {
-        var date = new Date($scope.selectedDate);
+    vm.showDay = function(step) {
+        var date = new Date(vm.selectedDate);
 
         date.setDate(
             step === 1 ?
@@ -94,31 +141,23 @@ function WeekViewController(WeekCalendarService, weekEventService, $scope, $uibM
                 date.getDate() - 1
         );
 
-        $scope.selectedDate = date;
+        vm.selectedDate = date;
     };
 
-    $scope.showDate = function() {
-        console.log($scope.selectedDate);
+    vm.showDate = function() {
+        console.log(vm.selectedDate);
     };
 
-    $scope.toggleModal = function() {
-        $scope.modalShown = !$scope.modalShown;
+    vm.toggleModal = function() {
+        vm.modalShown = !vm.modalShown;
     };
 
-    $scope.showCloseModal = function(day, index) {
+    vm.showCloseModal = function(day, index) {
 
-        //console.log('old selected data', $scope.selectedDate);
-        //console.log($scope.weekStartMoment.format("DD MMM YYYY HH:mm:ss"));
-
-        var tmpDate = $scope.weekStartMoment.clone();
+        var tmpDate = vm.weekStartMoment.clone();
         tmpDate.add(day, 'd');
-        //console.log($scope.weekStartMoment.format("DD MMM YYYY HH:mm:ss"));
-        $scope.selectedDate = new Date(tmpDate.format("DD MMM YYYY HH:mm:ss"));
-
-        //console.log('new selected data', $scope.selectedDate);
-        //console.log(day);
-        //console.log(index);
-        $scope.modalInstance = $uibModal.open({
+        vm.selectedDate = new Date(tmpDate.format("DD MMM YYYY HH:mm:ss"));
+        vm.modalInstance = $uibModal.open({
             animation: true,
             templateUrl: 'templates/weekCalendar/editEventWeekTemplate.html',
             controller: 'editEventWeekController',
@@ -126,22 +165,63 @@ function WeekViewController(WeekCalendarService, weekEventService, $scope, $uibM
             bindToController: true,
             resolve: {
                 rooms: function () {
-                    return $scope.availableRooms;
+                    return vm.availableRooms;
                 },
                 devices: function () {
-                    return $scope.availableInventory;
+                    return vm.availableInventory;
                 },
                 users: function () {
-                    return $scope.users;
+                    return vm.users;
                 },
                 selectedDate: function () {
-                    return $scope.selectedDate;
+                    return vm.selectedDate;
                 },
                 eventTypes: function () {
-                    return $scope.eventTypes;
+                    return vm.eventTypes;
                 },
             }
         });
+    };
+
+     vm.pullData = function() {
+
+        helpEventService.getEvents(vm.Start, vm.End).then(function(data) {
+            if (data !== null){
+                vm.eventObj = data;
+                console.log(data);
+                $scope.$broadcast('eventsUpdated');
+            }
+        });
+
+        helpEventService.getRooms().then(function(data) {
+            if (data !== null){
+                vm.availableRooms = data;
+            }
+        });
+
+        helpEventService.getDevices().then(function(data) {
+            if (data !== null){
+                vm.availableInventory = data;
+            }
+        });
+
+        helpEventService.getUsers().then(function(data) {
+            if (data !== null){
+                vm.users  = data;
+            }
+        });
+
+        helpEventService.getEventTypes().then(function(data) {
+            if (data !== null){
+                vm.eventTypes = data;
+            }
+        });
+
+        // helpEventService.getAllEvents().then(function(data) {
+        //     if (data !== null){
+        //         vm.allEvents  = data;
+        //     }
+        // });
     };
 
     init();
@@ -149,100 +229,16 @@ function WeekViewController(WeekCalendarService, weekEventService, $scope, $uibM
     function init() {
 
         var nowMoment = moment();
-        $scope.weekEndMoment = moment({hour: 23, minute: 59});
-        $scope.weekEndMoment.add(7-nowMoment.isoWeekday(), 'd');
-        $scope.weekStartMoment = moment({hour: 0, minute: 0});
-        $scope.weekStartMoment.add(-nowMoment.isoWeekday() +1, 'd');
-        //console.log(weekEndMoment, weekStartMoment, nowMoment);
-        vm.Start = new Date($scope.weekStartMoment.format("DD MMM YYYY HH:mm:ss"));    
-        vm.End = new Date($scope.weekEndMoment.format("DD MMM YYYY HH:mm:ss"));
+        vm.weekEndMoment = moment({hour: 23, minute: 59});
+        vm.weekEndMoment.add(7-nowMoment.isoWeekday(), 'd');
+        vm.weekStartMoment = moment({hour: 0, minute: 0});
+        vm.weekStartMoment.add(-nowMoment.isoWeekday() +1, 'd');
+        vm.Start = new Date(vm.weekStartMoment.format("DD MMM YYYY HH:mm:ss"));    
+        vm.End = new Date(vm.weekEndMoment.format("DD MMM YYYY HH:mm:ss"));
 
-        $scope.selectedDate = new Date($scope.weekStartMoment.format("DD MMM YYYY HH:mm:ss"));     
-        //console.log($scope.weekStartMoment.format("DD MMM YYYY HH:mm:ss"));
-        WeekCalendarService.getEvents(vm.Start, vm.End).then(function(data) {
-            vm.eventObj = data;
-            $scope.$broadcast('eventsUpdated');
-        });
-
-
-        // $scope.timeStamps = weekEventService.getTimeStamps();
-        // var todayDate = new Date();
-
-        // $scope.selectedDate = $scope.selectedDate || todayDate;
-        // $scope.eventSelected = false;
-        // $scope.modalShown = false;
-        // $scope.sidebarStyle = true;
+        vm.selectedDate = new Date(vm.weekStartMoment.format("DD MMM YYYY HH:mm:ss"));     
 
         // //will be pulled from server 
-        getRooms();
-        getInventory();
-        getUsers();
-        getAllEvents();
-        getEventTypes();
-    }
-    
-    function getRooms() {
-        weekEventService.getAllRooms()
-            .$promise.then(
-                function(response) {
-                    console.log('success Total rooms: ', response.length);
-                    $scope.availableRooms = response;
-                },
-                function(response) {
-                    console.log('failure', response);
-                }
-            );
-    }
-
-    function getInventory() {
-        weekEventService.getAllDevices()
-            .$promise.then(
-                function(response) {
-                    console.log('success Inventory items: ', response.length);
-                    $scope.availableInventory = response;
-                },
-                function(response) {
-                    console.log('failure', response);
-                }
-            );
-    }
-
-    function getUsers() {
-        weekEventService.getAllUsers()
-            .$promise.then(
-                function(response) {
-                    console.log('success Number of Users: ', response.length);
-                    $scope.users = response;
-                },
-                function(response) {
-                    console.log('failure', response);
-                }
-            );
-    }
-
-    function getEventTypes() {
-        weekEventService.getAllEventTypes()
-            .$promise.then(
-                function(response) {
-                    console.log('success Current number of types: ', response.length);
-                    $scope.eventTypes = response;
-                },
-                function(response) {
-                    console.log('failure', response);
-                }
-            );
-    }
-
-    function getAllEvents() {
-        weekEventService.getAllEvents()
-            .$promise.then(
-                function(response) {
-                    console.log('success Number of Events: ', response.length);
-                    $scope.allEvents = response;
-                },
-                function(response) {
-                    console.log('failure', response);
-                }
-            );
+        vm.pullData();
     }
 }

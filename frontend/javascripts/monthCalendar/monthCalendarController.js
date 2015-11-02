@@ -12,10 +12,6 @@ function MonthController($scope, monthEventService,  $timeout, $q, $uibModal) {
 // app.controller("MonthController", function ($scope) {
     //$scope.day = moment();
 
-    $scope.doubleClick = function() {
-      alert('Double Click');
-      console.log('click');
-    };
 
     $scope.maxEventNameLength = 18;
     $scope.maxDisplayEventsNumber = 3;
@@ -79,12 +75,6 @@ function MonthController($scope, monthEventService,  $timeout, $q, $uibModal) {
             }
         });
     };
-
-    // vm.getRowHeight = function () {
-    //  var tableRow = $('#calendar tr');
-    //  vm.rowHeight = tableRow.outerHeight();
-    //  alert(vm.rowHeight);
-    // };
 
     init();
 
