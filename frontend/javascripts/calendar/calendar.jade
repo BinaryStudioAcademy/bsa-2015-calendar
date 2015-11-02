@@ -114,6 +114,7 @@
 					br
 					li
 						a(ui-sref=".createNewEventType" ng-click="calendarCtrl.toggleMode()") Event types
+			a(ui-sref="signIn" ng-click="calendarCtrl.logOut()") Logout
 		.col-sm-10
 			ui-view#calendar-content
 	.container_calendar_footer

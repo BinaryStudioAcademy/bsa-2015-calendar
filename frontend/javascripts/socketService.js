@@ -1,22 +1,48 @@
-// var app = require('./app');
+var app = require('./app');
 
-// app.factory('socketFactory', ['socketFactory', function(socketFactory){
-// 	return socketFactory();
-// }])
+app.factory('socketService', ['socketFactory', 'alertify', function(socketFactory, alertify){
+        var socket = socketFactory();
 
+        socket.on('add device notification', function(device){
 
-// var socket = io.connect();
-// console.log('io connected');
+            console.log(device);
+            console.log('SOCKETIO: NEW DEVICE');
+            alertify.log("New device has been added");
+        });
 
-// socket.on('event added', function(event){
-// 	console.log('event added: ' + event);
-// });
+        socket.on('update device notification', function(device){
+            console.log(device);
+            alertify.log("Device has been updated");
+        });
 
-// socket.on('user added', function(user){
-// 	console.log('user added: ' + user);
-// });
+        socket.on('delete device notification', function(device){
+            alertify.log("Device has been deleted");
+        });
 
-// socket.on('room deleted', function(room){
-// 	console.log('room deleted: ' + room);
-// });
-	
+        socket.on('add room notification', function(room){
+            alertify.log('New room has been added');
+        });
+
+        socket.on('update room notification', function(room){
+            alertify.log('Romm has been updated');
+        });
+
+        socket.on('delete room notification', function(room){
+            alertify.log('Room has been deleted');
+        });
+
+        socket.on('add event notification', function(event){
+            console.log('event has been added');
+            alertify.log('Event has been created');
+        }); 
+
+        socket.on('update event notification', function(event){
+            alertify.log('Event has been updated');
+        });
+        
+        socket.on('delete event notification', function(event){
+            alertify.log('Event has been deleted');
+        });                                    
+
+        return  socket;
+}]);
