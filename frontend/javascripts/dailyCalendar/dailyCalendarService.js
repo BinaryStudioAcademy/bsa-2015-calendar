@@ -75,6 +75,10 @@ function DailyCalendarService($q, $resource, $http) {
 		return resourceUsers.query();
 	}
 
+	function getAllEventTypes() {
+		return resourceEventTypes.query();
+	}
+
 	function getTodaysEvents() {
 		// create current moment date object
 		var today = new Date();
@@ -102,7 +106,7 @@ function DailyCalendarService($q, $resource, $http) {
 		getAllRooms: getAllRooms,
 		getAllDevices: getAllDevices,
 		getAllUsers: getAllUsers,
-		getAllEvents: getAllEvents/*,
-		getAllEventTypes: getAllEventTypes,*/
+		getAllEvents: getAllEvents,
+		getAllEventTypes: getAllEventTypes,
 	};
 }
