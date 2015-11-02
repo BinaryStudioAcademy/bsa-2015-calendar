@@ -2,11 +2,20 @@ var app = require('../app');
 
 app.controller('editEventMonthController', editEventMonthController);
 
-editEventMonthController.$inject = ['$rootScope','monthEventService', '$timeout', '$modalInstance', 'rooms', 'devices', 'users', 'selectedDate', 'eventTypes'];
+editEventMonthController.$inject = ['socketService', 'alertify', 'DailyCalendarService', '$rootScope','monthEventService', '$timeout', '$modalInstance', 'rooms', 'devices', 'users', 'selectedDate', 'eventTypes'];
 
-function editEventMonthController($rootScope, monthEventService, $timeout, $modalInstance, rooms, devices, users, selectedDate, eventTypes) {
+function editEventMonthController(socketService, alertify, DailyCalendarService, $rootScope, monthEventService, $timeout, $modalInstance, rooms, devices, users, selectedDate, eventTypes) {
 
 	var vm = this;
+
+	vm.activeTab = function(tab){
+		if(tab === 'plan'){
+			vm.isPlan = true;
+		} else {
+			vm.isPlan = false;
+		}
+		console.log('isPlan', vm.isPlan);
+	};
 
 	vm.weekDays = [
 		{ name: 'Mo', selected: false },
@@ -21,7 +30,6 @@ function editEventMonthController($rootScope, monthEventService, $timeout, $moda
 	vm.planIntervals = [];
 
 	vm.computeIntervals = function(selectedDay){
-		vm.isPlan = true;
 		var selectIndex = vm.weekDays.indexOf(selectedDay);
 		console.log('selectIndex', selectIndex);
 
@@ -30,6 +38,14 @@ function editEventMonthController($rootScope, monthEventService, $timeout, $moda
 			startDay = 6;
 		}
 		console.log('start day', startDay);
+
+		if(!vm.planRoom && selectedDay){
+			if(selectedDay.name != vm.weekDays[startDay].name){
+				alertify.error('Please choose a room for your events');
+				selectedDay.selected = false;
+				return;				
+			}
+		}
 
 		vm.weekDays[startDay].selected = true;
 		// console.log(vm.weekDays);

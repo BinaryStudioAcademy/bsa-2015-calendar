@@ -1,10 +1,10 @@
 .modal-body.clearfix
 	button.close(type='button' ng-click='ModalCtrl.closeModal()') ×
 	ul.nav.nav-tabs(role='tablist')
-		li.active(role='presentation')
+		li.active(role='presentation' ng-click="ModalCtrl.activeTab('event')")
 			a(href="#event" aria-controls="event" role="tab" data-toggle="tab")
 				| New event
-		li(role='presentation' )
+		li(role='presentation' ng-click="ModalCtrl.activeTab('plan')")
 			a(href="#plan" aria-controls="plan" role="tab" data-toggle="tab")
 				| New plan
 	.tab-content
