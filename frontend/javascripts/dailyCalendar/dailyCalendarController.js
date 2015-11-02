@@ -85,7 +85,15 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal, socket
 				eventTypes: function () {
 					return vm.eventTypes;
 				},
+				allEvents: function () {
+					return vm.allEvents;
+				}
 			}
+		});
+
+		vm.modalInstance.result.then(function () {
+			filterEventsByTodayDate();
+			mapEvents();
 		});
 	};
 
