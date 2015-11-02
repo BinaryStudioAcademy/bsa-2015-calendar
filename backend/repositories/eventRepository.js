@@ -9,6 +9,25 @@ function EventRepository() {
 
 EventRepository.prototype = new Repository();
 
+Repository.prototype.getAllPop = function(callback){
+	var model = this.model;
+	var query = model.find().populate('room devices users');
+	query.exec(callback);
+};
+
+Repository.prototype.getByIdPop = function(id, callback){
+	var model = this.model;
+	var query = model.findOne({_id:id}).populate('room devices users');
+	query.exec(callback);
+};
+
+EventRepository.prototype.getByIntervalPop = function(gteDate,lteDate, callback){
+	var model = this.model;
+	var query = model.find( {"start": {"$gte": gteDate, "$lte": lteDate}}).sort({"start": 1}).populate('room devices users');
+	query.exec(callback);
+};
+
+
 EventRepository.prototype.getByDateStart = function(date, callback){
 	var model = this.model;
 	var query = model.find({"start":date});

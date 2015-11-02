@@ -22,13 +22,11 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal, socket
 
 		vm.selectedDate = date;
 
-		// filterEventsByTodayDate();
+		filterEventsByTodayDate();
 
-		// mapTimeStamps(vm.timeStamps, vm.todayEvents);
+		mapTimeStamps(vm.timeStamps, vm.todayEvents);
 
-		// mapEventsByStartTime(vm.timeStamps);
-
-		getAllEvents();
+		mapEventsByStartTime(vm.timeStamps);
 
 	};
 
@@ -82,27 +80,6 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal, socket
 			controllerAs: 'ModalCtrl',
 			bindToController: true,
 			resolve: {
-				event: function () {
-					return vm.event;
-				},
-				rooms: function () {
-					return vm.availableRooms;
-				},
-				devices: function () {
-					return vm.availableInventory;
-				},
-				users: function () {
-					return vm.users;
-				},
-				selectedDate: function () {
-					return vm.selectedDate;
-				},
-				eventTypes: function () {
-					return vm.eventTypes;
-				},
-				todayEvents: function () {
-					return vm.todayEvents;
-				},
 				dayViewObject: function() {
 					return {
 						event: vm.event,
@@ -111,16 +88,16 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal, socket
 						users: vm.users,
 						selectedDate: vm.selectedDate,
 						eventTypes: vm.eventTypes,
-						todayEvents: vm.todayEvents,
+						allEvents: vm.allEvents,
 					};
 				}
 			}
 		});
 
 		vm.modalInstance.result.then(function () {
+			filterEventsByTodayDate();
 			mapTimeStamps(vm.timeStamps, vm.todayEvents);
 			mapEventsByStartTime(vm.timeStamps);
-			// vm.dropEventInfo(vm.selectedDate);
 			console.log(vm.eventsByStart);
 		});
 	};
