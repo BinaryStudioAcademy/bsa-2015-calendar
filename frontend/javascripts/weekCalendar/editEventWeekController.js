@@ -127,7 +127,9 @@ function editEventWeekController(socketService, alertify, DailyCalendarService, 
 			vm.plan.intervals = [];
 			vm.plan.rooms = [];
 			for(i = 0; i < vm.planIntervals.length; i++){
-				vm.plan.rooms.push(vm.planRoom._id);
+				if(vm.planRoom){
+					vm.plan.rooms.push(vm.planRoom._id);
+				}
 				vm.plan.intervals.push(86400000 * vm.planIntervals[i]);
 			}
 			console.log('plan intervals: ', vm.plan.intervals);
@@ -215,7 +217,8 @@ function editEventWeekController(socketService, alertify, DailyCalendarService, 
 					dropEventInfo();
 					console.log('success', response);
 
-					socketService.emit('add event', { event : event });	
+					//socketService.emit('add event', { event : event });	
+					$rootScope.$broadcast('eventAdded', response);
 
 					$timeout(function() {
 						$modalInstance.close();
@@ -244,8 +247,8 @@ function editEventWeekController(socketService, alertify, DailyCalendarService, 
 					vm.formSuccess = true;
 					dropEventInfo();
 					console.log('success', response);
-
-					socketService.emit('add plan', { plan : plan });	
+					//socketService.emit('add plan', { plan : plan }); ?
+					$rootScope.$broadcast('planAdded', response);
 
 					$timeout(function() {
 						$modalInstance.close();

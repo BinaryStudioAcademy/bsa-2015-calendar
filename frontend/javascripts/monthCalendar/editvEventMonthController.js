@@ -215,7 +215,9 @@ function editEventMonthController(socketService, alertify, DailyCalendarService,
 					dropEventInfo();
 					console.log('success', response);
 
-					socketService.emit('add event', { event : event });	
+
+					//socketService.emit('add event', { event : event });	
+					$rootScope.$broadcast('eventAdded', response);
 
 					$timeout(function() {
 						$modalInstance.close();
@@ -245,8 +247,8 @@ function editEventMonthController(socketService, alertify, DailyCalendarService,
 					dropEventInfo();
 					console.log('success', response);
 
-					socketService.emit('add plan', { plan : plan });	
-
+					//socketService.emit('add plan', { plan : plan });	
+					$rootScope.$broadcast('planAdded', response);
 					$timeout(function() {
 						$modalInstance.close();
 						vm.formSuccess = false;
