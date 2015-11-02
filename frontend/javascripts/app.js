@@ -1,4 +1,4 @@
-var app = angular.module('calendar-app', ['ui.router', /*'ngAlertify', 'btford.socket-io', */'ngResource', 'ui.bootstrap', 'ngAnimate'/*, 'angularjs-dropdown-multiselect'*/])
+var app = angular.module('calendar-app', ['ui.router', 'ngAlertify', 'btford.socket-io', 'ngResource', 'ui.bootstrap', 'ngAnimate', 'angularjs-dropdown-multiselect'])
     .config(['$stateProvider', '$urlRouterProvider', '$resourceProvider', '$httpProvider', '$locationProvider',
         function ($stateProvider, $urlRouterProvider, $resourceProvider, $httpProvider, $locationProvider) {
             $urlRouterProvider.otherwise('/');
@@ -183,12 +183,12 @@ app.run(['$rootScope', '$state', 'AuthService', '$anchorScroll', function($rootS
         //console.log('STATECHANGE!');
         //console.log('AUTHService.getUser(): ', AuthService.getUser());
 
-        /*
+        
         if(to.auth && !AuthService.getUser()){
             evt.preventDefault();
             $state.transitionTo('signIn');          
         }
-        */
+        
 	});
     $anchorScroll.yOffset = 100;
 }]);
