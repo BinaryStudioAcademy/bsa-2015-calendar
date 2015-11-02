@@ -1,0 +1,41 @@
+.events-search-bar, .events-list
+	font-family 'Geneva', sans-serif
+	border 1px solid #DEDEDE
+	border-radius 4px
+	height 600px
+	margin-top 5px
+	overflow auto
+	padding-top 7px
+	#radio-group
+		height 180px
+		width 100%
+		border 1px solid #DEDEDE
+		border-radius 4px
+		padding 10px 5px
+		margin-bottom 20px;
+		h4
+			text-align center
+	#events-search-field
+		margin-bottom 20px
+		h4
+			text-align center
+	#event-table
+		width 100%
+		tr
+			border-bottom 1px solid #DEDEDE
+		a
+			text-decoration none
+			font-family 'Geneva', sans-serif
+			&:hover
+				text-decoration underline
+		.event-date-cell, .event-duration-cell
+			width 20%
+			text-align center
+		.event-description-cell
+			width 60%
+.events-list
+	border none
+	height initial
+@media screen and (max-width 768px)
+	.events-search-bar
+		height initial
