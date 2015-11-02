@@ -80,35 +80,35 @@ function MonthController($scope, helpEventService,  $timeout, $q, $uibModal) {
 
     vm.pullData = function() {
 
-        helpEventService.getEvents(vm.Start, vm.End).then(function(data) {
-            if (data !== null){
-                vm.eventObj = data;
-                console.log(data);
-                $scope.$broadcast('eventsUpdated');
-            }
-        });
+        // helpEventService.getEvents($scope.Start, $scope.End).then(function(data) {
+        //     if (data !== null){
+        //         $scope.eventObj = data;
+        //         console.log(data);
+        //         $scope.$broadcast('eventsUpdated');
+        //     }
+        // });
 
         helpEventService.getRooms().then(function(data) {
             if (data !== null){
-                vm.availableRooms = data;
+                $scope.availableRooms = data;
             }
         });
 
         helpEventService.getDevices().then(function(data) {
             if (data !== null){
-                vm.availableInventory = data;
+                $scope.availableInventory = data;
             }
         });
 
         helpEventService.getUsers().then(function(data) {
             if (data !== null){
-                vm.users  = data;
+                $scope.users  = data;
             }
         });
 
         helpEventService.getEventTypes().then(function(data) {
             if (data !== null){
-                vm.eventTypes = data;
+                $scope.eventTypes = data;
             }
         });
 

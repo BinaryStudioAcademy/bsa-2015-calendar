@@ -15,6 +15,10 @@ planService.prototype.availability = function(data, callback){
 	var eventDuration  = Date.parse(data.timeEnd).valueOf() - Date.parse(data.timeStart).valueOf();
 	var intervalsIterator = 0;
 
+	if (data.intervals === undefined){
+		return new Error('plan needed intervals');
+	}
+
 	async.whilst(function () { // проверки выполняются для каждого экземпляра "будущего" ивента
 			return eventTimeStart <= planDateEnd;
 	},
