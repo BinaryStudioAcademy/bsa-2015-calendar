@@ -416,11 +416,28 @@ eventService.prototype.updateStartEnd = function(eventId, data, callback){
 		function(cb){ // проверяем доступность комнаты для нового инветрала
 			if(event.room){
 				eventRepository.checkRoomAvailability(event.room, data.start, data.end, function(err, result){
+
 					if(err){
 						return cb(err);
 					}
 					if(result.length){
-						return cb(new Error('date/time conflict with room ' + event.room + '\nstart:' + data.start + ' \nend:' + data.end), result);
+						if(result.length == 1){
+							if(result[0]._id != eventId){
+								console.log('FAILED for room');
+								console.log('put ev id = ', eventId);
+								console.log('find ev id = ', result[0]._id);
+								return cb(new Error('date/time conflict with room ' + data.room + '\nstart:' + data.start + ' \nend:' + data.end+ '\n' +  result), result);
+							}
+							else{
+								console.log('SUCCESS for room');
+								console.log('put ev id = ', eventId);
+								console.log('find ev id = ', result[0]._id);
+							}
+						}
+						else {
+							console.log('more > 1 conflict results');
+							return cb(new Error('date/time conflict with room ' + data.room + '\nstart:' + data.start + ' \nend:' + data.end + '\n' +  result), result);
+						}
 					}
 					cb();
 				});
@@ -437,7 +454,23 @@ eventService.prototype.updateStartEnd = function(eventId, data, callback){
 						return cb(err);
 					}
 					if(result.length){
-						return cb(new Error('date/time conflict with device ' + deviceId + '\nstart:' + data.start + ' \nend:' + data.end), result);
+						if(result.length == 1){
+							if(result[0]._id != eventId){
+								console.log('FAILED for device');
+								console.log('put ev id = ', eventId);
+								console.log('find ev id = ', result[0]._id);
+								return cb(new Error('date/time conflict with device ' + deviceId + '\nstart:' + data.start + ' \nend:' + data.end+ '\n' +  result), result);
+							}
+							else{
+								console.log('SUCCESS for device');
+								console.log('put ev id = ', eventId);
+								console.log('find ev id = ', result[0]._id);
+							}
+						}
+						else {
+							console.log('more > 1 conflict results');
+							return cb(new Error('date/time conflict with device ' + deviceId + '\nstart:' + data.start + ' \nend:' + data.end + '\n' +  result), result);
+						}
 					}
 					next();
 				});
@@ -462,7 +495,7 @@ eventService.prototype.updateStartEnd = function(eventId, data, callback){
 		}
 	], function(err, result){
 		if(err){
-			return callback(err, {success: false});
+			return callback(err, result);
 		}
 		return callback(null, {success: true});
 	});
