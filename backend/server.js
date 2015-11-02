@@ -66,5 +66,4 @@ var socketio = require('./io/socketServer.js')(server);
 
 console.log('server start on port 3080');
 
-
 module.exports = app;
