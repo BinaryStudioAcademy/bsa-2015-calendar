@@ -95,6 +95,7 @@ app.directive("calendar", function ($http,$rootScope) {
         var eventObj = {};
 
         //GET WEEK EVENTS
+        console.log(gteDate,lteDate);
         var evtPromise = $http.get('/api/eventByInterval/' + gteDate + '/' + lteDate)       
         .then(function (response) {
             var events = response.data;

@@ -1,4 +1,5 @@
 var app = require('../app');
+    moment = require('moment');
 
 app.controller('WeekViewController', WeekViewController);
 
@@ -183,7 +184,7 @@ function WeekViewController(helpEventService, $scope, $uibModal, $compile, $temp
         });
     };
 
-     vm.pullData = function() {
+    vm.pullData = function() {
 
         helpEventService.getEvents(vm.Start, vm.End).then(function(data) {
             if (data !== null){

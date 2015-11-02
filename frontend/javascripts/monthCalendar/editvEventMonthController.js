@@ -1,10 +1,10 @@
 var app = require('../app');
 
-app.controller('editEventMonthController', editEventMonthController);
+app.controller('editEventWeekController', editEventWeekController);
 
-editEventMonthController.$inject = ['socketService', 'alertify', 'DailyCalendarService', '$rootScope','monthEventService', '$timeout', '$modalInstance', 'rooms', 'devices', 'users', 'selectedDate', 'eventTypes'];
+editEventWeekController.$inject = ['socketService', 'alertify', 'helpEventService', '$rootScope', '$scope', '$timeout', '$modalInstance', 'rooms', 'devices', 'users', 'selectedDate', 'eventTypes'];
 
-function editEventMonthController(socketService, alertify, DailyCalendarService, $rootScope, monthEventService, $timeout, $modalInstance, rooms, devices, users, selectedDate, eventTypes) {
+function editEventWeekController(socketService, alertify, helpEventService, $rootScope, $scope, $timeout, $modalInstance, rooms, devices, users, selectedDate, eventTypes) {
 
 	var vm = this;
 
@@ -48,13 +48,9 @@ function editEventMonthController(socketService, alertify, DailyCalendarService,
 		}
 
 		vm.weekDays[startDay].selected = true;
-		// console.log(vm.weekDays);
 
 		var currentDay, i;
 		vm.planIntervals = [];
-
-		//vm.daysSelectedCount = vm.
-
 
 		if(startDay === 0){
 			currentDay = 0;
@@ -85,9 +81,6 @@ function editEventMonthController(socketService, alertify, DailyCalendarService,
 
 		} else {
 			currentDay = startDay;
-			// console.log('current day', currentDay);
-			//console.log('weekDays: ', vm.weekDays);
-
 			for(i = currentDay + 1; i < 7; i++){
 				if(vm.weekDays[i].selected){
 					vm.planIntervals.push(i - currentDay);
@@ -127,11 +120,9 @@ function editEventMonthController(socketService, alertify, DailyCalendarService,
 			vm.plan.intervals = [];
 			vm.plan.rooms = [];
 			for(i = 0; i < vm.planIntervals.length; i++){
-
 				if(vm.planRoom){
 					vm.plan.rooms.push(vm.planRoom._id);
 				}
-
 				vm.plan.intervals.push(86400000 * vm.planIntervals[i]);
 			}
 			console.log('plan intervals: ', vm.plan.intervals);
@@ -202,37 +193,26 @@ function editEventMonthController(socketService, alertify, DailyCalendarService,
 	};
 
 	vm.selectPlanRoom = function(title){
-		// vm.plan.rooms = [];
-		// vm.plan.rooms.push(title);
 		console.log(title);
 		vm.planRoom = title;
 	};
 
 	function submitEvent(event) {
 		console.log('submiting an event...');
-		DailyCalendarService.saveEvent(event)
-			.$promise.then(
 
-				function(response) {
+		helpEventService.saveEvent(event).then(function(response) {
+           	vm.formSuccess = true;
+			dropEventInfo();
+			console.log('success', response);
 
-					vm.formSuccess = true;
-					dropEventInfo();
-					console.log('success', response);
+			socketService.emit('add event', { event : response });	
+			$rootScope.$broadcast('eventAdded', response);
 
-
-					socketService.emit('add event', { event : event });	
-					$rootScope.$broadcast('eventAdded', response);
-
-					$timeout(function() {
-						$modalInstance.close();
-						vm.formSuccess = false;
-					}, 2500);
-				},
-
-				function(response) {
-					console.log('failure', response);
-				}	
-			);
+			$timeout(function() {
+				$modalInstance.close();
+				vm.formSuccess = false;
+			}, 1500);
+        });
 	}
 
 	function submitPlan(plan){
@@ -243,26 +223,19 @@ function editEventMonthController(socketService, alertify, DailyCalendarService,
 
 		console.log('plan', plan);
 
-		DailyCalendarService.savePlan(plan)
-			.$promise.then(
-				function(response) {
+		helpEventService.savePlan(plan).then(function(response) {
+           	vm.formSuccess = true;
+			dropEventInfo();
+			console.log('success', response);
 
-					vm.formSuccess = true;
-					dropEventInfo();
-					console.log('success', response);
+			socketService.emit('add plan', { planEvents : response });	
+			$rootScope.$broadcast('planAdded', response);
 
-					socketService.emit('add plan', { plan : plan });	
-					$rootScope.$broadcast('planAdded', response);
-					$timeout(function() {
-						$modalInstance.close();
-						vm.formSuccess = false;
-					}, 1500);
-				},
-
-				function(response) {
-					console.log('failure', response);
-				}
-			);
+			$timeout(function() {
+				$modalInstance.close();
+				vm.formSuccess = false;
+			}, 1500);
+        });
 	}
 
 	function dropEventInfo(selDate) {
@@ -270,7 +243,6 @@ function editEventMonthController(socketService, alertify, DailyCalendarService,
 		var newEventDate = selDate || new Date();
 		newEventDate.setHours(0);
 		newEventDate.setMinutes(0);
-
 
 		vm.plan.title = '';
 		vm.plan.description = '';
@@ -293,7 +265,6 @@ function editEventMonthController(socketService, alertify, DailyCalendarService,
 		vm.event.isPrivate = false;
 		vm.event.type = undefined;
 		vm.event.price = undefined;
-
 
 		vm.computeIntervals();
 	}
