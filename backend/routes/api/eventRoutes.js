@@ -11,6 +11,14 @@ module.exports = function(app) {
 		});
 	}, apiResponse);
 
+	app.get('/api/eventpop/:id', function(req, res, next) {
+		eventRepository.getByIdPop(req.params.id, function(err, data) {
+			res.data = data;
+			res.err = err;
+			next();
+		});
+	}, apiResponse);
+
 	app.get('/api/event/plan/:id', function(req, res, next) {
 		eventRepository.getByPlanId(req.params.id, function(err, data) {
 			res.data = data;
@@ -29,6 +37,14 @@ module.exports = function(app) {
 
 	app.get('/api/event/', function(req, res, next){
 		eventRepository.getAll(function(err, data){
+			res.data = data;
+			res.err = err;
+			next();
+		});
+	}, apiResponse);
+
+	app.get('/api/eventpop', function(req, res, next){
+		eventRepository.getAllPop(function(err, data){
 			res.data = data;
 			res.err = err;
 			next();
@@ -69,6 +85,14 @@ module.exports = function(app) {
 
 	app.get('/api/eventByInterval/:gteDate/:lteDate', function(req, res, next){
 		eventRepository.getByInterval(req.params.gteDate, req.params.lteDate, function(err, data){
+			res.data = data;
+			res.err = err;
+			next();
+		});
+	}, apiResponse);	
+
+	app.get('/api/eventByIntervalpop/:gteDate/:lteDate', function(req, res, next){
+		eventRepository.getByIntervalPop(req.params.gteDate, req.params.lteDate, function(err, data){
 			res.data = data;
 			res.err = err;
 			next();

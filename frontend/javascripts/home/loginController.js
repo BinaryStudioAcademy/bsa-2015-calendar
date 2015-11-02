@@ -3,7 +3,20 @@
  */
 var app = require('../app');
 
-app.controller('LoginController', function ($scope, $state, alertify, LoginService, AuthService) {
+app.controller('LoginController', LoginController);
+
+LoginController.$inject = ['$scope', '$state', 'alertify','LoginService', 'AuthService', 'GoogleAuthService'];
+
+function LoginController($scope, $state, alertify, LoginService, AuthService, GoogleAuthService) {
+
+    $scope.googleLoginCode = "";
+
+    $scope.googleSignUp = function() {
+        console.log(GoogleAuthService);
+        GoogleAuthService.getLoginCode().then(function (code) {
+            $scope.googleLoginCode = code;
+        });
+    };
 
     $scope.signOut = function(){
         LoginService.signOut();
@@ -47,7 +60,8 @@ app.controller('LoginController', function ($scope, $state, alertify, LoginServi
             username: $scope.user.newUsername,
             name: $scope.user.newUsername,
             password: $scope.user.newPassword,
-            email: $scope.user.newEmail
+            email: $scope.user.newEmail,
+            googleCode : $scope.googleLoginCode
         };
 
         console.log('in signup');
@@ -74,4 +88,4 @@ app.controller('LoginController', function ($scope, $state, alertify, LoginServi
         $scope.signUpForm.$setPristine();
         $scope.signUpForm.$setUntouched();
     };
-});
+}

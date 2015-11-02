@@ -329,7 +329,7 @@ planService.prototype.update = function(planId, data, callback){
 					addEventsCount++;
 
 					eventTimeStart += plan.intervals[intervalsIterator];
-					eventTimeStart += eventDuration;
+					//eventTimeStart += eventDuration;
 
 					intervalsIterator++;
 

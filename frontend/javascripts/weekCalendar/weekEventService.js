@@ -2,7 +2,7 @@ var app = require('../app');
 
 app.factory('weekEventService', weekEventService);
 
-monthEventService.$inject = ['$resource', '$q', '$timeout'];
+weekEventService.$inject = ['$resource', '$q', '$timeout'];
 
 function weekEventService($resource, $timeout, $q) {
 

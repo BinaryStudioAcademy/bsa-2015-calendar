@@ -2,50 +2,80 @@ var app = require('../app');
 
 app.controller('WeekViewController', WeekViewController);
 
-WeekViewController.$inject = ['WeekCalendarService','weekEventService', '$scope', '$uibModal'];
+WeekViewController.$inject = ['WeekCalendarService','weekEventService', '$scope', '$uibModal', '$element'];
 
-function WeekViewController(WeekCalendarService, weekEventService, $scope, $uibModal) {
-	var vm = this;
+function WeekViewController(WeekCalendarService, weekEventService, $scope, $uibModal, $element) {
+	
+    var vm = this;
 
 	vm.timeStamps = WeekCalendarService.getTimeStamps();
 	vm.days = WeekCalendarService.getDays();
 
 
-	vm.toggleEventInfo = function() {
-		vm.eventSelected = !vm.eventSelected;
-	};
-
-
-	var now = new Date();
-	var now2 = new moment();
-	console.log(now2);
-
-	var startDay = 1;
-	var d = now.getDay();
-	var weekStart = new Date(now.valueOf() - (d<=0 ? 7-startDay:d-startDay)*86400000);
-	$scope.selectedDate = weekStart;
-	// var weektue = new Date(weekStart.valueOf() + 1*86400000);	
-	var weekEnd = new Date(weekStart.valueOf() + 6*86400000);
-
-	vm.Start = weekStart;
-	// vm.Tue = weektue;
-	vm.End = weekEnd;
-
-	WeekCalendarService.getEvents(weekStart, weekEnd).then(function(data) {
-		vm.eventObj = data;
-		$scope.$broadcast('eventsUpdated');
-	});
+    vm.toggleEventInfo = function() {
+        vm.eventSelected = !vm.eventSelected;
+    };
 
 	vm.newEvent = function(day, hour) {
 		console.log(day);
 		console.log(hour);
 		var createEventModal = $uibModal.open({
 			templateUrl: 'templates/weekCalendar/createEventModal.html',
-			size: 'lg'
+			size: 'md'
 			});
 	};
 
-$scope.showEventDetails = function (event) {
+    vm.clearCells = function(){
+        var daysNames = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+        for(var i = 0; i<7; i++){
+            var evtCells = angular.element($('.'+ daysNames[i]));
+            for (var j = 0; j <24; j++){
+                evtCells[j].textContent = ''; 
+            }
+        }
+    };
+
+    vm.prevWeek = function(){
+        vm.clearCells();
+
+        $scope.weekStartMoment.add(-7,'d');
+        $scope.weekEndMoment.add(-7,'d');
+
+        vm.Start = new Date($scope.weekStartMoment.format("DD MMM YYYY HH:mm:ss"));    
+        vm.End = new Date($scope.weekEndMoment.format("DD MMM YYYY HH:mm:ss"));
+
+        $scope.selectedDate = new Date($scope.weekStartMoment.format("DD MMM YYYY HH:mm:ss"));       
+        
+        //console.log($scope.weekStartMoment.format("DD MMM YYYY HH:mm:ss"));
+        //console.log($scope.weekEndMoment.format("DD MMM YYYY HH:mm:ss"));
+        
+        WeekCalendarService.getEvents(vm.Start, vm.End).then(function(data) {
+            vm.eventObj = data;
+            $scope.$broadcast('eventsUpdated');
+        });
+    };
+
+    vm.nextWeek = function(){
+        vm.clearCells();
+
+        $scope.weekStartMoment.add(7,'d');
+        $scope.weekEndMoment.add(7,'d');
+
+        vm.Start = new Date($scope.weekStartMoment.format("DD MMM YYYY HH:mm:ss"));    
+        vm.End = new Date($scope.weekEndMoment.format("DD MMM YYYY HH:mm:ss"));
+
+        $scope.selectedDate = new Date( $scope.weekStartMoment.format("DD MMM YYYY HH:mm:ss"));     
+       
+        //console.log($scope.weekStartMoment.format("DD MMM YYYY HH:mm:ss"));
+        //console.log($scope.weekEndMoment.format("DD MMM YYYY HH:mm:ss"));
+
+        WeekCalendarService.getEvents(vm.Start, vm.End).then(function(data) {
+            vm.eventObj = data;
+            $scope.$broadcast('eventsUpdated');
+        });
+    };
+
+    $scope.showEventDetails = function (event) {
         console.log(event.name);
         console.log(event.date.format('DD/MM/YYYY'));
     };
@@ -53,8 +83,6 @@ $scope.showEventDetails = function (event) {
     $scope.showAllDayEvents = function (day) {
         console.log(day.events);
     };
-
-    $scope.allDayEventsTemplateUrl = 'templates/monthCalendar/monthCalendarAllDaysEventTemplate.html';
 
     $scope.showDay = function(step) {
         var date = new Date($scope.selectedDate);
@@ -78,14 +106,18 @@ $scope.showEventDetails = function (event) {
     };
 
     $scope.showCloseModal = function(day, index) {
-        //$scope.selectedDate = new Date(dayDate.format("DD MMM YYYY HH:mm:ss"));
-        console.log('old selected data', $scope.selectedDate);
 
-        $scope.selectedDate.setDate($scope.selectedDate.getDate() + day);
+        //console.log('old selected data', $scope.selectedDate);
+        //console.log($scope.weekStartMoment.format("DD MMM YYYY HH:mm:ss"));
 
-        console.log('new selected data', $scope.selectedDate);
-        console.log(day);
-        console.log(index);
+        var tmpDate = $scope.weekStartMoment.clone();
+        tmpDate.add(day, 'd');
+        //console.log($scope.weekStartMoment.format("DD MMM YYYY HH:mm:ss"));
+        $scope.selectedDate = new Date(tmpDate.format("DD MMM YYYY HH:mm:ss"));
+
+        //console.log('new selected data', $scope.selectedDate);
+        //console.log(day);
+        //console.log(index);
         $scope.modalInstance = $uibModal.open({
             animation: true,
             templateUrl: 'templates/weekCalendar/editEventWeekTemplate.html',
@@ -112,30 +144,41 @@ $scope.showEventDetails = function (event) {
         });
     };
 
-    // vm.getRowHeight = function () {
-    //  var tableRow = $('#calendar tr');
-    //  vm.rowHeight = tableRow.outerHeight();
-    //  alert(vm.rowHeight);
-    // };
-
     init();
 
     function init() {
 
-        $scope.timeStamps = weekEventService.getTimeStamps();
-        var todayDate = new Date();
+        var nowMoment = moment();
+        $scope.weekEndMoment = moment({hour: 23, minute: 59});
+        $scope.weekEndMoment.add(7-nowMoment.isoWeekday(), 'd');
+        $scope.weekStartMoment = moment({hour: 0, minute: 0});
+        $scope.weekStartMoment.add(-nowMoment.isoWeekday() +1, 'd');
+        //console.log(weekEndMoment, weekStartMoment, nowMoment);
+        vm.Start = new Date($scope.weekStartMoment.format("DD MMM YYYY HH:mm:ss"));    
+        vm.End = new Date($scope.weekEndMoment.format("DD MMM YYYY HH:mm:ss"));
 
-        $scope.selectedDate = $scope.selectedDate || todayDate;
-        $scope.eventSelected = false;
-        $scope.modalShown = false;
-        $scope.sidebarStyle = true;
+        $scope.selectedDate = new Date($scope.weekStartMoment.format("DD MMM YYYY HH:mm:ss"));     
+        //console.log($scope.weekStartMoment.format("DD MMM YYYY HH:mm:ss"));
+        WeekCalendarService.getEvents(vm.Start, vm.End).then(function(data) {
+            vm.eventObj = data;
+            $scope.$broadcast('eventsUpdated');
+        });
 
-        //will be pulled from server 
-        getRooms();
-        getInventory();
-        getUsers();
-        getAllEvents();
-        getEventTypes();
+
+        // $scope.timeStamps = weekEventService.getTimeStamps();
+        // var todayDate = new Date();
+
+        // $scope.selectedDate = $scope.selectedDate || todayDate;
+        // $scope.eventSelected = false;
+        // $scope.modalShown = false;
+        // $scope.sidebarStyle = true;
+
+        // //will be pulled from server 
+        // getRooms();
+        // getInventory();
+        // getUsers();
+        // getAllEvents();
+        // getEventTypes();
     }
     
     function getRooms() {

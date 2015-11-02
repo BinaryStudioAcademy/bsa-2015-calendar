@@ -37,12 +37,13 @@ function calendarService($http) {
             while (dateMonth.getMonth() == i) {
                 dayObj.dayDate = dateMonth.getDate(); //add date
                 dayObj.weekDay = dateMonth.getDay(); //add number of week day
+                dayObj.dayId = dateMonth.getDate()+'_'+(i+1)+'_'+year; //id as D-M-YYYY,
+                //dayObj.events = [];
                 if (dateMonth.getDay() === 6 || dateMonth.getDay() === 0) {  //Check for dayoff and add it
                     dayObj.dayOff = true;
                 } else {
                     dayObj.dayOff = false;
                 }
-                dayObj.events = 0;
 
                 if (dateMonth <= nowDate && dateMonth >= nowDate) {
                     dayObj.timePeriod = 1;      //now
@@ -71,10 +72,8 @@ function calendarService($http) {
         var dateStart = new Date(year, 0, 1);
         var startMs = +dateStart;
         var dateEnd = new Date(year, 11, 32);
-        console.log(dateStart);
-        console.log(dateEnd);
         var eventObj = {};
-        //make hash object for events
+        
         while (dateStart < dateEnd) {
             var day = dateStart.getDate()+'_'+(dateStart.getMonth()+1)+'_'+year;
             eventObj[day] = [];
@@ -88,10 +87,8 @@ function calendarService($http) {
             for (var i = 0; i < events.length; i++) {
                 var eventStartDate = new Date(events[i].start);
                 var evDate = eventStartDate.getDate()+'_'+(eventStartDate.getMonth()+1)+'_'+eventStartDate.getFullYear();
-                //console.log(events[i].start);
                 eventObj[evDate].push(events[i]);
             }
-            console.log(events);
             return eventObj;
 
         }, function(reason) {
