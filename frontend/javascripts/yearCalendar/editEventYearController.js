@@ -2,12 +2,20 @@ var app = require('../app');
 
 app.controller('editEventYearController', editEventYearController);
 
-editEventYearController.$inject = ['$rootScope','yearEventService', '$timeout', '$modalInstance', 'rooms', 'devices', 'users', 'selectedDate', 'eventTypes'];
+editEventYearController.$inject = ['socketService', 'alertify', 'DailyCalendarService', '$rootScope','yearEventService', '$timeout', '$modalInstance', 'rooms', 'devices', 'users', 'selectedDate', 'eventTypes'];
 
-
-function editEventYearController(yearEventService, socketService, $timeout, $modalInstance, rooms, devices, users, selectedDate, eventTypes) {
+function editEventYearController(alertify, DailyCalendarService, yearEventService, socketService, $timeout, $modalInstance, rooms, devices, users, selectedDate, eventTypes) {
 
 	var vm = this;
+
+	vm.activeTab = function(tab){
+		if(tab === 'plan'){
+			vm.isPlan = true;
+		} else {
+			vm.isPlan = false;
+		}
+		console.log('isPlan', vm.isPlan);
+	};	
 
 	vm.weekDays = [
 		{ name: 'Mo', selected: false },
@@ -22,7 +30,6 @@ function editEventYearController(yearEventService, socketService, $timeout, $mod
 	vm.planIntervals = [];
 
 	vm.computeIntervals = function(selectedDay){
-		vm.isPlan = true;
 		var selectIndex = vm.weekDays.indexOf(selectedDay);
 		console.log('selectIndex', selectIndex);
 
@@ -31,6 +38,14 @@ function editEventYearController(yearEventService, socketService, $timeout, $mod
 			startDay = 6;
 		}
 		console.log('start day', startDay);
+
+		if(!vm.planRoom && selectedDay){
+			if(selectedDay.name != vm.weekDays[startDay].name){
+				alertify.error('Please choose a room for your events');
+				selectedDay.selected = false;
+				return;				
+			}
+		}
 
 		vm.weekDays[startDay].selected = true;
 		// console.log(vm.weekDays);

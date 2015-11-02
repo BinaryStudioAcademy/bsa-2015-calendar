@@ -2,11 +2,20 @@ var app = require('../app');
 
 app.controller('ModalController', ModalController);
 
-ModalController.$inject = ['DailyCalendarService', 'socketService', '$timeout', '$modalInstance', 'rooms', 'devices', 'users', 'selectedDate', 'eventTypes'];
+ModalController.$inject = ['alertify', 'DailyCalendarService', 'socketService', '$timeout', '$modalInstance', 'rooms', 'devices', 'users', 'selectedDate', 'eventTypes'];
 
-function ModalController(DailyCalendarService, socketService, $timeout, $modalInstance, rooms, devices, users, selectedDate, eventTypes) {
+function ModalController(alertify, DailyCalendarService, socketService, $timeout, $modalInstance, rooms, devices, users, selectedDate, eventTypes) {
 
 	var vm = this;
+
+	vm.activeTab = function(tab){
+		if(tab === 'plan'){
+			vm.isPlan = true;
+		} else {
+			vm.isPlan = false;
+		}
+		console.log('isPlan', vm.isPlan);
+	};
 
 	vm.weekDays = [
 		{ name: 'Mo', selected: false },
@@ -21,7 +30,6 @@ function ModalController(DailyCalendarService, socketService, $timeout, $modalIn
 	vm.planIntervals = [];
 
 	vm.computeIntervals = function(selectedDay){
-		vm.isPlan = true;
 		var selectIndex = vm.weekDays.indexOf(selectedDay);
 		console.log('selectIndex', selectIndex);
 
@@ -30,6 +38,14 @@ function ModalController(DailyCalendarService, socketService, $timeout, $modalIn
 			startDay = 6;
 		}
 		console.log('start day', startDay);
+
+		if(!vm.planRoom && selectedDay){
+			if(selectedDay.name != vm.weekDays[startDay].name){
+				alertify.error('Please choose a room for your events');
+				selectedDay.selected = false;
+				return;				
+			}
+		}
 
 		vm.weekDays[startDay].selected = true;
 		// console.log(vm.weekDays);
@@ -134,7 +150,8 @@ function ModalController(DailyCalendarService, socketService, $timeout, $modalIn
 
 	vm.submitModal = function() {
 		console.log('is plan', vm.isPlan);
-		if(vm.isPlan){
+		console.log('vm.planIntervals', vm.planIntervals);
+		if(vm.planIntervals.length){
 			submitPlan(vm.plan);
 		} else{
 			submitEvent(vm.event);		
