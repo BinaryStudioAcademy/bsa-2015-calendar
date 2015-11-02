@@ -19,8 +19,9 @@
 					td.eventCell(ng-dblclick="dvCtrl.showCloseModal()" ng-class="{ 'working-hour': timeSt.isWorkingHour }")
 						.event-wrapper(ng-if="timeSt.hasEvents")
 							day-view-event.event(
-							ng-repeat="event in dvCtrl.getEventsByStart(timeSt.index) track by $index" 
+							ng-repeat="event in dvCtrl.getEventsByStart(timeSt.index) | filter : dvCtrl.selectTypeEvent track by $index" 
 							event="event" 
 							table='#calendar' 
 							events-in-row='timeSt.totalEvents'
 							index='{{ $index+1 }}')
+

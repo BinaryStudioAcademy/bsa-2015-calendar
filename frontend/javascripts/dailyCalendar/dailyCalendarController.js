@@ -2,9 +2,9 @@ var app = require('../app');
 
 app.controller('DayViewController', DayViewController);
 
-DayViewController.$inject = ['DailyCalendarService', '$timeout', '$q', '$uibModal', 'socketService'];
+DayViewController.$inject = ['DailyCalendarService', '$timeout', '$q', '$uibModal', 'socketService', '$rootScope'];
 
-function DayViewController(DailyCalendarService, $timeout, $q, $uibModal, socketService) {
+function DayViewController(DailyCalendarService, $timeout, $q, $uibModal, socketService, $rootScope) {
 
 	var vm = this;
 
@@ -189,6 +189,38 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal, socket
 			}
 		}
 	}
+
+
+
+
+
+	var flagsInDaily = [];
+
+  $rootScope.$on('flagFromCalendar', function (event, agrs) {			//pull vm.flag from $rootScope.$broadcast
+      var flagsFromCalendar = agrs.messege;
+      console.log('flags from dailyCalendarController $rootScope.$on', flagsFromCalendar);
+      flagsInDaily.length = 0;																		// rewriting flagsInDaily
+			for (var i = 0; i < flagsFromCalendar.length; i++) {		
+		      flagsInDaily.push(flagsFromCalendar[i]);
+			}
+  });
+
+
+	vm.selectTypeEvent = function(event){														// if return true event show, if false event not show
+		// console.log('oll flags in daily from Calendar', flagsInDaily);		
+		for (var i = 0; i < flagsInDaily.length; i++) {		
+			if (event.type == flagsInDaily[i]) return true;
+		}
+	};
+
+
+
+
+
+
+
+
+
 
 	//TODO: implement example approach to API calls
 	// function getLatestCurrencyRateByCode(code, callback){
