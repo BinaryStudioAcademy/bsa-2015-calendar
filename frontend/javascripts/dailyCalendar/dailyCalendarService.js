@@ -113,9 +113,6 @@ function DailyCalendarService($q, $resource, $http) {
 		getAllUsers: getAllUsers,
 		getAllEvents: getAllEvents,
 		getAllEventTypes: getAllEventTypes,
-<<<<<<< HEAD
 		savePlan: savePlan,
-=======
->>>>>>> 9f5ce2bd361ceb4ce0053a0eafc19836b558220d
 	};
 }
