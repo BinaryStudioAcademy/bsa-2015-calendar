@@ -344,6 +344,58 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal, socket
 			}, true);
 		}
 	}
+
+	function getRooms() {
+			DailyCalendarService.getAllRooms()
+				.$promise.then(
+					function(response) {
+						console.log('success Total rooms: ', response.length);
+						vm.availableRooms = response;
+					},
+					function(response) {
+						console.log('failure', response);
+					}
+				);
+		}
+
+		function getInventory() {
+			DailyCalendarService.getAllDevices()
+				.$promise.then(
+					function(response) {
+						console.log('success Inventory items: ', response.length);
+						vm.availableInventory = response;
+					},
+					function(response) {
+						console.log('failure', response);
+					}
+				);
+		}
+
+		function getUsers() {
+			DailyCalendarService.getAllUsers()
+				.$promise.then(
+					function(response) {
+						console.log('success Number of Users: ', response.length);
+						vm.users = response;
+					},
+					function(response) {
+						console.log('failure', response);
+					}
+				);
+		}
+
+		function getEventTypes() {
+			DailyCalendarService.getAllEventTypes()
+				.$promise.then(
+					function(response) {
+						console.log('success Current number of types: ', response.length);
+						vm.eventTypes = response;
+					},
+					function(response) {
+						console.log('failure', response);
+					}
+				);
+		}
 	
 	function getAllEvents() {
 		DailyCalendarService.getAllEvents()
@@ -398,6 +450,10 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal, socket
 
 	function init() {
 		showWorkHours();
+		getRooms();
+		getInventory();
+		getUsers();
 		getAllEvents();
+		getEventTypes();
 	}
 }
