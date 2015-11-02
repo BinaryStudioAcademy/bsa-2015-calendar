@@ -3,11 +3,9 @@ var app = require('../app');
 app.controller('CalendarController', CalendarController);
 
 // <<<<<<< HEAD
-// CalendarController.$inject = ['$document', '$modal', '$resource', '$scope', '$rootScope'];
+CalendarController.$inject = ['$document', '$modal', '$resource', '$scope', '$rootScope'];
 
-// function CalendarController($document, $modal, $resource, $scope, $rootScope) {
-// =======
-function CalendarController($document, $uibModal) {
+function CalendarController($document, $uibModal, $resource, $scope, $rootScope) {
 
 	var vm = this;
 	

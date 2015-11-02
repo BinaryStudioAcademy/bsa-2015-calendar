@@ -461,6 +461,7 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal, socket
       flagsInDaily.length = 0;																		// rewriting flagsInDaily
 			for (var i = 0; i < flagsFromCalendar.length; i++) {		
 		      flagsInDaily.push(flagsFromCalendar[i]);
+		      console.log(flagsInDaily);
 			}
   });
 
