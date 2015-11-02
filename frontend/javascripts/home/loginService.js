@@ -28,4 +28,11 @@ app.service('LoginService', function ($http) {
         });
     };
 
+    this.logOut = function(){
+        return $http({
+            url: baseUrl + 'api/logout',
+            method: 'GET',
+        });
+    };
+
 });
