@@ -7,7 +7,7 @@ app.controller('LoginController', LoginController);
 
 LoginController.$inject = ['$scope', '$state', 'alertify', 'LoginService', 'AuthService', 'GoogleAuthService'];
 
-function LoginController($state, alertify, LoginService, AuthService, GoogleAuthService) {
+function LoginController($scope, $state, alertify, LoginService, AuthService, GoogleAuthService) {
     var vm = this;
 
     vm.googleLoginCode = "";
@@ -36,6 +36,12 @@ function LoginController($state, alertify, LoginService, AuthService, GoogleAuth
                 if (response.data.user) {
                     AuthService.setUser(response.data.user);
 
+                    vm.user.username = '';
+                    vm.user.password = '';
+
+                    vm.signInForm.$setPristine();
+                    vm.signInForm.$setUntouched();
+
                     $state.go('calendar.dayView');
                 } else {
                     alertify.error('Wrong username or password');
@@ -48,12 +54,6 @@ function LoginController($state, alertify, LoginService, AuthService, GoogleAuth
                     alertify.error('Error');
                 }
             });
-
-        vm.user.username = '';
-        vm.user.password = '';
-
-        vm.signInForm.$setPristine();
-        vm.signInForm.$setUntouched();
     };
 
     vm.signUp = function () {
@@ -70,6 +70,14 @@ function LoginController($state, alertify, LoginService, AuthService, GoogleAuth
         LoginService.signUp(userInfo)
             .then(function (response) {
                 console.log('RESPONSE: ', response);
+                vm.user.newUsername = '';
+                vm.user.newEmail = '';
+                vm.user.newPassword = '';
+                vm.user.newPasswordConfirm = '';
+
+                vm.signUpForm.$setPristine();
+                vm.signUpForm.$setUntouched();
+
                 $state.go('calendar.dayView');
                 alertify.success('registered successfully');
 
@@ -80,13 +88,5 @@ function LoginController($state, alertify, LoginService, AuthService, GoogleAuth
                     alertify.error('Error');
                 }
             });
-
-        vm.user.newUsername = '';
-        vm.user.newEmail = '';
-        vm.user.newPassword = '';
-        vm.user.newPasswordConfirm = '';
-
-        vm.signUpForm.$setPristine();
-        vm.signUpForm.$setUntouched();
     };
 }
