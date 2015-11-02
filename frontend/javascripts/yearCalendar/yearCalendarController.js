@@ -63,7 +63,6 @@ function yearCalendarController(calendarService, yearEventService, $scope, $uibM
     };
 
     $scope.showCloseModal = function(month, dayDate) {
-        console.log(month, dayDate);
         $scope.selectedDate = new Date(vm.currentYear, +month, dayDate);
         $scope.modalInstance = $uibModal.open({
             animation: true,
@@ -91,19 +90,21 @@ function yearCalendarController(calendarService, yearEventService, $scope, $uibM
         });
     };
 
+    init();
 
-    $scope.selectedDate = $scope.selectedDate || currentDate;
-    $scope.eventSelected = false;
-    $scope.modalShown = false;
-    $scope.sidebarStyle = true;
+    function init() {
+        $scope.selectedDate = $scope.selectedDate || currentDate;
+        $scope.eventSelected = false;
+        $scope.modalShown = false;
+        $scope.sidebarStyle = true;
 
-  
-    getRooms();
-    getInventory();
-    getUsers();
-    getAllEvents();
-    getEventTypes();
-
+      
+        getRooms();
+        getInventory();
+        getUsers();
+        getAllEvents();
+        getEventTypes();
+    }
 
     function getRooms() {
         yearEventService.getAllRooms()
