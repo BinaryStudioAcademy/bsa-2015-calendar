@@ -25,7 +25,7 @@ function monthCalendarService($http) {
             var events = response.data;
             for (var i = 0; i < events.length; i++) {
                 var eventStartDate = new Date(events[i].start);
-                var evDate = eventStartDate.getDate()+'_'+(eventStartDate.getMonth()+1)+'_'+eventStartDate.getFullYear();
+                var evDate = eventStartDate.getDate() + '_' + (eventStartDate.getMonth() + 1) + '_' + eventStartDate.getFullYear();
                 console.log(evDate);
                 eventObj[evDate].push(events[i]);
             }

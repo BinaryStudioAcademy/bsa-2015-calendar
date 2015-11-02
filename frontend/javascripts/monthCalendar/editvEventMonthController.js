@@ -39,8 +39,8 @@ function editEventMonthController(socketService, alertify, DailyCalendarService,
 		}
 		console.log('start day', startDay);
 
-		if(!vm.planRoom && selectedDay){
-			if(selectedDay.name != vm.weekDays[startDay].name){
+		if(!vm.planRoom && selectedDay) {
+			if(selectedDay.name != vm.weekDays[startDay].name) {
 				alertify.error('Please choose a room for your events');
 				selectedDay.selected = false;
 				return;				
@@ -56,7 +56,7 @@ function editEventMonthController(socketService, alertify, DailyCalendarService,
 		//vm.daysSelectedCount = vm.
 
 
-		if(startDay === 0){
+		if(startDay === 0) {
 			currentDay = 0;
 			for(i = 1; i < 7; i++){
 				if(vm.weekDays[i].selected){					
@@ -66,7 +66,7 @@ function editEventMonthController(socketService, alertify, DailyCalendarService,
 			}
 			if(vm.planIntervals.length)
 				vm.planIntervals.push(7 - currentDay);
-		} else if(startDay === 6){
+		} else if(startDay === 6) {
 			currentDay = 0;
 			for(i = 0; i < 6; i++){
 				if(vm.weekDays[i].selected){
@@ -113,8 +113,8 @@ function editEventMonthController(socketService, alertify, DailyCalendarService,
 				}
 			}
 
-			if(vm.planIntervals.length){
-				if(currentDay > startDay){
+			if(vm.planIntervals.length) {
+				if(currentDay > startDay) {
 					vm.planIntervals.push(6 - currentDay + startDay + 1);
 				} else {
 					vm.planIntervals.push(startDay - currentDay);
@@ -123,11 +123,11 @@ function editEventMonthController(socketService, alertify, DailyCalendarService,
 		}
 
 		console.log(vm.planIntervals);
-		if(vm.planIntervals.length){
+		if(vm.planIntervals.length) {
 			vm.plan.intervals = [];
 			vm.plan.rooms = [];
-			for(i = 0; i < vm.planIntervals.length; i++){
-				if(vm.planRoom){
+			for(i = 0; i < vm.planIntervals.length; i++) {
+				if(vm.planRoom) {
 					vm.plan.rooms.push(vm.planRoom._id);
 				}
 				vm.plan.intervals.push(86400000 * vm.planIntervals[i]);
@@ -174,6 +174,7 @@ function editEventMonthController(socketService, alertify, DailyCalendarService,
 		idProp: '_id',
 		externalIdProp: '',
 	};
+	
 	vm.selectConfigUsers = {
 		buttonDefaultText: 'Add people to event', 
 		enableSearch: true, 

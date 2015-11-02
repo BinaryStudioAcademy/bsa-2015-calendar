@@ -5,34 +5,34 @@ var app = require('../app'),
 
 app.controller('MonthController', MonthController);
 
-MonthController.$inject = ['$scope', 'monthEventService', '$timeout', '$q', '$uibModal'];
+MonthController.$inject = ['monthEventService', '$timeout', '$q', '$uibModal'];
 
-function MonthController($scope, monthEventService,  $timeout, $q, $uibModal) {
+function MonthController(monthEventService,  $timeout, $q, $uibModal) {
+    var vm = this;
+// app.controller("MonthController", function (vm) {
+    //vm.day = moment();
 
-// app.controller("MonthController", function ($scope) {
-    //$scope.day = moment();
-
-    $scope.doubleClick = function() {
+    vm.doubleClick = function() {
       alert('Double Click');
       console.log('click');
     };
 
-    $scope.maxEventNameLength = 18;
-    $scope.maxDisplayEventsNumber = 3;
+    vm.maxEventNameLength = 18;
+    vm.maxDisplayEventsNumber = 3;
 
-    $scope.showEventDetails = function (event) {
+    vm.showEventDetails = function (event) {
         console.log(event.name);
         console.log(event.date.format('DD/MM/YYYY'));
     };
 
-    $scope.showAllDayEvents = function (day) {
+    vm.showAllDayEvents = function (day) {
         console.log(day.events);
     };
 
-    $scope.allDayEventsTemplateUrl = 'templates/monthCalendar/monthCalendarAllDaysEventTemplate.html';
+    vm.allDayEventsTemplateUrl = 'templates/monthCalendar/monthCalendarAllDaysEventTemplate.html';
 
-    $scope.showDay = function(step) {
-        var date = new Date($scope.selectedDate);
+    vm.showDay = function(step) {
+        var date = new Date(vm.selectedDate);
 
         date.setDate(
             step === 1 ?
@@ -41,20 +41,20 @@ function MonthController($scope, monthEventService,  $timeout, $q, $uibModal) {
                 date.getDate() - 1
         );
 
-        $scope.selectedDate = date;
+        vm.selectedDate = date;
     };
 
-    $scope.showDate = function() {
-        console.log($scope.selectedDate);
+    vm.showDate = function() {
+        console.log(vm.selectedDate);
     };
 
-    $scope.toggleModal = function() {
-        $scope.modalShown = !$scope.modalShown;
+    vm.toggleModal = function() {
+        vm.modalShown = !vm.modalShown;
     };
 
-    $scope.showCloseModal = function(dayDate) {
-        $scope.selectedDate = new Date(dayDate.format("DD MMM YYYY HH:mm:ss"));
-        $scope.modalInstance = $uibModal.open({
+    vm.showCloseModal = function(dayDate) {
+        vm.selectedDate = new Date(dayDate.format("DD MMM YYYY HH:mm:ss"));
+        vm.modalInstance = $uibModal.open({
             animation: true,
             templateUrl: 'templates/monthCalendar/editEventMonthTemplate.html',
             controller: 'editEventMonthController',
@@ -62,19 +62,19 @@ function MonthController($scope, monthEventService,  $timeout, $q, $uibModal) {
             bindToController: true,
             resolve: {
                 rooms: function () {
-                    return $scope.availableRooms;
+                    return vm.availableRooms;
                 },
                 devices: function () {
-                    return $scope.availableInventory;
+                    return vm.availableInventory;
                 },
                 users: function () {
-                    return $scope.users;
+                    return vm.users;
                 },
                 selectedDate: function () {
-                    return $scope.selectedDate;
+                    return vm.selectedDate;
                 },
                 eventTypes: function () {
-                    return $scope.eventTypes;
+                    return vm.eventTypes;
                 },
             }
         });
@@ -90,13 +90,13 @@ function MonthController($scope, monthEventService,  $timeout, $q, $uibModal) {
 
     function init() {
 
-        $scope.timeStamps = monthEventService.getTimeStamps();
+        vm.timeStamps = monthEventService.getTimeStamps();
         var todayDate = new Date();
 
-        $scope.selectedDate = $scope.selectedDate || todayDate;
-        $scope.eventSelected = false;
-        $scope.modalShown = false;
-        $scope.sidebarStyle = true;
+        vm.selectedDate = vm.selectedDate || todayDate;
+        vm.eventSelected = false;
+        vm.modalShown = false;
+        vm.sidebarStyle = true;
 
         //will be pulled from server 
         getRooms();
@@ -111,7 +111,7 @@ function MonthController($scope, monthEventService,  $timeout, $q, $uibModal) {
             .$promise.then(
                 function(response) {
                     console.log('success Total rooms: ', response.length);
-                    $scope.availableRooms = response;
+                    vm.availableRooms = response;
                 },
                 function(response) {
                     console.log('failure', response);
@@ -124,7 +124,7 @@ function MonthController($scope, monthEventService,  $timeout, $q, $uibModal) {
             .$promise.then(
                 function(response) {
                     console.log('success Inventory items: ', response.length);
-                    $scope.availableInventory = response;
+                    vm.availableInventory = response;
                 },
                 function(response) {
                     console.log('failure', response);
@@ -137,7 +137,7 @@ function MonthController($scope, monthEventService,  $timeout, $q, $uibModal) {
             .$promise.then(
                 function(response) {
                     console.log('success Number of Users: ', response.length);
-                    $scope.users = response;
+                    vm.users = response;
                 },
                 function(response) {
                     console.log('failure', response);
@@ -150,7 +150,7 @@ function MonthController($scope, monthEventService,  $timeout, $q, $uibModal) {
             .$promise.then(
                 function(response) {
                     console.log('success Current number of types: ', response.length);
-                    $scope.eventTypes = response;
+                    vm.eventTypes = response;
                 },
                 function(response) {
                     console.log('failure', response);
@@ -163,7 +163,7 @@ function MonthController($scope, monthEventService,  $timeout, $q, $uibModal) {
             .$promise.then(
                 function(response) {
                     console.log('success Number of Events: ', response.length);
-                    $scope.allEvents = response;
+                    vm.allEvents = response;
                 },
                 function(response) {
                     console.log('failure', response);
