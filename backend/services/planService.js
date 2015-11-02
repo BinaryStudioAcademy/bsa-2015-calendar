@@ -3,18 +3,19 @@ var eventRepository = require('../repositories/eventRepository');
 var eventService = require('./eventService');
 var async = require('async');
 
-var planService = function(){};
+var planService = function(){}; // ПЛАН - несколько событий повторяющихся по заданным интервалам
 
 var pService = new planService();
 
 planService.prototype.availability = function(data, callback){
+	// операция проверки возможности добавления нового плана
 
 	var eventTimeStart = Date.parse(data.timeStart).valueOf();
 	var planDateEnd = Date.parse(data.dateEnd).valueOf();
 	var eventDuration  = Date.parse(data.timeEnd).valueOf() - Date.parse(data.timeStart).valueOf();
 	var intervalsIterator = 0;
 
-	async.whilst(function () {
+	async.whilst(function () { // проверки выполняются для каждого экземпляра "будущего" ивента
 			return eventTimeStart <= planDateEnd;
 	},
 
@@ -23,7 +24,7 @@ planService.prototype.availability = function(data, callback){
 
 		async.waterfall([
 			function(cb){
-				if(data.rooms){
+				if(data.rooms){ // проверяем комнаты
 					eventRepository.checkRoomAvailability(data.rooms[intervalsIterator], eventTimeStart, eventTimeEnd, function(err, result){
 						if(err){
 							return cb(err);
@@ -39,7 +40,7 @@ planService.prototype.availability = function(data, callback){
 				}
 			},
 
-			function(cb){
+			function(cb){ // проверяем девайсы
 				async.forEach(data.devices, function(deviceId, cb) { 
 					eventRepository.checkDeviceAvailability(deviceId, eventTimeStart, eventTimeEnd, function(err, result){
 						if(err){
@@ -62,9 +63,10 @@ planService.prototype.availability = function(data, callback){
 				});
 			}, 
 			function(cb){
+				// здесь вычисляем start и end следующего экземпляра event'а в плане
 
 				eventTimeStart += Number(data.intervals[intervalsIterator]);
-				eventTimeStart += eventDuration;
+				//eventTimeStart += eventDuration;
 
 				intervalsIterator++;
 
@@ -94,6 +96,8 @@ planService.prototype.availability = function(data, callback){
 
 
 planService.prototype.add = function(data, callback){
+	// операция добавления нового плана 
+
 
 	// if(data.rooms != null){
 	// 	if (data.rooms.length != data.intervasl.length) {
@@ -105,7 +109,7 @@ planService.prototype.add = function(data, callback){
 
 	async.waterfall([
 
-	function (cb){
+	function (cb){ // выполняем проверку возможности добавления плана
 		pService.availability(data, function(err, result){
 			if(err){
 				return cb(err, result);
@@ -114,14 +118,14 @@ planService.prototype.add = function(data, callback){
 		});
 	},
 
-	function (cb){
+	function (cb){ 
 		planRepository.add(data, function(err, plan){
 			if(err){			
 				return cb(err, null);
 			}
 			cb(null, plan);
 		});
-	},
+	}, // добавляем запись о плане в БД
 
 	function (plan, cb){
 		var event = {
@@ -133,7 +137,7 @@ planService.prototype.add = function(data, callback){
    			isPrivate: plan.isPrivate,
    			devices: plan.devices, 
    			users : plan.users
-		};
+		}; // формируем часть полей event'а
 
 		var eventTimeStart = plan.timeStart.valueOf();
 		var planDateEnd = plan.dateEnd.valueOf();
@@ -141,7 +145,7 @@ planService.prototype.add = function(data, callback){
 		var intervalsIterator = 0;
 		var addEventsCount = 0;
 
-		async.whilst(function () {
+		async.whilst(function () { // выполняем добавление ивентов, по заявленным интервалам
   			return eventTimeStart <= planDateEnd;
 		},
 
@@ -161,11 +165,11 @@ planService.prototype.add = function(data, callback){
 						cb();
 					});
 				},
-				function(cb){
+				function(cb){ // вычисляем start и end следующего ивента, обновляем счетчики если требуется
 					addEventsCount++;
 
 					eventTimeStart += plan.intervals[intervalsIterator];
-					eventTimeStart += eventDuration;
+					//eventTimeStart += eventDuration;
 
 					intervalsIterator++;
 
@@ -208,9 +212,9 @@ planService.prototype.add = function(data, callback){
 
 
 planService.prototype.delete = function(planId, callback){
-
+	// операция удаления плана
 	async.waterfall([
-		function(cb){
+		function(cb){ // получаем ивенты созданнные по данному плану
 			eventRepository.getByPlanId(planId, function(err, events){
 				if (!events){
 					return cb(new Error("incorrect planId " + planId));
@@ -218,7 +222,7 @@ planService.prototype.delete = function(planId, callback){
 				if (!events.length){
 					return cb(new Error("Empty plan for planId " + planId));
 				}
-				events.forEach(function(event){
+				events.forEach(function(event){ // удаляем каждый ивент созданный по данному плану
 					eventService.delete(event._id, function(err, data){
 						if(err){
 							cb("removing event by planId error " + err, null);
@@ -229,7 +233,7 @@ planService.prototype.delete = function(planId, callback){
 			});
 		},
 				
-		function(cb){
+		function(cb){ // удаляем запись о плане из БД
 			planRepository.delete(planId, function(err, plan){
 				if(err){
 					return cb(err, null);
@@ -252,10 +256,11 @@ planService.prototype.delete = function(planId, callback){
 
 
 planService.prototype.update = function(planId, data, callback){
+	// операция обновления плана
 
 	async.waterfall([
 
-	function (cb){
+	function (cb){ // проверяем возможность обновления плана для новых данных
 		pService.availability(data, function(err, result){
 			if(err){
 				return cb(err, result);
@@ -264,7 +269,7 @@ planService.prototype.update = function(planId, data, callback){
 		});
 	},
 
-	function (cb){
+	function (cb){ // если проверка пройдена то выполняем операцию удаления плана со старыми данными
 		pService.delete(planId, function(err, result){
 			if(err){
 				return cb(err, result);
@@ -273,16 +278,16 @@ planService.prototype.update = function(planId, data, callback){
 		});
 	},
 
-	function (cb){
-		planRepository.add(data, function(err, plan){
+	function (cb){ 
+		planRepository.add(data, function(err, plan){ 
 			if(err){			
 				return cb(err, null);
 			}
 			cb(null, plan);
-		});
-	},
+		}); 
+	}, // добавляем запись о новом плане в БД
 
-	function (plan, cb){
+	function (plan, cb){ // выполняем операцию добавления ивентов пл плану с новыми вводными данными
 		var event = {
 			title: plan.title,
 			description: plan.description,
@@ -300,7 +305,7 @@ planService.prototype.update = function(planId, data, callback){
 		var intervalsIterator = 0;
 		var addEventsCount = 0;
 
-		async.whilst(function () {
+		async.whilst(function () { // добавляем ивенты пока выполняется условие по заданным интервалам
   			return eventTimeStart <= planDateEnd;
 		},
 
@@ -320,11 +325,11 @@ planService.prototype.update = function(planId, data, callback){
 						cb();
 					});
 				},
-				function(cb){
+				function(cb){ // вычисляем новые start и end следующего ивента
 					addEventsCount++;
 
 					eventTimeStart += plan.intervals[intervalsIterator];
-					eventTimeStart += eventDuration;
+					//eventTimeStart += eventDuration;
 
 					intervalsIterator++;
 

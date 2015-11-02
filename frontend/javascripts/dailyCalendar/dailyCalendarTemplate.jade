@@ -10,18 +10,10 @@
 				date-picker.sidebar-datepicker(for="pickDate")
 		.col-md-2.col-sm-2.col-xs-2
 			i.glyphicon.glyphicon-chevron-right.bigger-icon.day-next.pull-right(class="btn btn-large btn-info" ng-click='dvCtrl.showDay(1)')
-	.content-for-day
+	.content-for-day#day-events-place
 		table#calendar.table.day-in-table
 			time-indicator(table='#calendar' table-row-height='dvCtrl.rowHeight')
 			tbody
-				tr(ng-repeat="timeSt in dvCtrl.timeStamps track by $index")
+				tr(ng-repeat="timeSt in dvCtrl.timeStamps")
 					td.hourCell {{timeSt.value}}
-					td.eventCell(ng-dblclick="dvCtrl.showCloseModal()" ng-class="{ 'working-hour': timeSt.isWorkingHour }")
-						.event-wrapper(ng-if="timeSt.hasEvents")
-							day-view-event.event(
-							ng-repeat="event in dvCtrl.getEventsByStart(timeSt.index) | filter : dvCtrl.selectTypeEvent track by $index" 
-							event="event" 
-							table='#calendar' 
-							events-in-row='timeSt.totalEvents'
-							index='{{ $index+1 }}')
-
+					td.eventCell(ng-dblclick="dvCtrl.showCloseModal()")

@@ -6,6 +6,7 @@ var groupRepository = require('../repositories/groupRepository');
 var userService = function(){};
 
 userService.prototype.delete = function(userId, callback){
+	// операция по удалению юзера
 
 	var user;
 	async.waterfall([
@@ -20,9 +21,9 @@ userService.prototype.delete = function(userId, callback){
 				user = data;
 				cb();
 			});
-		},
+		}, // поулчаем экземпляр юзера
 
-		function(cb){
+		function(cb){ // удаляем юзера из каждого ивента на который он был подписан
 			if(user.events.length){
 				user.events.forEach(function(eventId){
 					eventRepository.removeUser(eventId, user._id, function(err, data){
@@ -39,7 +40,7 @@ userService.prototype.delete = function(userId, callback){
 				cb();
 			}
 		}, 
-		function(cb){
+		function(cb){ // удаляем юзера из каждой группы подписок в которых оп числится
 			console.log('working on groups');
 			if(user.groups.length){
 				user.groups.forEach(function(groupId){
@@ -64,7 +65,7 @@ userService.prototype.delete = function(userId, callback){
 				}
 				cb(null, data);
 			});
-		}
+		} // удаляем запись о юзере из БД
 
 	], function(err, result){
 		if(err){

@@ -70,7 +70,23 @@ casual.define('group_', function () {
 		events: []
 	};
 });
+/*
+casual.define('event_', function(){
+	var id = casual.mongo_id;
+	var title = 'Title of the eve No ' + id;
+	var description = 'Description of the event No ' + id;
+	var start = new Date();
+	var end = new Date();
 
+	return {
+		_id: id,
+		title: title,
+		description: description,
+		start: start,
+		end: end
+	};
+});
+*/
 casual.define('eventType_', function () {
 	var id = casual.mongo_id;
 	context.eventType_ids.push(id);
@@ -100,7 +116,7 @@ casual.define('event_', function () {
     	ownerId : casual.random_element(context.user_ids),
     	title : casual.title,
     	description : casual.short_description,
-    	type : casual.random_element(['basic', 'general', 'activity']), 
+    	//type : casual.random_element(['basic', 'general', 'activity']), 
     	price : casual.integer(from=0, to=300),
     	//plan : {type: Schema.Types.ObjectId, ref: 'Plan'}, /* plan id */
     	isPrivate : casual.random_element([true, false]),
@@ -112,4 +128,3 @@ casual.define('event_', function () {
     	devices: casual.random_element(context.device_ids)
 	};
 });
-

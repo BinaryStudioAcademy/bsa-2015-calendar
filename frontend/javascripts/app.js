@@ -24,6 +24,12 @@ var app = angular.module('calendar-app', ['ui.router', 'ngAlertify', 'btford.soc
                     controllerAs: 'calendarCtrl',
                     auth: false
                 })
+                .state('googleAuth', {
+                    url: '/googleAuth',
+                    templateUrl: './templates/googleapi/googleAuth.html',
+                    controller: 'GoogleAuthController',
+                    controllerAs: 'gaCtrl'
+                })
                 .state('signIn', {
                     url: '/signIn',
                     templateUrl: './templates/home/signIn.html',
@@ -35,6 +41,12 @@ var app = angular.module('calendar-app', ['ui.router', 'ngAlertify', 'btford.soc
                     templateUrl: './templates/home/signUp.html',
                     controller: 'LoginController',
                     auth: false
+                })
+                .state('calendar.eventsView', {
+                    url: '/calendar/eventsView',
+                    templateUrl: './templates/eventsCalendar/eventsCalendarTemplate.html',
+                    controller: 'EventsViewController',
+                    controllerAs: 'evCtrl'
                 })
                 .state('calendar.dayView', {
                     url: '/dayView',
@@ -167,13 +179,16 @@ app.run(['$rootScope', '$state', 'AuthService', '$anchorScroll', function($rootS
 			$state.go(to.redirectTo, params);
 		}
 
-        console.log('STATECHANGE!');
+
+        //console.log('STATECHANGE!');
         //console.log('AUTHService.getUser(): ', AuthService.getUser());
 
+        
         if(to.auth && !AuthService.getUser()){
             evt.preventDefault();
             $state.transitionTo('signIn');          
         }
+        
 	});
     $anchorScroll.yOffset = 100;
 }]);
