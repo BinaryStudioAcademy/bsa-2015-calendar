@@ -4,7 +4,7 @@ app.controller('editEventYearController', editEventYearController);
 
 editEventYearController.$inject = ['socketService', 'alertify', 'DailyCalendarService', '$rootScope','yearEventService', '$timeout', '$modalInstance', 'rooms', 'devices', 'users', 'selectedDate', 'eventTypes'];
 
-function editEventYearController(alertify, DailyCalendarService, yearEventService, socketService, $timeout, $modalInstance, rooms, devices, users, selectedDate, eventTypes) {
+function editEventYearController  (socketService, alertify, DailyCalendarService, $rootScope, yearEventService, $timeout, $modalInstance, rooms, devices, users, selectedDate, eventTypes) {
 
 	var vm = this;
 
@@ -29,7 +29,40 @@ function editEventYearController(alertify, DailyCalendarService, yearEventServic
 
 	vm.planIntervals = [];
 
-	vm.computeIntervals = function(selectedDay){
+	vm.isPlan = false;
+	vm.formSuccess = false;
+	vm.event = {};
+	vm.plan = {};
+	vm.rooms = rooms;
+	vm.devices = devices;
+	vm.users = users;
+	vm.selectedDate = selectedDate;
+	vm.eventTypes = eventTypes;
+	console.log(vm.selectedDate);
+	dropEventInfo(vm.selectedDate);
+
+	vm.selectConfigDevices = {
+		buttonDefaultText: 'Select devices',
+		enableSearch: true,
+		scrollableHeight: '200px', 
+		scrollable: true,
+		displayProp: 'title',
+		idProp: '_id',
+		externalIdProp: '',
+	};
+	vm.selectConfigUsers = {
+		buttonDefaultText: 'Add people to event', 
+		enableSearch: true, 
+		smartButtonMaxItems: 3, 
+		scrollableHeight: '200px', 
+		scrollable: true,
+		displayProp: 'name',
+		idProp: '_id',
+		externalIdProp: '',
+	};
+
+
+	vm.computeIntervals = function (selectedDay){
 		var selectIndex = vm.weekDays.indexOf(selectedDay);
 		console.log('selectIndex', selectIndex);
 
@@ -136,18 +169,6 @@ function editEventYearController(alertify, DailyCalendarService, yearEventServic
 
 	};
 
-	vm.isPlan = false;
-	vm.formSuccess = false;
-	vm.event = {};
-	vm.plan = {};
-	vm.rooms = rooms;
-	vm.devices = devices;
-	vm.users = users;
-	vm.selectedDate = selectedDate;
-	vm.eventTypes = eventTypes;
-
-	dropEventInfo(vm.selectedDate);
-
 	vm.submitModal = function() {
 		console.log('is plan', vm.isPlan);
 		if(vm.isPlan){
@@ -161,26 +182,6 @@ function editEventYearController(alertify, DailyCalendarService, yearEventServic
 	vm.closeModal = function() {
 		$modalInstance.dismiss();
 		console.log('Modal closed');
-	};
-
-	vm.selectConfigDevices = {
-		buttonDefaultText: 'Select devices',
-		enableSearch: true,
-		scrollableHeight: '200px', 
-		scrollable: true,
-		displayProp: 'title',
-		idProp: '_id',
-		externalIdProp: '',
-	};
-	vm.selectConfigUsers = {
-		buttonDefaultText: 'Add people to event', 
-		enableSearch: true, 
-		smartButtonMaxItems: 3, 
-		scrollableHeight: '200px', 
-		scrollable: true,
-		displayProp: 'name',
-		idProp: '_id',
-		externalIdProp: '',
 	};
 
 	vm.selectEventType = function(type) {
@@ -262,6 +263,7 @@ function editEventYearController(alertify, DailyCalendarService, yearEventServic
 	function dropEventInfo(selDate) {
 
 		var newEventDate = selDate || new Date();
+		console.log(newEventDate);
 		newEventDate.setHours(0);
 		newEventDate.setMinutes(0);
 
@@ -288,6 +290,6 @@ function editEventYearController(alertify, DailyCalendarService, yearEventServic
 		vm.event.type = undefined;
 		vm.event.price = undefined;
 
-		vm.computeIntervals();
+		//vm.computeIntervals();
 	}
 }

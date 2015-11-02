@@ -127,7 +127,9 @@ function ModalController(alertify, DailyCalendarService, socketService, $timeout
 			vm.plan.intervals = [];
 			vm.plan.rooms = [];
 			for(i = 0; i < vm.planIntervals.length; i++){
-				vm.plan.rooms.push(vm.planRoom._id);
+				if(vm.planRoom){
+					vm.plan.rooms.push(vm.planRoom._id);
+				}
 				vm.plan.intervals.push(86400000 * vm.planIntervals[i]);
 			}
 			console.log('plan intervals: ', vm.plan.intervals);
@@ -214,6 +216,7 @@ function ModalController(alertify, DailyCalendarService, socketService, $timeout
 
 					vm.formSuccess = true;
 					dropEventInfo();
+					vm.allEvents.push(response);
 					console.log('success', response);
 
 					socketService.emit('add event', { event : event });	
