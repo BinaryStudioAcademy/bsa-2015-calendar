@@ -42,6 +42,12 @@ var app = angular.module('calendar-app', ['ui.router', 'ngAlertify', 'btford.soc
                     controller: 'LoginController',
                     auth: false
                 })
+                .state('calendar.eventsView', {
+                    url: '/calendar/eventsView',
+                    templateUrl: './templates/eventsCalendar/eventsCalendarTemplate.html',
+                    controller: 'EventsViewController',
+                    controllerAs: 'evCtrl'
+                })
                 .state('calendar.dayView', {
                     url: '/dayView',
                     templateUrl: './templates/dailyCalendar/dailyCalendarTemplate.html',
@@ -173,13 +179,16 @@ app.run(['$rootScope', '$state', 'AuthService', '$anchorScroll', function($rootS
 			$state.go(to.redirectTo, params);
 		}
 
+
         //console.log('STATECHANGE!');
         //console.log('AUTHService.getUser(): ', AuthService.getUser());
 
+        /*
         if(to.auth && !AuthService.getUser()){
             evt.preventDefault();
             $state.transitionTo('signIn');          
         }
+        */
 	});
     $anchorScroll.yOffset = 100;
 }]);
