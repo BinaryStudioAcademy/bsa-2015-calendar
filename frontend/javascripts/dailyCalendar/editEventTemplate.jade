@@ -24,14 +24,6 @@
 									.input-group-addon
 										i.glyphicon.glyphicon-time
 									uib-timepicker(ng-model='ModalCtrl.plan.timeEnd', show-spinners='false', minute-step=5)
-					.form-group.text-center
-						.col-md-10.col-sm-10.col-md-offset-2.col-sm-offset-2
-							.col-md-6.col-sm-6.col-xs-6
-								span.badge
-									| {{ModalCtrl.plan.timeStart | date: 'short'}}
-							.col-md-6.col-sm-6.col-xs-6
-								span.badge
-									| {{ModalCtrl.plan.timeEnd | date: 'short' }}
 					.form-group
 						label.col-md-2.control-label(for="planTitle") Title:
 						.col-md-10
@@ -118,14 +110,13 @@
 									.input-group-addon
 										i.glyphicon.glyphicon-time
 									uib-timepicker(ng-model='ModalCtrl.event.end', show-spinners='false', minute-step=5)
-					.form-group.text-center
-						.col-md-10.col-sm-10.col-md-offset-2.col-sm-offset-2
-							.col-md-6.col-sm-6.col-xs-6
-								span.badge
-									| {{ModalCtrl.event.start | date: 'short'}}
-							.col-md-6.col-sm-6.col-xs-6
-								span.badge
-									| {{ModalCtrl.event.end | date: 'short' }}
+					.form-group
+						.col-md-12.col-sm-12
+							.alert.alert-warning(role='alert' ng-show='ModalCtrl.event.end.getTime() < ModalCtrl.event.start.getTime()')
+								button.close(type='button', data-dismiss='alert', aria-label='Close')
+									span(aria-hidden='true')
+										i.glyphicon.glyphicon-remove
+								strong The End time of event must exceed the Start time!
 					.form-group
 						label.col-md-2.control-label(for="eventTitle") Title:
 						.col-md-10
