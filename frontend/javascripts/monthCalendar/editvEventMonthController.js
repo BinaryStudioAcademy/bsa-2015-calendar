@@ -288,6 +288,10 @@ function editEventMonthController(socketService, alertify, DailyCalendarService,
 		vm.event.type = undefined;
 		vm.event.price = undefined;
 
-		if(vm.isPlan) vm.computeIntervals();
+		for(var i = 0; i < vm.weekDays.length; i++){
+			vm.weekDays[i].selected = false;
+		}
+
+		vm.computeIntervals();
 	}
 }
