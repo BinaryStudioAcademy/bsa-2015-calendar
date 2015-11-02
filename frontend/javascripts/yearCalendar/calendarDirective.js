@@ -6,17 +6,16 @@ function calendarDirective($animate, $timeout) {
     return {
         restrict: 'A',
         templateUrl: 'templates/yearCalendar/monthTemplate.html',
-        priority: 10,
         scope: {
             calendar: '=',
-            monthNum: '@'
+            monthNum: '@',
         },
         link: function ($scope, element, attr) {
 
             $scope.$watch('calendar', function(calendar) {
                 var monthObj = calendar.months[$scope.monthNum];
                 $scope.weeks = [];
-
+                
                 //leading empty cells for first week
                 var week = [];
                 var firstDay = monthObj[0].weekDay;

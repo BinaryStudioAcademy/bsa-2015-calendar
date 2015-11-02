@@ -7,12 +7,10 @@ function eventCalendarDirective() {
         restrict: 'A',
         link: function ($scope, element, attr) {
             
-            $scope.$on('eventsUpdated', function(event, dataObj) { 
-                var monthEvt = dataObj[+attr.monthNum];
+            $scope.$on('eventsUpdated', function(event, dataObj) {
                 for (var day in dataObj) {
                     if (dataObj[day].length > 0) {
                         var dayCell = $('#'+day);
-
                         //create popover template with events titles
                         var tmpl = '<ol>';
                         for (var i=0; i<dataObj[day].length; i++) {
@@ -23,7 +21,7 @@ function eventCalendarDirective() {
                         //add popover
                         dayCell.popover({
                             trigger: 'hover',
-                            delay: 300,
+                            delay: 500,
                             container: 'body',
                             placement: 'top',
                             title: 'Events:',
