@@ -56,7 +56,7 @@ function eventsWeekDirective($compile, $templateCache) {
             });
 
             
-            $scope.$on('eventAdd', function(event, data) {
+            $scope.$on('eventAdded', function(event, data) {
                 //console.log($scope.wCtrl.eventObj);
                 var index = $scope.wCtrl.eventObj.length-1;
                 $scope.wCtrl.eventObj.push(data);

@@ -32,7 +32,7 @@ app.directive("calendar", function ($http,$rootScope) {
             };
         },
         controller: function ($scope){
-            $scope.$on('sendModal', function(event, eventfromsend){
+            $scope.$on('eventAdded', function(event, eventfromsend){
                 var newEventDate = new moment(eventfromsend.start);
                 evDate = newEventDate.format("D_M_YYYY");
 
