@@ -127,8 +127,11 @@ function editEventMonthController(socketService, alertify, DailyCalendarService,
 			vm.plan.intervals = [];
 			vm.plan.rooms = [];
 			for(i = 0; i < vm.planIntervals.length; i++){
-				if(vm.planRoom)
+
+				if(vm.planRoom){
 					vm.plan.rooms.push(vm.planRoom._id);
+				}
+
 				vm.plan.intervals.push(86400000 * vm.planIntervals[i]);
 			}
 			console.log('plan intervals: ', vm.plan.intervals);

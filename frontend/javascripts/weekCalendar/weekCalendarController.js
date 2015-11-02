@@ -174,11 +174,11 @@ function WeekViewController(WeekCalendarService, weekEventService, $scope, $uibM
         // $scope.sidebarStyle = true;
 
         // //will be pulled from server 
-        // getRooms();
-        // getInventory();
-        // getUsers();
-        // getAllEvents();
-        // getEventTypes();
+        getRooms();
+        getInventory();
+        getUsers();
+        getAllEvents();
+        getEventTypes();
     }
     
     function getRooms() {
