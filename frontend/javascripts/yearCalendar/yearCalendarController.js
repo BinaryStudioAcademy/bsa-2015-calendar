@@ -2,31 +2,23 @@ var app = require('../app');
 
 app.controller('yearCalendarController', yearCalendarController);
 
-yearCalendarController.$inject = ['calendarService'];
+yearCalendarController.$inject = ['calendarService', '$scope'];
 
-function yearCalendarController(calendarService) {
+function yearCalendarController(calendarService, $scope) {
     var vm = this;
 
     //init with current year
     var currentDate = new Date();
     vm.currentYear = currentDate.getFullYear();
     vm.calendar = calendarService.getYearObj(vm.currentYear);
-    
-    calendarService.getEventsObj(vm.currentYear).then(function(dataObj) {
-        vm.events = dataObj;
-    }, function(error) {
-        console.log(error);
-    });
+    vm.events = [];
+    getEvents(vm.currentYear);
 
     vm.yearDecrement = function() {
         if (vm.currentYear > 1970) {
             vm.currentYear--;
             vm.calendar = calendarService.getYearObj(vm.currentYear);
-            calendarService.getEventsObj(vm.currentYear).then(function(dataObj) {
-                vm.events = dataObj;
-            }, function(error) {
-                console.log(error);
-            });
+            getEvents(vm.currentYear);
         }
     };
 
@@ -34,11 +26,18 @@ function yearCalendarController(calendarService) {
         vm.currentYear++;
         vm.calendar = calendarService.getYearObj(vm.currentYear);
         vm.events = calendarService.getEventsObj(vm.currentYear);
-        calendarService.getEventsObj(vm.currentYear).then(function(dataObj) {
-            vm.events = dataObj;
+        getEvents(vm.currentYear);
+    };
+
+    function getEvents(year) {
+        calendarService.getEventsObj(year).then(function(dataObj) {
+            //vm.events = dataObj;
+            if (dataObj) {
+                $scope.$broadcast('eventsUpdated', dataObj);
+            }
         }, function(error) {
             console.log(error);
         });
-    };
+    }
 
 }

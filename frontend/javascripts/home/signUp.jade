@@ -16,5 +16,5 @@ div.signin-container
                 p.help-block(ng-show='(user.newPassword != user.newPasswordConfirm) && !signUpForm.confirmPassword.$pristine') Passwords do not match.
             .form-group
                 a.btn.btn-block.btn-social.btn-google.form-control(ng-click='googleSignUp()') Sign in with Google
-            button.btn.btn-primary.pull-right(type='submit', ng-disabled='signUpForm.$invalid || user.newPassword != user.newPasswordConfirm || !googleLoginCode') Sign Up
+            button.btn.btn-primary.pull-right(type='submit', ng-disabled='signUpForm.$invalid || user.newPassword != user.newPasswordConfirm') Sign Up
             button.btn.pull-left(ui-sref='home') Back

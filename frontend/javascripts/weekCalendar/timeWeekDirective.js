@@ -39,7 +39,6 @@ function timeWeekDirective($interval, $timeout) {
 
 
             var currentTime = Date.now();
-            
             if ($scope.wCtrl.Start <= currentTime && $scope.wCtrl.End >= currentTime) {
                 var redLine = angular.element('<div class="time-line-week"></div>');
 

@@ -42,8 +42,8 @@ var addToDb = function(events, username) {
 			var newEvent = {
 				ownerId : userId,
 				title : events[i].summary,
-				start : Date(events[i].start.date),
-				end : Date(events[i].end.date)
+				start : new Date(events[i].start.date),
+				end : new Date(events[i].end.date)
 			};
 			googleEventRepository.add(newEvent, function(err, data){
 				if(err) console.log(err);
