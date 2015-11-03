@@ -4,7 +4,7 @@ app.controller('CalendarController', CalendarController);
 
 // CalendarController.$inject
 
-function CalendarController($state, LoginService, AuthService, $document, $uibModal) {
+function CalendarController($state, LoginService, AuthService, $document, $uibModal, GoogleAuthService) {
 	var vm = this;
 	
 	var todayDate = Date.now();

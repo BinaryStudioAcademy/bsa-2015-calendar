@@ -34,12 +34,14 @@ var app = angular.module('calendar-app', ['ui.router', 'ngAlertify', 'btford.soc
                     url: '/signIn',
                     templateUrl: './templates/home/signIn.html',
                     controller: 'LoginController',
+                    controllerAs: 'loginCtrl',
                     auth: false
                 })
                 .state('signUp', {
                     url: '/signUp',
                     templateUrl: './templates/home/signUp.html',
                     controller: 'LoginController',
+                    controllerAs: 'loginCtrl',
                     auth: false
                 })
                 .state('calendar.eventsView', {
