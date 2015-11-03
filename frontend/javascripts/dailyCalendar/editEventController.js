@@ -29,28 +29,34 @@ function ModalController(alertify, DailyCalendarService, socketService, $timeout
 
 	vm.planIntervals = [];
 
+
 	vm.computeIntervals = function(selectedDay){
-		var selectIndex = vm.weekDays.indexOf(selectedDay);
+		var selectIndex = vm.weekDays.indexOf(selectedDay); //
 		console.log('selectIndex', selectIndex);
 
-		var startDay = vm.plan.timeStart.getDay() - 1;
-		if(startDay === -1) {
+
+		//calculating day of the week
+		//on which plan begins
+		var startDay = vm.plan.timeStart.getDay() - 1;  
+		if(startDay === -1) { 							
 			startDay = 6;
 		}
 		console.log('start day', startDay);
 
-		if(!vm.planRoom && selectedDay){
-			if(selectedDay.name != vm.weekDays[startDay].name){
-				alertify.error('Please choose a room for your events');
-				selectedDay.selected = false;
-				return;				
-			}
-		}
+		// if(!vm.planRoom && selectedDay){
+		// 	if(selectedDay.name != vm.weekDays[startDay].name){
+		// 		alertify.error('Please choose a room for your events');
+		// 		selectedDay.selected = false;
+		// 		return;				
+		// 	}
+		// }
 
 		vm.weekDays[startDay].selected = true;
 		// console.log(vm.weekDays);
 
 		var currentDay, i;
+
+
 		vm.planIntervals = [];
 
 		//vm.daysSelectedCount = vm.
@@ -121,6 +127,8 @@ function ModalController(alertify, DailyCalendarService, socketService, $timeout
 				}
 			}
 		}
+
+		if(!vm.planIntervals.length) vm.planIntervals = [7];
 
 		console.log(vm.planIntervals);
 		if(vm.planIntervals.length){
