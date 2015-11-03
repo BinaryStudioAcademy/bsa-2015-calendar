@@ -18,6 +18,7 @@ function WeekViewController(helpEventService, $scope, $uibModal, $compile, $temp
     });
 
     $scope.$on('eventAdded', function(event, data) {
+        console.log('add');
         if(data){
             var index = vm.eventObj.length-1;
             vm.eventObj.push(data);
@@ -29,14 +30,6 @@ function WeekViewController(helpEventService, $scope, $uibModal, $compile, $temp
         vm.eventSelected = !vm.eventSelected;
     };
 
-	vm.newEvent = function(day, hour) {
-		console.log(day);
-		console.log(hour);
-		var createEventModal = $uibModal.open({
-			templateUrl: 'templates/weekCalendar/createEventModal.html',
-			size: 'md'
-			});
-	};
 
     vm.buildEventCells = function(index){
         for (var i = index; i < vm.eventObj.length; i++) { 

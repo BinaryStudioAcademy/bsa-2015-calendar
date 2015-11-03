@@ -2,15 +2,17 @@ var app = require('../app');
 
 app.directive('calendarDirective', calendarDirective);
 
-function calendarDirective($animate, $timeout) {
+function calendarDirective($animate, $timeout, helpEventService, $uibModal) {
     return {
         restrict: 'A',
         templateUrl: 'templates/yearCalendar/monthTemplate.html',
         scope: {
             calendar: '=',
-            monthNum: '@',
+            monthNum: '@'
         },
+
         link: function ($scope, element, attr) {
+            //console.log($scope.calendar.year);
 
             $scope.$watch('calendar', function(calendar) {
                 var monthObj = calendar.months[$scope.monthNum];
@@ -36,6 +38,103 @@ function calendarDirective($animate, $timeout) {
 
                 $animate.enter(element.children('.year-month-table'), element); 
             }, true);   
+        },
+
+        controller: function($scope) {
+
+            $scope.showCloseModal = function(month, dayDate) {
+                $scope.selectedDate = new Date($scope.calendar.year, month, dayDate);
+                console.log('selectedDate');
+                $scope.modalInstance = $uibModal.open({
+                    animation: true,
+                    templateUrl: 'templates/yearCalendar/editEventYearTemplate.html',
+                    controller: 'editEventYearController',
+                    controllerAs: 'evYearCtrl',
+                    bindToController: true,
+                    resolve: {
+                        rooms: function () {
+                            return $scope.availableRooms;
+                        },
+                        devices: function () {
+                            return $scope.availableInventory;
+                        },
+                        users: function () {
+                            return $scope.users;
+                        },
+                        selectedDate: function () {
+                            return $scope.selectedDate;
+                        },
+                        eventTypes: function () {
+                            return $scope.eventTypes;
+                        },
+                    }
+                });
+            };
+
+            function getRooms() {
+                helpEventService.getAllRooms()
+                    .$promise.then(
+                        function(response) {
+                            console.log('success Total rooms: ', response.length);
+                            $scope.availableRooms = response;
+                        },
+                        function(response) {
+                            console.log('failure', response);
+                        }
+                    );
+            }
+
+            function getInventory() {
+                helpEventService.getAllDevices()
+                    .$promise.then(
+                        function(response) {
+                            console.log('success Inventory items: ', response.length);
+                            $scope.availableInventory = response;
+                        },
+                        function(response) {
+                            console.log('failure', response);
+                        }
+                    );
+            }
+
+            function getUsers() {
+                helpEventService.getAllUsers()
+                    .$promise.then(
+                        function(response) {
+                            console.log('success Number of Users: ', response.length);
+                            $scope.users = response;
+                        },
+                        function(response) {
+                            console.log('failure', response);
+                        }
+                    );
+            }
+
+            function getEventTypes() {
+                helpEventService.getAllEventTypes()
+                    .$promise.then(
+                        function(response) {
+                            console.log('success Current number of types: ', response.length);
+                            $scope.eventTypes = response;
+                        },
+                        function(response) {
+                            console.log('failure', response);
+                        }
+                    );
+            }
+
+            function getAllEvents() {
+                helpEventService.getAllEvents()
+                    .$promise.then(
+                        function(response) {
+                            console.log('success Number of Events: ', response.length);
+                            $scope.allEvents = response;
+                        },
+                        function(response) {
+                            console.log('failure', response);
+                        }
+                    );
+            }
         }
     };
 }

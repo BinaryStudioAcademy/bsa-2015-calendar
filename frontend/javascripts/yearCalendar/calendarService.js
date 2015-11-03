@@ -2,7 +2,7 @@ var app = require('../app');
 
 app.factory('calendarService', calendarService);
 
-function calendarService($http) {
+function calendarService(helpEventService) {
 
     var redDays = [{day:1, month:1}, {day:7, month:1}, {day:8, month:3}, {day:1, month:5}, {day:9, month:5}, {day:28, month:6}, {day:24, month:8}, {day:14, month:10}];
 
@@ -81,9 +81,7 @@ function calendarService($http) {
         }
 
         //get promise with events of year
-        var evtPromise = $http.get('/api/eventByInterval/'+startMs+'/'+(+dateEnd))       
-        .then(function (response) {
-            var events = response.data;
+        var evtPromise = helpEventService.getEvents(startMs, dateEnd).then(function (events) {
             for (var i = 0; i < events.length; i++) {
                 var eventStartDate = new Date(events[i].start);
                 var evDate = eventStartDate.getDate()+'_'+(eventStartDate.getMonth()+1)+'_'+eventStartDate.getFullYear();

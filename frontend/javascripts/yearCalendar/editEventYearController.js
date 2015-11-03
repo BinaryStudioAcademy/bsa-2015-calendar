@@ -2,9 +2,9 @@ var app = require('../app');
 
 app.controller('editEventYearController', editEventYearController);
 
-editEventYearController.$inject = ['socketService', 'alertify', 'DailyCalendarService', '$rootScope','yearEventService', '$timeout', '$modalInstance', 'rooms', 'devices', 'users', 'selectedDate', 'eventTypes'];
+editEventYearController.$inject = ['socketService', 'alertify', 'DailyCalendarService', '$rootScope', '$timeout', '$modalInstance', 'rooms', 'devices', 'users', 'selectedDate', 'eventTypes'];
 
-function editEventYearController  (socketService, alertify, DailyCalendarService, $rootScope, yearEventService, $timeout, $modalInstance, rooms, devices, users, selectedDate, eventTypes) {
+function editEventYearController  (socketService, alertify, DailyCalendarService, $rootScope, $timeout, $modalInstance, rooms, devices, users, selectedDate, eventTypes) {
 
 	var vm = this;
 
@@ -214,9 +214,11 @@ function editEventYearController  (socketService, alertify, DailyCalendarService
 
 					vm.formSuccess = true;
 					dropEventInfo();
-					console.log('success', response);
+					//console.log('success', response);
 
 					socketService.emit('add event', { event : event });	
+					$rootScope.$broadcast('eventAdded', response);
+
 
 					$timeout(function() {
 						$modalInstance.close();
@@ -244,9 +246,10 @@ function editEventYearController  (socketService, alertify, DailyCalendarService
 
 					vm.formSuccess = true;
 					dropEventInfo();
-					console.log('success', response);
+					//console.log('success', response);
 
-					socketService.emit('add plan', { plan : plan });	
+					socketService.emit('add plan', { plan : plan });
+					$rootScope.$broadcast('planAdded', response);	
 
 					$timeout(function() {
 						$modalInstance.close();
