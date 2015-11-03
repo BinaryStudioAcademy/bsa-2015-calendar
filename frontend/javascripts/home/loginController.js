@@ -5,9 +5,9 @@ var app = require('../app');
 
 app.controller('LoginController', LoginController);
 
-LoginController.$inject = ['$scope', '$state', 'alertify','LoginService', 'AuthService', 'GoogleAuthService'];
+LoginController.$inject = ['$scope', '$state', '$resource', 'alertify','LoginService', 'AuthService', 'GoogleAuthService'];
 
-function LoginController($scope, $state, alertify, LoginService, AuthService, GoogleAuthService) {
+function LoginController($scope, $state, $resource, alertify, LoginService, AuthService, GoogleAuthService) {
 
     $scope.googleLoginCode = "";
 
@@ -34,7 +34,13 @@ function LoginController($scope, $state, alertify, LoginService, AuthService, Go
             console.log('RESPONSE: ', response);
             if(response.data.user){
                 AuthService.setUser(response.data.user);
-
+                /*var resUser = $resource('/api/user/username/:username', {username: '@username'});
+                resUser.get({username : response.data.user.username}, function(user) {
+                    if(user.googleCode) {
+                        GoogleAuthService.login(response.data.user.username);
+                    }
+                });*/
+                
                 $state.go('calendar.dayView');               
             } else {
                 alertify.error('Wrong username or password');
