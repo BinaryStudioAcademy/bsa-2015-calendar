@@ -26,8 +26,8 @@ function LoginController($scope, $state, alertify, LoginService, AuthService, Go
 
     vm.signIn = function () {
         var userInfo = {
-            username: vm.user.username,
-            password: vm.user.password
+            username: $scope.user.username,
+            password: $scope.user.password
         };
 
         LoginService.signIn(userInfo)
@@ -36,11 +36,11 @@ function LoginController($scope, $state, alertify, LoginService, AuthService, Go
                 if (response.data.user) {
                     AuthService.setUser(response.data.user);
 
-                    vm.user.username = '';
-                    vm.user.password = '';
+                    $scope.user.username = '';
+                    $scope.user.password = '';
 
-                    vm.signInForm.$setPristine();
-                    vm.signInForm.$setUntouched();
+                    $scope.signInForm.$setPristine();
+                    $scope.signInForm.$setUntouched();
 
                     $state.go('calendar.dayView');
                 } else {
@@ -58,11 +58,11 @@ function LoginController($scope, $state, alertify, LoginService, AuthService, Go
 
     vm.signUp = function () {
         var userInfo = {
-            username: vm.user.newUsername,
-            name: vm.user.newUsername,
-            password: vm.user.newPassword,
-            email: vm.user.newEmail,
-            googleCode: vm.googleLoginCode
+            username: $scope.user.newUsername,
+            name: $scope.user.newUsername,
+            password: $scope.user.newPassword,
+            email: $scope.user.newEmail,
+            googleCode: $scope.googleLoginCode
         };
 
         console.log('in signup');
@@ -70,13 +70,13 @@ function LoginController($scope, $state, alertify, LoginService, AuthService, Go
         LoginService.signUp(userInfo)
             .then(function (response) {
                 console.log('RESPONSE: ', response);
-                vm.user.newUsername = '';
-                vm.user.newEmail = '';
-                vm.user.newPassword = '';
-                vm.user.newPasswordConfirm = '';
+                $scope.user.newUsername = '';
+                $scope.user.newEmail = '';
+                $scope.user.newPassword = '';
+                $scope.user.newPasswordConfirm = '';
 
-                vm.signUpForm.$setPristine();
-                vm.signUpForm.$setUntouched();
+                $scope.signUpForm.$setPristine();
+                $scope.signUpForm.$setUntouched();
 
                 $state.go('calendar.dayView');
                 alertify.success('registered successfully');
