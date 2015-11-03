@@ -5,87 +5,88 @@ var app = require('../app');
 
 app.controller('LoginController', LoginController);
 
-LoginController.$inject = ['$scope', '$state', 'alertify','LoginService', 'AuthService', 'GoogleAuthService'];
+LoginController.$inject = ['$scope', '$state', 'alertify', 'LoginService', 'AuthService', 'GoogleAuthService'];
 
 function LoginController($scope, $state, alertify, LoginService, AuthService, GoogleAuthService) {
+    var vm = this;
 
-    $scope.googleLoginCode = "";
+    vm.googleLoginCode = "";
 
-    $scope.googleSignUp = function() {
+    vm.googleSignUp = function () {
         console.log(GoogleAuthService);
         GoogleAuthService.getLoginCode().then(function (code) {
-            $scope.googleLoginCode = code;
+            vm.googleLoginCode = code;
         });
     };
 
-    $scope.signOut = function(){
+    vm.signOut = function () {
         LoginService.signOut();
         $state.go('signIn');
     };
 
-    $scope.signIn = function () {
+    vm.signIn = function () {
         var userInfo = {
             username: $scope.user.username,
             password: $scope.user.password
         };
 
         LoginService.signIn(userInfo)
-        .then(function(response){
-            console.log('RESPONSE: ', response);
-            if(response.data.user){
-                AuthService.setUser(response.data.user);
+            .then(function (response) {
+                console.log('RESPONSE: ', response);
+                if (response.data.user) {
+                    AuthService.setUser(response.data.user);
 
-                $state.go('calendar.dayView');               
-            } else {
-                alertify.error('Wrong username or password');
-            }
+                    $scope.user.username = '';
+                    $scope.user.password = '';
 
-        })
-        .then(function(response){
-            if(response){
-                console.log(response);
-                alertify.error('Error');
-            }
-        });
+                    $scope.signInForm.$setPristine();
+                    $scope.signInForm.$setUntouched();
 
-        $scope.user.username = '';
-        $scope.user.password = '';
+                    $state.go('calendar.dayView');
+                } else {
+                    alertify.error('Wrong username or password');
+                }
 
-        $scope.signInForm.$setPristine();
-        $scope.signInForm.$setUntouched();
+            })
+            .then(function (response) {
+                if (response) {
+                    console.log(response);
+                    alertify.error('Error');
+                }
+            });
     };
 
-    $scope.signUp = function () {
+    vm.signUp = function () {
         var userInfo = {
             username: $scope.user.newUsername,
             name: $scope.user.newUsername,
             password: $scope.user.newPassword,
             email: $scope.user.newEmail,
-            googleCode : $scope.googleLoginCode
+            googleCode: $scope.googleLoginCode
         };
 
         console.log('in signup');
 
         LoginService.signUp(userInfo)
-        .then(function(response){
-            console.log('RESPONSE: ', response);
-            $state.go('calendar.dayView');
-            alertify.success('registered successfully');        
+            .then(function (response) {
+                console.log('RESPONSE: ', response);
+                $scope.user.newUsername = '';
+                $scope.user.newEmail = '';
+                $scope.user.newPassword = '';
+                $scope.user.newPasswordConfirm = '';
 
-        })
-        .then(function(response){
-            if(response){
-                console.log(response);
-                alertify.error('Error');
-            }
-        });
+                $scope.signUpForm.$setPristine();
+                $scope.signUpForm.$setUntouched();
 
-        $scope.user.newUsername = '';
-        $scope.user.newEmail = '';
-        $scope.user.newPassword = '';
-        $scope.user.newPasswordConfirm = '';
+                $state.go('calendar.dayView');
+                alertify.success('registered successfully');
 
-        $scope.signUpForm.$setPristine();
-        $scope.signUpForm.$setUntouched();
+            })
+            .then(function (response) {
+                if (response) {
+                    console.log(response);
+                    alertify.error('Error');
+                }
+            });
     };
 }
