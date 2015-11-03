@@ -9,9 +9,16 @@ function eventCalendarDirective() {
             
             $scope.$on('eventsUpdated', function(event, dataObj) {
                 $scope.dataObj = dataObj;
+                $scope.maximumLength = 0;
                 for (var day in $scope.dataObj) {
-                    addEvents(day);
-                }      
+                    if ($scope.dataObj[day].length > $scope.maximumLength) { //maximum events number in day
+                        $scope.maximumLength = $scope.dataObj[day].length;
+                    }
+                } 
+
+                for (var item in $scope.dataObj) {
+                    addEvents(item);
+                }     
             });    
 
             $scope.$on('planAdded', function(event, data) {
@@ -56,6 +63,15 @@ function eventCalendarDirective() {
 
                     //add color background for events
                     var evtNum = $scope.dataObj[day].length;
+                    var colorGray;
+                    if ($scope.maximumLength !== 0) {
+                        var colorStep = Math.round(64/$scope.maximumLength);
+                        var addWhite = 160+(64 -$scope.dataObj[day].length*colorStep); //basic gray + (grey range - length*step)
+                        colorGray = 'rgb('+addWhite+', '+addWhite+', '+addWhite+')';
+                    }
+                    dayCell.css('background-color', colorGray);
+
+                    /*variant 3 step color
                     switch(true) {
                         case (evtNum < 3):
                             dayCell.css('background-color', 'rgb(224, 224, 224)');
@@ -67,6 +83,7 @@ function eventCalendarDirective() {
                             dayCell.css('background-color', 'rgb(160, 160, 160)');
                             break;
                     }
+                    */
                 }
             }
 
