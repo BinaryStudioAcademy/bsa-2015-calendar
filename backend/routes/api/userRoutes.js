@@ -19,6 +19,14 @@ module.exports = function(app) {
 		});
 	}, apiResponse);
 
+	app.get('/api/user/username/:username', function(req, res, next){
+		userRepository.getByUsername(req.params.username, function(err, data){
+			res.data = data;
+			res.err = err;
+			next();
+		});
+	}, apiResponse);
+
 	app.post('/api/user/', function(req, res, next) {
 		userRepository.add(req.body, function(err, data) {
 			res.data = data;

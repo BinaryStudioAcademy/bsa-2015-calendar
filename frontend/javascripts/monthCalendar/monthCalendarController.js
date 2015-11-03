@@ -5,17 +5,15 @@ var app = require('../app'),
 
 app.controller('MonthController', MonthController);
 
-MonthController.$inject = ['monthEventService', '$timeout', '$q', '$uibModal'];
 
-function MonthController(monthEventService,  $timeout, $q, $uibModal) {
-    var vm = this;
-// app.controller("MonthController", function (vm) {
-    //vm.day = moment();
+MonthController.$inject = ['$scope', 'helpEventService', '$timeout', '$q', '$uibModal'];
 
-    vm.doubleClick = function() {
-      alert('Double Click');
-      console.log('click');
-    };
+function MonthController($scope, helpEventService,  $timeout, $q, $uibModal) {
+
+// app.controller("MonthController", function ($scope) {
+    //$scope.day = moment();
+
+    vm = this;
 
     vm.maxEventNameLength = 18;
     vm.maxDisplayEventsNumber = 3;
@@ -80,17 +78,57 @@ function MonthController(monthEventService,  $timeout, $q, $uibModal) {
         });
     };
 
-    // vm.getRowHeight = function () {
-    //  var tableRow = $('#calendar tr');
-    //  vm.rowHeight = tableRow.outerHeight();
-    //  alert(vm.rowHeight);
-    // };
+
+    vm.pullData = function() {
+
+        // helpEventService.getEvents($scope.Start, $scope.End).then(function(data) {
+        //     if (data !== null){
+        //         $scope.eventObj = data;
+        //         console.log(data);
+        //         $scope.$broadcast('eventsUpdated');
+        //     }
+        // });
+
+        helpEventService.getRooms().then(function(data) {
+            if (data !== null){
+                $scope.availableRooms = data;
+            }
+        });
+
+        helpEventService.getDevices().then(function(data) {
+            if (data !== null){
+                $scope.availableInventory = data;
+            }
+        });
+
+        helpEventService.getUsers().then(function(data) {
+            if (data !== null){
+                $scope.users  = data;
+            }
+        });
+
+        helpEventService.getEventTypes().then(function(data) {
+            if (data !== null){
+                $scope.eventTypes = data;
+            }
+        });
+
+        // helpEventService.getAllEvents().then(function(data) {
+        //     if (data !== null){
+        //         vm.allEvents  = data;
+        //     }
+        // });
+    };
 
     init();
 
     function init() {
 
+<<<<<<< HEAD
         vm.timeStamps = monthEventService.getTimeStamps();
+=======
+        $scope.timeStamps = helpEventService.getTimeStamps();
+>>>>>>> bf0aa6c81b4123de18151afc449c324ee6d843be
         var todayDate = new Date();
 
         vm.selectedDate = vm.selectedDate || todayDate;
@@ -99,6 +137,7 @@ function MonthController(monthEventService,  $timeout, $q, $uibModal) {
         vm.sidebarStyle = true;
 
         //will be pulled from server 
+<<<<<<< HEAD
         getRooms();
         getInventory();
         getUsers();
@@ -169,5 +208,8 @@ function MonthController(monthEventService,  $timeout, $q, $uibModal) {
                     console.log('failure', response);
                 }
             );
+=======
+        vm.pullData();
+>>>>>>> bf0aa6c81b4123de18151afc449c324ee6d843be
     }
 }

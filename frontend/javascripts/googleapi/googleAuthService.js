@@ -3,11 +3,11 @@ var googleConfig = require('./googleConfig');
 
 app.factory('GoogleAuthService', GoogleAuthService);
 
-GoogleAuthService.$inject = ['$interval', '$q'];
+GoogleAuthService.$inject = ['$interval', '$q', '$resource'];
 
 
 
-function GoogleAuthService ($interval, $q) {
+function GoogleAuthService ($interval, $q, $resource) {
 
 	function getLoginCode() {
 		var deferred = $q.defer();
@@ -49,8 +49,48 @@ function GoogleAuthService ($interval, $q) {
 		return results ? results[1] : "";
 	}
 
+	function sendUserData(data) {
+		var resourceGoogleAuth = $resource('/api/gAuth/');
+		resourceGoogleAuth.save(data)
+		.$promise.then(function(res) {
+			console.log('Loggined with Google');
+		});
+	}
+
+	function login (userName, code) {
+		var loginCode;
+		var username;
+		if(!userName){
+			username = AuthService.getUser().username;
+		} else {
+			username = userName;
+		}
+
+		if(!code) {
+			getLoginCode().then(function (code) {
+				loginCode = code;
+				var accountData = {
+					loginCode : loginCode,
+					username : username
+				};
+
+				
+				sendUserData(JSON.stringify(accountData));
+			});
+		} else {
+			var accountData = {
+				loginCode : code,
+				username : username
+			};
+			sendUserData(JSON.stringify(accountData));
+		}
+		
+	}
+
 	return {
-		getLoginCode : getLoginCode
+		getLoginCode : getLoginCode,
+		sendUserData : sendUserData,
+		login : login
 	};
 
 }

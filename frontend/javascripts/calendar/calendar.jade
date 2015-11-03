@@ -69,7 +69,10 @@
 						//- 	li
 						//- 		a(ui-sref='.yearView') Year
 						
-
+			
+			a.btn.btn-block.btn-social.btn-google(ng-controller='GoogleAuthController as gaCtrl'  ng-click='gaCtrl.login()')
+				span.fa.fa-google 
+				| Sync with Google
 			.filters.hidden-xs
 				h3 Filters
 				ul
@@ -114,6 +117,7 @@
 					br
 					li
 						a(ui-sref=".createNewEventType" ng-click="calendarCtrl.toggleMode()") Event types
+			a(ui-sref="signIn" ng-click="calendarCtrl.logOut()") Logout
 		.col-sm-10
 			ui-view#calendar-content
 	.container_calendar_footer
