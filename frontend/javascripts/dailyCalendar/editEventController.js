@@ -29,6 +29,8 @@ function ModalController(alertify, DailyCalendarService, socketService, $timeout
 
 	vm.planIntervals = [];
 
+	vm.minDate = new Date();
+	vm.planEndDate = new Date();
 
 	vm.computeIntervals = function(selectedDay){
 		var selectIndex = vm.weekDays.indexOf(selectedDay); //
@@ -247,8 +249,7 @@ function ModalController(alertify, DailyCalendarService, socketService, $timeout
 	function submitPlan(plan){
 		console.log('submiting plan');
 		plan.dateStart = new Date(plan.timeStart);
-		plan.dateEnd = new Date(plan.dateStart);
-		plan.dateEnd.setFullYear(2016);
+		plan.dateEnd = vm.planEndDate;
 
 		console.log('plan', plan);
 

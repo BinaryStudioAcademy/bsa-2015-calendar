@@ -86,14 +86,17 @@
 									options='ModalCtrl.users', 
 									extra-settings='ModalCtrl.selectConfigUsers')
 					.form-group
-						label.col-md-2.col-sm-2.control-label Repeat days:
+						label.col-md-2.control-label Days:
 						.col-md-10.col-sm-10
 							.col-md-12
 								.btn-group
 									label.btn.btn-default(ng-repeat='day in ModalCtrl.weekDays', ng-class='{active: day.selected}') {{day.name}}
-										input(class='hidden-checkbox', ng-click='ModalCtrl.computeIntervals(day)', visible='false', type='checkbox', name='selectedDays[]', ng-model='day.selected', ng-change="console.log('change')")
+										input(class='hidden-checkbox', ng-click='ModalCtrl.computeIntervals(day)', visible='false', type='checkbox', name='selectedDays[]', ng-model='day.selected')
 					.form-group
-						label.col
+						label.col-md-2 Ends:
+						.col-md-10.col-sm-10
+							.col-md-12
+								uib-datepicker.well.well-sm(ng-model='ModalCtrl.planEndDate', min-date='ModalCtrl.minDate')
 		.tab-pane.active(role="tabpanel" id="event")
 			form(role='form' name='newEventForm')
 				form.form-horizontal
