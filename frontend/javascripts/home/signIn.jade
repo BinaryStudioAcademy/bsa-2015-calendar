@@ -1,6 +1,6 @@
 div.signin-container
     .container
-        form.form-signin(ng-submit='signIn()', name="signInForm", novalidate='')
+        form.form-signin(ng-submit='loginCtrl.signIn()', name="signInForm", novalidate='')
             h2.form-signin-heading Please sign in
             input#signInUsername.form-control(type='text', name="username", placeholder='Username', ng-model='user.username', required='')
             input#signInPassword.form-control(type='password', name='password' placeholder='Password', ng-model='user.password', required='')
