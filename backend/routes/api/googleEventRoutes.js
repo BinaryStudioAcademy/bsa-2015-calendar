@@ -17,7 +17,7 @@ module.exports = function (app) {
 		})*/
 		userGoogleEvents.save(code, username);
 
-		
+		res.send();
 	});	
 
 };

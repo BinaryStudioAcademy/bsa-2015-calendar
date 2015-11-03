@@ -42,6 +42,8 @@ function LoginController($scope, $state, $resource, alertify, LoginService, Auth
                 var resUser = $resource('/api/user/username/:username', {username: '@username'});
                 resUser.get({username : response.data.user.username}, function(user) {
                     if(user.googleCode) {
+
+                        console.log('loginCtrl');
                         GoogleAuthService.login(response.data.user.username);
                     }
                 });
