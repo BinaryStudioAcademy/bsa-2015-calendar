@@ -5,14 +5,20 @@ var app = require('../app'),
 
 app.controller('MonthController', MonthController);
 
-MonthController.$inject = ['$scope', 'helpEventService', '$timeout', '$q', '$uibModal'];
+MonthController.$inject = ['$scope', 'helpEventService', '$timeout', '$q', '$uibModal', '$stateParams'];
 
-function MonthController($scope, helpEventService,  $timeout, $q, $uibModal) {
+function MonthController($scope, helpEventService,  $timeout, $q, $uibModal, $stateParams) {
 
 // app.controller("MonthController", function ($scope) {
-    //$scope.day = moment();
+
 
     vm = this;
+
+    //date from route
+    if ($stateParams.year) {
+        $scope.day = moment([$stateParams.year, $stateParams.month, 10]);
+        console.log($scope.day);
+    }
 
     $scope.maxEventNameLength = 18;
     $scope.maxDisplayEventsNumber = 3;

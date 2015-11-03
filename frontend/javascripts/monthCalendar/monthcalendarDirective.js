@@ -10,6 +10,7 @@ app.directive("calendar", function ($http,$rootScope) {
         },
         link: function (scope) {
             scope.selected = _removeTime(scope.selected || moment());
+            console.log(scope.selected);
             scope.month = scope.selected.clone();
             var start = scope.selected.clone();
             start.date(1);

@@ -63,7 +63,7 @@ var app = angular.module('calendar-app', ['ui.router', 'ngAlertify', 'btford.soc
                     auth: true
                 })               
                 .state('calendar.monthView', {
-                    url: '/monthView',
+                    url: '/monthView/:year/:month',
                     templateUrl: './templates/monthCalendar/monthCalendar.html',
                     controller: 'MonthController',
                     controllerAs: 'mCtrl',

@@ -14,28 +14,52 @@ div#year-content(ng-cloak).row
 
   div.row
     div.col-xs-12.col-sm-12.col-md-12.col-lg-12(event-calendar-directive)
-        div.month.col-xs-12.col-sm-6.col-md-4.col-lg-3.text-center#jan January
+        div.month.col-xs-12.col-sm-6.col-md-4.col-lg-3.text-center#jan 
+          div.year-month-header
+            a(ui-sref='calendar.monthView({year: YCtrl.currentYear, month: 0})') January
           div(calendar-directive calendar='YCtrl.calendar', month-num ='0')
-        div.month.col-xs-12.col-sm-6.col-md-4.col-lg-3.text-center#feb February
+        div.month.col-xs-12.col-sm-6.col-md-4.col-lg-3.text-center#feb 
+          div.year-month-header
+            a(ui-sref='calendar.monthView({year: YCtrl.currentYear, month: 1})') February
           div(calendar-directive calendar='YCtrl.calendar', month-num ='1')
-        div.month.col-xs-12.col-sm-6.col-md-4.col-lg-3.text-center#mar March
+        div.month.col-xs-12.col-sm-6.col-md-4.col-lg-3.text-center#mar
+          div.year-month-header
+            a(ui-sref='calendar.monthView({year: YCtrl.currentYear, month: 2})') March
           div(calendar-directive calendar='YCtrl.calendar', month-num ='2')
-        div.month.col-xs-12.col-sm-6.col-md-4.col-lg-3.text-center#apr April
+        div.month.col-xs-12.col-sm-6.col-md-4.col-lg-3.text-center#apr 
+          div.year-month-header
+            a(ui-sref='calendar.monthView({year: YCtrl.currentYear, month: 3})') April
           div(calendar-directive calendar='YCtrl.calendar', month-num ='3')
-        div.month.col-xs-12.col-sm-6.col-md-4.col-lg-3.text-center#may May
+        div.month.col-xs-12.col-sm-6.col-md-4.col-lg-3.text-center#may 
+          div.year-month-header
+            a(ui-sref='calendar.monthView({year: YCtrl.currentYear, month: 4})') May       
           div(calendar-directive calendar='YCtrl.calendar', month-num ='4')
-        div.month.col-xs-12.col-sm-6.col-md-4.col-lg-3.text-center#jun June
+        div.month.col-xs-12.col-sm-6.col-md-4.col-lg-3.text-center#jun 
+          div.year-month-header
+            a(ui-sref='calendar.monthView({year: YCtrl.currentYear, month: 5})') June
           div(calendar-directive calendar='YCtrl.calendar', month-num ='5')
-        div.month.col-xs-12.col-sm-6.col-md-4.col-lg-3.text-center#jul July
+        div.month.col-xs-12.col-sm-6.col-md-4.col-lg-3.text-center#jul 
+          div.year-month-header
+            a(ui-sref='calendar.monthView({year: YCtrl.currentYear, month: 6})') July
           div(calendar-directive calendar='YCtrl.calendar', month-num ='6')
-        div.month.col-xs-12.col-sm-6.col-md-4.col-lg-3.text-center#aug August
+        div.month.col-xs-12.col-sm-6.col-md-4.col-lg-3.text-center#aug 
+          div.year-month-header
+            a(ui-sref='calendar.monthView({year: YCtrl.currentYear, month: 7})') August
           div(calendar-directive calendar='YCtrl.calendar', month-num ='7')
-        div.month.col-xs-12.col-sm-6.col-md-4.col-lg-3.text-center#sep September
+        div.month.col-xs-12.col-sm-6.col-md-4.col-lg-3.text-center#sep
+          div.year-month-header
+            a(ui-sref='calendar.monthView({year: YCtrl.currentYear, month: 8})') September
           div(calendar-directive calendar='YCtrl.calendar', month-num ='8')
-        div.month.col-xs-12.col-sm-6.col-md-4.col-lg-3.text-center#oct October
+        div.month.col-xs-12.col-sm-6.col-md-4.col-lg-3.text-center#oct 
+          div.year-month-header
+            a(ui-sref='calendar.monthView({year: YCtrl.currentYear, month: 9})') October
           div(calendar-directive calendar='YCtrl.calendar', month-num ='9')
-        div.month.col-xs-12.col-sm-6.col-md-4.col-lg-3.text-center#nov November
+        div.month.col-xs-12.col-sm-6.col-md-4.col-lg-3.text-center#nov 
+          div.year-month-header
+            a(ui-sref='calendar.monthView({year: YCtrl.currentYear, month: 10})') November
           div(calendar-directive calendar='YCtrl.calendar', month-num ='10')
-        div.month.col-xs-12.col-sm-6.col-md-4.col-lg-3.text-center#dec December
+        div.month.col-xs-12.col-sm-6.col-md-4.col-lg-3.text-center#dec 
+          div.year-month-header
+            a(ui-sref='calendar.monthView({year: YCtrl.currentYear, month: 11})') December
           div(calendar-directive calendar='YCtrl.calendar', month-num ='11')
 
