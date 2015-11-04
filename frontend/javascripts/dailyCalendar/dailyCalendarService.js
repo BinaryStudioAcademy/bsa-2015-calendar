@@ -34,37 +34,12 @@ function DailyCalendarService($q, $resource, $http) {
 		return timeStampsObj;
 	}
 
-	function updateEvent(id, body) {
-		$http({
-			method: 'PUT',
-			url: '/api/event/newdate/' + id,
-			data: body
-		}).then(function success(resp){
-			console.log('success');
-		},
-		function error(err){
-			console.log(err);
-		});
-	}
-
 	function configureEventData(date, event) {
 
 		var selDay = date.getDate();
 
 		event.start.setDate(selDay);
 		event.end.setDate(selDay);
-	}
-
-	function getTodaysEvents() {
-		var today = new Date();
-		today.setHours(0,0,0,0);
-		var tommorow = new Date(today.getTime() + 86400000);
-		return $resource('/api/eventByInterval/:gteDate/:lteDate').query({gteDate: today, lteDate: tommorow}).$promise.then(function(data){ 
-				return data; 
-			},
-			function(err){
-				return $q.reject(err);
-			});
 	}
 
 	function saveEvent(event) {
@@ -102,6 +77,7 @@ function DailyCalendarService($q, $resource, $http) {
 		function error(err){
 			console.log(err);
 		});
+	}
 
 	function getTodaysEvents() {
 		// create current moment date object
@@ -127,8 +103,6 @@ function DailyCalendarService($q, $resource, $http) {
 
 	return {
 		getTimeStamps: getTimeStamps,
-		getTodaysEvents: getTodaysEvents,
-		updateEvent: updateEvent,
 		saveEvent: saveEvent,
 		configureEventData: configureEventData,
 		getAllRooms: getAllRooms,
