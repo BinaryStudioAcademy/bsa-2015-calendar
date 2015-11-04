@@ -31,6 +31,7 @@ module.exports = function(app) {
 			req.logIn(user, function(err){
 				if(err) { return next(err); }
 				var userInfo = {
+					id : req.user._id,
 					username : req.user.username,
 					name : req.user.name,
 					events : req.user.events,

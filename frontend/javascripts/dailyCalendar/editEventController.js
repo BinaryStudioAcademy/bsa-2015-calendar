@@ -166,7 +166,7 @@ function ModalController(alertify, DailyCalendarService, socketService, $timeout
 	vm.submitModal = function() {
 		console.log('is plan', vm.isPlan);
 		console.log('vm.planIntervals', vm.planIntervals);
-		if(vm.planIntervals.length){
+		if(vm.isPlan){
 			submitPlan(vm.plan);
 		} else{
 			submitEvent(vm.event);		
@@ -280,6 +280,7 @@ function ModalController(alertify, DailyCalendarService, socketService, $timeout
 		var newEventDate = selDate || new Date();
 		newEventDate.setHours(0);
 		newEventDate.setMinutes(0);
+		vm.isPlan = false;
 
 
 		vm.plan.title = '';
