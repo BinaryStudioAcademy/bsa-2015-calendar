@@ -1,16 +1,107 @@
-.modal-body.clearfix
+modal-body.clearfix
 	button.close(type='button' ng-click='evWeekCtrl.closeModal()') ×
 	ul.nav.nav-tabs(role='tablist')
-		li.active(role='presentation')
+		li.active(role='presentation' ng-click="evWeekCtrl.activeTab('event')")
 			a(href="#event" aria-controls="event" role="tab" data-toggle="tab")
 				| New event
-		li(role='presentation')
+		li(role='presentation' ng-click="evWeekCtrl.activeTab('plan')")
 			a(href="#plan" aria-controls="plan" role="tab" data-toggle="tab")
 				| New plan
 	.tab-content
 		.tab-pane(role="tabpanel" id="plan")
-			span
-				| New plan form goes here
+			form(role='form' name='newPlanForm')
+				form.form-horizontal
+					.form-group
+						label.col-md-2.col-sm-2.control-label Time:
+						.col-md-10.col-sm-10
+							.col-md-6.col-sm-6.col-xs-6
+								.input-group
+									.input-group-addon
+										i.glyphicon.glyphicon-time
+									uib-timepicker(ng-model='evWeekCtrl.plan.timeStart', show-spinners='false', minute-step=5)
+							.col-md-6.col-sm-6.col-xs-6
+								.input-group
+									.input-group-addon
+										i.glyphicon.glyphicon-time
+									uib-timepicker(ng-model='evWeekCtrl.plan.timeEnd', show-spinners='false', minute-step=5)
+					.form-group.text-center
+						.col-md-10.col-sm-10.col-md-offset-2.col-sm-offset-2
+							.col-md-6.col-sm-6.col-xs-6
+								span.badge
+									| {{evWeekCtrl.plan.timeStart | date: 'short'}}
+							.col-md-6.col-sm-6.col-xs-6
+								span.badge
+									| {{evWeekCtrl.plan.timeEnd | date: 'short' }}
+					.form-group
+						label.col-md-2.control-label(for="planTitle") Title:
+						.col-md-10
+							.col-md-12
+								input.form-control(type='text', id="planTitle" placeholder='Name the plan...', ng-model="evWeekCtrl.plan.title")
+					.form-group
+						label.col-md-2.control-label(for="planDescription") About:
+						.col-md-10
+							.col-md-12
+								textarea.form-control(rows='5', id="planDescription" placeholder='Description...', ng-model="evWeekCtrl.plan.description")
+					.form-group
+						label.col-md-2.col-sm-2.control-label Organization:
+						.col-md-10.col-sm-10
+							.col-md-6.col-sm-6.col-xs-6
+								.input-group
+									.input-group-addon 
+										i.glyphicon.glyphicon-piggy-bank
+									input.form-control(type='text', placeholder='Price...', ng-model='evWeekCtrl.plan.price')
+							.col-md-6.col-sm-6.col-xs-6
+								.input-group
+									.input-group-btn
+										button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+											| Type 
+											span.caret
+										ul.dropdown-menu
+											li(ng-repeat="type in evWeekCtrl.eventTypes" ng-click="evWeekCtrl.selectPlanType(type)")
+												a(href="") 
+													| {{ type.title }}
+									input.form-control(type='text', aria-label='...' ng-model="evWeekCtrl.planType" placeholder="..." disabled)
+					.form-group
+						.col-md-10.col-sm-10.col-md-offset-2.col-sm-offset-2
+							.col-md-6.col-sm-6
+								.input-group
+									.input-group-btn
+										button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+											span
+												i.glyphicon.glyphicon-home
+										ul.dropdown-menu.scrollable-menu
+											li(ng-repeat="room in evWeekCtrl.rooms" ng-click="evWeekCtrl.selectPlanRoom(room)")
+												a(href='') 
+													| {{ room.title }}
+									input.form-control(type='text', aria-label='...' ng-model="evWeekCtrl.planRoom.title" placeholder="Room..." disabled)
+							.col-md-6.col-sm-6
+								.checkbox
+									label
+										input(type='checkbox', value='', ng-model='evWeekCtrl.plan.isPrivate')
+										| &nbsp;Private
+					.form-group
+						.col-md-10.col-sm-10.col-md-offset-2.col-sm-offset-2
+							.col-md-6.col-sm-6
+								div(ng-dropdown-multiselect='', 
+									translation-texts='evWeekCtrl.selectConfigDevices', 
+									selected-model='evWeekCtrl.plan.devices', 
+									options='evWeekCtrl.devices', 
+									extra-settings='evWeekCtrl.selectConfigDevices')
+							.col-md-6.col-sm-6
+								div(ng-dropdown-multiselect='', 
+									translation-texts='evWeekCtrl.selectConfigUsers', 
+									selected-model='evWeekCtrl.plan.users', 
+									options='evWeekCtrl.users', 
+									extra-settings='evWeekCtrl.selectConfigUsers')
+					.form-group
+						label.col-md-2.col-sm-2.control-label Repeat days:
+						.col-md-10.col-sm-10
+							.col-md-12
+								.btn-group
+									label.btn.btn-default(ng-repeat='day in evWeekCtrl.weekDays', ng-class='{active: day.selected}') {{day.name}}
+										input(class='hidden-checkbox', ng-click='evWeekCtrl.computeIntervals(day)', visible='false', type='checkbox', name='selectedDays[]', ng-model='day.selected', ng-change="console.log('change')")
+					.form-group
+						label.col
 		.tab-pane.active(role="tabpanel" id="event")
 			form(role='form' name='newEventForm')
 				form.form-horizontal
@@ -63,7 +154,7 @@
 											li(ng-repeat="type in evWeekCtrl.eventTypes" ng-click="evWeekCtrl.selectEventType(type)")
 												a(href="") 
 													| {{ type.title }}
-									input.form-control(type='text', aria-label='...' ng-model="evWeekCtrl.event.type.title" disabled)
+									input.form-control(type='text', aria-label='...' ng-model="evWeekCtrl.eventType" placeholder="..." disabled)
 					.form-group
 						.col-md-10.col-sm-10.col-md-offset-2.col-sm-offset-2
 							.col-md-6.col-sm-6

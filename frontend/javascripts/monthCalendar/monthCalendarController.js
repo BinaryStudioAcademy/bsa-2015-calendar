@@ -5,17 +5,14 @@ var app = require('../app'),
 
 app.controller('MonthController', MonthController);
 
-MonthController.$inject = ['$scope', 'monthEventService', '$timeout', '$q', '$uibModal'];
+MonthController.$inject = ['$scope', 'helpEventService', '$timeout', '$q', '$uibModal'];
 
-function MonthController($scope, monthEventService,  $timeout, $q, $uibModal) {
+function MonthController($scope, helpEventService,  $timeout, $q, $uibModal) {
 
 // app.controller("MonthController", function ($scope) {
     //$scope.day = moment();
 
-    $scope.doubleClick = function() {
-      alert('Double Click');
-      console.log('click');
-    };
+    vm = this;
 
     $scope.maxEventNameLength = 18;
     $scope.maxDisplayEventsNumber = 3;
@@ -80,17 +77,53 @@ function MonthController($scope, monthEventService,  $timeout, $q, $uibModal) {
         });
     };
 
-    // vm.getRowHeight = function () {
-    //  var tableRow = $('#calendar tr');
-    //  vm.rowHeight = tableRow.outerHeight();
-    //  alert(vm.rowHeight);
-    // };
+
+    vm.pullData = function() {
+
+        // helpEventService.getEvents($scope.Start, $scope.End).then(function(data) {
+        //     if (data !== null){
+        //         $scope.eventObj = data;
+        //         console.log(data);
+        //         $scope.$broadcast('eventsUpdated');
+        //     }
+        // });
+
+        helpEventService.getRooms().then(function(data) {
+            if (data !== null){
+                $scope.availableRooms = data;
+            }
+        });
+
+        helpEventService.getDevices().then(function(data) {
+            if (data !== null){
+                $scope.availableInventory = data;
+            }
+        });
+
+        helpEventService.getUsers().then(function(data) {
+            if (data !== null){
+                $scope.users  = data;
+            }
+        });
+
+        helpEventService.getEventTypes().then(function(data) {
+            if (data !== null){
+                $scope.eventTypes = data;
+            }
+        });
+
+        // helpEventService.getAllEvents().then(function(data) {
+        //     if (data !== null){
+        //         vm.allEvents  = data;
+        //     }
+        // });
+    };
 
     init();
 
     function init() {
 
-        $scope.timeStamps = monthEventService.getTimeStamps();
+        $scope.timeStamps = helpEventService.getTimeStamps();
         var todayDate = new Date();
 
         $scope.selectedDate = $scope.selectedDate || todayDate;
@@ -99,75 +132,6 @@ function MonthController($scope, monthEventService,  $timeout, $q, $uibModal) {
         $scope.sidebarStyle = true;
 
         //will be pulled from server 
-        getRooms();
-        getInventory();
-        getUsers();
-        getAllEvents();
-        getEventTypes();
-    }
-    
-    function getRooms() {
-        monthEventService.getAllRooms()
-            .$promise.then(
-                function(response) {
-                    console.log('success Total rooms: ', response.length);
-                    $scope.availableRooms = response;
-                },
-                function(response) {
-                    console.log('failure', response);
-                }
-            );
-    }
-
-    function getInventory() {
-        monthEventService.getAllDevices()
-            .$promise.then(
-                function(response) {
-                    console.log('success Inventory items: ', response.length);
-                    $scope.availableInventory = response;
-                },
-                function(response) {
-                    console.log('failure', response);
-                }
-            );
-    }
-
-    function getUsers() {
-        monthEventService.getAllUsers()
-            .$promise.then(
-                function(response) {
-                    console.log('success Number of Users: ', response.length);
-                    $scope.users = response;
-                },
-                function(response) {
-                    console.log('failure', response);
-                }
-            );
-    }
-
-    function getEventTypes() {
-        monthEventService.getAllEventTypes()
-            .$promise.then(
-                function(response) {
-                    console.log('success Current number of types: ', response.length);
-                    $scope.eventTypes = response;
-                },
-                function(response) {
-                    console.log('failure', response);
-                }
-            );
-    }
-
-    function getAllEvents() {
-        monthEventService.getAllEvents()
-            .$promise.then(
-                function(response) {
-                    console.log('success Number of Events: ', response.length);
-                    $scope.allEvents = response;
-                },
-                function(response) {
-                    console.log('failure', response);
-                }
-            );
+        vm.pullData();
     }
 }

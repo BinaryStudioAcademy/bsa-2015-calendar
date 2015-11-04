@@ -32,7 +32,7 @@ app.directive("calendar", function ($http,$rootScope) {
             };
         },
         controller: function ($scope){
-            $scope.$on('sendModal', function(event, eventfromsend){
+            $scope.$on('eventAdded', function(event, eventfromsend){
                 var newEventDate = new moment(eventfromsend.start);
                 evDate = newEventDate.format("D_M_YYYY");
 
@@ -95,6 +95,7 @@ app.directive("calendar", function ($http,$rootScope) {
         var eventObj = {};
 
         //GET WEEK EVENTS
+        console.log(gteDate,lteDate);
         var evtPromise = $http.get('/api/eventByInterval/' + gteDate + '/' + lteDate)       
         .then(function (response) {
             var events = response.data;

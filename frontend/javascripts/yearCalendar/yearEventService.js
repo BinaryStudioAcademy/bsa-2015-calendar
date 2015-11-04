@@ -1,23 +1,40 @@
 var app = require('../app');
 
-app.factory('weekEventService', weekEventService);
+app.factory('yearEventService', yearEventService);
 
-weekEventService.$inject = ['$resource', '$q', '$timeout'];
+yearEventService.$inject = ['$resource', '$q', '$timeout'];
 
-function weekEventService($resource, $timeout, $q) {
+function yearEventService($resource, $timeout, $q) {
 
-	var timeStamps = '12am|1am|2am|3am|4am|5am|6am|7am|8am|9am|10am|11am|12pm|1pm|2pm|3pm|4pm|5pm|6pm|7pm|8pm|9pm|10pm|11pm'.split('|');
-	var resAllEvents;
+
 	var resourceEvent = $resource('/api/event/');
 	var resourceRooms= $resource('/api/room/');
 	var resourceDevices = $resource('/api/device/');
 	var resourceUsers = $resource('/api/user/');
 	var resourceEventTypes = $resource('/api/eventType');
+	var resourcePlan = $resource('/api/plan/');
 
 
 
 	function getTimeStamps() {
-		return timeStamps;
+
+		var timeStampsObj = [];
+
+		var workingHours = [9, 18];
+
+		for(var i=0; i<timeStamps.length; i+=1) {
+			var timeObj = {};
+			timeObj.value = timeStamps[i];
+			if(i >= 9 && i <= 18) {
+				timeObj.isWorkingHour = true;
+			} else {
+				timeObj.isWorkingHour = false;
+			}
+			timeObj.index = i;
+			timeStampsObj.push(timeObj);
+		}
+
+		return timeStampsObj;
 	}
 
 	function configureEventData(date, event) {
@@ -52,6 +69,10 @@ function weekEventService($resource, $timeout, $q) {
 		return resourceEventTypes.query();
 	}
 
+	function savePlan(plan){
+		return resourcePlan.save(plan);
+	}
+
 	return {
 		getTimeStamps: getTimeStamps,
 		saveEvent: saveEvent,
@@ -61,5 +82,6 @@ function weekEventService($resource, $timeout, $q) {
 		getAllUsers: getAllUsers,
 		getAllEvents: getAllEvents,
 		getAllEventTypes: getAllEventTypes,
+		savePlan: savePlan,
 	};
 }

@@ -1,10 +1,10 @@
 var app = require('../app');
 
-app.controller('ModalController', ModalController);
+app.controller('editEventYearController', editEventYearController);
 
-ModalController.$inject = ['alertify', 'DailyCalendarService', 'socketService', '$timeout', '$modalInstance', 'dayViewObject'];
+editEventYearController.$inject = ['socketService', 'alertify', 'DailyCalendarService', '$rootScope','yearEventService', '$timeout', '$modalInstance', 'rooms', 'devices', 'users', 'selectedDate', 'eventTypes'];
 
-function ModalController(DailyCalendarService, socketService, $timeout, $modalInstance, dayViewObject) {
+function editEventYearController  (socketService, alertify, DailyCalendarService, $rootScope, yearEventService, $timeout, $modalInstance, rooms, devices, users, selectedDate, eventTypes) {
 
 	var vm = this;
 
@@ -15,7 +15,7 @@ function ModalController(DailyCalendarService, socketService, $timeout, $modalIn
 			vm.isPlan = false;
 		}
 		console.log('isPlan', vm.isPlan);
-	};
+	};	
 
 	vm.weekDays = [
 		{ name: 'Mo', selected: false },
@@ -29,7 +29,40 @@ function ModalController(DailyCalendarService, socketService, $timeout, $modalIn
 
 	vm.planIntervals = [];
 
-	vm.computeIntervals = function(selectedDay){
+	vm.isPlan = false;
+	vm.formSuccess = false;
+	vm.event = {};
+	vm.plan = {};
+	vm.rooms = rooms;
+	vm.devices = devices;
+	vm.users = users;
+	vm.selectedDate = selectedDate;
+	vm.eventTypes = eventTypes;
+	console.log(vm.selectedDate);
+	dropEventInfo(vm.selectedDate);
+
+	vm.selectConfigDevices = {
+		buttonDefaultText: 'Select devices',
+		enableSearch: true,
+		scrollableHeight: '200px', 
+		scrollable: true,
+		displayProp: 'title',
+		idProp: '_id',
+		externalIdProp: '',
+	};
+	vm.selectConfigUsers = {
+		buttonDefaultText: 'Add people to event', 
+		enableSearch: true, 
+		smartButtonMaxItems: 3, 
+		scrollableHeight: '200px', 
+		scrollable: true,
+		displayProp: 'name',
+		idProp: '_id',
+		externalIdProp: '',
+	};
+
+
+	vm.computeIntervals = function (selectedDay){
 		var selectIndex = vm.weekDays.indexOf(selectedDay);
 		console.log('selectIndex', selectIndex);
 
@@ -127,11 +160,7 @@ function ModalController(DailyCalendarService, socketService, $timeout, $modalIn
 			vm.plan.intervals = [];
 			vm.plan.rooms = [];
 			for(i = 0; i < vm.planIntervals.length; i++){
-
-				if(vm.planRoom){
-					vm.plan.rooms.push(vm.planRoom._id);
-				}
-
+				vm.plan.rooms.push(vm.planRoom._id);
 				vm.plan.intervals.push(86400000 * vm.planIntervals[i]);
 			}
 			console.log('plan intervals: ', vm.plan.intervals);
@@ -140,23 +169,9 @@ function ModalController(DailyCalendarService, socketService, $timeout, $modalIn
 
 	};
 
-	vm.isPlan = false;
-	vm.formSuccess = false;
-
-	vm.event = dayViewObject.event;
-	vm.rooms = dayViewObject.rooms;
-	vm.devices = dayViewObject.devices;
-	vm.users = dayViewObject.users;
-	vm.selectedDate = dayViewObject.selectedDate;
-	vm.eventTypes = dayViewObject.eventTypes;
-	vm.allEvents = dayViewObject.allEvents;
-
-	dropEventInfo(vm.selectedDate);
-
 	vm.submitModal = function() {
 		console.log('is plan', vm.isPlan);
-		console.log('vm.planIntervals', vm.planIntervals);
-		if(vm.planIntervals.length){
+		if(vm.isPlan){
 			submitPlan(vm.plan);
 		} else{
 			submitEvent(vm.event);		
@@ -167,26 +182,6 @@ function ModalController(DailyCalendarService, socketService, $timeout, $modalIn
 	vm.closeModal = function() {
 		$modalInstance.dismiss();
 		console.log('Modal closed');
-	};
-
-	vm.selectConfigDevices = {
-		buttonDefaultText: 'Select devices',
-		enableSearch: true,
-		scrollableHeight: '200px', 
-		scrollable: true,
-		displayProp: 'title',
-		idProp: '_id',
-		externalIdProp: '',
-	};
-	vm.selectConfigUsers = {
-		buttonDefaultText: 'Add people to event', 
-		enableSearch: true, 
-		smartButtonMaxItems: 3, 
-		scrollableHeight: '200px', 
-		scrollable: true,
-		displayProp: 'name',
-		idProp: '_id',
-		externalIdProp: '',
 	};
 
 	vm.selectEventType = function(type) {
@@ -218,9 +213,9 @@ function ModalController(DailyCalendarService, socketService, $timeout, $modalIn
 				function(response) {
 
 					vm.formSuccess = true;
+					dropEventInfo();
 					console.log('success', response);
-					vm.allEvents.push(event);
-					
+
 					socketService.emit('add event', { event : event });	
 
 					$timeout(function() {
@@ -268,6 +263,7 @@ function ModalController(DailyCalendarService, socketService, $timeout, $modalIn
 	function dropEventInfo(selDate) {
 
 		var newEventDate = selDate || new Date();
+		console.log(newEventDate);
 		newEventDate.setHours(0);
 		newEventDate.setMinutes(0);
 
@@ -294,7 +290,6 @@ function ModalController(DailyCalendarService, socketService, $timeout, $modalIn
 		vm.event.type = undefined;
 		vm.event.price = undefined;
 
-
-		vm.computeIntervals();
+		//vm.computeIntervals();
 	}
 }

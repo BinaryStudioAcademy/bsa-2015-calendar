@@ -42,6 +42,12 @@ var app = angular.module('calendar-app', ['ui.router', 'ngAlertify', 'btford.soc
                     controller: 'LoginController',
                     auth: false
                 })
+                .state('calendar.eventsView', {
+                    url: '/calendar/eventsView',
+                    templateUrl: './templates/eventsCalendar/eventsCalendarTemplate.html',
+                    controller: 'EventsViewController',
+                    controllerAs: 'evCtrl'
+                })
                 .state('calendar.dayView', {
                     url: '/dayView',
                     templateUrl: './templates/dailyCalendar/dailyCalendarTemplate.html',
@@ -92,79 +98,7 @@ var app = angular.module('calendar-app', ['ui.router', 'ngAlertify', 'btford.soc
                     auth: true
 				});
 		}
-	]).factory('socketService', ['socketFactory', 'alertify', function(socketFactory, alertify){
-        var socket = socketFactory();
-
-        socket.on('add device notification', function(device){
-
-            console.log(device);
-            console.log('SOCKETIO: NEW DEVICE');
-            alertify.log("New device has been added");
-        });
-
-        socket.on('update device notification', function(device){
-            console.log(device);
-            alertify.log("Device has been updated");
-        });
-
-        socket.on('delete device notification', function(device){
-            alertify.log("Device has been deleted");
-        });
-
-        socket.on('add room notification', function(room){
-            alertify.log('New room has been added');
-        });
-
-        socket.on('update room notification', function(room){
-            alertify.log('Romm has been updated');
-        });
-
-        socket.on('delete room notification', function(room){
-            alertify.log('Room has been deleted');
-        });
-
-        socket.on('add event notification', function(event){
-            console.log('event has been added');
-            alertify.log('Event has been created');
-        }); 
-
-        socket.on('update event notification', function(event){
-            alertify.log('Event has been updated');
-        });
-        
-        socket.on('delete event notification', function(event){
-            alertify.log('Event has been deleted');
-        });                                    
-
-        return socket;
-    }])
-    .factory('AuthService', [function(){
-
-        var service = {};
-        var userInfo = null;
-
-        service.getUser = function(){
-            //console.log('localstorage.userInfo: ', localStorage.userInfo);
-
-            if(localStorage.userInfo){
-                //console.log('JSON parse userinfo', JSON.parse(localStorage.userInfo));
-                return JSON.parse(localStorage.userInfo);  
-            }
-
-            return null;
-
-        };
-
-        service.setUser = function(user){
-            console.log(user);
-
-            localStorage.userInfo = JSON.stringify(user);
-            //console.log('SET localstorage.userinfo', localStorage.userInfo);
-            userInfo = user;
-        };
-
-        return service;
-    }]);
+	]);
 
 app.run(['$rootScope', '$state', 'AuthService', '$anchorScroll', function($rootScope, $state, AuthService, $anchorScroll) {
 	$rootScope.$on('$stateChangeStart', function(evt, to, params) {
@@ -173,13 +107,16 @@ app.run(['$rootScope', '$state', 'AuthService', '$anchorScroll', function($rootS
 			$state.go(to.redirectTo, params);
 		}
 
+
         //console.log('STATECHANGE!');
         //console.log('AUTHService.getUser(): ', AuthService.getUser());
 
+        
         if(to.auth && !AuthService.getUser()){
             evt.preventDefault();
             $state.transitionTo('signIn');          
         }
+        
 	});
     $anchorScroll.yOffset = 100;
 }]);
