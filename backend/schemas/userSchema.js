@@ -65,7 +65,12 @@ var userSchema = new Schema({
     preModeration: {
         type: 'string'
     },
+    googleCode: {
+        type: 'string',
+        defaultsTo: ''
+    },
     events: [{type: Schema.Types.ObjectId, ref: 'Event'}],
+    googleEvents: [{type: Schema.Types.ObjectId, ref: 'GoogleEvent'}],
     groups: [{type: Schema.Types.ObjectId, ref: 'Group'}]
 });
 

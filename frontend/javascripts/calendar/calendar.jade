@@ -69,7 +69,10 @@
 						//- 	li
 						//- 		a(ui-sref='.yearView') Year
 						
-
+			
+			a.btn.btn-block.btn-social.btn-google(ng-controller='GoogleAuthController as gaCtrl'  ng-click='gaCtrl.login()')
+				span.fa.fa-google 
+				| Sync with Google
 			.filters.hidden-xs
 				h3 Filters
 				ul
