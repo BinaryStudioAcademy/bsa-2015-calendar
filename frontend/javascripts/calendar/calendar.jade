@@ -16,47 +16,49 @@
 								a.dropdown-toggle(href="#", data-toggle="dropdown", role="button", aria-expanded="false")
 									| Filters
 									span.caret
+								button(ng-click='calendarCtrl.selectAllEventType()') select all
+								button(ng-click='calendarCtrl.clearAllEventType()') clear all
 								ul.dropdown-menu(role="menu")
-									li
-										.checkbox
-											label
-												input(type="checkbox")
-												| All events
-									li
-										.checkbox
-											label
-												input(type="checkbox")
-												| Basic Events
-									li
-										.checkbox
-											label
-												input(type="checkbox")
-												| General Events
-									li
-										.checkbox
-											label
-												input(type="checkbox")
-												| Activity Events
-									li 
-										.checkbox
-											label
-												input(type="checkbox")
-												| Google Events
-									li 
-										.checkbox
-											label
-												input(type="checkbox") 
-												| Birthdays
+									form.form-inline
+										li(ng-repeat="eventType in calendarCtrl.eventTypes")
+											label.checkbox
+												input(type="checkbox",id="eventType", ng-model = "eventType.flag", name ="{{ eventType.title }}", ng-change = "calendarCtrl.checkFlag(eventType._id)")
+												span.eventTypeFilters {{ eventType.title }}
+									//- li
+									//- 	.checkbox
+									//- 		label
+									//- 			input(type="checkbox")
+									//- 			| Basic Events
+									//- li
+									//- 	.checkbox
+									//- 		label
+									//- 			input(type="checkbox")
+									//- 			| General Events
+									//- li
+									//- 	.checkbox
+									//- 		label
+									//- 			input(type="checkbox")
+									//- 			| Activity Events
+									//- li 
+									//- 	.checkbox
+									//- 		label
+									//- 			input(type="checkbox")
+									//- 			| Google Events
+									//- li 
+									//- 	.checkbox
+									//- 		label
+									//- 			input(type="checkbox") 
+									//- 			| Birthdays
 							li
 								.datepicker(style="position: relative")
 									button.btn.btn-default#header-pickdate
 										| {{calendarCtrl.selectedDate | date: 'd EEE yyyy'}}
 									date-picker.nav-datepicker(for="header-pickdate")
-							li
-								.checkbox
-									label
-										input(type="checkbox") 
-										| Show all events	
+							//- li
+							//- 	.checkbox
+							//- 		label
+							//- 			input(type="checkbox") 
+							//- 			| Show all events	
 					#navbar.navbar-collapse.collapse
 						nav-menu
 						//- ul.nav.navbar-nav
@@ -72,37 +74,39 @@
 
 			.filters.hidden-xs
 				h3 Filters
+				button(ng-click='calendarCtrl.selectAllEventType()') select all
+				button(ng-click='calendarCtrl.clearAllEventType()') clear all
 				ul
-					li
-						.checkbox
-							label
-								input(type="checkbox")
-								| All events
-					li
-						.checkbox
-							label
-								input(type="checkbox")
-								| Basic Events
-					li
-						.checkbox
-							label
-								input(type="checkbox")
-								| General Events
-					li
-						.checkbox
-							label
-								input(type="checkbox")
-								| Activity Events
-					li 
-						.checkbox
-							label
-								input(type="checkbox")
-								| Google Events
-					li 
-						.checkbox
-							label
-								input(type="checkbox") 
-								| Birthdays
+					form.form-inline
+						li(ng-repeat="eventType in calendarCtrl.eventTypes")
+							label.checkbox
+								input(type="checkbox",id="eventType", ng-model = "eventType.flag", name ="{{ eventType.name }}", ng-change = "calendarCtrl.checkFlag(eventType._id)")
+								span.eventTypeFilters {{ eventType.title }}
+					//- li
+					//- 	.checkbox
+					//- 		label
+					//- 			input(type="checkbox")
+					//- 			| Basic Events
+					//- li
+					//- 	.checkbox
+					//- 		label
+					//- 			input(type="checkbox")
+					//- 			| General Events
+					//- li
+					//- 	.checkbox
+					//- 		label
+					//- 			input(type="checkbox")
+					//- 			| Activity Events
+					//- li 
+					//- 	.checkbox
+					//- 		label
+					//- 			input(type="checkbox")
+					//- 			| Google Events
+					//- li 
+					//- 	.checkbox
+					//- 		label
+					//- 			input(type="checkbox") 
+					//- 			| Birthdays
 			h3 CRUD
 			.navbar.navbar-default(role="navigation")
 				ul.nav.navbar-nav.text-center
@@ -117,8 +121,13 @@
 			a(ui-sref="signIn" ng-click="calendarCtrl.logOut()") Logout
 		.col-sm-10
 			ui-view#calendar-content
+
+
 	.container_calendar_footer
-		h4(align='center' style="color: blue") Press  F1 to help window.
+		h4(align='center' style="color: blue") Press  F1 or H, in addiction on your web browser, to help window.
+
+
+
 
 	div(class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel")
 		div(class="modal-dialog" role="document")
@@ -128,7 +137,7 @@
 						span(aria-hidden="true") &times;
 					h2(class="modal-title" id="myModalLabel" align='center' style="color: blue") Welcome to Calendar    
 				div(class="modal-body")
-					h2 Today  {{calendarCtrl.selectedDate | date: 'd MMMM yyyy'}}
+					h2 Today  {{calendarCtrl.selectedDate | date: 'd MMMM yyyy'}} {{calendarCtrl.selectedDate | date: 'shortTime'}} 
 					h3 For creating a new event you should double-click on time in Day calendar.
 					h3 
 					h3 Will bee the power with us!

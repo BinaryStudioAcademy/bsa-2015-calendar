@@ -56,6 +56,7 @@ function MonthController($scope, helpEventService,  $timeout, $q, $uibModal) {
             vm.events[eventDate] = vm.events[eventDate] || [] ;
             vm.events[eventDate].push(data[i]);
         }
+        console.log(vm.events);
     };
 
     vm.buildMonth  = function(){
