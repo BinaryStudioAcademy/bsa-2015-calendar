@@ -18,6 +18,8 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal, socket
 	vm.computedEvents = [];
 	vm.selectedDate = vm.selectedDate || todayDate;
 	vm.eventSelected = false;
+	vm.event = vm.event || {};
+	vm.plan = vm.plan || {};
 
 	function getRandomInt(min, max) {
 		return Math.floor(Math.random() * (max - min)) + min;
