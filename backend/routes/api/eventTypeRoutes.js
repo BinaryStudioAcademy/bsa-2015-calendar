@@ -48,7 +48,7 @@ module.exports = function(app) {
 
 
 	app.delete('/api/eventType/:id', function(req, res, next){
-		eventTypeService.delete(req.params.id, function(err, data){
+		eventTypeRepository.delete(req.params.id, function(err, data){
 			res.data = data;
 			res.err = err;
 			next();
