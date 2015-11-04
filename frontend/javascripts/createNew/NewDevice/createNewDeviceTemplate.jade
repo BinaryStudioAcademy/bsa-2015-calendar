@@ -4,10 +4,10 @@
     h1(align='center') Create a new device
 
     .form-group
-      label.col-sm-2(for="device") title: 
+      label.col-sm-2(for="device") Title:
       .col-sm-10
         input(type='text', class="form-control", id="device", placeholder="Enter title", ng-model='cndCtrl.device.title')
-      label.col-sm-2(for="description" class="form-control4") description: 
+      label.col-sm-2(for="description" class="form-control4") Description:
       .col-sm-10
         input(type='text', class="form-control", id="description", placeholder="Enter description", ng-model='cndCtrl.device.description')  
 
@@ -16,18 +16,18 @@
         button(ng-click='cndCtrl.reset()' class="btn btn-warning form-btn") Reset form
         button(ng-click='cndCtrl.addDevice()' class='btn btn-info form-btn') Save
     .button-div2
-      h4 Devices: {{ cndCtrl.devices.length }}.
-      button(ng-click='cndCtrl.toggleViewDevice()') Display/hide all devices
+      h4 Devices: {{ cndCtrl.devices.length }}
+      //button(ng-click='cndCtrl.toggleViewDevice()') Display/hide all devices
     br
 
 
-  device_list_body(align='center', ng-show='cndCtrl.showDevicesList')
+  device_list_body(align='center')
     .div_search
       b Search device:
       input(type='text', size='19', border='1', ng-model='cndCtrl.search')
 
     .content_for_device_list
-      table.col-sm-12.table-responsive.table-hover.table.deviceTable(border='1', ng-show='cndCtrl.showDevicesList')
+      table.col-sm-12.table-responsive.table-hover.table.deviceTable(border='1')
         tr
           th.col-sm-4 device title
           th.col-sm-6 device description

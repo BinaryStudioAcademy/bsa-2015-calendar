@@ -5,18 +5,18 @@ createNewDeviceController.$inject = ['$scope', 'createNewDeviceService', 'socket
 
 function createNewDeviceController($scope, createNewDeviceService, socketService, alertify){
   var vm = this;
-  vm.showDevicesList = false;
+  //vm.showDevicesList = false;
   vm.devices = createNewDeviceService.getDevices();
   // alternativa str 9
   // createNewDeviceService.getDevices(function(data){
   //   vm.devices = data;
   // });
 
-  vm.toggleViewDevice = function(){
+/*  vm.toggleViewDevice = function(){
       vm.showDevicesList = !vm.showDevicesList;
       vm.devices = createNewDeviceService.getDevices();
       //alertify.log('test alert');
-  };
+  };*/
 
   vm.reset = function (){
       vm.device.title = '';
