@@ -2,6 +2,8 @@ var app = require('../app');
 
 app.controller('editEventWeekController', editEventWeekController);
 
+
+
 editEventWeekController.$inject = ['socketService', 'alertify', 'helpEventService', '$rootScope', '$scope', '$timeout', '$modalInstance', 'rooms', 'devices', 'users', 'selectedDate', 'eventTypes'];
 
 function editEventWeekController(socketService, alertify, helpEventService, $rootScope, $scope, $timeout, $modalInstance, rooms, devices, users, selectedDate, eventTypes) {

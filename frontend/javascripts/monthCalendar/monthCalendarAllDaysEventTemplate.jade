@@ -1,2 +1,2 @@
 div(ng-repeat='event in day.events')
-    div.month-event(uib-popover='Strating at {{event.date.format("HH:mm")}}', popover-trigger='mouseenter', popover-title="{{event.name | limitTo: maxEventNameLength}}") {{event.name}}
+    div.month-event(uib-popover='Strating at {{event.date.format("HH:mm")}}', popover-trigger='mouseenter', popover-title="{{event.eventbody.title | limitTo: maxEventNameLength}}") {{event.eventbody.title}}

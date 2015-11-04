@@ -10,8 +10,7 @@ function WeekViewController(helpEventService, $scope, $uibModal, $compile, $temp
 
     vm.timeStamps = helpEventService.getTimeStamps();
     vm.days = helpEventService.getDays();
-
-    vm.daysNames = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+    vm.daysNames = helpEventService.getDaysNames();
 
     $scope.$on('eventsUpdated', function() {
         vm.buildEventCells(0);

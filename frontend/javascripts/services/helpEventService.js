@@ -60,6 +60,12 @@ function helpEventService($resource, $timeout, $q, $http) {
 		            { name: 'Sun'},
 		          ];
 
+	var daysNames = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+
+	function getDaysNames(){
+		return daysNames;
+	}
+
 	function getTimeStamps(){
 		return timeSatmps;
 	}
@@ -119,6 +125,7 @@ function helpEventService($resource, $timeout, $q, $http) {
 
 
 	function getEvents(start, stop) {
+		console.log(start,stop);
 		var eventsPromise = $http.get('api/eventByInterval/'+ (+start)+ '/'+ (+stop))       
 		.then(function (response) {
 			console.log('success Number of finded events: ', response.length);
@@ -206,6 +213,7 @@ function helpEventService($resource, $timeout, $q, $http) {
 	return {
 		getTimeStamps: getTimeStamps,
 		getDays: getDays,
+		getDaysNames: getDaysNames,
 		configureEventData: configureEventData,
 		saveEvent: saveEvent,
 		savePlan: savePlan,

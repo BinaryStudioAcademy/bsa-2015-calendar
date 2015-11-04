@@ -2,20 +2,110 @@
 var app = require('../app'),
     moment = require('moment');
 
-
 app.controller('MonthController', MonthController);
 
 MonthController.$inject = ['$scope', 'helpEventService', '$timeout', '$q', '$uibModal'];
 
 function MonthController($scope, helpEventService,  $timeout, $q, $uibModal) {
 
-// app.controller("MonthController", function ($scope) {
-    //$scope.day = moment();
 
     vm = this;
 
-    $scope.maxEventNameLength = 18;
+    $scope.maxEventNameLength = 24;
     $scope.maxDisplayEventsNumber = 3;
+
+    $scope.selected = _removeTime($scope.selected || moment());
+    $scope.month = $scope.selected.clone();
+    var start = $scope.selected.clone();
+    start.date(1);
+    _removeTime(start.day(0));
+
+
+    var nowMoment = moment();
+
+    vm.monthStartMoment = moment({hour: 0, minute: 0});
+    vm.monthStartMoment.add(-nowMoment.isoWeekday() +1, 'd');
+   
+    vm.monthEndMoment = vm.monthStartMoment.clone();
+    vm.monthEndMoment.add(5, 'w');
+    vm.monthEndMoment.set({'hour': 23, 'minute': 59});
+
+    vm.Start = new Date(vm.monthStartMoment.format("DD MMM YYYY HH:mm:ss"));    
+    vm.End = new Date(vm.monthEndMoment.format("DD MMM YYYY HH:mm:ss"));
+
+    _buildMonth(vm.monthStartMoment, vm.monthEndMoment);
+
+
+    function _removeTime(date) {
+        return date.day(1).hour(0).minute(0).second(0).millisecond(0);
+    }
+
+    function _buildMonth(start, end) {
+        $scope.weeks = [];
+        $scope.events = {};
+
+        var date = start.clone();
+
+        console.log(start,end);      
+
+
+        helpEventService.getEvents(new Date(start.format("DD MMM YYYY HH:mm:ss")),new Date(end.format("DD MMM YYYY HH:mm:ss"))).then(function(data) {
+            if (data !== null){
+                var events = data;
+                for (var i = 0; i < events.length; i++) {
+                    var eventStartDate = new Date(events[i].start);
+                    var evDate = eventStartDate.getDate()+'_'+(eventStartDate.getMonth()+1)+'_'+eventStartDate.getFullYear();
+                    $scope.events[evDate] = $scope.events[evDate] || [] ;
+                    $scope.events[evDate].push(events[i]);
+                }
+                for (var weekIndex = 0; weekIndex < 5; weekIndex++){
+                    $scope.weeks.push({days: _buildWeek(date.clone())});
+                    date.add(1, "w");
+                }
+            }  
+            console.log($scope.weeks); 
+        });
+
+        
+    }
+
+    function getDateEvents(eventsObj, dateString) {
+        var events = [];
+
+        eventsObj[dateString].forEach( function(event){
+                console.log(event.title, event.start);
+                events.push({name:event.title, date: moment(event.start)});
+            });
+
+        return events;
+    }
+
+    function _buildWeek(date) {
+        var days = [];
+        var evDate;
+        var startDate = date.clone();
+        for (var i = 0; i < 7; i++) {
+            days.push({
+                number: date.date(),
+                isCurrentMonth: date.month() === startDate.month(),
+                isToday: date.isSame(new Date(), "day"),
+                date: date,
+                events: []
+            });
+            if ($scope.events !== undefined){
+                evDate = days[i].date.format("D_M_YYYY");
+                if($scope.events[evDate]){
+                    $scope.events[evDate].forEach( function(event){
+                        days[i].events.push({eventbody: event, date: moment(event.start)});
+                    });
+                }
+            }
+            date = date.clone();
+            date.add(1, "d");
+        }
+        return days;
+    }
+
 
     $scope.showEventDetails = function (event) {
         console.log(event.name);
@@ -53,7 +143,7 @@ function MonthController($scope, helpEventService,  $timeout, $q, $uibModal) {
         $scope.selectedDate = new Date(dayDate.format("DD MMM YYYY HH:mm:ss"));
         $scope.modalInstance = $uibModal.open({
             animation: true,
-            templateUrl: 'templates/monthCalendar/editEventMonthTemplate.html',
+            templateUrl: 'templates/monthCalendar/  .html',
             controller: 'editEventMonthController',
             controllerAs: 'evMonthCtrl',
             bindToController: true,
@@ -79,14 +169,6 @@ function MonthController($scope, helpEventService,  $timeout, $q, $uibModal) {
 
 
     vm.pullData = function() {
-
-        // helpEventService.getEvents($scope.Start, $scope.End).then(function(data) {
-        //     if (data !== null){
-        //         $scope.eventObj = data;
-        //         console.log(data);
-        //         $scope.$broadcast('eventsUpdated');
-        //     }
-        // });
 
         helpEventService.getRooms().then(function(data) {
             if (data !== null){

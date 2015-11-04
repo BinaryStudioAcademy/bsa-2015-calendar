@@ -35,15 +35,10 @@ app.directive("calendar", function ($http,$rootScope) {
             $scope.$on('eventAdded', function(event, eventfromsend){
                 var newEventDate = new moment(eventfromsend.start);
                 evDate = newEventDate.format("D_M_YYYY");
-
-                //console.log($scope.start);
-                //console.log($scope.end);
-
+                
                 var daysDiff = newEventDate.diff($scope.start,'days');
-                //console.log(daysDiff);
                 var weekindex = Math.floor(daysDiff / 7);
                 var dayindex = daysDiff % 7;
-
                 $scope.weeks[weekindex].days[dayindex].events.push({name:eventfromsend.title, date: moment(eventfromsend.start)});
 
             });
@@ -58,9 +53,6 @@ app.directive("calendar", function ($http,$rootScope) {
         scope.weeks = [];
         scope.events = [];
         var end = start.clone().add(1, 'month').endOf('month');
-        // console.log(start);
-        // console.log(end);
-        // console.log(month);
         scope.start = start;
         scope.end = end;
 
