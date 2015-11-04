@@ -51,8 +51,7 @@ function CalendarController($document, $modal, $resource, $scope, $rootScope, $s
     } else {
       vm.flag.push(_id);
     }
-    console.log('flags from CalendarController $rootScope.$broadcast', vm.flag);
-
+    // console.log('flags from CalendarController $rootScope.$broadcast', vm.flag);
     $rootScope.$broadcast('flagFromCalendar', {   //push vm.flag to point $rootScope.$on
       messege: vm.flag
     });
@@ -64,8 +63,7 @@ function CalendarController($document, $modal, $resource, $scope, $rootScope, $s
     for (var i = 0; i < vm.eventTypes.length; i++) {   
       vm.flag.push(vm.eventTypes[i]._id);
       vm.eventTypes[i].flag = true;
-      console.log('flags from CalendarController selectAllEventType', vm.flag);
-
+      // console.log('flags from CalendarController selectAllEventType', vm.flag);
       $rootScope.$broadcast('flagFromCalendar', {   //push vm.flag to point $rootScope.$on
         messege: vm.flag
       });
@@ -77,8 +75,7 @@ function CalendarController($document, $modal, $resource, $scope, $rootScope, $s
     vm.flag.length = 0;
     for (var i = 0; i < vm.eventTypes.length; i++) {   
       vm.eventTypes[i].flag = false;
-      console.log('flags from CalendarController selectAllEventType', vm.flag);
-      
+      // console.log('flags from CalendarController clearAllEventType', vm.flag);    
       $rootScope.$broadcast('flagFromCalendar', {   //push vm.flag to point $rootScope.$on
         messege: vm.flag
       });
