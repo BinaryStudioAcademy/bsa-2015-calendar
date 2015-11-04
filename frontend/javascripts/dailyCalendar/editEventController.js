@@ -17,6 +17,13 @@ function ModalController(alertify, DailyCalendarService, socketService, $timeout
 		console.log('isPlan', vm.isPlan);
 	};
 
+	vm.isDPopened = false;
+	vm.dpFormat = "dd.MM.yyyy";
+
+	vm.openDP = function(){
+		vm.isDPopened = !vm.isDPopened;
+	};
+
 	vm.weekDays = [
 		{ name: 'Mo', selected: false },
 		{ name: 'Tu', selected: false },
@@ -30,6 +37,7 @@ function ModalController(alertify, DailyCalendarService, socketService, $timeout
 	vm.planIntervals = [];
 
 	vm.minDate = new Date();
+	vm.planStartDate = new Date();
 	vm.planEndDate = new Date();
 
 	vm.computeIntervals = function(selectedDay){
