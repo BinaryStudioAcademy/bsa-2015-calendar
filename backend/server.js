@@ -12,15 +12,16 @@ var LocalStrategy = require('passport-local').Strategy;
 
 var connection = require('./db/dbconnect');
 
-// var faker = require('./faker/generate.js');
+ var faker = require('./faker/generate.js');
 
-// faker({
+ //faker({
 //   device: 1,
 //   user: 1,
 //   room: 1,
 //   group: 1,
 //   eventType: 1
-// });
+    //event: 10
+ //});
 
 
 

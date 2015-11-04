@@ -94,6 +94,21 @@ eventService.prototype.add = function(data, callback){
 				cb();
 			}
 		},
+		function(cb){ // добавляем запись об ивенте юзеру
+			if(event.ownerId){
+				userRepository.addEvent(event.ownerId, event._id, function(err, data){
+	 				if(err){				
+	 					return cb(err, null);
+	 				}
+	 				console.log('added to user');
+				});
+				cb();
+			}
+			else{
+				console.log('no ownerId');
+				cb();
+			}
+		},
 		function(cb){ // добавляем запись об ивенте в каждый экземпляр device
 			if(event.devices.length){
 				event.devices.forEach(function(deviceId){

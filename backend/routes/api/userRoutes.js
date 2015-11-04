@@ -11,6 +11,14 @@ module.exports = function(app) {
 		});
 	}, apiResponse);
 
+	app.get('/api/user/events/:id', function(req, res, next) {
+		userRepository.getUserEvents(req.params.id, function(err, data) {
+			res.data = data;
+			res.err = err;
+			next();
+		});
+	}, apiResponse);
+
 	app.get('/api/user/', function(req, res, next){
 		userRepository.getAll(function(err, data){
 			res.data = data;
