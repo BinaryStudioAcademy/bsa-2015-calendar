@@ -44,6 +44,7 @@ module.exports = function(app) {
 	}, apiResponse);	
 
 	app.post('/api/plan/', function(req, res, next) {
+		console.log('in plan post route');
 		planService.add(req.body, function(err, data) {
 			res.data = data;
 			res.err = err;

@@ -16,10 +16,11 @@ planService.prototype.availability = function(data, callback){
 	var intervalsIterator = 0;
 
 	if (data.intervals === undefined){
-		return new Error('plan needed intervals');
+		callback(new Error('plan needed intervals'), null);
 	}
 
-	async.whilst(function () { // проверки выполняются для каждого экземпляра "будущего" ивента
+	async.whilst(
+	function () { // проверки выполняются для каждого экземпляра "будущего" ивента
 			return eventTimeStart <= planDateEnd;
 	},
 
@@ -84,6 +85,7 @@ planService.prototype.availability = function(data, callback){
 			if(err){
 				//console.log(err);
 				return cb(err);	
+				// cb(err);
 			}
 			cb();	
 			// // else?? bp
@@ -93,8 +95,10 @@ planService.prototype.availability = function(data, callback){
 		}, function(err, result) {
 			if (err) {
 				return callback(err, {success: false});
+				// callback(err, {success: false});
 			}
 			return callback(null, {success: true});
+			// callback(null, {success: true});
 		});
 };
 
@@ -114,10 +118,13 @@ planService.prototype.add = function(data, callback){
 	async.waterfall([
 
 	function (cb){ // выполняем проверку возможности добавления плана
+		console.log('checking availability');
 		pService.availability(data, function(err, result){
 			if(err){
+				console.log('availability error');
 				return cb(err, result);
 			}
+			console.log('avaiable');
 			cb();
 		});
 	},
