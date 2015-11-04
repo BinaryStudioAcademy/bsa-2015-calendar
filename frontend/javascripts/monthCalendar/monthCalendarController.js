@@ -61,16 +61,15 @@ function MonthController($scope, helpEventService,  $timeout, $q, $uibModal, $ro
 
 
     var flagsInDaily = [];
-    $rootScope.$on('flagFromCalendar', function (event, agrs) {           //pull vm.flag from $rootScope.$broadcast
+    $rootScope.$on('flagFromCalendar', function (event, agrs) {           
         var flagsFromCalendar = agrs.messege;
-        // console.log('flags from monthCalendarController $rootScope.$on', flagsFromCalendar);
-        flagsInDaily.length = 0;                                           // rewriting flagsInDaily
+        flagsInDaily.length = 0;                                           
             for (var i = 0; i < flagsFromCalendar.length; i++) {        
                 flagsInDaily.push(flagsFromCalendar[i]);
             }
     });
 
-    vm.selectTypeEvent = function(event){                                  // if return true event show, if false event not show
+    vm.selectTypeEvent = function(event){                                  
         // console.log('event in day.events', event);                    
         for (var i = 0; i < flagsInDaily.length; i++) {     
             if (event.type == flagsInDaily[i]) return true;
