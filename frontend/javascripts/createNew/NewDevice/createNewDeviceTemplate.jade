@@ -18,8 +18,8 @@
         .button-div2
             h4 Devices: {{ cndCtrl.devices.length }}
             .div_search
-                b Search:
-                input(type='text', size='19', border='1', ng-model='cndCtrl.search')
+                span.glyphicon.glyphicon-search
+                input(type='text', size='19', border='1' style="margin-left: 10px", ng-model='cndCtrl.search')
         br
 
     device_list_body(align='center')
