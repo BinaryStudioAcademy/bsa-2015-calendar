@@ -76,7 +76,7 @@ var clearUserEventsDb = function (eventIds) {
 };
 
 var saveGoogleEvents = function(code, username){
-	
+	//var deferred = q.defer();
 /*
 	if(userInfo.googleEvents && userInfo.googleEvents.length) {
 		clearUserEventsDb(userInfo.googleEvents);
@@ -94,6 +94,7 @@ var saveGoogleEvents = function(code, username){
 
 			if (err) {
 				console.log('Error while trying to retrieve access token ', err);
+				//deferred.reject(err);
 				return;
 			}
 
@@ -115,9 +116,12 @@ var saveGoogleEvents = function(code, username){
 				
 			}, function(err){
 				console.log('Getting google events error: ' + err);
+				//deferred.reject(err);
 			});
+
+			//deferred.resolve();
+			//return deferred;
 		});
-		//}
 	});
 
 	

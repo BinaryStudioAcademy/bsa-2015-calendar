@@ -8,6 +8,7 @@ function GoogleAuthController (GoogleAuthService, AuthService, $resource) {
 	var vm = this;
 	
 	vm.login = function() {
+		console.log('gaCtrl');
 		var userInfo = AuthService.getUser();
 		GoogleAuthService.login(userInfo.username);
 	};
