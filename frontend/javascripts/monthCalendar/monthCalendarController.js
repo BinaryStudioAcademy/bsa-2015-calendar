@@ -63,33 +63,33 @@ function MonthController($scope, helpEventService,  $timeout, $q, $uibModal) {
         var date = vm.mViewStartMoment.clone();
         vm.weeks = [];
        
-            // формируем недели в таком же стиле как объект с ивентами
-            for (var weekIndex = 0; weekIndex < 5; weekIndex++){
-                var days = [];
-                var evDate;
-                var startDate = date.clone();
-                for (var j = 0; j < 7; j++) {
-                    days.push({
-                        number: date.date(),
-                        isCurrentMonth: date.month() === startDate.month(),
-                        isToday: date.isSame(new Date(), "day"),
-                        date: date.clone(),
-                        events: []
-                    });
-                    if (vm.events !== undefined){
-                        evDate = days[j].date.format("D_M_YYYY");
-                        if(vm.events[evDate]){
-                            vm.events[evDate].forEach( function(event){
-                                event.momentStartDate = moment(event.start);
-                                days[j].events.push(event);
-                            });
-                        }
+        // формируем недели в таком же стиле как объект с ивентами
+        for (var weekIndex = 0; weekIndex < 5; weekIndex++){
+            var days = [];
+            var evDate;
+            
+            for (var j = 0; j < 7; j++) {
+                days.push({
+                    number: date.date(),
+                    isCurrentMonth: date.month() === vm.monthStartMoment.month(),
+                    isToday: date.isSame(new Date(), "day"),
+                    date: date.clone(),
+                    events: []
+                });
+                if (vm.events !== undefined){
+                    evDate = days[j].date.format("D_M_YYYY");
+                    if(vm.events[evDate]){
+                        vm.events[evDate].forEach( function(event){
+                            event.momentStartDate = moment(event.start);
+                            days[j].events.push(event);
+                        });
                     }
-                    date.add(1, "d");
                 }
-                vm.weeks.push({days: days});
-            }  
-        
+                date.add(1, "d");
+            }
+            vm.weeks.push({days: days});
+        }  
+        console.log(vm.weeks);
     };
 
 
@@ -134,10 +134,7 @@ function MonthController($scope, helpEventService,  $timeout, $q, $uibModal) {
         vm.maxDisplayEventsNumber = 3;
         vm.allDayEventsTemplateUrl = 'templates/monthCalendar/monthCalendarAllDaysEventTemplate.html';
 
-        vm.selected = vm.removeTime(vm.selected || moment());
-        
-        //vm.startCurrentMonth = vm.startCurrentMonth || moment().startOf('month');
-        
+        vm.selected = vm.removeTime(vm.selected || moment());        
         var nowMoment = moment();
 
         vm.mViewStartMoment = moment({hour: 0, minute: 0});
