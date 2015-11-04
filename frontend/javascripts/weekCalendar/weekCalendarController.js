@@ -8,10 +8,6 @@ WeekViewController.$inject = ['helpEventService', '$scope', '$uibModal','$compil
 function WeekViewController(helpEventService, $scope, $uibModal, $compile, $templateCache) {
 	var vm = this;
 
-    vm.timeStamps = helpEventService.getTimeStamps();
-    vm.days = helpEventService.getDays();
-    vm.daysNames = helpEventService.getDaysNames();
-
     $scope.$on('eventsUpdated', function() {
         vm.buildEventCells(0);
     });
@@ -23,19 +19,6 @@ function WeekViewController(helpEventService, $scope, $uibModal, $compile, $temp
             vm.buildEventCells(index);
         }    
     });
-
-    vm.toggleEventInfo = function() {
-        vm.eventSelected = !vm.eventSelected;
-    };
-
-	vm.newEvent = function(day, hour) {
-		console.log(day);
-		console.log(hour);
-		var createEventModal = $uibModal.open({
-			templateUrl: 'templates/weekCalendar/createEventModal.html',
-			size: 'md'
-			});
-	};
 
     vm.buildEventCells = function(index){
         for (var i = index; i < vm.eventObj.length; i++) { 
@@ -82,7 +65,7 @@ function WeekViewController(helpEventService, $scope, $uibModal, $compile, $temp
         }
     };
 
-    vm.prevWeek = function(){
+    vm.previous = function(){
         vm.clearCells();
 
         vm.weekStartMoment.add(-7,'d');
@@ -102,7 +85,7 @@ function WeekViewController(helpEventService, $scope, $uibModal, $compile, $temp
         });
     };
 
-    vm.nextWeek = function(){
+    vm.next = function(){
         vm.clearCells();
 
         vm.weekStartMoment.add(7,'d');
@@ -120,36 +103,6 @@ function WeekViewController(helpEventService, $scope, $uibModal, $compile, $temp
                 $scope.$broadcast('eventsUpdated');
             }
         });
-    };
-
-    vm.showEventDetails = function (event) {
-        console.log(event.name);
-        console.log(event.date.format('DD/MM/YYYY'));
-    };
-
-    vm.showAllDayEvents = function (day) {
-        console.log(day.events);
-    };
-
-    vm.showDay = function(step) {
-        var date = new Date(vm.selectedDate);
-
-        date.setDate(
-            step === 1 ?
-                date.getDate() + 1
-                    :
-                date.getDate() - 1
-        );
-
-        vm.selectedDate = date;
-    };
-
-    vm.showDate = function() {
-        console.log(vm.selectedDate);
-    };
-
-    vm.toggleModal = function() {
-        vm.modalShown = !vm.modalShown;
     };
 
     vm.showCloseModal = function(day, index) {
@@ -227,7 +180,9 @@ function WeekViewController(helpEventService, $scope, $uibModal, $compile, $temp
     init();
 
     function init() {
-
+        vm.timeStamps = helpEventService.getTimeStamps();
+        vm.days = helpEventService.getDays();
+        vm.daysNames = helpEventService.getDaysNames();
         var nowMoment = moment();
         vm.weekEndMoment = moment({hour: 23, minute: 59});
         vm.weekEndMoment.add(7-nowMoment.isoWeekday(), 'd');

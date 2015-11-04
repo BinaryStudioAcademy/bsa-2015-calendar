@@ -109,7 +109,7 @@ function helpEventService($resource, $timeout, $q, $http) {
 	function getAllEvents() {
 		var allEventsPromise = $http.get('api/event/')       
 		.then(function (response) {
-			console.log('success Number of all events: ', response.length);
+			console.log('success Number of all events: ', response.data.length);
 			return response.data;
 		}, function(reason) {
 			if (reason.status == 404){
@@ -125,10 +125,9 @@ function helpEventService($resource, $timeout, $q, $http) {
 
 
 	function getEvents(start, stop) {
-		console.log(start,stop);
 		var eventsPromise = $http.get('api/eventByInterval/'+ (+start)+ '/'+ (+stop))       
 		.then(function (response) {
-			console.log('success Number of finded events: ', response.length);
+			console.log('success Number of finded events: ', response.data.length);
 			return response.data;
 		}, function(reason) {
 			if (reason.status == 404){
@@ -145,7 +144,7 @@ function helpEventService($resource, $timeout, $q, $http) {
 	function getRooms() {
 		var roomsPromise = $http.get('api/room/')       
 		.then(function (response) {
-			 console.log('success Total rooms: items: ', response.length);
+			 console.log('success Total rooms: items: ', response.data.length);
 			return response.data;
 		}, function(reason) {
 			if (reason.status == 404){
@@ -162,7 +161,7 @@ function helpEventService($resource, $timeout, $q, $http) {
 	function getDevices() {
 		var devicesPromise = $http.get('api/device/')       
 		.then(function (response) {
-			console.log('success Total devices: ', response.length);
+			console.log('success Total devices: ', response.data.length);
 			return response.data;
 		}, function(reason) {
 			if (reason.status == 404){
@@ -179,7 +178,7 @@ function helpEventService($resource, $timeout, $q, $http) {
 	function getUsers() {
 		var usersPromise = $http.get('api/user/')       
 		.then(function (response) {
-			console.log('success Number of Users: ', response.length);
+			console.log('success Number of Users: ', response.data.length);
 			return response.data;
 		}, function(reason) {
 			if (reason.status == 404){
@@ -196,7 +195,7 @@ function helpEventService($resource, $timeout, $q, $http) {
 	function getEventTypes() {
 		var typesPromise = $http.get('api/eventType/')       
 		.then(function (response) {
-			console.log('success Current number of types: ', response.length);
+			console.log('success Current number of types: ', response.data.length);
 			return response.data;
 		}, function(reason) {
 			if (reason.status == 404){
