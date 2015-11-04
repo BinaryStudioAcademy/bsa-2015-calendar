@@ -1,19 +1,19 @@
 //- add your class depending on position and modify css
-.date-picker(ng-show='showDatePicker')
+.date-picker(ng-show='datePickerCtrl.showDatePicker')
     .calendar.no-select
         .row.calendar-nav
-            .calendar-nav-left.pointer(ng-click='previousYear()')
+            .calendar-nav-left.pointer(ng-click='datePickerCtrl.previousYear()')
                 i.glyphicon.glyphicon-chevron-left
             .calendar-hdr
-                | {{calendar.year}}
-            .calendar-nav-right.pointer(ng-click='nextYear()')
+                | {{datePickerCtrl.calendar.year}}
+            .calendar-nav-right.pointer(ng-click='datePickerCtrl.nextYear()')
                 i.glyphicon.glyphicon-chevron-right
         .row.calendar-nav
-            .calendar-nav-left.pointer(ng-click='previousMonth()')
+            .calendar-nav-left.pointer(ng-click='datePickerCtrl.previousMonth()')
                 i.glyphicon.glyphicon-chevron-left
             .calendar-hdr
-                | {{calendar.monthName}}
-            .calendar-nav-right.pointer(ng-click='nextMonth()')
+                | {{datePickerCtrl.calendar.monthName}}
+            .calendar-nav-right.pointer(ng-click='datePickerCtrl.nextMonth()')
                 i.glyphicon.glyphicon-chevron-right
         .row
             div Sun
@@ -24,4 +24,4 @@
             div Fri
             div Sat
         .row
-            .pointer(ng-repeat='day in days track by $index', ng-click='selectDate(day)') {{day}}
+            .pointer(ng-repeat='day in datePickerCtrl.days track by $index', ng-click='datePickerCtrl.selectDate(day)') {{day}}

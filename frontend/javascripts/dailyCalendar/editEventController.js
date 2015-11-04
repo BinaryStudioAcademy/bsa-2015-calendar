@@ -2,9 +2,9 @@ var app = require('../app');
 
 app.controller('ModalController', ModalController);
 
-ModalController.$inject = ['alertify', 'DailyCalendarService', 'socketService', '$timeout', '$modalInstance', 'dayViewObject'];
+ModalController.$inject = ['DailyCalendarService', 'socketService', '$timeout', '$modalInstance', 'event', 'plan', 'rooms', 'devices', 'users', 'selectedDate', 'eventTypes', 'allEvents'];
 
-function ModalController(DailyCalendarService, socketService, $timeout, $modalInstance, dayViewObject) {
+function ModalController(DailyCalendarService, socketService, $timeout, $modalInstance, event, plan, rooms, devices, users, selectedDate, eventTypes, allEvents) {
 
 	var vm = this;
 
@@ -31,6 +31,17 @@ function ModalController(DailyCalendarService, socketService, $timeout, $modalIn
 
 	vm.minDate = new Date();
 	vm.planEndDate = new Date();
+	vm.isPlan = false;
+	vm.formSuccess = false;
+
+	vm.event = event;
+	vm.plan = plan;
+	vm.rooms = rooms;
+	vm.devices = devices;
+	vm.users = users;
+	vm.selectedDate = selectedDate;
+	vm.eventTypes = eventTypes;
+	vm.allEvents = allEvents;
 
 	vm.computeIntervals = function(selectedDay){
 		var selectIndex = vm.weekDays.indexOf(selectedDay); //
@@ -43,26 +54,11 @@ function ModalController(DailyCalendarService, socketService, $timeout, $modalIn
 		if(startDay === -1) { 							
 			startDay = 6;
 		}
-		console.log('start day', startDay);
-
-		// if(!vm.planRoom && selectedDay){
-		// 	if(selectedDay.name != vm.weekDays[startDay].name){
-		// 		alertify.error('Please choose a room for your events');
-		// 		selectedDay.selected = false;
-		// 		return;				
-		// 	}
-		// }
 
 		vm.weekDays[startDay].selected = true;
-		// console.log(vm.weekDays);
 
 		var currentDay, i;
-
-
 		vm.planIntervals = [];
-
-		//vm.daysSelectedCount = vm.
-
 
 		if(startDay === 0){
 			currentDay = 0;
@@ -93,8 +89,6 @@ function ModalController(DailyCalendarService, socketService, $timeout, $modalIn
 
 		} else {
 			currentDay = startDay;
-			// console.log('current day', currentDay);
-			//console.log('weekDays: ', vm.weekDays);
 
 			for(i = currentDay + 1; i < 7; i++){
 				if(vm.weekDays[i].selected){
@@ -149,19 +143,6 @@ function ModalController(DailyCalendarService, socketService, $timeout, $modalIn
 
 
 	};
-
-	vm.isPlan = false;
-	vm.formSuccess = false;
-
-	vm.event = dayViewObject.event;
-	vm.rooms = dayViewObject.rooms;
-	vm.devices = dayViewObject.devices;
-	vm.users = dayViewObject.users;
-	vm.selectedDate = dayViewObject.selectedDate;
-	vm.eventTypes = dayViewObject.eventTypes;
-	vm.allEvents = dayViewObject.allEvents;
-
-	dropEventInfo(vm.selectedDate);
 
 	vm.submitModal = function() {
 		console.log('is plan', vm.isPlan);
@@ -220,6 +201,8 @@ function ModalController(DailyCalendarService, socketService, $timeout, $modalIn
 		vm.planRoom = title;
 	};
 
+	dropEventInfo(vm.selectedDate);
+
 	function submitEvent(event) {
 		console.log('submiting an event...');
 		DailyCalendarService.saveEvent(event)
@@ -253,25 +236,27 @@ function ModalController(DailyCalendarService, socketService, $timeout, $modalIn
 		console.log('plan', plan);
 
 		DailyCalendarService.savePlan(plan)
-			.$promise.then(
+			.$promise
+			.then(
 				function(response) {
 
 					vm.formSuccess = true;
-					dropEventInfo();
 					console.log('success', response);
+					vm.allEvents.push(vm.event);
 
-					socketService.emit('add plan', { plan : plan });	
-
-					$timeout(function() {
-						$modalInstance.close();
-						vm.formSuccess = false;
-					}, 1500);
+					socketService.emit('add plan', { plan : plan });
 				},
 
 				function(response) {
 					console.log('failure', response);
 				}
-			);
+			)
+			.then(function() {
+				$timeout(function() {
+					$modalInstance.close();
+					vm.formSuccess = false;
+				}, 1500);
+			});
 	}
 
 	function dropEventInfo(selDate) {
@@ -279,7 +264,6 @@ function ModalController(DailyCalendarService, socketService, $timeout, $modalIn
 		var newEventDate = selDate || new Date();
 		newEventDate.setHours(0);
 		newEventDate.setMinutes(0);
-
 
 		vm.plan.title = '';
 		vm.plan.description = '';

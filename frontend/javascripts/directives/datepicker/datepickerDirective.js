@@ -5,62 +5,24 @@ angular
         return {
             restrict: "E",
             templateUrl: "templates/directives/datepicker/datepickerTemplate.html",
-            controller: function($scope, datepickerService, $timeout) {
-                $scope.showDatePicker = false;
+            controller: datepickerController,
+            controllerAs: 'datePickerCtrl',
+            bindToController: true,
 
-                $scope.calendar = {
-                    year: new Date().getFullYear(),
-                    month: new Date().getMonth(),
-                    monthName: datepickerService.getMonthName(new Date().getMonth())
-                };
-
-                $scope.days = datepickerService.getCalendarDays(new Date().getFullYear(), new Date().getMonth());
-
-                $scope.nextMonth = function () {
-                    datepickerService.incrementCalendarMonth($scope.calendar);
-                    $scope.calendar.monthName = datepickerService.getMonthName($scope.calendar.month);
-                    $scope.days = datepickerService.getCalendarDays($scope.calendar.year, $scope.calendar.month);
-                };
-
-                $scope.previousMonth = function () {
-                    datepickerService.decrementCalendarMonth($scope.calendar);
-                    $scope.calendar.monthName = datepickerService.getMonthName($scope.calendar.month);
-                    $scope.days = datepickerService.getCalendarDays($scope.calendar.year, $scope.calendar.month);
-                };
-
-                $scope.nextYear = function () {
-                    $scope.calendar.year++;
-                    $scope.days = datepickerService.getCalendarDays($scope.calendar.year, $scope.calendar.month);
-                };
-
-                $scope.previousYear = function () {
-                    $scope.calendar.year--;
-                    $scope.days = datepickerService.getCalendarDays($scope.calendar.year, $scope.calendar.month);
-                };
-
-                $scope.selectDate = function (day) {
-                    var newDate = new Date($scope.calendar.year, $scope.calendar.month, day);
-                    $scope.selectedDate = newDate;
-                    console.log($scope.selectedDate);
-                    $scope.showDatePicker = false;           
-                };
-
-            },
-
-            link: function(scope, element, attrs, controller) {
+            link: function(scope, element, attrs, datePickerCtrl) {
 
                 var forElement = angular.element("#" + attrs.for);
                 scope.element = forElement;
 
                 forElement.on('focus', function() {
                     scope.$apply(function() {
-                        scope.showDatePicker = true;
+                        datePickerCtrl.showDatePicker = true;
                     });  
                 });
 
                 angular.element("body").on('click', function() { 
                     scope.$apply( function() { 
-                        scope.showDatePicker = false; 
+                        datePickerCtrl.showDatePicker = false; 
                     });
                 });
 
@@ -73,4 +35,49 @@ angular
                 });
             }
         };
+
+        function datepickerController(datepickerService, $timeout) {
+
+                var vm = this;
+
+                vm.showDatePicker = false;
+
+                vm.calendar = {
+                    year: new Date().getFullYear(),
+                    month: new Date().getMonth(),
+                    monthName: datepickerService.getMonthName(new Date().getMonth())
+                };
+
+                vm.days = datepickerService.getCalendarDays(new Date().getFullYear(), new Date().getMonth());
+
+                vm.nextMonth = function () {
+                    datepickerService.incrementCalendarMonth(vm.calendar);
+                    vm.calendar.monthName = datepickerService.getMonthName(vm.calendar.month);
+                    vm.days = datepickerService.getCalendarDays(vm.calendar.year, vm.calendar.month);
+                };
+
+                vm.previousMonth = function () {
+                    datepickerService.decrementCalendarMonth(vm.calendar);
+                    vm.calendar.monthName = datepickerService.getMonthName(vm.calendar.month);
+                    vm.days = datepickerService.getCalendarDays(vm.calendar.year, vm.calendar.month);
+                };
+
+                vm.nextYear = function () {
+                    vm.calendar.year++;
+                    vm.days = datepickerService.getCalendarDays(vm.calendar.year, vm.calendar.month);
+                };
+
+                vm.previousYear = function () {
+                    vm.calendar.year--;
+                    vm.days = datepickerService.getCalendarDays(vm.calendar.year, vm.calendar.month);
+                };
+
+                vm.selectDate = function (day) {
+                    var newDate = new Date(vm.calendar.year, vm.calendar.month, day);
+                    vm.selectedDate = newDate;
+                    console.log(vm.selectedDate);
+                    vm.showDatePicker = false;           
+                };
+
+            }
     });

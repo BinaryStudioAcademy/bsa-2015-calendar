@@ -14,27 +14,31 @@ angular
 				table: '@',
 			},
 			controller: timeIndicatorController,
-			link: function($scope, $element, $attrs) {
+			controllerAs: 'timeIndCtrl',
+			bindToController: true,
+			link: function(scope, element, attrs, timeIndCtrl) {
 
 				$timeout(function () {
 
-					$scope.rowHeight = $scope.calcRowHeight($scope.tableSel);
-					$scope.moveIndicator($element, $scope.rowHeight);	
-					$scope.changePosition($element, $scope.rowHeight);
-					$scope.goToIndicator($element);
+					timeIndCtrl.rowHeight = timeIndCtrl.calcRowHeight(timeIndCtrl.tableSel);
+					timeIndCtrl.moveIndicator(element, timeIndCtrl.rowHeight);	
+					timeIndCtrl.changePosition(element, timeIndCtrl.rowHeight);
+					// $scope.goToIndicator($element);
 
 				}, 0);
 			}
 		};
 
 		function timeIndicatorController($scope, $interval, $attrs) {
+
+			var vm = this;
 			
-			$scope.calcRowHeight = calcRowHeight;
-			$scope.calcPosition = calcPosition;
-			$scope.moveIndicator = moveIndicator;
-			$scope.changePosition = changePosition;
-			$scope.goToIndicator = goToIndicator;
-			$scope.tableSel = $attrs.table;
+			vm.calcRowHeight = calcRowHeight;
+			vm.calcPosition = calcPosition;
+			vm.moveIndicator = moveIndicator;
+			vm.changePosition = changePosition;
+			vm.goToIndicator = goToIndicator;
+			vm.tableSel = $attrs.table;
 
 			function goToIndicator() {
 				$location.hash('time-indicator');
@@ -44,7 +48,7 @@ angular
 			function changePosition(element, rowHeight) {
 
 				$interval(function() {
-					$scope.moveIndicator(element, rowHeight);
+					vm.moveIndicator(element, rowHeight);
 				}, 60000);
 			}
 
@@ -56,7 +60,7 @@ angular
 			function calcPosition(rowHeight) {
 
 				if(!rowHeight) {
-					rowHeight = $scope.calcRowHeight($scope.tableSel);
+					rowHeight = vm.calcRowHeight(vm.tableSel);
 				}
 
 				var today = new Date();
@@ -69,7 +73,7 @@ angular
 			}
 			
 			function moveIndicator(element, rowHeight) {
-				var newPos = $scope.calcPosition(rowHeight);
+				var newPos = vm.calcPosition(rowHeight);
 				element.css('top', newPos);
 			}
 		}

@@ -18,6 +18,8 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal, socket
 	vm.computedEvents = [];
 	vm.selectedDate = vm.selectedDate || todayDate;
 	vm.eventSelected = false;
+	vm.event = vm.event || {};
+	vm.plan = vm.plan || {};
 
 	function getRandomInt(min, max) {
 		return Math.floor(Math.random() * (max - min)) + min;
@@ -68,24 +70,6 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal, socket
 		return eventArr;
 	};
 
-	vm.dropEventInfo = function(selDate) {
-
-		var newEventDate = selDate || new Date();
-		newEventDate.setHours(0);
-		newEventDate.setMinutes(0);
-
-		vm.event.title = '';
-		vm.event.description = '';
-		vm.event.start = newEventDate;
-		vm.event.end = newEventDate;
-		vm.event.devices = [];
-		vm.event.users = [];
-		vm.event.room = undefined;
-		vm.event.isPrivate = false;
-		vm.event.type = undefined;
-		vm.event.price = null;
-	};
-
 	vm.showCloseModal = function() {
 		vm.modalInstance = $uibModal.open({
 			animation: true,
@@ -94,17 +78,30 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal, socket
 			controllerAs: 'ModalCtrl',
 			bindToController: true,
 			resolve: {
-				dayViewObject: function() {
-					return {
-						event: vm.event,
-						rooms: vm.availableRooms,
-						devices: vm.availableInventory,
-						users: vm.users,
-						selectedDate: vm.selectedDate,
-						eventTypes: vm.eventTypes,
-						allEvents: vm.allEvents,
-					};
+				event: function() {
+					return vm.event;
 				},
+				plan: function() {
+					return vm.plan;
+				},
+				rooms: function() {
+					return vm.availableRooms;
+				},
+				devices: function() {
+					return vm.availableInventory;
+				},
+				users: function() {
+					return vm.users;
+				},
+				selectedDate: function() {
+					return vm.selectedDate;
+				},
+				eventTypes: function() {
+					return vm.eventTypes;
+				},
+				allEvents: function() {
+					return vm.allEvents;
+				}
 			},
 		});
 
@@ -114,6 +111,16 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal, socket
 		});
 	};
 
+	init();
+
+	function init() {
+		showWorkHours();
+		getRooms();
+		getInventory();
+		getUsers();
+		getAllEvents();
+		getEventTypes();
+	}
 
 	// function gets array of event objects and return the one with _id == criteria
 	function findById(array, criteria) {
@@ -383,44 +390,44 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal, socket
 				);
 		}
 
-		function getInventory() {
-			DailyCalendarService.getAllDevices()
-				.$promise.then(
-					function(response) {
-						console.log('success Inventory items: ', response.length);
-						vm.availableInventory = response;
-					},
-					function(response) {
-						console.log('failure', response);
-					}
-				);
-		}
+	function getInventory() {
+		DailyCalendarService.getAllDevices()
+			.$promise.then(
+				function(response) {
+					console.log('success Inventory items: ', response.length);
+					vm.availableInventory = response;
+				},
+				function(response) {
+					console.log('failure', response);
+				}
+			);
+	}
 
-		function getUsers() {
-			DailyCalendarService.getAllUsers()
-				.$promise.then(
-					function(response) {
-						console.log('success Number of Users: ', response.length);
-						vm.users = response;
-					},
-					function(response) {
-						console.log('failure', response);
-					}
-				);
-		}
+	function getUsers() {
+		DailyCalendarService.getAllUsers()
+			.$promise.then(
+				function(response) {
+					console.log('success Number of Users: ', response.length);
+					vm.users = response;
+				},
+				function(response) {
+					console.log('failure', response);
+				}
+			);
+	}
 
-		function getEventTypes() {
-			DailyCalendarService.getAllEventTypes()
-				.$promise.then(
-					function(response) {
-						console.log('success Current number of types: ', response.length);
-						vm.eventTypes = response;
-					},
-					function(response) {
-						console.log('failure', response);
-					}
-				);
-		}
+	function getEventTypes() {
+		DailyCalendarService.getAllEventTypes()
+			.$promise.then(
+				function(response) {
+					console.log('success Current number of types: ', response.length);
+					vm.eventTypes = response;
+				},
+				function(response) {
+					console.log('failure', response);
+				}
+			);
+	}
 	
 	function getAllEvents() {
 		DailyCalendarService.getAllEvents()
@@ -432,7 +439,6 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal, socket
 					filterEventsByTodayDate();
 
 					mapEvents();
-
 				},
 				function(response) {
 					console.log('failure', response);
@@ -441,13 +447,9 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal, socket
 	}
 
 	function filterEventsByTodayDate() {
-		console.log('filter');
 		vm.todayEvents = vm.allEvents.filter(function(event) {
-			console.log(event);
 			if(event.start) {
 				var date = new Date(event.start);
-				console.log(date.getDate());
-				console.log(vm.selectedDate.getDate());
 				return date.getDate() === vm.selectedDate.getDate();
 			}
 		});
@@ -510,16 +512,5 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal, socket
 	// 	}
 	function showWorkHours() {
 		
-	}
-
-	init();
-
-	function init() {
-		showWorkHours();
-		getRooms();
-		getInventory();
-		getUsers();
-		getAllEvents();
-		getEventTypes();
 	}
 }

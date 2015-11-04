@@ -13,6 +13,20 @@ function DailyCalendarService($q, $resource, $http) {
 	var resourceEventTypes = $resource('/api/eventType');
 	var resourcePlan = $resource('/api/plan/');
 
+	return {
+		getTimeStamps: getTimeStamps,
+		saveEvent: saveEvent,
+		configureEventData: configureEventData,
+		getAllRooms: getAllRooms,
+		getAllDevices: getAllDevices,
+		getAllUsers: getAllUsers,
+		getAllEvents: getAllEvents,
+		getAllEventTypes: getAllEventTypes,
+		getTodaysEvents: getTodaysEvents,
+		updateEvent: updateEvent,
+		savePlan: savePlan,
+	};
+
 	function getTimeStamps() {
 
 		var timeStampsObj = [];
@@ -101,17 +115,4 @@ function DailyCalendarService($q, $resource, $http) {
 		return resourcePlan.save(plan);
 	}
 
-	return {
-		getTimeStamps: getTimeStamps,
-		saveEvent: saveEvent,
-		configureEventData: configureEventData,
-		getAllRooms: getAllRooms,
-		getAllDevices: getAllDevices,
-		getAllUsers: getAllUsers,
-		getAllEvents: getAllEvents,
-		getAllEventTypes: getAllEventTypes,
-		getTodaysEvents: getTodaysEvents,
-		updateEvent: updateEvent,
-		savePlan: savePlan,
-	};
 }
