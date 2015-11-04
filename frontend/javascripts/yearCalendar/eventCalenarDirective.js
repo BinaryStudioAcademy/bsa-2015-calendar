@@ -66,24 +66,23 @@ function eventCalendarDirective() {
                     var colorGray;
                     if ($scope.maximumLength !== 0) {
                         var colorStep = Math.round(64/$scope.maximumLength);
-                        var addWhite = 160+(64 -$scope.dataObj[day].length*colorStep); //basic gray + (grey range - length*step)
+                        var addWhite = 160+(64 -$scope.dataObj[day].length*colorStep); //basic gray + (64 shades of gray - events length* shades step length)
                         colorGray = 'rgb('+addWhite+', '+addWhite+', '+addWhite+')';
+                        dayCell.css('background-color', colorGray);
+                    } else {
+                     //if fails use old variant
+                        switch(true) {
+                            case (evtNum < 3):
+                                dayCell.css('background-color', 'rgb(224, 224, 224)');
+                                break;
+                            case (evtNum > 2 && evtNum < 5):
+                                dayCell.css('background-color', 'rgb(192, 192, 192)');
+                                break;
+                            case (evtNum > 4):
+                                dayCell.css('background-color', 'rgb(160, 160, 160)');
+                                break;
+                        }
                     }
-                    dayCell.css('background-color', colorGray);
-
-                    /*variant 3 step color
-                    switch(true) {
-                        case (evtNum < 3):
-                            dayCell.css('background-color', 'rgb(224, 224, 224)');
-                            break;
-                        case (evtNum > 2 && evtNum < 5):
-                            dayCell.css('background-color', 'rgb(192, 192, 192)');
-                            break;
-                        case (evtNum > 4):
-                            dayCell.css('background-color', 'rgb(160, 160, 160)');
-                            break;
-                    }
-                    */
                 }
             }
 
