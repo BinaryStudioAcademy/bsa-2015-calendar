@@ -108,7 +108,26 @@ function MonthController($rootScope, $scope, helpEventService, crudEvEventServic
             vm.events[eventDate] = vm.events[eventDate] || [] ;
             vm.events[eventDate].push(data[i]);
         }
+        // console.log(vm.events);
     };
+
+
+    var flagsInDaily = [];
+    $rootScope.$on('flagFromCalendar', function (event, agrs) {           
+        var flagsFromCalendar = agrs.messege;
+        flagsInDaily.length = 0;                                           
+            for (var i = 0; i < flagsFromCalendar.length; i++) {        
+                flagsInDaily.push(flagsFromCalendar[i]);
+            }
+    });
+
+    vm.selectTypeEvent = function(event){                                  
+        // console.log('event in day.events', event);                    
+        for (var i = 0; i < flagsInDaily.length; i++) {     
+            if (event.type == flagsInDaily[i]) return true;
+        }
+    };
+
 
     vm.buildMonth  = function(){
 
