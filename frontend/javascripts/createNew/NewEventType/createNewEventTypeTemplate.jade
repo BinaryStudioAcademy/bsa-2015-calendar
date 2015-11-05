@@ -6,18 +6,19 @@
         .form-group
             label.col-sm-2(for="eventType") Title:
             .col-sm-10
-                input(type='text', class="form-control", id="eventType", placeholder="Enter title", ng-model='cnetCtrl.eventType.title')
-
+                input#eventType.form-control(type='text', placeholder="Enter title", ng-model='cnetCtrl.eventType.title')
+            label.col-sm-2(for="eventPrivacy") Private:
+            .col-sm-10
+                input#eventPrivacy(ng-init="cnetCtrl.eventType.isPrivate = false", type='checkbox', ng-model='cnetCtrl.eventType.isPrivate')
         .form-group
-            .col-sm-offset-2.col-sm-10
-                button.btn.btn-default.form-btn(ng-click='cnetCtrl.reset()') Clear form
+            div
+                button.btn.btn-default.form-btn(ng-click='cnetCtrl.reset()', style="margin-left: 15px") Clear form
                 button.btn.btn-primary.form-btn(ng-click='cnetCtrl.addEventType()') Save
         .button-div2
             h4 Event types: {{ cnetCtrl.eventTypes.length }}
             .div_search
                 span.glyphicon.glyphicon-search
-                input(type='text', size='19', border='1', ng-model='cnetCtrl.search', style="margin-left: 10px")
-            //button(ng-click='cnetCtrl.toggleViewEventType()') Display/hide all event types
+                input(type='text', size='19', ng-model='cnetCtrl.search', style="margin-left: 10px")
         br
 
     device_list_body(align='center')
@@ -30,7 +31,7 @@
                     th.col-sm-1 Delete
                 tr(ng-repeat='eventType in cnetCtrl.eventTypes | filter: cnetCtrl.search')
                     td
-                        input#inputEventTypeTitle(class="form-control", ng-model='eventType.title')
+                        input#inputEventTypeTitle.form-control(ng-model='eventType.title')
                     //td  {{ eventType.events }}
                     td(align='center')
                         button.btn.btn-primary.btn-xs(ng-click='cnetCtrl.updateEventType(eventType)') save

@@ -6,10 +6,10 @@
         .form-group
             label.col-sm-2(for="room") Title:
             .col-sm-10
-                input(type='text', class="form-control", id="room", placeholder="Enter title", ng-model='cnrCtrl.room.title')
-            label.col-sm-2(for="description" class="form-control4") Description:
+                input.form-control(type='text', id="room", placeholder="Enter title", ng-model='cnrCtrl.room.title')
+            label.col-sm-2.form-control4(for="description") Description:
             .col-sm-10
-                input(type='text', class="form-control", id="description", placeholder="Enter description", ng-model='cnrCtrl.room.description')
+                input.form-control(type='text', id="description", placeholder="Enter description", ng-model='cnrCtrl.room.description')
 
         .form-group
             .col-sm-offset-2.col-sm-10
@@ -19,7 +19,7 @@
             h4 Rooms: {{ cnrCtrl.rooms.length }}
             .div_search
                 span.glyphicon.glyphicon-search
-                input(type='text', size='19', border='1', ng-model='cnrCtrl.search', style="margin-left: 10px")
+                input(type='text', size='19', ng-model='cnrCtrl.search', style="margin-left: 10px")
         br
 
     room_list_body(align='center')
@@ -32,9 +32,9 @@
                     th.col-sm-1 Delete
                 tr(ng-repeat='room in cnrCtrl.rooms | filter: cnrCtrl.search')
                     td
-                        input#inputRoomTitle(class="form-control", ng-model='room.title')
+                        input#inputRoomTitle.form-control(ng-model='room.title')
                     td
-                        input#inputRoomDescription(class="form-control", ng-model='room.description')
+                        input#inputRoomDescription.form-control(ng-model='room.description')
                     td(align='center')
                         button.btn.btn-primary.btn-xs(ng-click='cnrCtrl.updateRoom(room)') save
                         //- a(ng-click='cnrCtrl.updateRoom(room)') save

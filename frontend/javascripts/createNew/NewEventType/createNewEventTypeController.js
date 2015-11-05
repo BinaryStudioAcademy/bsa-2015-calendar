@@ -1,19 +1,25 @@
 var app = require('../../app');
 
 app.controller('createNewEventTypeController', createNewEventTypeController);
-createNewEventTypeController.$inject = ['$scope', 'createNewEventTypeService'];
+createNewEventTypeController.$inject = ['$scope', 'createNewEventTypeService', 'AuthService'];
 
-function createNewEventTypeController($scope, createNewEventTypeService) {
+function createNewEventTypeController($scope, createNewEventTypeService, AuthService) {
     var vm = this;
-    vm.eventTypes = createNewEventTypeService.getEventTypes();
+    vm.eventTypes = createNewEventTypeService.getEventTypesPublicByOwner();
 
     vm.reset = function () {
         vm.eventType.title = '';
+        vm.eventType.isPrivate = false;
         // vm.eventType.events = '';
     };
 
     vm.addEventType = function () {
-        var newEventType = {title: vm.eventType.title};
+        //console.log(AuthService.getUser());
+        var newEventType = {
+            title: vm.eventType.title,
+            isPrivate: vm.eventType.isPrivate,
+            ownerId: AuthService.getUser().id
+        };
         console.log(newEventType);
         createNewEventTypeService.saveEventType(newEventType)
             .$promise.then(
@@ -25,9 +31,8 @@ function createNewEventTypeController($scope, createNewEventTypeService) {
                 console.log('failure function addEventType', response);
             }
         );
-        vm.eventType.title = '';
+        vm.reset();
     };
-
 
     vm.updateEventType = function (eventType) {
         console.log('element', eventType);

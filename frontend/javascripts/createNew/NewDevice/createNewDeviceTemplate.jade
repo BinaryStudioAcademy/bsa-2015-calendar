@@ -6,10 +6,10 @@
         .form-group
             label.col-sm-2(for="device") Title:
             .col-sm-10
-                input(type='text', class="form-control", id="device", placeholder="Enter title", ng-model='cndCtrl.device.title')
-            label.col-sm-2(for="description" class="form-control4") Description:
+                input.form-control(type='text', id="device", placeholder="Enter title", ng-model='cndCtrl.device.title')
+            label.col-sm-2.form-control4(for="description") Description:
             .col-sm-10
-                input(type='text', class="form-control", id="description", placeholder="Enter description", ng-model='cndCtrl.device.description')
+                input.form-control(type='text', id="description", placeholder="Enter description", ng-model='cndCtrl.device.description')
 
         .form-group
             .col-sm-offset-2.col-sm-10
@@ -19,7 +19,7 @@
             h4 Devices: {{ cndCtrl.devices.length }}
             .div_search
                 span.glyphicon.glyphicon-search
-                input(type='text', size='19', border='1' style="margin-left: 10px", ng-model='cndCtrl.search')
+                input(type='text', size='19', style="margin-left: 10px", ng-model='cndCtrl.search')
         br
 
     device_list_body(align='center')
@@ -32,9 +32,9 @@
                     th.col-sm-1 Delete
                 tr(ng-repeat='device in cndCtrl.devices | filter: cndCtrl.search')
                     td
-                        input#inputDeviceTitle(class="form-control", ng-model='device.title')
+                        input#inputDeviceTitle.form-control(ng-model='device.title')
                     td
-                        input#inputDeviceDescription(class="form-control", ng-model='device.description')
+                        input#inputDeviceDescription.form-control(ng-model='device.description')
                     td(align='center')
                         button.btn.btn-primary.btn-xs(ng-click='cndCtrl.updateDevice(device)') save
                         //- a(ng-click='cndCtrl.updateDevice(device)') save
