@@ -9,7 +9,7 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 	var vm = this;
 
 	vm.selectedDate = selectedDate;
-	vm.ViewType = viewType;
+	vm.viewType = viewType;
 
 	vm.activeTab = function(tab){
 		if(tab === 'plan'){
@@ -231,7 +231,8 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 
 			//socketService.emit('edit event', { event : response });	
 			//$rootScope.$broadcast('eventAdded' + vm.viewType, response);
-			crudEvEventService.editEventBroadcast(vm.selectedDate, response, vm.viewType);
+			// тип селектеддейт проверить!!!!!!!!!!!!!!!!!!!!!!!
+			crudEvEventService.editedEventBroadcast(vm.selectedDate, response, vm.viewType);
 
 			$timeout(function() {
 				$modalInstance.close();
@@ -254,8 +255,8 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 			console.log('success', response);
 
 			//socketService.emit('edit plan', { planEvents : response });	
-			//$rootScope.$broadcast('planAdded', response);
-			crudEvEventService.editPlanBroadcast(vm.selectedDate, response, vm.viewType);
+
+			//crudEvEventService.editedPlanBroadcast(vm.selectedDate, response, vm.viewType);
 
 			$timeout(function() {
 				$modalInstance.close();
@@ -266,7 +267,10 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 
 	function dropEventInfo(selDate) {
 
-		var newEventDate = new Date(selDate.format("DD MMM YYYY HH:mm:ss")) || new Date();
+		var newEventDate = new Date();
+		if (selDate){
+			newEventDate = new Date(selDate.format("DD MMM YYYY HH:mm:ss"));
+		}
 		newEventDate.setHours(0);
 		newEventDate.setMinutes(0);
 

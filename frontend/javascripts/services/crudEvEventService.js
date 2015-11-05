@@ -10,7 +10,7 @@ function crudEvEventService($rootScope, $uibModal) {
 
 	// отправка события после добавления нового ивента
 	vm.addedEventBroadcast = function(selectedDate, eventBody, viewType) {
-    	console.log('addedEvent broadcast');
+    	console.log('addedEvent broadcast', viewType);
     	$rootScope.$broadcast('addedEvent' + viewType, selectedDate, eventBody);
 	};
 
@@ -80,7 +80,7 @@ function crudEvEventService($rootScope, $uibModal) {
 	                selectedDate: function () {
 	                    return selectedDate;
 	                },
-	                selectedEvent: function () {
+	                eventBody: function () {
 	                    return eventBody;
 	                },
 	               	viewType: function () {

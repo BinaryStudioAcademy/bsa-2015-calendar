@@ -132,7 +132,7 @@ function createEventController(crudEvEventService, socketService, alertify, help
 
 	};
 	vm.selectedDate = selectedDate;
-	vm.ViewType = viewType;
+	vm.viewType = viewType;
 	vm.isPlan = false;
 	vm.formSuccess = false;
 	vm.event = {};
@@ -229,7 +229,8 @@ function createEventController(crudEvEventService, socketService, alertify, help
 
 			socketService.emit('add event', { event : response });	
 			//$rootScope.$broadcast('eventAdded' + vm.viewType, response);
-			crudEvEventService.addEventBroadcast(vm.viewType, response);
+			console.log(vm.viewType);
+			crudEvEventService.addedEventBroadcast(vm.selectedDate, response, vm.viewType);
 
 			$timeout(function() {
 				$modalInstance.close();
@@ -253,7 +254,7 @@ function createEventController(crudEvEventService, socketService, alertify, help
 
 			socketService.emit('add plan', { planEvents : response });	
 			//$rootScope.$broadcast('planAdded', response);
-			crudEvEventService.addPlanBroadcast(vm.viewType, response);
+			crudEvEventService.addedPlanBroadcast(vm.selectedDate, response, vm.viewType);
 
 			$timeout(function() {
 				$modalInstance.close();
@@ -263,7 +264,10 @@ function createEventController(crudEvEventService, socketService, alertify, help
 	}
 
 	function dropEventInfo(selDate) {
-		var newEventDate = new Date(selDate.format("DD MMM YYYY HH:mm:ss")) || new Date();
+		var newEventDate = new Date();
+		if (selDate){
+			newEventDate = new Date(selDate.format("DD MMM YYYY HH:mm:ss"));
+		}
 		newEventDate.setHours(0);
 		newEventDate.setMinutes(0);
 

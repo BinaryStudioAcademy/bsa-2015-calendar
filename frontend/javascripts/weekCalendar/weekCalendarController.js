@@ -1,5 +1,6 @@
 var app = require('../app');
     moment = require('moment');
+require('moment-range');
 
 app.controller('WeekViewController', WeekViewController);
 
@@ -13,6 +14,7 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
     });
 
     $scope.$on('addedEventWeekView', function(event, selectedDate, eventBody){
+        console.log('addedEventWeekView', selectedDate, eventBody);
         if(eventBody){
             var index = vm.eventObj.length-1;
             vm.eventObj.push(eventBody);
@@ -22,7 +24,7 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
 
     $scope.$on('addedPlanWeekView', function(event, selectedDate, events){
         var index = vm.eventObj.length-1;
-
+        console.log(selectedDate,events);
         var range = moment().range(vm.weekStartMoment, vm.weekEndMoment);
         for (var i = 0; i < events.length; i++){
             if (range.contains(events[i].start)){
@@ -89,11 +91,12 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
             eventDiv.attr('popover-title', currEvt.title);
             eventDiv.attr('popover-append-to-body', "true");
             eventDiv.attr('trigger', 'focus');
+            eventDiv.attr('index', i);
+            eventDiv.attr('date', evtStart);
             //eventDiv.attr('ng-dblClick', 'wCtrl.showCloseModal(); $event.stopPropagation();');
             eventDiv.on( "click", function(event){
-                //vm.showCloseModal(); 
-                //alert(vm.eventObj[i].title);
-                console.log(currEvt.title);
+                var date = new Date($(event.currentTarget).attr('date'));
+                vm.editEvent(date, vm.eventObj[$(event.currentTarget).attr('index')]); 
                 event.stopPropagation();
             });
             //background color for different types of events
@@ -165,30 +168,23 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
         });
     };
 
-    vm.showCloseModal = function(day, index, eventBody) {
-
+    vm.createEvent = function(day, hours) {
         var tmpDate = vm.weekStartMoment.clone();
         tmpDate.add(day, 'd');
-        //vm.selectedDate = new Date(tmpDate.format("DD MMM YYYY HH:mm:ss"));
-        
-        console.log('date', vm.selectedDate);
-        if (eventBody){
-            console.log(eventBody);
-        }
-        if (eventBody){
-            console.log('eventService editindBroadcast call');
-            //$rootScope.$broadcast('editEvent', selectedDate, eventBody);
-            crudEvEventService.editingBroadcast(tmpDate, eventBody, 'WeekView');
-        }
-        else{
-            console.log('eventService creatingBroadcast call');
-            //$rootScope.$broadcast('createEvent', selectedDate);
-            crudEvEventService.creatingBroadcast(tmpDate, 'WeekView');
-        }
+        tmpDate.set({'hour': hours, 'minute': 0});
+
+        console.log('eventService creatingBroadcast call');
+        crudEvEventService.creatingBroadcast(tmpDate, 'WeekView');
+    };
+
+    vm.editEvent = function(selectedDate, eventBody){
+        console.log('eventService editindBroadcast call');
+        var tmpDate = moment(selectedDate);
+        console.log(tmpDate);
+        crudEvEventService.editingBroadcast(tmpDate, eventBody, 'WeekView');
     };
 
     vm.pullData = function() {
-
         helpEventService.getEvents(vm.Start, vm.End).then(function(data) {
             if (data !== null){
                 vm.eventObj = data;
@@ -196,36 +192,6 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
                 $scope.$broadcast('eventsUpdated');
             }
         });
-
-        // helpEventService.getRooms().then(function(data) {
-        //     if (data !== null){
-        //         vm.availableRooms = data;
-        //     }
-        // });
-
-        // helpEventService.getDevices().then(function(data) {
-        //     if (data !== null){
-        //         vm.availableInventory = data;
-        //     }
-        // });
-
-        // helpEventService.getUsers().then(function(data) {
-        //     if (data !== null){
-        //         vm.users  = data;
-        //     }
-        // });
-
-        // helpEventService.getEventTypes().then(function(data) {
-        //     if (data !== null){
-        //         vm.eventTypes = data;
-        //     }
-        // });
-
-        // helpEventService.getAllEvents().then(function(data) {
-        //     if (data !== null){
-        //         vm.allEvents  = data;
-        //     }
-        // });
     };
 
     init();
