@@ -33,7 +33,7 @@
 								input.form-control(type='text', id="planTitle" placeholder='Event title...', ng-model="createEvCtrl.form.title" required)
 					.form-group
 						.col-md-10.col-sm-10.col-md-offset-2.col-sm-offset-2
-							.alert.alert-danger(role='alert' ng-show='createEvCtrl.form.titleError')
+							.alert.alert-danger(role='alert' ng-show='createEvCtrl.form.titleError && !createEvCtrl.form.title')
 								strong Error!
 								|  Please, specify the title
 					.form-group
