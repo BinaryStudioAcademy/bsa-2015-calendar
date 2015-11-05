@@ -168,20 +168,16 @@ function MonthController($rootScope, $scope, helpEventService, crudEvEventServic
         return date.day(1).hour(0).minute(0).second(0).millisecond(0);
     };
 
-    vm.showCloseModal = function(selectedDate, eventBody) {
-        console.log('date', selectedDate);
+    vm.createEvent = function(selectedDate){
+        console.log('eventService creatingBroadcast call');
+        crudEvEventService.creatingBroadcast(selectedDate, 'MonthView');
+    };
+
+    vm.editEvent = function(selectedDate, eventBody) {
         if (eventBody){
-            console.log(eventBody);
-        }
-        if (eventBody){
-            console.log('eventService editindBroadcast call');
+            console.log('eventService editingdBroadcast call');
             //$rootScope.$broadcast('editEvent', selectedDate, eventBody);
             crudEvEventService.editingBroadcast(selectedDate, eventBody, 'MonthView');
-        }
-        else{
-            console.log('eventService creatingBroadcast call');
-            //$rootScope.$broadcast('createEvent', selectedDate);
-            crudEvEventService.creatingBroadcast(selectedDate, 'MonthView');
         }
     };
     

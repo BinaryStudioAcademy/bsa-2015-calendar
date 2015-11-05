@@ -93,12 +93,12 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
             eventDiv.attr('trigger', 'focus');
             eventDiv.attr('index', i);
             eventDiv.attr('date', evtStart);
-            //eventDiv.attr('ng-dblClick', 'wCtrl.showCloseModal(); $event.stopPropagation();');
-            eventDiv.on( "click", function(event){
+            eventDiv.on( 'dblclick', function(event){
                 var date = new Date($(event.currentTarget).attr('date'));
                 vm.editEvent(date, vm.eventObj[$(event.currentTarget).attr('index')]); 
                 event.stopPropagation();
             });
+            
             //background color for different types of events
             switch(currEvt.type) {
                 case('basic'):
