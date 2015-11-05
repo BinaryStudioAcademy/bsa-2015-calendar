@@ -11,6 +11,7 @@ module.exports = function (app) {
         });
     }, apiResponse);
 
+    //gets all event types
     app.get('/api/eventType/', function (req, res, next) {
         eventTypeRepository.getAll(function (err, data) {
             res.data = data;
@@ -19,6 +20,7 @@ module.exports = function (app) {
         });
     }, apiResponse);
 
+    //gets public event types
     app.get('/api/eventTypePublic/', function (req, res, next) {
         eventTypeRepository.getPublic(function (err, data) {
             res.data = data;
@@ -27,6 +29,8 @@ module.exports = function (app) {
         });
     }, apiResponse);
 
+    //in most cases you want to use this function
+    //gets public event types and private event types created by user currently logged in
     app.get('/api/eventTypePublicAndByOwner/', function (req, res, next) {
         console.log('req.user.id: ' + req.user._id);
         eventTypeRepository.getPublicAndByOwner(req.user._id, function (err, data) {
