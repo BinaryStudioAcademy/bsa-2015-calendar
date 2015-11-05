@@ -209,6 +209,22 @@ function helpEventService($resource, $timeout, $q, $http) {
 		return typesPromise;
 	}
 
+	function getEventTypesPublicByOwner() {
+		return $http.get('api/eventTypePublicAndByOwner/')
+				.then(function (response) {
+					console.log('success Current number of types: ', response.data.length);
+					return response.data;
+				}, function (reason) {
+					if (reason.status == 404) {
+						console.log('not found types');
+						return null;
+					}
+					else {
+						return reason;
+					}
+				});
+	}
+
 	return {
 		getTimeStamps: getTimeStamps,
 		getDays: getDays,
@@ -222,5 +238,6 @@ function helpEventService($resource, $timeout, $q, $http) {
 		getEvents: getEvents,
 		getAllEvents: getAllEvents,
 		getEventTypes: getEventTypes,
+		getEventTypesPublicByOwner: getEventTypesPublicByOwner,
 	};
 }

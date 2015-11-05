@@ -2,9 +2,9 @@ var app = require('../app');
 
 app.controller('DayViewController', DayViewController);
 
-DayViewController.$inject = ['DailyCalendarService', '$timeout', '$q', '$uibModal', 'socketService'];
+DayViewController.$inject = ['DailyCalendarService', '$timeout', '$q', '$uibModal', 'socketService', 'helpEventService'];
 
-function DayViewController(DailyCalendarService, $timeout, $q, $uibModal, socketService) {
+function DayViewController(DailyCalendarService, $timeout, $q, $uibModal, socketService, helpEventService) {
 
 	var vm = this;
 	
@@ -399,16 +399,7 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal, socket
 		}
 
 		function getEventTypes() {
-			DailyCalendarService.getAllEventTypes()
-				.$promise.then(
-					function(response) {
-						console.log('success Current number of types: ', response.length);
-						vm.eventTypes = response;
-					},
-					function(response) {
-						console.log('failure', response);
-					}
-				);
+			vm.eventTypes = helpEventService.getEventTypesPublicByOwner();
 		}
 	
 	function getAllEvents() {
