@@ -32,6 +32,19 @@
 							.col-md-12
 								textarea.form-control(rows='5', id="planDescription" placeholder='Description...', ng-model="ModalCtrl.form.description")
 					.form-group
+						.col-md-10.col-sm-10.col-md-offset-2.col-sm-offset-2
+							.col-md-12.col-sm-12
+								.input-group
+									.input-group-btn
+										button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+											| Type 
+											span.caret
+										ul.dropdown-menu
+											li(ng-repeat="type in ModalCtrl.eventTypes" ng-click="ModalCtrl.selectFormType(type)")
+												a(href="") 
+													| {{ type.title }}
+									input.form-control(type='text', aria-label='...' ng-model="ModalCtrl.form.type.title" placeholder="..." disabled)							
+					.form-group
 						label.col-md-12(align="center")
 							input(type="checkbox" ng-model="ModalCtrl.isPublic")
 							| &nbsp;Public
@@ -44,19 +57,6 @@
 										i.glyphicon.glyphicon-piggy-bank
 									input.form-control(type='text', placeholder='Price...', ng-model='ModalCtrl.form.price')
 							.col-md-6.col-sm-6.col-xs-6
-								.input-group
-									.input-group-btn
-										button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-											| Type 
-											span.caret
-										ul.dropdown-menu
-											li(ng-repeat="type in ModalCtrl.eventTypes" ng-click="ModalCtrl.selectFormType(type)")
-												a(href="") 
-													| {{ type.title }}
-									input.form-control(type='text', aria-label='...' ng-model="ModalCtrl.form.type.title" placeholder="..." disabled)
-					.form-group(ng-show="ModalCtrl.isPublic")
-						.col-md-10.col-sm-10.col-md-offset-2.col-sm-offset-2
-							.col-md-12.col-sm-12
 								.input-group
 									.input-group-btn
 										button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')

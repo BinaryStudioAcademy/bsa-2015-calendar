@@ -26,6 +26,7 @@ function ModalController(alertify, DailyCalendarService, socketService, $timeout
 		vm.todayIndex = 6;
 	}
 
+
 	vm.weekDays = [
 		{ name: 'Mo', selected: false },
 		{ name: 'Tu', selected: false },
@@ -35,6 +36,8 @@ function ModalController(alertify, DailyCalendarService, socketService, $timeout
 		{ name: 'Sa', selected: false },
 		{ name: 'Su', selected: false }
 	];
+
+	vm.weekDays[vm.todayIndex].selected = true;	
 
 	vm.changeStartDate = function(){
 		vm.todayIndex = vm.planStartDate.getDay() - 1;
