@@ -25,7 +25,7 @@
             tr(ng-repeat='week in mCtrl.weeks')
                 //-| filter : mCtrl.selectTypeEvent 
                 td.tg-month-yw4l.month-day(ng-dblClick="mCtrl.createEvent(day.date)", ng-class="{ 'month-day-today': day.isToday, 'different-month': !day.isCurrentMonth, 'dayoff': $last || $index == 5}", ng-repeat='day in week.days') {{day.number}} 
-                    div.month-event(ng-repeat='event in day.events | limitTo: (mCtrl.maxDisplayEventsNumber)',
+                    div.month-event(ng-repeat='event in day.events | filter : mCtrl.selectTypeEvent | limitTo: (mCtrl.maxDisplayEventsNumber)',
                     ng-dblClick="mCtrl.editEvent(day.date, event); $event.stopPropagation();", uib-popover='Starting at {{event.momentStartDate.format("HH:mm")}}', popover-trigger='mouseenter', popover-title='{{event.title | limitTo: mCtrl.maxEventNameLength}}') {{event.title | limitTo: mCtrl.maxEventNameLength}}
                     button.btn-link.month-all-events(ng-show='day.events.length > mCtrl.maxDisplayEventsNumber', ng-click='mCtrl.showAllDayEvents(day)',
                         uib-popover-template='mCtrl.allDayEventsTemplateUrl', popover-trigger='focus', popover-title="Events for {{day.date.format('MMMM Do')}}") Show all&nbsp;
