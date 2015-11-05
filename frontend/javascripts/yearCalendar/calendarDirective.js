@@ -2,7 +2,9 @@ var app = require('../app');
 
 app.directive('calendarDirective', calendarDirective);
 
-function calendarDirective($animate, $timeout, helpEventService, $uibModal) {
+calendarDirective.$inject = ['helpEventService'];
+
+function calendarDirective($animate, $timeout, $uibModal) {
     return {
         restrict: 'A',
         templateUrl: 'templates/yearCalendar/monthTemplate.html',
@@ -40,7 +42,14 @@ function calendarDirective($animate, $timeout, helpEventService, $uibModal) {
             }, true);   
         },
 
-        controller: function($scope) {
+        controller: function($scope, helpEventService) {
+            console.log($scope);
+
+            $scope.availableRooms = getRooms();
+            $scope.availableInventory = getInventory();
+            $scope.users = getUsers();
+            $scope.eventTypes = getEventTypes();
+
 
             $scope.showCloseModal = function(month, dayDate) {
                 $scope.selectedDate = new Date($scope.calendar.year, month, dayDate);
@@ -60,9 +69,6 @@ function calendarDirective($animate, $timeout, helpEventService, $uibModal) {
                         },
                         users: function () {
                             return $scope.users;
-                        },
-                        selectedDate: function () {
-                            return $scope.selectedDate;
                         },
                         eventTypes: function () {
                             return $scope.eventTypes;
@@ -123,18 +129,6 @@ function calendarDirective($animate, $timeout, helpEventService, $uibModal) {
                     );
             }
 
-            function getAllEvents() {
-                helpEventService.getAllEvents()
-                    .$promise.then(
-                        function(response) {
-                            console.log('success Number of Events: ', response.length);
-                            $scope.allEvents = response;
-                        },
-                        function(response) {
-                            console.log('failure', response);
-                        }
-                    );
-            }
         }
     };
 }

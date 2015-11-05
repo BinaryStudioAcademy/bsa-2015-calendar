@@ -94,7 +94,7 @@ eventService.prototype.add = function(data, callback){
 				cb();
 			}
 		},
-		function(cb){ // добавляем запись об ивенте юзеру
+		function(cb){ //add event to owner events
 			if(event.ownerId){
 				userRepository.addEvent(event.ownerId, event._id, function(err, data){
 	 				if(err){				
@@ -106,6 +106,21 @@ eventService.prototype.add = function(data, callback){
 			}
 			else{
 				console.log('no ownerId');
+				cb();
+			}
+		}, 
+		function(cb){ //add to all public events
+			if(event.isPrivate === false){
+				userRepository.addEventToAll(event._id, function(err, data){
+	 				if(err){				
+	 					return cb(err, null);
+	 				}
+	 				console.log('added to all users');
+				});
+				cb();
+			}
+			else{
+				console.log('event is private');
 				cb();
 			}
 		},

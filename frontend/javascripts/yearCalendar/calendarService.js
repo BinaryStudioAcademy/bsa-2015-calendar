@@ -82,7 +82,7 @@ function calendarService(helpEventService) {
 
         //get promise with events of year
         var evtPromise = helpEventService.getUserEvents(startMs, dateEnd).then(function (events) {
-            console.log(events);
+            //console.log(events);
             for (var i = 0; i < events.length; i++) {
                 var eventStartDate = new Date(events[i].start);
                 var evDate = eventStartDate.getDate()+'_'+(eventStartDate.getMonth()+1)+'_'+eventStartDate.getFullYear();

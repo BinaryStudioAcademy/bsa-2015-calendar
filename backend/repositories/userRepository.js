@@ -17,7 +17,19 @@ UserRepository.prototype.removeEvent = function(userId, eventId, callback) {
 
 UserRepository.prototype.addEvent = function(userId, eventId, callback) {
 	var model = this.model;
-	var query = model.findByIdAndUpdate({_id:userId}, { $push: { events:  eventId } } );
+	var query = model.findByIdAndUpdate({_id:userId}, { $addToSet: { events:  eventId } } );
+	query.exec(callback);
+};
+
+UserRepository.prototype.addEventToAll = function(eventId, callback) {
+	var model = this.model;
+	var query = model.update({}, { $addToSet: { events:  eventId } }, { multi: true } );
+	query.exec(callback);
+};
+
+UserRepository.prototype.addEventByUserName = function(username, eventId, callback) {
+	var model = this.model;
+	var query = model.update({username:username}, { $addToSet: { events:  eventId } } );
 	query.exec(callback);
 };
 
