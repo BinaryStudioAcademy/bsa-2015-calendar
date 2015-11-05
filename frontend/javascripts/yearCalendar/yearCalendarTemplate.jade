@@ -17,7 +17,7 @@ div#year-content(ng-cloak).row
         div.month.col-xs-12.col-sm-6.col-md-4.col-lg-3.text-center#jan 
           div.year-month-header
             a(ui-sref='calendar.monthView({year: YCtrl.currentYear, month: 0})') January
-          div(calendar-directive calendar='YCtrl.calendar', month-num ='0')
+          div(calendar-directive calendar='YCtrl.calendar', month-num ='0', modal='YCtrl.showCloseModal(clickElem)')
         div.month.col-xs-12.col-sm-6.col-md-4.col-lg-3.text-center#feb 
           div.year-month-header
             a(ui-sref='calendar.monthView({year: YCtrl.currentYear, month: 1})') February
