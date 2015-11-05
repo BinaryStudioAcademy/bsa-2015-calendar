@@ -21,9 +21,16 @@ module.exports = function(server){
 		store: context.mongoStore
 	}));
 
+
+
 	context.io.on('connection', function (socket) {
 		// socketManager.addSocketForUser(socket.request.user._id, socket.id);
 		console.log('user connected: ' + socket.request.user.username);
+
+		// socket.on('logout', function(){
+		// 	console.log('user logged out');
+		// 	socket.disconnect();
+		// });
 
 		socket.on('disconnect', function () {
 			// socketManager.removeSocketForUser(socket.request.user._id, socket.id);

@@ -99,6 +99,7 @@ function DailyCalendarService($q, $resource, $http) {
 	}
 
 	function savePlan(plan){
+		console.log('in service/savePlan');
 		return resourcePlan.save(plan);
 	}
 
