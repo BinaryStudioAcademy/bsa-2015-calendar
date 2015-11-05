@@ -1,14 +1,15 @@
 var app = require('../app');
 
-app.controller('editEventWeekController', editEventWeekController);
+app.controller('editEventController', editEventController);
 
+editEventController.$inject = ['crudEvEventService', 'socketService', 'alertify', 'helpEventService', '$rootScope', '$scope', '$timeout', '$modalInstance', 'selectedDate', 'eventBody', 'viewType'];
 
-
-editEventWeekController.$inject = ['socketService', 'alertify', 'helpEventService', '$rootScope', '$scope', '$timeout', '$modalInstance', 'rooms', 'devices', 'users', 'selectedDate', 'eventTypes'];
-
-function editEventWeekController(socketService, alertify, helpEventService, $rootScope, $scope, $timeout, $modalInstance, rooms, devices, users, selectedDate, eventTypes) {
+function editEventController(crudEvEventService, socketService, alertify, helpEventService, $rootScope, $scope, $timeout, $modalInstance, selectedDate, eventBody, viewType) {
 
 	var vm = this;
+
+	vm.selectedDate = selectedDate;
+	vm.viewType = viewType;
 
 	vm.activeTab = function(tab){
 		if(tab === 'plan'){
@@ -137,11 +138,32 @@ function editEventWeekController(socketService, alertify, helpEventService, $roo
 	vm.formSuccess = false;
 	vm.event = {};
 	vm.plan = {};
-	vm.rooms = rooms;
-	vm.devices = devices;
-	vm.users = users;
-	vm.selectedDate = selectedDate;
-	vm.eventTypes = eventTypes;
+
+	
+	helpEventService.getRooms().then(function(data) {
+            if (data !== null){
+                vm.rooms = data;
+            }
+        });
+
+    helpEventService.getDevices().then(function(data) {
+        if (data !== null){
+            vm.devices = data;
+        }
+    });
+
+    helpEventService.getUsers().then(function(data) {
+        if (data !== null){
+            vm.users = data;
+        }
+    });
+
+    helpEventService.getEventTypes().then(function(data) {
+        if (data !== null){
+            vm.eventTypes = data;
+        }
+    });
+
 
 	dropEventInfo(vm.selectedDate);
 
@@ -207,8 +229,10 @@ function editEventWeekController(socketService, alertify, helpEventService, $roo
 			dropEventInfo();
 			console.log('success', response);
 
-			socketService.emit('add event', { event : response });	
-			$rootScope.$broadcast('eventAdded', response);
+			//socketService.emit('edit event', { event : response });	
+			//$rootScope.$broadcast('eventAdded' + vm.viewType, response);
+			// тип селектеддейт проверить!!!!!!!!!!!!!!!!!!!!!!!
+			crudEvEventService.editedEventBroadcast(vm.selectedDate, response, vm.viewType);
 
 			$timeout(function() {
 				$modalInstance.close();
@@ -230,8 +254,9 @@ function editEventWeekController(socketService, alertify, helpEventService, $roo
 			dropEventInfo();
 			console.log('success', response);
 
-			socketService.emit('add plan', { planEvents : response });	
-			$rootScope.$broadcast('planAdded', response);
+			//socketService.emit('edit plan', { planEvents : response });	
+
+			//crudEvEventService.editedPlanBroadcast(vm.selectedDate, response, vm.viewType);
 
 			$timeout(function() {
 				$modalInstance.close();
@@ -242,7 +267,10 @@ function editEventWeekController(socketService, alertify, helpEventService, $roo
 
 	function dropEventInfo(selDate) {
 
-		var newEventDate = selDate || new Date();
+		var newEventDate = new Date();
+		if (selDate){
+			newEventDate = new Date(selDate.format("DD MMM YYYY HH:mm:ss"));
+		}
 		newEventDate.setHours(0);
 		newEventDate.setMinutes(0);
 

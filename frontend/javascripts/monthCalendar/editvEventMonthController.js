@@ -2,9 +2,9 @@ var app = require('../app');
 
 app.controller('editEventMonthController', editEventMonthController);
 
-editEventMonthController.$inject = ['socketService', 'alertify', 'helpEventService', '$rootScope', '$scope', '$timeout', '$modalInstance', 'rooms', 'devices', 'users', 'selectedDate', 'eventTypes'];
+editEventMonthController.$inject = ['socketService', 'alertify', 'helpEventService', '$rootScope', '$scope', '$timeout', '$modalInstance', 'selectedDate'];
 
-function editEventMonthController(socketService, alertify, helpEventService, $rootScope, $scope, $timeout, $modalInstance, rooms, devices, users, selectedDate, eventTypes) {
+function editEventMonthController(socketService, alertify, helpEventService, $rootScope, $scope, $timeout, $modalInstance, selectedDate) {
 
 	var vm = this;
 
@@ -135,11 +135,32 @@ function editEventMonthController(socketService, alertify, helpEventService, $ro
 	vm.formSuccess = false;
 	vm.event = {};
 	vm.plan = {};
-	vm.rooms = rooms;
-	vm.devices = devices;
-	vm.users = users;
+
+	helpEventService.getRooms().then(function(data) {
+            if (data !== null){
+                vm.rooms = data;
+            }
+        });
+
+    helpEventService.getDevices().then(function(data) {
+        if (data !== null){
+            vm.devices = data;
+        }
+    });
+
+    helpEventService.getUsers().then(function(data) {
+        if (data !== null){
+            vm.users = data;
+        }
+    });
+
+    helpEventService.getEventTypes().then(function(data) {
+        if (data !== null){
+            vm.eventTypes = data;
+        }
+    });
+
 	vm.selectedDate = selectedDate;
-	vm.eventTypes = eventTypes;
 
 	dropEventInfo(vm.selectedDate);
 
@@ -240,7 +261,7 @@ function editEventMonthController(socketService, alertify, helpEventService, $ro
 
 	function dropEventInfo(selDate) {
 
-		var newEventDate = selDate || new Date();
+		var newEventDate = new Date(selDate.format("DD MMM YYYY HH:mm:ss")) || new Date();
 		newEventDate.setHours(0);
 		newEventDate.setMinutes(0);
 
