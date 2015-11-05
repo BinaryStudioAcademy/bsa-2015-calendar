@@ -102,7 +102,7 @@ var app = angular.module('calendar-app', ['ui.router', 'ngAlertify', 'btford.soc
 		}
 	]);
 
-app.run(['$rootScope', '$state', 'AuthService', '$anchorScroll', function($rootScope, $state, AuthService, $anchorScroll) {
+app.run(['$rootScope', '$state', '$window', 'AuthService', '$anchorScroll', function($rootScope, $state, $window, AuthService, $anchorScroll) {
 	$rootScope.$on('$stateChangeStart', function(evt, to, params) {
 		if (to.redirectTo) {
 			evt.preventDefault();
@@ -112,6 +112,21 @@ app.run(['$rootScope', '$state', 'AuthService', '$anchorScroll', function($rootS
 
         //console.log('STATECHANGE!');
         //console.log('AUTHService.getUser(): ', AuthService.getUser());
+
+        AuthService.checkAuth()
+        .then(function(response){
+            console.log('check auth response', response);
+            if(!response.data.user){
+                AuthService.unSetUser();
+                if(to.auth){
+                    $state.transitionTo('signIn');
+                    $window.location.reload();
+                }
+            }
+        })
+        .then(function(response){
+            console.log('error check auth response: ', response);
+        });
 
         
         if(to.auth && !AuthService.getUser()){

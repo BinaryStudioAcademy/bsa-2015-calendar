@@ -209,6 +209,39 @@ function ModalController(alertify, DailyCalendarService, socketService, $timeout
 
 	vm.submitModal = function() {
 
+		console.log('form title', vm.form.title);
+
+		vm.form.isValid = true;
+
+		if(!vm.form.title){
+			vm.form.titleError = true;
+			vm.form.isValid = false;
+		} else{
+			vm.form.titleError = false;
+		}
+
+		if(!vm.planIntervals.length && vm.isPlan){
+			vm.form.intervalsError = true;
+			vm.form.isValid = false;
+		} else {
+			vm.form.intervalsError = false;
+		}
+
+		if(!vm.form.type){
+			vm.form.typeError = true;
+			vm.form.isValid = false;
+		} else {
+			vm.form.typeError = false;
+		}
+
+		if(vm.form.startTime > vm.form.endTime){
+			vm.form.isValid = false;
+		}
+
+		if(!vm.form.isValid){
+			return;
+		}
+
 		if(vm.isPlan){ //plan
 			var plan = {};
 			plan.title = vm.form.title;

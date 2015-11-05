@@ -22,10 +22,20 @@
 										i.glyphicon.glyphicon-time
 									uib-timepicker(ng-model='ModalCtrl.form.timeEnd', show-spinners='false', minute-step=5)
 					.form-group
+						.col-md-10.col-sm-10.col-md-offset-2.col-sm-offset-2
+							.alert.alert-danger(role='alert' ng-show='ModalCtrl.form.timeStart > ModalCtrl.form.timeEnd')
+								strong Error!
+								|  Start time must be less than the end time					
+					.form-group
 						label.col-md-2.control-label(for="planTitle") Title:
 						.col-md-10
 							.col-md-12
-								input.form-control(type='text', id="planTitle" placeholder='Event title...', ng-model="ModalCtrl.form.title")
+								input.form-control(type='text', id="planTitle" placeholder='Event title...', ng-model="ModalCtrl.form.title" required)
+					.form-group
+						.col-md-10.col-sm-10.col-md-offset-2.col-sm-offset-2
+							.alert.alert-danger(role='alert' ng-show='ModalCtrl.form.titleError')
+								strong Error!
+								|  Please, specify the title
 					.form-group
 						label.col-md-2.control-label(for="planDescription") About:
 						.col-md-10
@@ -43,7 +53,12 @@
 											li(ng-repeat="type in ModalCtrl.eventTypes" ng-click="ModalCtrl.selectFormType(type)")
 												a(href="") 
 													| {{ type.title }}
-									input.form-control(type='text', aria-label='...' ng-model="ModalCtrl.form.type.title" placeholder="..." disabled)							
+									input.form-control(type='text', aria-label='...' ng-model="ModalCtrl.form.type.title" placeholder="..." disabled required)
+					.form-group
+						.col-md-10.col-sm-10.col-md-offset-2.col-sm-offset-2
+							.alert.alert-danger(role='alert' ng-show='ModalCtrl.form.typeError')
+								strong Error!
+								|  Please, specify the type					
 					.form-group
 						label.col-md-12(align="center")
 							input(type="checkbox" ng-model="ModalCtrl.isPublic")
@@ -92,6 +107,11 @@
 								.btn-group
 									label.btn.btn-default(ng-repeat='day in ModalCtrl.weekDays', ng-class='{active: day.selected}') {{day.name}}
 										input(class='hidden-checkbox', visible='false', type='checkbox', name='selectedDays[]', ng-model='day.selected', ng-click='ModalCtrl.computeIntervals(day)')
+					.form-group
+						.col-md-10.col-sm-10.col-md-offset-2.col-sm-offset-2
+							.alert.alert-danger(role='alert' ng-show='ModalCtrl.form.intervalsError && ModalCtrl.isPlan')
+								strong Error!
+								|  Please, specify the days on which the event will be repeated
 					.form-group(ng-show="ModalCtrl.isPlan")
 						label.col-md-2 Begins:
 						.col-md-10.col-sm-10
