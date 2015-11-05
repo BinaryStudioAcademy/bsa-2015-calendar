@@ -12,7 +12,7 @@ div.signin-container
                 input#signUpPassword.form-control(type='password', name='password' placeholder='Password', ng-model='user.newPassword', required='', ng-minlength='5')
                 p.help-block(ng-show='signUpForm.password.$error.minlength') Password is too short.
             .form-group(ng-class="{ 'has-error' : (user.newPassword != user.newPasswordConfirm) && !signUpForm.confirmPassword.$pristine }")
-                input#signUpPassword.form-control(type='password', name='confirmPassword' placeholder='Confirm password', ng-model='user.newPasswordConfirm', required='')
+                input#signUpConfirmPassword.form-control(type='password', name='confirmPassword' placeholder='Confirm password', ng-model='user.newPasswordConfirm', required='')
                 p.help-block(ng-show='(user.newPassword != user.newPasswordConfirm) && !signUpForm.confirmPassword.$pristine') Passwords do not match.
             .form-group
                 a.btn.btn-block.btn-social.btn-google.form-control(ng-click='loginCtrl.googleSignUp()') Sign in with Google
