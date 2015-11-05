@@ -374,7 +374,7 @@ function ModalController(alertify, DailyCalendarService, socketService, $timeout
 					console.log('success', response);
 
 					socketService.emit('add plan', { plan : plan });	
-
+					
 					$timeout(function() {
 						$modalInstance.close();
 						vm.formSuccess = false;
