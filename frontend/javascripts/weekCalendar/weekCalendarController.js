@@ -3,21 +3,75 @@ var app = require('../app');
 
 app.controller('WeekViewController', WeekViewController);
 
-WeekViewController.$inject = ['helpEventService', '$scope', '$uibModal','$compile', '$templateCache'];
+WeekViewController.$inject = ['crudEvEventService','helpEventService', '$scope', '$uibModal','$compile', '$templateCache'];
 
-function WeekViewController(helpEventService, $scope, $uibModal, $compile, $templateCache) {
+function WeekViewController(crudEvEventService,helpEventService, $scope, $uibModal, $compile, $templateCache) {
 	var vm = this;
 
     $scope.$on('eventsUpdated', function() {
         vm.buildEventCells(0);
     });
 
-    $scope.$on('eventAdded', function(event, data) {
-        if(data){
+    $scope.$on('addedEventWeekView', function(event, selectedDate, eventBody){
+        if(eventBody){
             var index = vm.eventObj.length-1;
-            vm.eventObj.push(data);
+            vm.eventObj.push(eventBody);
             vm.buildEventCells(index);
         }    
+    });
+
+    $scope.$on('addedPlanWeekView', function(event, selectedDate, events){
+        var index = vm.eventObj.length-1;
+
+        var range = moment().range(vm.weekStartMoment, vm.weekEndMoment);
+        for (var i = 0; i < events.length; i++){
+            if (range.contains(events[i].start)){
+                vm.eventObj.push(events[i]);
+            }
+            else break;
+        }
+        vm.buildEventCells(index);
+    });
+
+    $scope.$on('deletedEventWeekView', function(event, selectedDate, eventBody){
+        var index = vm.eventObj.length-1,
+            indexOfEvent;
+        // проверить выполнение равенства
+        for (var i = 0; i < vm.eventObj.length; i++){
+            if (vm.eventObj[i] == eventBody) {
+                indexOfEvent = i;
+                break;
+            }
+        }
+        vm.eventObj.splice(indexOfEvent,1);
+
+        // подумать над способом перерисовки без очистки всех ячеек
+        clearCells();
+        vm.buildEventCells(0);
+    });
+
+    $scope.$on('editedEventWeekView', function(event, selectedDate, oldEventBody, newEventBody){
+        
+        var index = vm.eventObj.length-1,
+            indexOfEvent;
+        var range = moment().range(vm.weekStartMoment, vm.weekEndMoment);
+
+        // проверить выполнение равенства
+        for (var i = 0; i < vm.eventObj.length; i++){
+            if (vm.eventObj[i] == oldEventBody) {
+                indexOfEvent = i;
+                break;
+            }
+        }
+        vm.eventObj.splice(indexOfEvent,1);
+
+        if (range.contains(newEventBody.start)){
+            vm.eventObj.push(newEventBody);
+        }
+
+        // подумать над способом перерисовки без очистки всех ячеек
+        clearCells();
+        vm.buildEventCells(0);
     });
 
     vm.buildEventCells = function(index){
@@ -35,7 +89,13 @@ function WeekViewController(helpEventService, $scope, $uibModal, $compile, $temp
             eventDiv.attr('popover-title', currEvt.title);
             eventDiv.attr('popover-append-to-body', "true");
             eventDiv.attr('trigger', 'focus');
-
+            //eventDiv.attr('ng-dblClick', 'wCtrl.showCloseModal(); $event.stopPropagation();');
+            eventDiv.on( "click", function(event){
+                //vm.showCloseModal(); 
+                //alert(vm.eventObj[i].title);
+                console.log(currEvt.title);
+                event.stopPropagation();
+            });
             //background color for different types of events
             switch(currEvt.type) {
                 case('basic'):
@@ -105,35 +165,26 @@ function WeekViewController(helpEventService, $scope, $uibModal, $compile, $temp
         });
     };
 
-    vm.showCloseModal = function(day, index) {
+    vm.showCloseModal = function(day, index, eventBody) {
 
         var tmpDate = vm.weekStartMoment.clone();
         tmpDate.add(day, 'd');
-        vm.selectedDate = new Date(tmpDate.format("DD MMM YYYY HH:mm:ss"));
-        vm.modalInstance = $uibModal.open({
-            animation: true,
-            templateUrl: 'templates/weekCalendar/editEventWeekTemplate.html',
-            controller: 'editEventWeekController',
-            controllerAs: 'evWeekCtrl',
-            bindToController: true,
-            resolve: {
-                rooms: function () {
-                    return vm.availableRooms;
-                },
-                devices: function () {
-                    return vm.availableInventory;
-                },
-                users: function () {
-                    return vm.users;
-                },
-                selectedDate: function () {
-                    return vm.selectedDate;
-                },
-                eventTypes: function () {
-                    return vm.eventTypes;
-                },
-            }
-        });
+        //vm.selectedDate = new Date(tmpDate.format("DD MMM YYYY HH:mm:ss"));
+        
+        console.log('date', vm.selectedDate);
+        if (eventBody){
+            console.log(eventBody);
+        }
+        if (eventBody){
+            console.log('eventService editindBroadcast call');
+            //$rootScope.$broadcast('editEvent', selectedDate, eventBody);
+            crudEvEventService.editingBroadcast(tmpDate, eventBody, 'WeekView');
+        }
+        else{
+            console.log('eventService creatingBroadcast call');
+            //$rootScope.$broadcast('createEvent', selectedDate);
+            crudEvEventService.creatingBroadcast(tmpDate, 'WeekView');
+        }
     };
 
     vm.pullData = function() {
@@ -146,29 +197,29 @@ function WeekViewController(helpEventService, $scope, $uibModal, $compile, $temp
             }
         });
 
-        helpEventService.getRooms().then(function(data) {
-            if (data !== null){
-                vm.availableRooms = data;
-            }
-        });
+        // helpEventService.getRooms().then(function(data) {
+        //     if (data !== null){
+        //         vm.availableRooms = data;
+        //     }
+        // });
 
-        helpEventService.getDevices().then(function(data) {
-            if (data !== null){
-                vm.availableInventory = data;
-            }
-        });
+        // helpEventService.getDevices().then(function(data) {
+        //     if (data !== null){
+        //         vm.availableInventory = data;
+        //     }
+        // });
 
-        helpEventService.getUsers().then(function(data) {
-            if (data !== null){
-                vm.users  = data;
-            }
-        });
+        // helpEventService.getUsers().then(function(data) {
+        //     if (data !== null){
+        //         vm.users  = data;
+        //     }
+        // });
 
-        helpEventService.getEventTypes().then(function(data) {
-            if (data !== null){
-                vm.eventTypes = data;
-            }
-        });
+        // helpEventService.getEventTypes().then(function(data) {
+        //     if (data !== null){
+        //         vm.eventTypes = data;
+        //     }
+        // });
 
         // helpEventService.getAllEvents().then(function(data) {
         //     if (data !== null){

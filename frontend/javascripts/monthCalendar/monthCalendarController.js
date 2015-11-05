@@ -4,19 +4,71 @@ var app = require('../app'),
 
 app.controller('MonthController', MonthController);
 
-MonthController.$inject = ['$scope', 'helpEventService', '$timeout', '$q', '$uibModal'];
+MonthController.$inject = ['$rootScope', '$scope', 'helpEventService', 'crudEvEventService', '$timeout', '$q', '$uibModal'];
 
-function MonthController($scope, helpEventService,  $timeout, $q, $uibModal) {
+function MonthController($rootScope, $scope, helpEventService, crudEvEventService, $timeout, $q, $uibModal) {
 
     vm = this;
 
-    $scope.$on('eventAdded', function(event, eventfromsend){
-        var newEventDate = new moment(eventfromsend.start);
+    $scope.$on('addedEventMonthView', function(event, selectedDate, eventBody){
+        var newEventDate = new moment(eventBody.start);
         var daysDiff = newEventDate.diff(vm.mViewStartMoment,'days');
         var weekIndex = Math.floor(daysDiff / 7);
         var dayIndex = newEventDate.isoWeekday() - 1;
-        eventfromsend.momentStartDate = moment(eventfromsend.start);
-        vm.weeks[weekIndex].days[dayIndex].events.push(eventfromsend);
+        eventBody.momentStartDate = moment(eventBody.start);
+        vm.weeks[weekIndex].days[dayIndex].events.push(eventBody);
+    });
+
+    $scope.$on('addedPlanMonthView', function(event, selectedDate, events){
+        for (var i = 0; i < events.length; i++){
+            var newEventDate = new moment(events[i].start);
+            if (newEventDate.month() == vm.monthStartMoment.month()){
+                var daysDiff = newEventDate.diff(vm.mViewStartMoment,'days'),
+                    weekIndex = Math.floor(daysDiff / 7),
+                    dayIndex = newEventDate.isoWeekday() - 1;
+                events[i].momentStartDate = moment(events[i].start);
+                vm.weeks[weekIndex].days[dayIndex].events.push(events[i]);
+            }
+            else break;
+        }   
+    });
+
+    $scope.$on('deletedEventMonthView', function(event, selectedDate, eventBody){
+        var newEventDate = new moment(eventBody.start),
+            daysDiff = newEventDate.diff(vm.mViewStartMoment,'days'),
+            weekIndex = Math.floor(daysDiff / 7),
+            dayIndex = newEventDate.isoWeekday() - 1,
+            indexInEvents;
+
+        for (var i = 0; i < vm.weeks[weekIndex].days[dayIndex].events.length; i++){
+            // проверить выполнение равенства
+            if (vm.weeks[weekIndex].days[dayIndex].events[i] == eventBody){
+                indexInEvents = i;
+                break;
+            }  
+        }
+        vm.weeks[weekIndex].days[dayIndex].events.splice(indexInEvents, 1);
+    });
+
+    $scope.$on('editedEventMonthView', function(event, selectedDate, oldEventBody, newEventBody){
+        
+        var newEventDate = new moment(oldEventBody.start),
+            daysDiff = newEventDate.diff(vm.mViewStartMoment,'days'),
+            weekIndex = Math.floor(daysDiff / 7),
+            dayIndex = newEventDate.isoWeekday() - 1,
+            indexInEvents;
+
+        for (var i = 0; i < vm.weeks[weekIndex].days[dayIndex].events.length; i++){
+            // проверить выполнение равенства
+            if (vm.weeks[weekIndex].days[dayIndex].events[i] == eventBody){
+                indexInEvents = i;
+                break;
+            }  
+        }
+        vm.weeks[weekIndex].days[dayIndex].events.splice(indexInEvents, 1);
+
+        newEventBody.momentStartDate = moment(newEventBody.start);
+        vm.weeks[weekIndex].days[dayIndex].events.push(newEventBody);
     });
 
     vm.next = function () {
@@ -97,20 +149,21 @@ function MonthController($scope, helpEventService,  $timeout, $q, $uibModal) {
         return date.day(1).hour(0).minute(0).second(0).millisecond(0);
     };
 
-    vm.showCloseModal = function(dayDate) {
-        vm.selectedDate = new Date(dayDate.format("DD MMM YYYY HH:mm:ss"));
-        vm.modalInstance = $uibModal.open({
-            animation: true,
-            templateUrl: 'templates/monthCalendar/editEventMonthTemplate.html',
-            controller: 'editEventMonthController',
-            controllerAs: 'evMonthCtrl',
-            bindToController: true,
-            resolve: {
-                selectedDate: function () {
-                    return vm.selectedDate;
-                },
-            }
-        });
+    vm.showCloseModal = function(selectedDate, eventBody) {
+        console.log('date', selectedDate);
+        if (eventBody){
+            console.log(eventBody);
+        }
+        if (eventBody){
+            console.log('eventService editindBroadcast call');
+            //$rootScope.$broadcast('editEvent', selectedDate, eventBody);
+            crudEvEventService.editingBroadcast(selectedDate, eventBody, 'MonthView');
+        }
+        else{
+            console.log('eventService creatingBroadcast call');
+            //$rootScope.$broadcast('createEvent', selectedDate);
+            crudEvEventService.creatingBroadcast(selectedDate, 'MonthView');
+        }
     };
     
     vm.pullData = function() {

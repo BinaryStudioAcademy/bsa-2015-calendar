@@ -100,18 +100,19 @@ var app = angular.module('calendar-app', ['ui.router', 'ngAlertify', 'btford.soc
 		}
 	]);
 
-app.run(['$rootScope', '$state', 'AuthService', '$anchorScroll', function($rootScope, $state, AuthService, $anchorScroll) {
-	$rootScope.$on('$stateChangeStart', function(evt, to, params) {
+app.run(['crudEvEventService', '$rootScope', '$state', 'AuthService', '$anchorScroll', function(crudEvEventService, $rootScope, $state, AuthService, $anchorScroll) {
+	
+    console.log('editing service listen call');
+    crudEvEventService.editingListen();
+    console.log('creating service listen call');
+    crudEvEventService.creatingListen();
+
+    $rootScope.$on('$stateChangeStart', function(evt, to, params) {
 		if (to.redirectTo) {
 			evt.preventDefault();
 			$state.go(to.redirectTo, params);
 		}
-
-
-        //console.log('STATECHANGE!');
-        //console.log('AUTHService.getUser(): ', AuthService.getUser());
-
-        
+       
         if(to.auth && !AuthService.getUser()){
             evt.preventDefault();
             $state.transitionTo('signIn');          

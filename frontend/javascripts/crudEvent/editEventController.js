@@ -1,12 +1,15 @@
 var app = require('../app');
 
-app.controller('editEventMonthController', editEventMonthController);
+app.controller('editEventController', editEventController);
 
-editEventMonthController.$inject = ['socketService', 'alertify', 'helpEventService', '$rootScope', '$scope', '$timeout', '$modalInstance', 'selectedDate'];
+editEventController.$inject = ['crudEvEventService', 'socketService', 'alertify', 'helpEventService', '$rootScope', '$scope', '$timeout', '$modalInstance', 'selectedDate', 'eventBody', 'viewType'];
 
-function editEventMonthController(socketService, alertify, helpEventService, $rootScope, $scope, $timeout, $modalInstance, selectedDate) {
+function editEventController(crudEvEventService, socketService, alertify, helpEventService, $rootScope, $scope, $timeout, $modalInstance, selectedDate, eventBody, viewType) {
 
 	var vm = this;
+
+	vm.selectedDate = selectedDate;
+	vm.ViewType = viewType;
 
 	vm.activeTab = function(tab){
 		if(tab === 'plan'){
@@ -136,6 +139,7 @@ function editEventMonthController(socketService, alertify, helpEventService, $ro
 	vm.event = {};
 	vm.plan = {};
 
+	
 	helpEventService.getRooms().then(function(data) {
             if (data !== null){
                 vm.rooms = data;
@@ -160,7 +164,6 @@ function editEventMonthController(socketService, alertify, helpEventService, $ro
         }
     });
 
-	vm.selectedDate = selectedDate;
 
 	dropEventInfo(vm.selectedDate);
 
@@ -226,8 +229,9 @@ function editEventMonthController(socketService, alertify, helpEventService, $ro
 			dropEventInfo();
 			console.log('success', response);
 
-			socketService.emit('add event', { event : response });	
-			$rootScope.$broadcast('eventAdded', response);
+			//socketService.emit('edit event', { event : response });	
+			//$rootScope.$broadcast('eventAdded' + vm.viewType, response);
+			crudEvEventService.editEventBroadcast(vm.selectedDate, response, vm.viewType);
 
 			$timeout(function() {
 				$modalInstance.close();
@@ -249,8 +253,9 @@ function editEventMonthController(socketService, alertify, helpEventService, $ro
 			dropEventInfo();
 			console.log('success', response);
 
-			socketService.emit('add plan', { planEvents : response });	
-			$rootScope.$broadcast('planAdded', response);
+			//socketService.emit('edit plan', { planEvents : response });	
+			//$rootScope.$broadcast('planAdded', response);
+			crudEvEventService.editPlanBroadcast(vm.selectedDate, response, vm.viewType);
 
 			$timeout(function() {
 				$modalInstance.close();
