@@ -388,7 +388,7 @@ eventService.prototype.update = function(eventId, newEvent, callback){
 		if(err){
 			return callback(err, {success: false});
 		}
-		return callback(null, data);
+		return callback(result/*, data*/);
 	});
 };
 

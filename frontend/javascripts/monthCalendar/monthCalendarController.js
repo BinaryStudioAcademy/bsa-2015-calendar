@@ -124,11 +124,8 @@ function MonthController($scope, helpEventService,  $timeout, $q, $uibModal) {
 
     function init() {
 
-<<<<<<< HEAD
-        vm.timeStamps = monthEventService.getTimeStamps();
-=======
-        $scope.timeStamps = helpEventService.getTimeStamps();
->>>>>>> bf0aa6c81b4123de18151afc449c324ee6d843be
+        vm.timeStamps = helpEventService.getTimeStamps();
+
         var todayDate = new Date();
 
         vm.selectedDate = vm.selectedDate || todayDate;
@@ -137,79 +134,7 @@ function MonthController($scope, helpEventService,  $timeout, $q, $uibModal) {
         vm.sidebarStyle = true;
 
         //will be pulled from server 
-<<<<<<< HEAD
-        getRooms();
-        getInventory();
-        getUsers();
-        getAllEvents();
-        getEventTypes();
-    }
-    
-    function getRooms() {
-        monthEventService.getAllRooms()
-            .$promise.then(
-                function(response) {
-                    console.log('success Total rooms: ', response.length);
-                    vm.availableRooms = response;
-                },
-                function(response) {
-                    console.log('failure', response);
-                }
-            );
-    }
 
-    function getInventory() {
-        monthEventService.getAllDevices()
-            .$promise.then(
-                function(response) {
-                    console.log('success Inventory items: ', response.length);
-                    vm.availableInventory = response;
-                },
-                function(response) {
-                    console.log('failure', response);
-                }
-            );
-    }
-
-    function getUsers() {
-        monthEventService.getAllUsers()
-            .$promise.then(
-                function(response) {
-                    console.log('success Number of Users: ', response.length);
-                    vm.users = response;
-                },
-                function(response) {
-                    console.log('failure', response);
-                }
-            );
-    }
-
-    function getEventTypes() {
-        monthEventService.getAllEventTypes()
-            .$promise.then(
-                function(response) {
-                    console.log('success Current number of types: ', response.length);
-                    vm.eventTypes = response;
-                },
-                function(response) {
-                    console.log('failure', response);
-                }
-            );
-    }
-
-    function getAllEvents() {
-        monthEventService.getAllEvents()
-            .$promise.then(
-                function(response) {
-                    console.log('success Number of Events: ', response.length);
-                    vm.allEvents = response;
-                },
-                function(response) {
-                    console.log('failure', response);
-                }
-            );
-=======
         vm.pullData();
->>>>>>> bf0aa6c81b4123de18151afc449c324ee6d843be
     }
 }
