@@ -8,14 +8,24 @@ function ModalController(alertify, DailyCalendarService, socketService, $timeout
 
 	var vm = this;
 
-	vm.activeTab = function(tab){
-		if(tab === 'plan'){
-			vm.isPlan = true;
-		} else {
-			vm.isPlan = false;
+	vm.isStartDPopened = false;
+	vm.isEndDPopened = false;
+	vm.dpFormat = "dd MMMM yyyy";
+
+	vm.openDP = function(dp){
+		if(dp === 'start'){
+			vm.isStartDPopened = !vm.isStartDPopened;
+		} else{
+			vm.isEndDPopened = !vm.isEndDPopened;
 		}
-		console.log('isPlan', vm.isPlan);
+		
 	};
+
+	vm.todayIndex = selectedDate.getDay() - 1;
+	if(vm.todayIndex === -1){
+		vm.todayIndex = 6;
+	}
+
 
 	vm.weekDays = [
 		{ name: 'Mo', selected: false },
@@ -27,44 +37,78 @@ function ModalController(alertify, DailyCalendarService, socketService, $timeout
 		{ name: 'Su', selected: false }
 	];
 
+	vm.weekDays[vm.todayIndex].selected = true;	
+
+	vm.changeStartDate = function(){
+		vm.todayIndex = vm.planStartDate.getDay() - 1;
+		if(vm.todayIndex === -1){
+			vm.todayIndex = 6;
+		}
+
+		vm.computeIntervals();
+	};	
+
+	vm.getSelectedDays = function(){
+		return vm.weekDays.filter(function(item){
+			return item.selected;
+		});
+	};
+
 	vm.planIntervals = [];
 
 	vm.minDate = new Date();
-	vm.planEndDate = new Date();
+	vm.planStartDate = new Date(selectedDate);
+	vm.planEndDate = new Date(selectedDate);
+	vm.planEndDate.setYear(vm.planEndDate.getFullYear() + 1);
+	vm.planFirstEventStart = new Date();
 
 	vm.computeIntervals = function(selectedDay){
+		console.log('>>>>>> COMPUTING INTERVALS');
+		console.log('week days', vm.weekDays);
+		var currentDay, i;
 		var selectIndex = vm.weekDays.indexOf(selectedDay); //
 		console.log('selectIndex', selectIndex);
 
 
-		//calculating day of the week
-		//on which plan begins
-		var startDay = vm.plan.timeStart.getDay() - 1;  
-		if(startDay === -1) { 							
-			startDay = 6;
+
+		console.log('today index', vm.todayIndex);
+
+		var startDay;
+		vm.startDate = new Date();
+
+		if(vm.weekDays[vm.todayIndex].selected){
+			startDay = vm.todayIndex;
+			vm.startDate = new Date(vm.planStartDate);
+		}		
+
+		if(startDay === undefined){
+			for(i = vm.todayIndex + 1; i<7; i++){
+				if(vm.weekDays[i].selected){					
+					startDay = i;
+					vm.startDate.setDate(vm.planStartDate.getDate() + (i - vm.todayIndex));
+					break;
+				}
+			}
 		}
-		console.log('start day', startDay);
 
-		// if(!vm.planRoom && selectedDay){
-		// 	if(selectedDay.name != vm.weekDays[startDay].name){
-		// 		alertify.error('Please choose a room for your events');
-		// 		selectedDay.selected = false;
-		// 		return;				
-		// 	}
-		// }
+		if(startDay === undefined){
+			for(i = 0; i < vm.todayIndex; i++){
+				if(vm.weekDays[i].selected){
+					startDay = i;
+					vm.startDate.setDate(vm.planStartDate.getDate() + 7 - (vm.todayIndex - i));
+					break;
+				}
+			}
+		}
 
-		vm.weekDays[startDay].selected = true;
-		// console.log(vm.weekDays);
-
-		var currentDay, i;
-
+		console.log('start day index', startDay);
+		console.log('start date', vm.startDate);
 
 		vm.planIntervals = [];
 
-		//vm.daysSelectedCount = vm.
+		if(startDay === undefined){
 
-
-		if(startDay === 0){
+		}else if(startDay === 0){
 			currentDay = 0;
 			for(i = 1; i < 7; i++){
 				if(vm.weekDays[i].selected){					
@@ -130,30 +174,30 @@ function ModalController(alertify, DailyCalendarService, socketService, $timeout
 			}
 		}
 
-		if(!vm.planIntervals.length) vm.planIntervals = [7];
+		if(startDay !== undefined && !vm.planIntervals.length) vm.planIntervals = [7];
 
-		console.log(vm.planIntervals);
+		console.log('plan intervals', vm.planIntervals);
 		if(vm.planIntervals.length){
-			vm.plan.intervals = [];
-			vm.plan.rooms = [];
+			vm.form.intervals = [];
+			vm.form.rooms = [];
 			for(i = 0; i < vm.planIntervals.length; i++){
 
-				if(vm.planRoom){
-					vm.plan.rooms.push(vm.planRoom._id);
+				if(vm.form.room){
+					vm.form.rooms.push(vm.form.room['_id']);
 				}
 
-				vm.plan.intervals.push(86400000 * vm.planIntervals[i]);
+				vm.form.intervals.push(86400000 * vm.planIntervals[i]);
 			}
-			console.log('plan intervals: ', vm.plan.intervals);
+			console.log('plan intervals: ', vm.form.intervals);
 		}
 
 
 	};
 
-	vm.isPlan = false;
 	vm.formSuccess = false;
-	vm.event = {};
-	vm.plan = {};
+	vm.form = {};
+	vm.form.users = [];
+	vm.form.devices = [];
 	vm.rooms = rooms;
 	vm.devices = devices;
 	vm.users = users;
@@ -164,13 +208,61 @@ function ModalController(alertify, DailyCalendarService, socketService, $timeout
 	dropEventInfo(vm.selectedDate);
 
 	vm.submitModal = function() {
-		console.log('is plan', vm.isPlan);
-		console.log('vm.planIntervals', vm.planIntervals);
-		if(vm.isPlan){
-			submitPlan(vm.plan);
-		} else{
-			submitEvent(vm.event);		
+
+		if(vm.isPlan){ //plan
+			var plan = {};
+			plan.title = vm.form.title;
+			plan.description = vm.form.description;
+			plan.isPrivate = true;
+
+			plan.dateStart = new Date(vm.startDate);
+			plan.dateStart.setHours(vm.form.timeStart.getHours());
+			plan.dateStart.setMinutes(vm.form.timeStart.getMinutes());
+
+			plan.timeStart = new Date(plan.dateStart);
+
+			plan.timeEnd = new Date(plan.dateStart);
+			plan.timeEnd.setHours(vm.form.timeEnd.getHours());
+			plan.timeEnd.setMinutes(vm.form.timeEnd.getMinutes());
+
+			plan.dateEnd = vm.planEndDate;
+			plan.dateEnd.setHours(vm.form.timeEnd.getHours());
+			plan.dateEnd.setMinutes(vm.form.timeEnd.getMinutes());
+
+			plan.intervals = vm.form.intervals;
+
+
+			if(vm.isPublic){
+				plan.isPrivate = false;
+				plan.price = vm.form.price;
+				plan.rooms = vm.form.rooms;
+				plan.devices = vm.form.devices;
+				plan.users = vm.form.users;
+				plan.type = vm.form.type['_id'];
+			}
+
+			console.log('SUBMITTING PLAN >>>>>', plan);
+			submitPlan(plan);
+		} else{ //event
+			var event = {};
+			event.title = vm.form.title;
+			event.description = vm.form.description;
+			event.isPrivate = true;
+			event.start = vm.form.timeStart;
+			event.end = vm.form.timeEnd;
+			if(vm.isPublic){
+				event.isPrivate = false;
+				event.price = vm.form.price;
+				event.room = vm.form.room['_id'];
+				event.devices = vm.form.devices;
+				event.users = vm.form.users;
+				event.type = vm.form.type['_id'];
+			}
+
+			console.log('SUBMITTING EVENT >>>>>', event);
+			submitEvent(event);
 		}
+
 		console.log('Modal submited');	
 	};
 
@@ -199,25 +291,13 @@ function ModalController(alertify, DailyCalendarService, socketService, $timeout
 		externalIdProp: '',
 	};
 
-	vm.selectEventType = function(type) {
-		vm.event.type = type['_id'];
-		vm.eventType = type.title;
+	vm.selectFormType = function(type){
+		vm.form.type = type;
 	};
 
-	vm.selectPlanType = function(type){
-		vm.plan.type = type['_id'];
-		vm.planType = type.title;
-	};
-
-	vm.selectRoom = function(title) {
-		vm.event.room = title;
-	};
-
-	vm.selectPlanRoom = function(title){
-		// vm.plan.rooms = [];
-		// vm.plan.rooms.push(title);
-		console.log(title);
-		vm.planRoom = title;
+	vm.selectFormRoom = function(room){
+		vm.form.room = room;
+		vm.computeIntervals();
 	};
 
 	function submitEvent(event) {
@@ -229,7 +309,6 @@ function ModalController(alertify, DailyCalendarService, socketService, $timeout
 
 					vm.formSuccess = true;
 					dropEventInfo();
-					vm.allEvents.push(response);
 					console.log('success', response);
 
 					socketService.emit('add event', { event : event });	
@@ -237,7 +316,7 @@ function ModalController(alertify, DailyCalendarService, socketService, $timeout
 					$timeout(function() {
 						$modalInstance.close();
 						vm.formSuccess = false;
-					}, 2500);
+					}, 1500);
 				},
 
 				function(response) {
@@ -248,8 +327,6 @@ function ModalController(alertify, DailyCalendarService, socketService, $timeout
 
 	function submitPlan(plan){
 		console.log('submiting plan');
-		plan.dateStart = new Date(plan.timeStart);
-		plan.dateEnd = vm.planEndDate;
 
 		console.log('plan', plan);
 
@@ -280,32 +357,13 @@ function ModalController(alertify, DailyCalendarService, socketService, $timeout
 		var newEventDate = selDate || new Date();
 		newEventDate.setHours(0);
 		newEventDate.setMinutes(0);
-		vm.isPlan = false;
 
+		vm.form.timeStart = newEventDate;
+		vm.form.timeEnd = newEventDate;
 
-		vm.plan.title = '';
-		vm.plan.description = '';
-		vm.plan.timeStart = newEventDate;
-		vm.plan.timeEnd = newEventDate;
-		vm.plan.devices = [];
-		vm.plan.users = [];
-		vm.plan.rooms = [];
-		vm.plan.isPrivate = false;
-		vm.plan.type = undefined;
-		vm.plan.price = undefined;
+		vm.form.users = [];
+		vm.form.devices = [];
 
-		vm.event.title = '';
-		vm.event.description = '';
-		vm.event.start = newEventDate;
-		vm.event.end = newEventDate;
-		vm.event.devices = [];
-		vm.event.users = [];
-		vm.event.room = undefined;
-		vm.event.isPrivate = false;
-		vm.event.type = undefined;
-		vm.event.price = undefined;
-
-
-		vm.computeIntervals();
+		vm.changeStartDate();
 	}
 }

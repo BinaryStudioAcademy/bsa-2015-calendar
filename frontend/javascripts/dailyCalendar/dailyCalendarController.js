@@ -215,6 +215,9 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal, socket
 					newStart.setMilliseconds(0);
 					// get event from the array to calculate its true duration
 					var thisEvent = findById(vm.todayEvents, self.id);
+
+					console.log('this event ', thisEvent);
+
 					// calculating events end by the sum of start and calculated duration
 					var newEnd = new Date(newStart.getTime() + (new Date(thisEvent.end) - new Date(thisEvent.start)));
 					alert('newStart: ' + newStart + ';\nnewEnd: ' + newEnd);
@@ -428,7 +431,7 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal, socket
 	function filterEventsByTodayDate() {
 		console.log('filter');
 		vm.todayEvents = vm.allEvents.filter(function(event) {
-			console.log(event);
+			//console.log(event);
 			if(event.start) {
 				var date = new Date(event.start);
 				console.log(date.getDate());
