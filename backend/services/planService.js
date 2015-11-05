@@ -16,10 +16,11 @@ planService.prototype.availability = function(data, callback){
 	var intervalsIterator = 0;
 
 	if (data.intervals === undefined){
-		return new Error('plan needed intervals');
+		callback(new Error('plan needed intervals'), null);
 	}
 
-	async.whilst(function () { // проверки выполняются для каждого экземпляра "будущего" ивента
+	async.whilst(
+	function () { // проверки выполняются для каждого экземпляра "будущего" ивента
 			return eventTimeStart <= planDateEnd;
 	},
 
@@ -84,6 +85,7 @@ planService.prototype.availability = function(data, callback){
 			if(err){
 				//console.log(err);
 				return cb(err);	
+				// cb(err);
 			}
 			cb();	
 			// // else?? bp
@@ -93,8 +95,10 @@ planService.prototype.availability = function(data, callback){
 		}, function(err, result) {
 			if (err) {
 				return callback(err, {success: false});
+				// callback(err, {success: false});
 			}
 			return callback(null, {success: true});
+			// callback(null, {success: true});
 		});
 };
 
@@ -110,14 +114,18 @@ planService.prototype.add = function(data, callback){
 	// }
 	// договориться на фронтенде о правилах для отправки плана (по румам и интервалам) должны соответствовать по кол-ву
 	// проверки всех значений даты/времени (end > start)
+	var planData;
 
 	async.waterfall([
 
 	function (cb){ // выполняем проверку возможности добавления плана
+		console.log('checking availability');
 		pService.availability(data, function(err, result){
 			if(err){
+				console.log('availability error');
 				return cb(err, result);
 			}
+			console.log('avaiable');
 			cb();
 		});
 	},
@@ -127,6 +135,7 @@ planService.prototype.add = function(data, callback){
 			if(err){			
 				return cb(err, null);
 			}
+			planData =plan;
 			cb(null, plan);
 		});
 	}, // добавляем запись о плане в БД
@@ -196,22 +205,32 @@ planService.prototype.add = function(data, callback){
 			if (err) {
 				return callback(err, result);
 			}
-			return cb(null, addEventsCount);
+			return cb(/*null, addEventsCount*/);
 		});
 		
-	}
-	],
+	},
 
+	function (cb){
+		eventRepository.getByPlanId(planData._id, function(err, events){
+				if (!events){
+					return cb(new Error("incorrect planId " + planData._id));
+				}
+				if (!events.length){
+					return cb(new Error("Empty plan for planId " + planData._id));
+				} 
+			console.log(events);
+			cb(null, events);
+		});
+	}, // запрашиваем из базы список созданных ивентов, для отправки их клиенту
+	],
 
 	function(err, result){
 		if(err){
 			console.log(err);
 			return callback(err, result);
 		}
-		return callback(null, {succes: true, addCount : result});
+		return callback(null, /*{succes: true, addCount : result}*/ result);
 	});
-
-
 };
 
 

@@ -34,6 +34,7 @@
     "less": "^2.5.3",
     "lodash": "^3.10.1",
     "moment": "^2.10.6",
+    "moment-range": "^2.0.3",
     "mongoose": "^4.1.10",
     "passport": "^0.3.0",
     "passport-local": "^1.0.0",
