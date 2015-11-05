@@ -40,7 +40,7 @@ function CalendarController($document, $modal, $resource, $scope, $rootScope, $s
 
 
 
-  var dbEventTypes = $resource('http://localhost:3080/api/eventType/', {});
+  var dbEventTypes = $resource('http://localhost:3080/api/eventTypePublicAndByOwner/', {});
   vm.eventTypes = dbEventTypes.query();  // oll event type from db
   vm.flag = [];
 
