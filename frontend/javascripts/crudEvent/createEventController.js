@@ -66,7 +66,7 @@ function createEventController(crudEvEventService, socketService, alertify, help
 	vm.minDate = new Date();
 	vm.planStartDate = new Date(vm.selectedDate);
 	vm.planEndDate = new Date(vm.selectedDate);
-	vm.planEndDate.setYear(vm.planEndDate.getFullYear() + 1);
+	//vm.planEndDate.setYear(vm.planEndDate.getFullYear() + 1);
 	vm.planFirstEventStart = new Date();
 
 	vm.computeIntervals = function(selectedDay){
@@ -289,14 +289,15 @@ function createEventController(crudEvEventService, socketService, alertify, help
 
 			plan.intervals = vm.form.intervals;
 
+			plan.type = vm.form.type['_id'];
+
 
 			if(vm.isPublic){
 				plan.isPrivate = false;
-				plan.price = vm.form.price;
-				plan.rooms = vm.form.rooms;
-				plan.devices = vm.form.devices;
-				plan.users = vm.form.users;
-				plan.type = vm.form.type['_id'];
+				if(vm.form.price) plan.price = vm.form.price;
+				if(vm.form.rooms.length) plan.rooms = vm.form.rooms;
+				if(vm.form.devices.length) plan.devices = vm.form.devices;
+				if(vm.form.users.length) plan.users = vm.form.users;
 			}
 
 			console.log('SUBMITTING PLAN >>>>>', plan);
@@ -308,13 +309,14 @@ function createEventController(crudEvEventService, socketService, alertify, help
 			event.isPrivate = true;
 			event.start = vm.form.timeStart;
 			event.end = vm.form.timeEnd;
+			event.type = vm.form.type['_id'];
+
 			if(vm.isPublic){
 				event.isPrivate = false;
-				event.price = vm.form.price;
-				event.room = vm.form.room['_id'];
-				event.devices = vm.form.devices;
-				event.users = vm.form.users;
-				event.type = vm.form.type['_id'];
+				if(vm.form.price) event.price = vm.form.price;
+				if(vm.form.rooms.length) event.room = vm.form.room['_id'];
+				if(vm.form.devices.length) event.devices = vm.form.devices;
+				if(vm.form.users.length) event.users = vm.form.users;
 			}
 
 			console.log('SUBMITTING EVENT >>>>>', event);
