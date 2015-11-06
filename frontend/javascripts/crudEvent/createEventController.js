@@ -2,9 +2,9 @@ var app = require('../app');
 
 app.controller('createEventController', createEventController);
 
-createEventController.$inject = ['crudEvEventService', 'socketService', 'alertify', 'helpEventService', '$rootScope', '$scope', '$timeout', '$modalInstance', 'selectedDate', 'viewType'];
+createEventController.$inject = ['AuthService', 'crudEvEventService', 'socketService', 'alertify', 'helpEventService', '$rootScope', '$scope', '$timeout', '$modalInstance', 'selectedDate', 'viewType'];
 
-function createEventController(crudEvEventService, socketService, alertify, helpEventService, $rootScope, $scope, $timeout, $modalInstance, selectedDate, viewType) {
+function createEventController(AuthService, crudEvEventService, socketService, alertify, helpEventService, $rootScope, $scope, $timeout, $modalInstance, selectedDate, viewType) {
 
 	var vm = this;
 
@@ -269,6 +269,7 @@ function createEventController(crudEvEventService, socketService, alertify, help
 
 		if(vm.isPlan){ //plan
 			var plan = {};
+			plan.ownerId = AuthService.getUser().id;
 			plan.title = vm.form.title;
 			plan.description = vm.form.description;
 			plan.isPrivate = true;
@@ -304,6 +305,7 @@ function createEventController(crudEvEventService, socketService, alertify, help
 			submitPlan(plan);
 		} else{ //event
 			var event = {};
+			event.ownerId = AuthService.getUser().id;
 			event.title = vm.form.title;
 			event.description = vm.form.description;
 			event.isPrivate = true;
