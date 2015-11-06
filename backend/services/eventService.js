@@ -188,6 +188,7 @@ eventService.prototype.delete = function(eventId, callback){
 			if (event.room !== undefined){
 				roomRepository.removeEvent(event.room, eventId, function(err, data){
 	 				if(err){
+	 					console.log('removing from room err');
 	 					return	cb(err, null);
 	 				}
 	 				console.log('delete from room');
@@ -206,6 +207,7 @@ eventService.prototype.delete = function(eventId, callback){
 				event.users.forEach(function(userId){
 					userRepository.removeEvent(userId, eventId, function(err, data){
 	 					if(err){
+	 						console.log('removing from users err');
 	 						return	cb(err, null);
 	 					}
 	 					console.log('delete from user');
@@ -224,6 +226,7 @@ eventService.prototype.delete = function(eventId, callback){
 				event.devices.forEach(function(deviceId){
 					deviceRepository.removeEvent(deviceId, eventId, function(err, data){
 	 					if(err){
+	 						console.log('removing from devices err');
 	 						return	cb(err, null);
 	 					}
 	 					console.log('delete from device');
@@ -242,6 +245,7 @@ eventService.prototype.delete = function(eventId, callback){
 			if (event.type !== undefined){
 				eventTypeRepository.removeEvent(event.type, eventId, function(err, data){
  					if(err){
+ 						console.log('removing from eventTypes err');
  						return	cb(err, null);
  					}
  					console.log('delete from eventType');
@@ -258,7 +262,9 @@ eventService.prototype.delete = function(eventId, callback){
 
 		function(cb){ // удаляем запись об event из групповых попдисок
 			groupRepository.removeEvent(eventId, function(err, data){
+				// игнорируем ошибки
 				if(err){
+					console.log('removing from groups err');
 					return	cb(err, null);
 				}
 				console.log('delete from groups');
@@ -269,18 +275,21 @@ eventService.prototype.delete = function(eventId, callback){
 		function(cb){
 			eventRepository.delete(event._id, function(err, data){
 				if(err){
+					console.log('removing from repository err');
 					return cb(err, null);
 				}
+				console.log(data);
 				cb(null, data);
 			});
 		} // удаляем event из БД
 
 	], function(err, result){
 		if(err){
-			//console.log(err);
+			console.log(err);
 			return callback(err, {success: false});
 		}
-		return callback(null, {success: true});
+		console.log(result);
+		return callback(null, result);
 	});
 };
 

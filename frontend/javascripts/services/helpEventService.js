@@ -88,7 +88,7 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 	}
 
 	function updateEvent(eventId, eventBody) {
-		var updateEventPromise = $http.put('api/event/' + eventId, event)       
+		var updateEventPromise = $http.put('api/event/' + eventId, eventBody)       
 		.then(function (response) {
 			console.log('updating event status: ', response.status);
 			return response.data;
@@ -99,7 +99,7 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 	}
 
 	function deleteEvent(eventId) {
-		var deleteEventPromise = $http.delete('api/event/' + eventId, event)       
+		var deleteEventPromise = $http.delete('api/event/' + eventId)       
 		.then(function (response) {
 			console.log('deleting event status: ', response.status);
 			return response.data;

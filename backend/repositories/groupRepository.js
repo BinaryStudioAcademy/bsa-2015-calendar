@@ -17,8 +17,9 @@ GroupRepository.prototype.removeUser = function(groupId, userId, callback) {
 
 GroupRepository.prototype.removeEvent = function(eventId, callback) {
 	var model = this.model;
-	var query = model.findByIdAndUpdate({"events":eventId}, { $pull: { events:  eventId } } );
+	var query = model.update({events:eventId}, {$pull: { events:  eventId }}, {multi:true});
 	query.exec(callback);
 };
+
 
 module.exports = new GroupRepository();

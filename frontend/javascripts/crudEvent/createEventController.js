@@ -353,6 +353,17 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 		externalIdProp: '',
 	};
 
+	vm.checkDuration = function(){
+		start = new Date(vm.form.timeStart);
+        end = new Date(vm.form.timeEnd);
+		diff = end - start;
+		if (diff < 900000){
+			vm.timeError = true;
+		} else {
+			vm.timeError = false;
+		}
+	};
+
 	vm.selectFormType = function(type){
 		vm.form.type = type;
 	};

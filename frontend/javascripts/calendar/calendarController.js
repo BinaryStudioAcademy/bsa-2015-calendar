@@ -29,7 +29,7 @@ function CalendarController($document, $modal, $resource, $scope, $rootScope, $s
   };
 
   $document.bind("keypress", function(event) {
-    console.log(event.keyCode);
+    //console.log(event.keyCode);
     if ((event.keyCode == 112) || (event.keyCode == 104)) {
       $("#myModal").modal("show");
     }
