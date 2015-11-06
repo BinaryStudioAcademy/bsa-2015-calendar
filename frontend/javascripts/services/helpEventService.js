@@ -2,9 +2,9 @@ var app = require('../app');
 
 app.factory('helpEventService', helpEventService);
 
-helpEventService.$inject = ['$resource', '$q', '$timeout', '$http'];
+helpEventService.$inject = ['$resource', '$q', '$timeout', '$http', 'AuthService'];
 
-function helpEventService($resource, $timeout, $q, $http) {
+function helpEventService($resource, $timeout, $q, $http, AuthService) {
 
 /*
 	var timeSatmps = [	{ time: '12am-7am'},
@@ -141,6 +141,25 @@ function helpEventService($resource, $timeout, $q, $http) {
 		return eventsPromise;
 	}
 
+	function getUserEvents(start, stop) {
+		var loggedUserId = AuthService.getUser().id;
+		var eventsPromise = $http.get('api/user/eventsByInterval/'+ loggedUserId+ '/' + (+start)+ '/'+ (+stop))       
+		.then(function (response) {
+			var eventsArr = response.data.events;
+			console.log('success Number of finded events: ', eventsArr.length);
+			return eventsArr;
+		}, function(reason) {
+			if (reason.status == 404){
+				console.log('not found events');
+				return null;
+			}
+			else{
+				return reason; 
+			}			
+		});
+		return eventsPromise;
+	}
+
 	function getRooms() {
 		var roomsPromise = $http.get('api/room/')       
 		.then(function (response) {
@@ -238,6 +257,7 @@ function helpEventService($resource, $timeout, $q, $http) {
 		getEvents: getEvents,
 		getAllEvents: getAllEvents,
 		getEventTypes: getEventTypes,
+		getUserEvents: getUserEvents,
 		getEventTypesPublicByOwner: getEventTypesPublicByOwner,
 	};
 }

@@ -17,6 +17,7 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
         console.log('addedEventWeekView', selectedDate, eventBody);
         if(eventBody){
             var index = vm.eventObj.length;
+
             vm.eventObj.push(eventBody);
             vm.buildEventCells(index);
         }    
@@ -79,6 +80,7 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
         clearCells();
         vm.buildEventCells(0);
     });
+
 
     vm.buildEventCells = function(index){
         for (var i = index; i < vm.eventObj.length; i++) { 

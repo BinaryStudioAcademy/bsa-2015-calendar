@@ -77,6 +77,12 @@ EventRepository.prototype.getByDeviceId = function(deviceId, callback){
 	query.exec(callback);
 };
 
+EventRepository.prototype.getByPrivate = function(bool, callback){
+	var model = this.model;
+	var query = model.find({"isPrivate":bool});
+	query.exec(callback);
+};
+
 EventRepository.prototype.checkRoomAvailability = function(roomId, dateStart, dateEnd, callback){
 	var model = this.model;
 	var query = model.find({"room":roomId, "$or": [ {"start": {"$gte": new Date(dateStart), "$lte": new Date(dateEnd)}}, {"end": {"$gte": new Date(dateStart), "$lte": new Date(dateEnd)}}]});
