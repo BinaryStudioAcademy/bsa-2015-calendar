@@ -2,11 +2,37 @@ var app = require('../app');
 
 app.controller('DayViewController', DayViewController);
 
-DayViewController.$inject = ['crudEvEventService', 'DailyCalendarService', '$timeout', '$q', '$uibModal', 'socketService', 'helpEventService'];
+DayViewController.$inject = ['$scope', 'crudEvEventService', 'DailyCalendarService', '$timeout', '$q', '$uibModal', 'socketService', 'helpEventService'];
 
-function DayViewController(crudEvEventService, DailyCalendarService, $timeout, $q, $uibModal, socketService, helpEventService) {
+function DayViewController($scope, crudEvEventService, DailyCalendarService, $timeout, $q, $uibModal, socketService, helpEventService) {
 
 	var vm = this;
+
+    $scope.$on('addedEventDayView', function(event, selectedDate, eventBody){
+    	console.log('EVENT ADDED', eventBody);
+    	if(!vm.allEvents.length) vm.allEvents = [];
+   		vm.allEvents.push(eventBody);
+   		filterEventsByTodayDate();
+   		mapEvents();
+    });
+ 
+    $scope.$on('addedPlanDayView', function(event, selectedDate, events){
+ 		console.log('PLAN ADDED', events);
+     	if(!vm.allEvents.length) vm.allEvents = [];		
+ 		for(var i = 0; i < events.length; i++){
+ 			vm.allEvents.push(events[i]);
+ 		}
+ 		filterEventsByTodayDate();
+ 		mapEvents();
+    });
+ 
+    $scope.$on('deletedEventDayView', function(event, selectedDate, eventBody){
+ 
+    });
+ 
+    $scope.$on('editedEventDayView', function(event, selectedDate, oldEventBody, newEventBody){
+ 
+    });
 	
 	vm.timeStamps = DailyCalendarService.getTimeStamps();
 	var COLORS = [
@@ -66,7 +92,7 @@ function DayViewController(crudEvEventService, DailyCalendarService, $timeout, $
 
 	vm.showCloseModal = function() {
 
-		crudEvEventService.creatingBroadcast(moment(vm.selectedDate), 'dayView');
+		crudEvEventService.creatingBroadcast(moment(vm.selectedDate), 'DayView');
 
 		// vm.modalInstance = $uibModal.open({
 		// 	animation: true,
@@ -375,35 +401,35 @@ function DayViewController(crudEvEventService, DailyCalendarService, $timeout, $
 				);
 		}
 
-		function getInventory() {
-			DailyCalendarService.getAllDevices()
-				.$promise.then(
-					function(response) {
-						console.log('success Inventory items: ', response.length);
-						vm.availableInventory = response;
-					},
-					function(response) {
-						console.log('failure', response);
-					}
-				);
-		}
+	function getInventory() {
+		DailyCalendarService.getAllDevices()
+			.$promise.then(
+				function(response) {
+					console.log('success Inventory items: ', response.length);
+					vm.availableInventory = response;
+				},
+				function(response) {
+					console.log('failure', response);
+				}
+			);
+	}
 
-		function getUsers() {
-			DailyCalendarService.getAllUsers()
-				.$promise.then(
-					function(response) {
-						console.log('success Number of Users: ', response.length);
-						vm.users = response;
-					},
-					function(response) {
-						console.log('failure', response);
-					}
-				);
-		}
+	function getUsers() {
+		DailyCalendarService.getAllUsers()
+			.$promise.then(
+				function(response) {
+					console.log('success Number of Users: ', response.length);
+					vm.users = response;
+				},
+				function(response) {
+					console.log('failure', response);
+				}
+			);
+	}
 
-		function getEventTypes() {
-			vm.eventTypes = helpEventService.getEventTypesPublicByOwner();
-		}
+	function getEventTypes() {
+		vm.eventTypes = helpEventService.getEventTypesPublicByOwner();
+	}
 	
 	function getAllEvents() {
 		DailyCalendarService.getAllEvents()

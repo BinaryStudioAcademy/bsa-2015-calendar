@@ -224,7 +224,7 @@ function createEventController(AuthService, crudEvEventService, socketService, a
         }
     });
 
-    helpEventService.getEventTypes().then(function(data) {
+    helpEventService.getEventTypesPublicByOwner().then(function(data) {
         if (data !== null){
             vm.eventTypes = data;
         }
