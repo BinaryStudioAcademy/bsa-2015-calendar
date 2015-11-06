@@ -142,6 +142,7 @@ planService.prototype.add = function(data, callback){
 
 	function (plan, cb){
 		var event = {
+			ownerId: plan.ownerId,
 			title: plan.title,
 			description: plan.description,
 			type: plan.type,
