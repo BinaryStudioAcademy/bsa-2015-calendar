@@ -11,7 +11,7 @@ function DailyCalendarService($q, $resource, $http) {
 	var resourceRooms= $resource('/api/room/');
 	var resourceDevices = $resource('/api/device/');
 	var resourceUsers = $resource('/api/user/');
-	var resourceEventTypes = $resource('/api/eventType');
+	var resourceEventTypes = $resource('/api/eventTypePublicAndByOwner');
 	var resourcePlan = $resource('/api/plan/');
 
 	function getTimeStamps() {
@@ -99,6 +99,7 @@ function DailyCalendarService($q, $resource, $http) {
 	}
 
 	function savePlan(plan){
+		console.log('in service/savePlan');
 		return resourcePlan.save(plan);
 	}
 

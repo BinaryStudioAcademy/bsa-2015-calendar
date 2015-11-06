@@ -52,11 +52,26 @@ EventRepository.prototype.getByInterval = function(gteDate,lteDate, callback){
 	query.exec(callback);
 };
 
+EventRepository.prototype.getPublicAndByOwner = function (id, callback) {
+	console.log('requesting events public and by owner for id: ', id);
+    var model = this.model;
+    //var query = model.find({$or: [{ 'users': { $in: id} }, {'ownerId': id}]});
+    var query = model.find({'ownerId': id});
+    query.exec(callback);
+};
+
 EventRepository.prototype.getByPlanId = function(planId, callback){
 	var model = this.model;
 	var query = model.find({"plan":planId});
 	query.exec(callback);
 };
+
+EventRepository.prototype.getByPlanIdPop = function(planId, callback){
+	var model = this.model;
+	var query = model.find({"plan":planId}).sort({"start": 1}).populate('room devices users');
+	query.exec(callback);
+};
+
 
 EventRepository.prototype.getByRoomId = function(roomId, callback){
 	var model = this.model;
@@ -67,6 +82,12 @@ EventRepository.prototype.getByRoomId = function(roomId, callback){
 EventRepository.prototype.getByDeviceId = function(deviceId, callback){
 	var model = this.model;
 	var query = model.find({"devices":deviceId});
+	query.exec(callback);
+};
+
+EventRepository.prototype.getByPrivate = function(bool, callback){
+	var model = this.model;
+	var query = model.find({"isPrivate":bool});
 	query.exec(callback);
 };
 

@@ -2,9 +2,9 @@ var app = require('../app');
 
 app.factory('helpEventService', helpEventService);
 
-helpEventService.$inject = ['$resource', '$q', '$timeout', '$http'];
+helpEventService.$inject = ['$resource', '$q', '$timeout', '$http', 'AuthService'];
 
-function helpEventService($resource, $timeout, $q, $http) {
+function helpEventService($resource, $timeout, $q, $http, AuthService) {
 
 /*
 	var timeSatmps = [	{ time: '12am-7am'},
@@ -60,6 +60,12 @@ function helpEventService($resource, $timeout, $q, $http) {
 		            { name: 'Sun'},
 		          ];
 
+	var daysNames = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+
+	function getDaysNames(){
+		return daysNames;
+	}
+
 	function getTimeStamps(){
 		return timeSatmps;
 	}
@@ -68,6 +74,7 @@ function helpEventService($resource, $timeout, $q, $http) {
 	function getDays(){
 		return days;
 	}
+
 
 	function saveEvent(event) {
 		var saveEventPromise = $http.post('api/event/', event)       
@@ -78,6 +85,28 @@ function helpEventService($resource, $timeout, $q, $http) {
 			return reason; 		
 		});
 		return saveEventPromise;
+	}
+
+	function updateEvent(eventId, eventBody) {
+		var updateEventPromise = $http.put('api/event/' + eventId, event)       
+		.then(function (response) {
+			console.log('updating event status: ', response.status);
+			return response.data;
+		}, function(reason) {
+			return reason; 		
+		});
+		return updateEventPromise;
+	}
+
+	function deleteEvent(eventId) {
+		var deleteEventPromise = $http.delete('api/event/' + eventId, event)       
+		.then(function (response) {
+			console.log('deleting event status: ', response.status);
+			return response.data;
+		}, function(reason) {
+			return reason; 		
+		});
+		return deleteEventPromise;
 	}
 
 	function savePlan(plan) {
@@ -103,7 +132,7 @@ function helpEventService($resource, $timeout, $q, $http) {
 	function getAllEvents() {
 		var allEventsPromise = $http.get('api/event/')       
 		.then(function (response) {
-			console.log('success Number of all events: ', response.length);
+			console.log('success Number of all events: ', response.data.length);
 			return response.data;
 		}, function(reason) {
 			if (reason.status == 404){
@@ -117,12 +146,35 @@ function helpEventService($resource, $timeout, $q, $http) {
 		return allEventsPromise;
 	}
 
+	function getAllUserEvents(){
+		return $http.get('api/eventPublicAndByOwner');
+	}
+
 
 	function getEvents(start, stop) {
 		var eventsPromise = $http.get('api/eventByInterval/'+ (+start)+ '/'+ (+stop))       
 		.then(function (response) {
-			console.log('success Number of finded events: ', response.length);
+			console.log('success Number of finded events: ', response.data.length);
 			return response.data;
+		}, function(reason) {
+			if (reason.status == 404){
+				console.log('not found events');
+				return null;
+			}
+			else{
+				return reason; 
+			}			
+		});
+		return eventsPromise;
+	}
+
+	function getUserEvents(start, stop) {
+		var loggedUserId = AuthService.getUser().id;
+		var eventsPromise = $http.get('api/user/eventsByInterval/'+ loggedUserId+ '/' + (+start)+ '/'+ (+stop))       
+		.then(function (response) {
+			var eventsArr = response.data.events;
+			console.log('success Number of finded events: ', eventsArr.length);
+			return eventsArr;
 		}, function(reason) {
 			if (reason.status == 404){
 				console.log('not found events');
@@ -138,7 +190,7 @@ function helpEventService($resource, $timeout, $q, $http) {
 	function getRooms() {
 		var roomsPromise = $http.get('api/room/')       
 		.then(function (response) {
-			 console.log('success Total rooms: items: ', response.length);
+			 console.log('success Total rooms: items: ', response.data.length);
 			return response.data;
 		}, function(reason) {
 			if (reason.status == 404){
@@ -155,7 +207,7 @@ function helpEventService($resource, $timeout, $q, $http) {
 	function getDevices() {
 		var devicesPromise = $http.get('api/device/')       
 		.then(function (response) {
-			console.log('success Total devices: ', response.length);
+			console.log('success Total devices: ', response.data.length);
 			return response.data;
 		}, function(reason) {
 			if (reason.status == 404){
@@ -172,7 +224,7 @@ function helpEventService($resource, $timeout, $q, $http) {
 	function getUsers() {
 		var usersPromise = $http.get('api/user/')       
 		.then(function (response) {
-			console.log('success Number of Users: ', response.length);
+			console.log('success Number of Users: ', response.data.length);
 			return response.data;
 		}, function(reason) {
 			if (reason.status == 404){
@@ -189,7 +241,7 @@ function helpEventService($resource, $timeout, $q, $http) {
 	function getEventTypes() {
 		var typesPromise = $http.get('api/eventType/')       
 		.then(function (response) {
-			console.log('success Current number of types: ', response.length);
+			console.log('success Current number of types: ', response.data.length);
 			return response.data;
 		}, function(reason) {
 			if (reason.status == 404){
@@ -203,11 +255,30 @@ function helpEventService($resource, $timeout, $q, $http) {
 		return typesPromise;
 	}
 
+	function getEventTypesPublicByOwner() {
+		return $http.get('api/eventTypePublicAndByOwner/')
+				.then(function (response) {
+					console.log('success Current number of types (public by owner): ', response.data.length);
+					return response.data;
+				}, function (reason) {
+					if (reason.status == 404) {
+						console.log('not found types');
+						return null;
+					}
+					else {
+						return reason;
+					}
+				});
+	}
+
 	return {
 		getTimeStamps: getTimeStamps,
 		getDays: getDays,
+		getDaysNames: getDaysNames,
 		configureEventData: configureEventData,
 		saveEvent: saveEvent,
+		updateEvent: updateEvent,
+		deleteEvent: deleteEvent,
 		savePlan: savePlan,
 		getRooms: getRooms,
 		getDevices: getDevices,
@@ -215,5 +286,8 @@ function helpEventService($resource, $timeout, $q, $http) {
 		getEvents: getEvents,
 		getAllEvents: getAllEvents,
 		getEventTypes: getEventTypes,
+		getUserEvents: getUserEvents,
+		getEventTypesPublicByOwner: getEventTypesPublicByOwner,
+		getAllUserEvents: getAllUserEvents
 	};
 }

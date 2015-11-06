@@ -94,6 +94,36 @@ eventService.prototype.add = function(data, callback){
 				cb();
 			}
 		},
+		function(cb){ //add event to owner events
+			if(event.ownerId){
+				userRepository.addEvent(event.ownerId, event._id, function(err, data){
+	 				if(err){				
+	 					return cb(err, null);
+	 				}
+	 				console.log('added to user');
+				});
+				cb();
+			}
+			else{
+				console.log('no ownerId');
+				cb();
+			}
+		}, 
+		function(cb){ //add to all public events
+			if(event.isPrivate === false){
+				userRepository.addEventToAll(event._id, function(err, data){
+	 				if(err){				
+	 					return cb(err, null);
+	 				}
+	 				console.log('added to all users');
+				});
+				cb();
+			}
+			else{
+				console.log('event is private');
+				cb();
+			}
+		},
 		function(cb){ // добавляем запись об ивенте в каждый экземпляр device
 			if(event.devices.length){
 				event.devices.forEach(function(deviceId){
@@ -373,22 +403,49 @@ eventService.prototype.update = function(eventId, newEvent, callback){
 						return cb(err, null);
 					}
 				}); // добавляем запись об ивенте в новую комнату
+			}
+			cb();
+		},
+		function(cb){
+				async.waterfall([
 
+				function(cb){ 
+					eventRepository.update(eventId, newEvent, function(err, data){
+						if(err){
+							return cb(err, data);
+						}
+						cb();
+					});
+				}, // обновляем экземпляр event
+				
+				function(cb){
+					eventRepository.getById(eventId, function(err, data){
+						if (!data){
+							return cb(new Error("incorrect eventId " + eventId));
+						}
+						if(err){				
+							return cb(err);
+						}
+						else{
+							console.log(data);
+							cb(null, data);
+						}		
+					});
+				}],
+			 	function(err, result){
+					if(err){
+						return callback(err, result);	
+					}
+					return cb(null, result);	
+				});
 			}
 
-			eventRepository.update(eventId, newEvent, function(err, data){
-				if(err){
-					return cb(err, data);
-				}
-			}); // обновляем экземпляр event
-
-			cb();
-		}
 	], function(err, result){
 		if(err){
 			return callback(err, {success: false});
 		}
-		return callback(result/*, data*/);
+		return callback(null, result);
+
 	});
 };
 

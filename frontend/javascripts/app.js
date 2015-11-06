@@ -65,7 +65,7 @@ var app = angular.module('calendar-app', ['ui.router', 'ngAlertify', 'btford.soc
                     auth: true
                 })               
                 .state('calendar.monthView', {
-                    url: '/monthView',
+                    url: '/monthView/:year/:month',
                     templateUrl: './templates/monthCalendar/monthCalendar.html',
                     controller: 'MonthController',
                     controllerAs: 'mCtrl',
@@ -102,8 +102,14 @@ var app = angular.module('calendar-app', ['ui.router', 'ngAlertify', 'btford.soc
 		}
 	]);
 
-app.run(['$rootScope', '$state', 'AuthService', '$anchorScroll', function($rootScope, $state, AuthService, $anchorScroll) {
-	$rootScope.$on('$stateChangeStart', function(evt, to, params) {
+app.run(['crudEvEventService', '$rootScope', '$state', '$window', 'AuthService', '$anchorScroll', function(crudEvEventService, $rootScope, $state, $window, AuthService, $anchorScroll) {
+	
+    console.log('editing service listen call');
+    crudEvEventService.editingListen();
+    console.log('creating service listen call');
+    crudEvEventService.creatingListen();
+
+    $rootScope.$on('$stateChangeStart', function(evt, to, params) {
 		if (to.redirectTo) {
 			evt.preventDefault();
 			$state.go(to.redirectTo, params);
@@ -113,7 +119,21 @@ app.run(['$rootScope', '$state', 'AuthService', '$anchorScroll', function($rootS
         //console.log('STATECHANGE!');
         //console.log('AUTHService.getUser(): ', AuthService.getUser());
 
-        
+        AuthService.checkAuth()
+        .then(function(response){
+            console.log('check auth response', response);
+            if(!response.data.user){
+                AuthService.unSetUser();
+                if(to.auth){
+                    $state.transitionTo('signIn');
+                    $window.location.reload();
+                }
+            }
+        })
+        .then(function(response){
+            console.log('error check auth response: ', response);
+        });
+
         if(to.auth && !AuthService.getUser()){
             evt.preventDefault();
             $state.transitionTo('signIn');          

@@ -113,7 +113,7 @@ casual.define('event_', function () {
 
 	return {
 		_id: id,
-    	ownerId : casual.random_element(context.user_ids),
+    	ownerId : "563a035115d60df20e9e0d73",
     	title : casual.title,
     	description : casual.short_description,
     	//type : casual.random_element(['basic', 'general', 'activity']), 

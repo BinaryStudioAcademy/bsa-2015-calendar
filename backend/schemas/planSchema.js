@@ -5,6 +5,7 @@ var Device = require('./deviceSchema');
 var Schema = mongoose.Schema;
 
 var planSchema = new Schema({
+    ownerId : {type: Schema.Types.ObjectId, ref: 'User'},
     title : String,
     description : String,
     type : {type: Schema.Types.ObjectId, ref: 'EventType'},

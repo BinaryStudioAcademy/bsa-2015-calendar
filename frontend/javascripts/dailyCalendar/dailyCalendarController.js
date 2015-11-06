@@ -2,11 +2,37 @@ var app = require('../app');
 
 app.controller('DayViewController', DayViewController);
 
-DayViewController.$inject = ['DailyCalendarService', '$timeout', '$q', '$uibModal', 'socketService'];
+DayViewController.$inject = ['AuthService', '$scope', 'crudEvEventService', 'DailyCalendarService', '$timeout', '$q', '$uibModal', 'socketService', 'helpEventService'];
 
-function DayViewController(DailyCalendarService, $timeout, $q, $uibModal, socketService) {
+function DayViewController(AuthService, $scope, crudEvEventService, DailyCalendarService, $timeout, $q, $uibModal, socketService, helpEventService) {
 
 	var vm = this;
+
+    $scope.$on('addedEventDayView', function(event, selectedDate, eventBody){
+    	console.log('EVENT ADDED', eventBody);
+    	if(!vm.allEvents) vm.allEvents = [];
+   		vm.allEvents.push(eventBody);
+   		filterEventsByTodayDate();
+   		mapEvents();
+    });
+ 
+    $scope.$on('addedPlanDayView', function(event, selectedDate, events){
+ 		console.log('PLAN ADDED', events);
+     	if(!vm.allEvents) vm.allEvents = [];		
+ 		for(var i = 0; i < events.length; i++){
+ 			vm.allEvents.push(events[i]);
+ 		}
+ 		filterEventsByTodayDate();
+ 		mapEvents();
+    });
+ 
+    $scope.$on('deletedEventDayView', function(event, selectedDate, eventBody){
+ 
+    });
+ 
+    $scope.$on('editedEventDayView', function(event, selectedDate, oldEventBody, newEventBody){
+ 
+    });
 	
 	vm.timeStamps = DailyCalendarService.getTimeStamps();
 	var COLORS = [
@@ -63,39 +89,42 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal, socket
 	};
 
 	vm.showCloseModal = function() {
-		vm.modalInstance = $uibModal.open({
-			animation: true,
-			templateUrl: 'templates/dailyCalendar/editEventTemplate.html',
-			controller: 'ModalController',
-			controllerAs: 'ModalCtrl',
-			bindToController: true,
-			resolve: {
-				rooms: function () {
-					return vm.availableRooms;
-				},
-				devices: function () {
-					return vm.availableInventory;
-				},
-				users: function () {
-					return vm.users;
-				},
-				selectedDate: function () {
-					return vm.selectedDate;
-				},
-				eventTypes: function () {
-					return vm.eventTypes;
-				},
-				allEvents: function () {
-					return vm.allEvents;
-				}
-			}
-		});
 
-		vm.modalInstance.result.then(function () {
-			getAllEvents();
-			filterEventsByTodayDate();
-			mapEvents();
-		});
+		crudEvEventService.creatingBroadcast(moment(vm.selectedDate), 'DayView');
+
+		// vm.modalInstance = $uibModal.open({
+		// 	animation: true,
+		// 	templateUrl: 'templates/dailyCalendar/editEventTemplate.html',
+		// 	controller: 'ModalController',
+		// 	controllerAs: 'ModalCtrl',
+		// 	bindToController: true,
+		// 	resolve: {
+		// 		rooms: function () {
+		// 			return vm.availableRooms;
+		// 		},
+		// 		devices: function () {
+		// 			return vm.availableInventory;
+		// 		},
+		// 		users: function () {
+		// 			return vm.users;
+		// 		},
+		// 		selectedDate: function () {
+		// 			return vm.selectedDate;
+		// 		},
+		// 		eventTypes: function () {
+		// 			return vm.eventTypes;
+		// 		},
+		// 		allEvents: function () {
+		// 			return vm.allEvents;
+		// 		}
+		// 	}
+		// });
+
+		// vm.modalInstance.result.then(function () {
+		// 	getAllEvents();
+		// 	filterEventsByTodayDate();
+		// 	mapEvents();
+		// });
 	};
 
 
@@ -397,56 +426,54 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal, socket
 	}
 
 	function getRooms() {
-			DailyCalendarService.getAllRooms()
-				.$promise.then(
-					function(response) {
-						console.log('success Total rooms: ', response.length);
-						vm.availableRooms = response;
-					},
-					function(response) {
-						console.log('failure', response);
-					}
-				);
-		}
+		// DailyCalendarService.getAllRooms()
+		// 	.$promise.then(
+		// 		function(response) {
+		// 			console.log('success Total rooms: ', response.length);
+		// 			vm.availableRooms = response;
+		// 		},
+		// 		function(response) {
+		// 			console.log('failure', response);
+		// 		}
+		// 	);
 
-		function getInventory() {
-			DailyCalendarService.getAllDevices()
-				.$promise.then(
-					function(response) {
-						console.log('success Inventory items: ', response.length);
-						vm.availableInventory = response;
-					},
-					function(response) {
-						console.log('failure', response);
-					}
-				);
-		}
+		vm.availableRooms = helpEventService.getRooms();
+	}
 
-		function getUsers() {
-			DailyCalendarService.getAllUsers()
-				.$promise.then(
-					function(response) {
-						console.log('success Number of Users: ', response.length);
-						vm.users = response;
-					},
-					function(response) {
-						console.log('failure', response);
-					}
-				);
-		}
+	function getInventory() {
+		// DailyCalendarService.getAllDevices()
+		// 	.$promise.then(
+		// 		function(response) {
+		// 			console.log('success Inventory items: ', response.length);
+		// 			vm.availableInventory = response;
+		// 		},
+		// 		function(response) {
+		// 			console.log('failure', response);
+		// 		}
+		// 	);
 
-		function getEventTypes() {
-			DailyCalendarService.getAllEventTypes()
-				.$promise.then(
-					function(response) {
-						console.log('success Current number of types: ', response.length);
-						vm.eventTypes = response;
-					},
-					function(response) {
-						console.log('failure', response);
-					}
-				);
-		}
+		vm.availableInventory = helpEventService.getDevices();
+	}
+
+	function getUsers() {
+		// DailyCalendarService.getAllUsers()
+		// 	.$promise.then(
+		// 		function(response) {
+		// 			console.log('success Number of Users: ', response.length);
+		// 			vm.users = response;
+		// 		},
+		// 		function(response) {
+		// 			console.log('failure', response);
+		// 		}
+		// 	);
+		
+		vm.users = helpEventService.getUsers();
+	}
+
+
+	function getEventTypes() {
+		vm.eventTypes = helpEventService.getEventTypesPublicByOwner();
+	}
 	
 	function getAllEvents() {
 		DailyCalendarService.getAllEvents()
@@ -463,13 +490,26 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal, socket
 					console.log('failure', response);
 				}
 			);
+
+		// helpEventService.getAllUserEvents()
+		// .then(function(response){
+		// 	console.log('received users events: ', response);
+		// 	vm.allEvents = response.data;
+		// 	filterEventsByTodayDate();
+		// 	mapEvents();
+
+		// });
 	}
 
 	function filterEventsByTodayDate() {
 		vm.todayEvents = vm.allEvents.filter(function(event) {
 			if(event.start) {
+				var currentUserId = AuthService.getUser().id;
 				var date = new Date(event.start);
-				return date.getDate() === vm.selectedDate.getDate();
+				return date.getDate() === vm.selectedDate.getDate() && 
+				(event.ownerId === currentUserId || event.users.indexOf(currentUserId) != -1);
+				//event.ownerId === currentUserId;
+				//event.users.indexOf(currentUserId) != -1;
 			}
 		});
 	}
