@@ -445,6 +445,7 @@ eventService.prototype.update = function(eventId, newEvent, callback){
 			return callback(err, {success: false});
 		}
 		return callback(null, result);
+
 	});
 };
 

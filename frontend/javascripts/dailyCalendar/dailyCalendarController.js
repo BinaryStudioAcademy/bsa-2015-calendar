@@ -72,8 +72,6 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
 
 		filterEventsByTodayDate();
 
-		console.log(vm.todayEvents);
-
 		mapEvents();
 
 	};
@@ -138,9 +136,16 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
 		return {};
 	}
 
+	function replaceEvent(array, newElement) {
+		for(var i = 0; i < array.length; i++) {
+			if(array[i]._id == newElement._id)
+				array[i] = newElement;
+		}
+	}
+
 	// gets all the events that corrspond to the rodays date
 	function mapEvents(){
-		console.log('mapping');
+		$('#calendar').css('margin-bottom', 0);
 		//computing top and height values for all geted events
 		for(var i = 0; i < vm.todayEvents.length; i++) {
 			// temp - object to save top and height values for further event displaying
@@ -157,9 +162,9 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
 			temp.topVal = 888 * (eventStart.getTime() - now.getTime()) / 86400000;
 			// save computed values to the array
 			vm.computedEvents.push(temp);
-			console.log('counting values');
+			
 		}
-		console.log('vm.computedEvents: ' + vm.computedEvents.length);
+		
 		//creating and appending blocks which display events for today
 		for(var c = 0; c < vm.computedEvents.length; c++) {
 
@@ -185,6 +190,8 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
 			block.style.top = vm.computedEvents[c].topVal.toPrecision(4) + 'px';
 			block.id = vm.computedEvents[c].eventAsItIs._id;
 			block.style.background = COLORS[getRandomInt(0, COLORS.length)];
+			// if(!vm.computedEvents[c].eventAsItIs.type) block.style.background = COLORS[0];
+			// TODO else block.style.background = vm.computedEvents[c].eventAsItIs.type.color;
 			
 			// setting styles for resize block
 			resizeBlock.style.width = '100%';
@@ -244,11 +251,12 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
 					newStart.setMilliseconds(0);
 					// get event from the array to calculate its true duration
 					var thisEvent = findById(vm.todayEvents, self.id);
-
-					console.log('this event ', thisEvent);
-
+					var oldStart = new Date(thisEvent.start);
+					var oldEnd = new Date(thisEvent.end);
 					// calculating events end by the sum of start and calculated duration
-					var newEnd = new Date(newStart.getTime() + (new Date(thisEvent.end) - new Date(thisEvent.start)));
+					var newEnd = new Date(newStart.getTime() + (oldEnd.getTime() - oldStart.getTime()));
+					newStart.setFullYear(oldStart.getFullYear(), oldStart.getMonth(), oldStart.getDate());
+					newEnd.setFullYear(oldEnd.getFullYear(), oldEnd.getMonth(), oldEnd.getDate());
 					alert('newStart: ' + newStart + ';\nnewEnd: ' + newEnd);
 					//object to send to the server for update
 					var newElement = {
@@ -257,6 +265,9 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
 					};
 					// send new dates to the server for uodating
 					DailyCalendarService.updateEvent(self.id, newElement);
+					thisEvent.start = newStart;
+					thisEvent.end = newEnd;
+					replaceEvent(vm.todayEvents, thisEvent);
 				}
 
 
@@ -327,10 +338,15 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
 				// method that handles when you leave resize block or make mouseup
 				function resizeMouseAway() {
 					// remove event listeners for tracking mousemove, mouseleave and mouseup so it would not track the mouse after we drop the block
-					self.removeEventListener('mousemove', resizeTrackMouse);
 					self.removeEventListener('mouseup', resizeMouseAway);
-					self.removeEventListener('mouseleave', resizeMouseAway);
+					self.removeEventListener('mouseleave', resizeTrackMouseWhenLeave);
+					document.removeEventListener('mousemove', resizeTrackMouseDoc);
+					document.removeEventListener('mouseleave', resizeMouseAway);
+					document.removeEventListener('mouseup', resizeMouseAway);
 
+					var thisEvent = findById(vm.todayEvents, parent.id);
+					var oldStart = new Date(thisEvent.start);
+					var oldEnd = new Date(thisEvent.end);
 					// calculating the newStart date
 					var zeroDate = new Date();
 					zeroDate.setHours(0, 0, 0, 0);
@@ -352,6 +368,8 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
 					// remove seconds and mls
 					newEnd.setSeconds(0);
 					newEnd.setMilliseconds(0);
+					newStart.setFullYear(oldStart.getFullYear(), oldStart.getMonth(), oldStart.getDate());
+					newEnd.setFullYear(oldEnd.getFullYear(), oldEnd.getMonth(), oldEnd.getDate());
 					alert('newStart: ' + newStart + ';\nnewEnd: ' + newEnd);
 					// create object to send to the server with new dates
 					var newElement = {
@@ -360,30 +378,49 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
 					};
 					// update dates for event
 					DailyCalendarService.updateEvent(parent.id, newElement);
+					thisEvent.start = newStart;
+					thisEvent.end = newEnd;
+					replaceEvent(vm.todayEvents, thisEvent);
 				}
 
-				// function which tracks mouse position and changes dynamically the height of the event block
-				function resizeTrackMouse(e) {
+				function resizeTrackMouseDoc(e) {
 					// new mouse y coordinate
 					var changedMouseY = e.offsetY === undefined ? e.layerY : e.offsetY;
+
 					// if we move down
 					if(changedMouseY > mouseY)
 						// and it is still possible to increase the height of the event block
-						if(Number(parent.style.height.split('px')[0]) + Number(parent.style.top.split('px')[0]) < 888)
+						if(Number(parent.style.height.split('px')[0]) + Number(parent.style.top.split('px')[0]) < (parent.parentNode.getBoundingClientRect().height + 1))
 							// we increase it
-							parent.style.height = Number(parent.style.height.split('px')[0]) + changedMouseY - mouseY + 'px';
-
+							parent.style.height = e.clientY - parent.getBoundingClientRect().top + 'px';
 					// if we move up
-					if(changedMouseY < mouseY)
+					if(changedMouseY < mouseY){
+						console.log('move up');
 						// and height is still bigger than one quarter of the hour(15 minutes)
-						if(Number(parent.style.height.split('px')[0]) > 888 / 4 / 24)
+						if(Number(parent.style.height.split('px')[0]) > (parent.parentNode.getBoundingClientRect().height + 1) / 4 / 24){
+							console.log('change height');
 							// we set new height to the event block
-							parent.style.height = Number(parent.style.height.split('px')[0]) - mouseY + changedMouseY + 'px';
+							parent.style.height = e.clientY - parent.getBoundingClientRect().top + 'px';
+						}
+					}
+
+					if(Number(parent.style.height.split('px')[0]) < (parent.parentNode.getBoundingClientRect().height + 1) / 4 / 24)
+						parent.style.height = (parent.parentNode.getBoundingClientRect().height + 1) * 900000 / 86400000 + 'px';
+
+					if(Number(parent.style.height.split('px')[0]) > (parent.parentNode.getBoundingClientRect().height + 1) - Number(parent.style.top.split('px')[0]).toPrecision(3))
+						parent.style.height = (parent.parentNode.getBoundingClientRect().height + 1) - Number(parent.style.top.split('px')[0]).toPrecision(3) + 'px';
 				}
+
+				// function which tracks mouse position and changes dynamically the height of the event block
+				function resizeTrackMouseWhenLeave(e) {
+					document.addEventListener('mousemove', resizeTrackMouseDoc);
+					document.addEventListener('mouseleave', resizeMouseAway);
+					document.addEventListener('mouseup', resizeMouseAway);
+				}
+
 				// add event listeners to the resize blocks whicl resizing
-				self.addEventListener('mousemove', resizeTrackMouse);
 				self.addEventListener('mouseup', resizeMouseAway);
-				self.addEventListener('mouseleave', resizeMouseAway);
+				self.addEventListener('mouseleave', resizeTrackMouseWhenLeave);
 			}, true);
 		}
 	}
@@ -465,14 +502,10 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
 	}
 
 	function filterEventsByTodayDate() {
-		console.log('filter');
 		vm.todayEvents = vm.allEvents.filter(function(event) {
-			//console.log(event);
 			if(event.start) {
 				var currentUserId = AuthService.getUser().id;
 				var date = new Date(event.start);
-				console.log(date.getDate());
-				console.log(vm.selectedDate.getDate());
 				return date.getDate() === vm.selectedDate.getDate() && 
 				(event.ownerId === currentUserId || event.users.indexOf(currentUserId) != -1);
 				//event.ownerId === currentUserId;

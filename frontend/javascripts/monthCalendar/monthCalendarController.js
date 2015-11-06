@@ -11,6 +11,7 @@ function MonthController($rootScope, $scope, helpEventService, crudEvEventServic
 
     vm = this;
 
+
     $scope.$on('addedEventMonthView', function(event, selectedDate, eventBody){
         var newEventDate = new moment(eventBody.start);
         var daysDiff = newEventDate.diff(vm.mViewStartMoment,'days');
@@ -111,7 +112,6 @@ function MonthController($rootScope, $scope, helpEventService, crudEvEventServic
         }
         // console.log(vm.events);
     };
-
 
     var flagsInDaily = [];
     $rootScope.$on('flagFromCalendar', function (event, agrs) {           
@@ -214,7 +214,6 @@ function MonthController($rootScope, $scope, helpEventService, crudEvEventServic
         }
 
         var nowMoment = routeMonth || moment();
-
         vm.mViewStartMoment = routeMonth || moment({hour: 0, minute: 0});
         vm.mViewStartMoment.add(-nowMoment.isoWeekday() +1, 'd');
         vm.mViewEndMoment = vm.mViewStartMoment.clone();
@@ -223,8 +222,8 @@ function MonthController($rootScope, $scope, helpEventService, crudEvEventServic
         vm.monthStartMoment = startMonth || moment().startOf('month');
         vm.monthEndMoment = endMonth || moment().endOf('month');
 
-
         //will be pulled from server 
+
         vm.pullData();
     }
 }
