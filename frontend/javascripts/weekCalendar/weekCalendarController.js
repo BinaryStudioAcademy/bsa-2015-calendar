@@ -224,7 +224,7 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
             if (data !== null){
                 vm.eventObjOll = data;                                              //medai
                 vm.eventObj = [];
-                // console.log('from vm.pullData', vm.eventObj);
+                console.log('from vm.pullData', vm.eventObjOll);
                 for (var i = 0; i < vm.eventObjOll.length; i++){
                     for (var j = 0; j < vm.flagsInDaily.length; j++) {     
                         if (vm.eventObjOll[i].type == vm.flagsInDaily[j]) vm.eventObj.push(vm.eventObjOll[i]);

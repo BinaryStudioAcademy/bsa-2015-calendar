@@ -2,9 +2,9 @@ var app = require('../app');
 
 app.controller('DayViewController', DayViewController);
 
-DayViewController.$inject = ['AuthService', '$scope', 'crudEvEventService', 'DailyCalendarService', '$timeout', '$q', '$uibModal', 'socketService', 'helpEventService'];
+DayViewController.$inject = ['AuthService', '$scope', 'crudEvEventService', 'DailyCalendarService', '$timeout', '$q', '$uibModal', 'socketService', 'helpEventService', '$rootScope', '$document'];
 
-function DayViewController(AuthService, $scope, crudEvEventService, DailyCalendarService, $timeout, $q, $uibModal, socketService, helpEventService) {
+function DayViewController(AuthService, $scope, crudEvEventService, DailyCalendarService, $timeout, $q, $uibModal, socketService, helpEventService, $rootScope, $document) {
 
 	var vm = this;
 
@@ -73,7 +73,7 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
 
 		filterEventsByTodayDate();
 
-		console.log(vm.todayEvents);
+		console.log('from vm.showDay', vm.todayEvents);
 
 		mapEvents();
 
@@ -204,6 +204,7 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
 
 		// take all the events displayed
 		var blocks = document.getElementsByClassName('day-event-blocks');
+		console.log('весь блок', blocks);
 		// and in the loop put for all of the event listeners for 'mousedown' event
 		for(var k = 0; k < blocks.length; k++) {
 			blocks[k].addEventListener('mousedown', function(e) {
@@ -313,6 +314,7 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
 		// get an array of all the resize blocks
 		var resizeBlocks = document.getElementsByClassName('resize-block');
 		// in the loop put an event listener for each on mousedown event and handle event on capture event
+		console.log('что такое resizeBlocks', resizeBlocks);
 		for(var n = 0; n < resizeBlocks.length; n++) {
 			resizeBlocks[n].addEventListener('mousedown', function(e) {
 				// stop continueing event handling
@@ -465,21 +467,74 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
 		// });
 	}
 
+
+	vm.clearBlocks = function(){
+		// console.log('from clearBlocks');
+		// var element = document.getElementsByClassName("day-event-blocks");
+		// element = [];
+		// var paretn1 = element.parentNode;
+		// console.log('paretn1 from clearBlocks', element);		
+		// vm.blocks.length = 0;   
+		// var el = document.getElementsByClassName('day-event-blocks');
+		// console.log(' blocks from clearBlocks', blocks);
+		var fazer = angular.element(document.getElementsByClassName('content-for-day'));
+		console.log('fazer from clearBlocks', fazer);		
+		var element = angular.element(document.getElementsByClassName('day-event-blocks'));
+		console.log('element from clearBlocks', element);	
+			element.length = 0;
+		console.log('blocks from clearBlocks', vm.blocks);	
+
+		// for(var k = 0; k < element.length; k++) {
+		// 	element[k].length = 0;
+		// }
+		// console.log('length element from clearBlocks', element.length);	
+
+		// element.remove();
+		// content-for-day.removeChild(el);
+// 		document.getElementsByClassName('day-event-blocks').parentNode.removeChild(document.getElementsByClassName('day-event-blocks'));
+	};
+
+	vm.flagsInDaily = [];                                                  //medai
+	$rootScope.$on('flagFromCalendar', function (event, agrs) {           
+		var flagsFromCalendar = agrs.messege;
+		vm.flagsInDaily.length = 0;                                           
+			for (var i = 0; i < flagsFromCalendar.length; i++) {        
+				vm.flagsInDaily.push(flagsFromCalendar[i]);
+			}
+		console.log('flagFromDay', vm.flagsInDaily);
+		// console.log('длина блока', vm.blocks.length);		
+
+		// vm.blocks.length = 0; 
+		vm.clearBlocks();
+		filterEventsByTodayDate();
+		mapEvents();
+	});                                                                    //medai
+
 	function filterEventsByTodayDate() {
-		console.log('filter');
-		vm.todayEvents = vm.allEvents.filter(function(event) {
+		vm.todayEvents = [];
+		vm.todayEventsOll = vm.allEvents.filter(function(event) {
 			//console.log(event);
 			if(event.start) {
 				var currentUserId = AuthService.getUser().id;
 				var date = new Date(event.start);
-				console.log(date.getDate());
-				console.log(vm.selectedDate.getDate());
+				// console.log(date.getDate());
+				// console.log(vm.selectedDate.getDate());
 				return date.getDate() === vm.selectedDate.getDate() && 
 				(event.ownerId === currentUserId || event.users.indexOf(currentUserId) != -1);
 				//event.ownerId === currentUserId;
 				//event.users.indexOf(currentUserId) != -1;
 			}
 		});
+		console.log('todayEventsOll from filterEventsByTodayDate', vm.todayEventsOll);
+		// console.log('from filterEventsByTodayDate', vm.todayEvents);
+
+		for (var i = 0; i < vm.todayEventsOll.length; i++){
+			for (var j = 0; j < vm.flagsInDaily.length; j++) {     
+				if (vm.todayEventsOll[i].type == vm.flagsInDaily[j]) vm.todayEvents.push(vm.todayEventsOll[i]);
+			}                    
+		}
+		console.log('todayEvents from filterEventsByTodayDate after for-for', vm.todayEvents); 
+
 	}
 	//TODO: implement example approach to API calls
 	// function getLatestCurrencyRateByCode(code, callback){
