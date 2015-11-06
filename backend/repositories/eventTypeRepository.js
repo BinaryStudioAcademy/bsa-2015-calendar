@@ -48,11 +48,10 @@ EventTypeRepository.prototype.addBasicType = function(title) {
     });
 };
 
-EventTypeRepository.prototype.init = function () {
-    this.addBasicType('basic');
-    this.addBasicType('general');
-    this.addBasicType('activity');
-    this.addBasicType('google');
+EventTypeRepository.prototype.init = function (types) {
+    for(var i = 0; i < types.length; i++){
+        this.addBasicType(types[i]);
+    }
 };
 
 module.exports = new EventTypeRepository();
