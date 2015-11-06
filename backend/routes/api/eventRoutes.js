@@ -67,7 +67,7 @@ module.exports = function(app) {
 			res.err = err;
 			next();
 		});
-	}, apiResponse)
+	}, apiResponse);
 
 	app.get('/api/eventByTitle/:title', function(req, res, next){
 		eventRepository.searchByTitle(req.params.title, function(err, data){
