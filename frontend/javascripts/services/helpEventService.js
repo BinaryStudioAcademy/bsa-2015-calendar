@@ -123,6 +123,10 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		return allEventsPromise;
 	}
 
+	function getAllUserEvents(){
+		return $http.get('api/eventPublicAndByOwner');
+	}
+
 
 	function getEvents(start, stop) {
 		var eventsPromise = $http.get('api/eventByInterval/'+ (+start)+ '/'+ (+stop))       
@@ -259,5 +263,6 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		getEventTypes: getEventTypes,
 		getUserEvents: getUserEvents,
 		getEventTypesPublicByOwner: getEventTypesPublicByOwner,
+		getAllUserEvents: getAllUserEvents
 	};
 }

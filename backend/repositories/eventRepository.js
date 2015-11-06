@@ -52,6 +52,14 @@ EventRepository.prototype.getByInterval = function(gteDate,lteDate, callback){
 	query.exec(callback);
 };
 
+EventRepository.prototype.getPublicAndByOwner = function (id, callback) {
+	console.log('requesting events public and by owner for id: ', id);
+    var model = this.model;
+    //var query = model.find({$or: [{ 'users': { $in: id} }, {'ownerId': id}]});
+    var query = model.find({'ownerId': id});
+    query.exec(callback);
+};
+
 EventRepository.prototype.getByPlanId = function(planId, callback){
 	var model = this.model;
 	var query = model.find({"plan":planId});

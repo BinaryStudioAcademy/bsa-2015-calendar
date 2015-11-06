@@ -2,15 +2,15 @@ var app = require('../app');
 
 app.controller('DayViewController', DayViewController);
 
-DayViewController.$inject = ['$scope', 'crudEvEventService', 'DailyCalendarService', '$timeout', '$q', '$uibModal', 'socketService', 'helpEventService'];
+DayViewController.$inject = ['AuthService', '$scope', 'crudEvEventService', 'DailyCalendarService', '$timeout', '$q', '$uibModal', 'socketService', 'helpEventService'];
 
-function DayViewController($scope, crudEvEventService, DailyCalendarService, $timeout, $q, $uibModal, socketService, helpEventService) {
+function DayViewController(AuthService, $scope, crudEvEventService, DailyCalendarService, $timeout, $q, $uibModal, socketService, helpEventService) {
 
 	var vm = this;
 
     $scope.$on('addedEventDayView', function(event, selectedDate, eventBody){
     	console.log('EVENT ADDED', eventBody);
-    	if(!vm.allEvents.length) vm.allEvents = [];
+    	if(!vm.allEvents) vm.allEvents = [];
    		vm.allEvents.push(eventBody);
    		filterEventsByTodayDate();
    		mapEvents();
@@ -18,7 +18,7 @@ function DayViewController($scope, crudEvEventService, DailyCalendarService, $ti
  
     $scope.$on('addedPlanDayView', function(event, selectedDate, events){
  		console.log('PLAN ADDED', events);
-     	if(!vm.allEvents.length) vm.allEvents = [];		
+     	if(!vm.allEvents) vm.allEvents = [];		
  		for(var i = 0; i < events.length; i++){
  			vm.allEvents.push(events[i]);
  		}
@@ -389,43 +389,50 @@ function DayViewController($scope, crudEvEventService, DailyCalendarService, $ti
 	}
 
 	function getRooms() {
-			DailyCalendarService.getAllRooms()
-				.$promise.then(
-					function(response) {
-						console.log('success Total rooms: ', response.length);
-						vm.availableRooms = response;
-					},
-					function(response) {
-						console.log('failure', response);
-					}
-				);
-		}
+		// DailyCalendarService.getAllRooms()
+		// 	.$promise.then(
+		// 		function(response) {
+		// 			console.log('success Total rooms: ', response.length);
+		// 			vm.availableRooms = response;
+		// 		},
+		// 		function(response) {
+		// 			console.log('failure', response);
+		// 		}
+		// 	);
+
+		vm.availableRooms = helpEventService.getRooms();
+	}
 
 	function getInventory() {
-		DailyCalendarService.getAllDevices()
-			.$promise.then(
-				function(response) {
-					console.log('success Inventory items: ', response.length);
-					vm.availableInventory = response;
-				},
-				function(response) {
-					console.log('failure', response);
-				}
-			);
+		// DailyCalendarService.getAllDevices()
+		// 	.$promise.then(
+		// 		function(response) {
+		// 			console.log('success Inventory items: ', response.length);
+		// 			vm.availableInventory = response;
+		// 		},
+		// 		function(response) {
+		// 			console.log('failure', response);
+		// 		}
+		// 	);
+
+		vm.availableInventory = helpEventService.getDevices();
 	}
 
 	function getUsers() {
-		DailyCalendarService.getAllUsers()
-			.$promise.then(
-				function(response) {
-					console.log('success Number of Users: ', response.length);
-					vm.users = response;
-				},
-				function(response) {
-					console.log('failure', response);
-				}
-			);
+		// DailyCalendarService.getAllUsers()
+		// 	.$promise.then(
+		// 		function(response) {
+		// 			console.log('success Number of Users: ', response.length);
+		// 			vm.users = response;
+		// 		},
+		// 		function(response) {
+		// 			console.log('failure', response);
+		// 		}
+		// 	);
+		
+		vm.users = helpEventService.getUsers();
 	}
+
 
 	function getEventTypes() {
 		vm.eventTypes = helpEventService.getEventTypesPublicByOwner();
@@ -446,6 +453,15 @@ function DayViewController($scope, crudEvEventService, DailyCalendarService, $ti
 					console.log('failure', response);
 				}
 			);
+
+		// helpEventService.getAllUserEvents()
+		// .then(function(response){
+		// 	console.log('received users events: ', response);
+		// 	vm.allEvents = response.data;
+		// 	filterEventsByTodayDate();
+		// 	mapEvents();
+
+		// });
 	}
 
 	function filterEventsByTodayDate() {
@@ -453,10 +469,14 @@ function DayViewController($scope, crudEvEventService, DailyCalendarService, $ti
 		vm.todayEvents = vm.allEvents.filter(function(event) {
 			//console.log(event);
 			if(event.start) {
+				var currentUserId = AuthService.getUser().id;
 				var date = new Date(event.start);
 				console.log(date.getDate());
 				console.log(vm.selectedDate.getDate());
-				return date.getDate() === vm.selectedDate.getDate();
+				return date.getDate() === vm.selectedDate.getDate() && 
+				(event.ownerId === currentUserId || event.users.indexOf(currentUserId) != -1);
+				//event.ownerId === currentUserId;
+				//event.users.indexOf(currentUserId) != -1;
 			}
 		});
 	}

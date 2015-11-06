@@ -57,7 +57,17 @@ module.exports = function(app) {
 			res.err = err;
 			next();
 		});
-	}, apiResponse);	
+	}, apiResponse);
+
+	app.get('/api/eventPublicAndByOwner', function(req, res, next){
+		eventRepository.getPublicAndByOwner(req.user._id, function(err, data){
+			console.log('in public and by owner events route');
+			console.log('found data: ', data);
+			res.data = data;
+			res.err = err;
+			next();
+		});
+	}, apiResponse)
 
 	app.get('/api/eventByTitle/:title', function(req, res, next){
 		eventRepository.searchByTitle(req.params.title, function(err, data){
