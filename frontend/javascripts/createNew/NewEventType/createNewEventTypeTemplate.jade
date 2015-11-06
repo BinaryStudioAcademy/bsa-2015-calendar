@@ -1,41 +1,39 @@
-.eventType_list(ng-controller='createNewEventTypeController')
+.eventType_list
 
-  .eventType_list_header
-    h1(align='center') Create a new event type
+    .eventType_list_header
+        h1(align='center') Create a new event type
 
-    .form-group
-      label.col-sm-2(for="eventType") title: 
-      .col-sm-10
-        input(type='text', class="form-control", id="eventType", placeholder="Enter title", ng-model='cnetCtrl.eventType.title')
+        .form-group
+            label.col-sm-2(for="eventType") Title:
+            .col-sm-10
+                input#eventType.form-control(type='text', placeholder="Enter title", ng-model='cnetCtrl.eventType.title')
+            label.col-sm-2(for="eventPrivacy") Private:
+            .col-sm-10
+                input#eventPrivacy(ng-init="cnetCtrl.eventType.isPrivate = false", type='checkbox', ng-model='cnetCtrl.eventType.isPrivate')
+        .form-group
+            div
+                button.btn.btn-default.form-btn(ng-click='cnetCtrl.reset()', style="margin-left: 15px") Clear form
+                button.btn.btn-primary.form-btn(ng-click='cnetCtrl.addEventType()') Save
+        .button-div2
+            h4 Event types: {{ cnetCtrl.eventTypes.length }}
+            .div_search
+                span.glyphicon.glyphicon-search
+                input(type='text', size='19', ng-model='cnetCtrl.search', style="margin-left: 10px")
+        br
 
-
-    .form-group
-      .col-sm-offset-2.col-sm-10
-        button(ng-click='cnetCtrl.reset()' class="btn btn-warning form-btn") Reset form
-        button(ng-click='cnetCtrl.addEventType()' class='btn btn-info form-btn') Save
-    .button-div2
-      h4 Event types: {{ cnetCtrl.eventTypes.length }}.
-      button(ng-click='cnetCtrl.toggleViewEventType()') Display/hide all event types
-    br
-
-
-  device_list_body(align='center', ng-show='cnetCtrl.showEventTypesList')
-    .div_search
-      b Search type:
-      input(type='text', size='19', border='1', ng-model='cnetCtrl.search')
-
-    .content_for_eventType_list
-      table.col-sm-12.table-responsive.table-hover.table.eventTypeTable(border='1', ng-show='cnetCtrl.showEventTypesList')
-        tr
-          th.col-sm-10 type for event
-          //th.col-sm-6 events
-          th.col-sm-1 change
-          th.col-sm-1 delete
-        tr(ng-repeat='eventType in cnetCtrl.eventTypes | filter: cnetCtrl.search')
-          td
-            input#inputEventTypeTitle(class="form-control", ng-model='eventType.title')
-          //td  {{ eventType.events }}
-          td(align='center')   
-            button(class="btn btn-info btn-xs" ng-click='cnetCtrl.updateEventType(eventType)') save            
-          td(align='center')  
-            button(class="btn btn-primary btn-xs btn-danger" ng-click='cnetCtrl.deleteEventType(eventType, $index)') delete
+    device_list_body(align='center')
+        .content_for_eventType_list
+            table.col-sm-12.table-responsive.table-hover.table.eventTypeTable(border='1')
+                tr
+                    th.col-sm-10 Event type
+                    //th.col-sm-6 events
+                    th.col-sm-1 Edit
+                    th.col-sm-1 Delete
+                tr(ng-repeat='eventType in cnetCtrl.eventTypes | filter: cnetCtrl.search')
+                    td
+                        input#inputEventTypeTitle.form-control(ng-model='eventType.title')
+                    //td  {{ eventType.events }}
+                    td(align='center')
+                        button.btn.btn-primary.btn-xs(ng-click='cnetCtrl.updateEventType(eventType)') save
+                    td(align='center')
+                        button.btn.btn-xs.btn-danger(ng-click='cnetCtrl.deleteEventType(eventType, $index)') delete

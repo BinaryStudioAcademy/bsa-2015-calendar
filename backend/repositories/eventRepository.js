@@ -58,6 +58,13 @@ EventRepository.prototype.getByPlanId = function(planId, callback){
 	query.exec(callback);
 };
 
+EventRepository.prototype.getByPlanIdPop = function(planId, callback){
+	var model = this.model;
+	var query = model.find({"plan":planId}).sort({"start": 1}).populate('room devices users');
+	query.exec(callback);
+};
+
+
 EventRepository.prototype.getByRoomId = function(roomId, callback){
 	var model = this.model;
 	var query = model.find({"room":roomId});
