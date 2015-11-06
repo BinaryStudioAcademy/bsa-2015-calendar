@@ -161,6 +161,8 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal, socket
 			block.style.top = vm.computedEvents[c].topVal.toPrecision(4) + 'px';
 			block.id = vm.computedEvents[c].eventAsItIs._id;
 			block.style.background = COLORS[getRandomInt(0, COLORS.length)];
+			// if(!vm.computedEvents[c].eventAsItIs.type) block.style.background = COLORS[0];
+			// TODO else block.style.background = vm.computedEvents[c].eventAsItIs.type.color;
 			
 			// setting styles for resize block
 			resizeBlock.style.width = '100%';
