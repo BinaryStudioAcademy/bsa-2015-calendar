@@ -53,7 +53,7 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
         vm.eventObj.splice(indexOfEvent,1);
 
         // подумать над способом перерисовки без очистки всех ячеек
-        clearCells();
+        vm.clearCells();
         vm.buildEventCells(0);
     });
 
@@ -77,7 +77,7 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
         }
 
         // подумать над способом перерисовки без очистки всех ячеек
-        clearCells();
+        vm.clearCells();
         vm.buildEventCells(0);
     });
 

@@ -2,9 +2,9 @@ var app = require('../app');
 
 app.service('crudEvEventService', crudEvEventService);
 
-crudEvEventService.$inject = ['$rootScope', '$uibModal'];
+crudEvEventService.$inject = ['$rootScope', '$uibModal', 'helpEventService'];
 
-function crudEvEventService($rootScope, $uibModal) {
+function crudEvEventService($rootScope, $uibModal, helpEventService) {
 
 	vm = this;
 
@@ -47,47 +47,115 @@ function crudEvEventService($rootScope, $uibModal) {
 	// подписываемся на событие при вызове создания ивента
     vm.creatingListen = function() {
     	$rootScope.$on('creatingEvent', function(event, selectedDate, viewType){
+    		vm.selectedDate = selectedDate;
+    		vm.viewType = viewType;
 	        console.log('creatingEvent received');
-	        var modalInstance = $uibModal.open({
-	            animation: true,
-	            templateUrl: 'templates/crudEvent/createEvent.html',
-	            controller: 'createEventController',
-	            controllerAs: 'createEvCtrl',
-	            bindToController: true,
-	            resolve: {
-	                selectedDate: function () {
-	                    return selectedDate;
-	                },
-	               	viewType: function () {
-	                    return viewType;
-	                },
-	            }
-	        });
+	        pullData(initCreateModal);    
 	    });
     };
 
     // подписываемся на событие при вызове редактирования ивента
     vm.editingListen = function() {
     	$rootScope.$on('editingEvent', function(event, selectedDate, eventBody, viewType){
+    		vm.selectedDate = selectedDate;
+    		vm.eventBody = eventBody;
+    		vm.viewType = viewType;
+	        
 	        console.log('editingEvent received');
-	        var modalInstance = $uibModal.open({
-	            animation: true,
-	            templateUrl: 'templates/crudEvent/editEvent.html',
-	            controller: 'editEventController',
-	            controllerAs: 'editEvCtrl',
-	            bindToController: true,
-	            resolve: {
-	                selectedDate: function () {
-	                    return selectedDate;
-	                },
-	                eventBody: function () {
-	                    return eventBody;
-	                },
-	               	viewType: function () {
-	                    return viewType;
-	                },
-	            }
-	        });
+	        pullData(initEditModal);
 	    });
     };
+
+    pullData = function(cb){
+		console.log('pullData');
+		helpEventService.getRooms().then(function(data) {
+            if (data !== null){
+                vm.rooms = data;
+            }
+
+        }).then(function() {
+		    helpEventService.getDevices().then(function(data) {
+		        if (data !== null){
+		            vm.devices = data;
+		        }
+		    });
+		}).then(function() {
+		    helpEventService.getUsers().then(function(data) {
+		        if (data !== null){
+		            vm.users = data;
+		        }
+		    });
+		}).then(function() {
+		    helpEventService.getEventTypes().then(function(data) {
+		        if (data !== null){
+		            vm.eventTypes = data;
+		        }
+		        console.log('pullDataCb');
+		        cb();
+		    });
+		});
+	};
+
+	initCreateModal = function(selectedDate, viewType) {
+	  var modalInstance = $uibModal.open({
+            animation: true,
+            templateUrl: 'templates/crudEvent/createEvent.html',
+            controller: 'createEventController',
+            controllerAs: 'createEvCtrl',
+            bindToController: true,
+            resolve: {
+                selectedDate: function () {
+                    return vm.selectedDate;
+                },
+               	viewType: function () {
+                    return vm.viewType;
+                },
+                rooms: function (){
+                	return vm.rooms;
+                },
+                devices: function (){
+                	return vm.devices;
+                },
+                users: function (){
+                	return vm.users;
+                },
+                eventTypes: function (){
+                	return vm.eventTypes;
+                },
+            }
+        });
+	};
+
+	initEditModal = function(selectedDate, eventBody, viewType) {
+	  var modalInstance = $uibModal.open({
+            animation: true,
+            templateUrl: 'templates/crudEvent/editEvent.html',
+            controller: 'editEventController',
+            controllerAs: 'editEvCtrl',
+            bindToController: true,
+            resolve: {
+                selectedDate: function () {
+                    return vm.selectedDate;
+                },
+                eventBody: function () {
+                    return vm.eventBody;
+                },
+               	viewType: function () {
+                    return vm.viewType;
+                },
+                rooms: function (){
+                	return vm.rooms;
+                },
+                devices: function (){
+                	return vm.devices;
+                },
+                users: function (){
+                	return vm.users;
+                },
+                eventTypes: function (){
+                	return vm.eventTypes;
+                },
+            }
+        });
+	};
 }

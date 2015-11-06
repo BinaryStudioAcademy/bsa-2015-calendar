@@ -75,6 +75,7 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		return days;
 	}
 
+
 	function saveEvent(event) {
 		var saveEventPromise = $http.post('api/event/', event)       
 		.then(function (response) {
@@ -84,6 +85,28 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 			return reason; 		
 		});
 		return saveEventPromise;
+	}
+
+	function updateEvent(eventId, eventBody) {
+		var updateEventPromise = $http.put('api/event/' + eventId, event)       
+		.then(function (response) {
+			console.log('updating event status: ', response.status);
+			return response.data;
+		}, function(reason) {
+			return reason; 		
+		});
+		return updateEventPromise;
+	}
+
+	function deleteEvent(eventId) {
+		var deleteEventPromise = $http.delete('api/event/' + eventId, event)       
+		.then(function (response) {
+			console.log('deleting event status: ', response.status);
+			return response.data;
+		}, function(reason) {
+			return reason; 		
+		});
+		return deleteEventPromise;
 	}
 
 	function savePlan(plan) {
@@ -250,6 +273,8 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		getDaysNames: getDaysNames,
 		configureEventData: configureEventData,
 		saveEvent: saveEvent,
+		updateEvent: updateEvent,
+		deleteEvent: deleteEvent,
 		savePlan: savePlan,
 		getRooms: getRooms,
 		getDevices: getDevices,
