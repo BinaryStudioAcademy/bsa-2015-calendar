@@ -40,17 +40,25 @@ EventRepository.prototype.getByDateEnd = function(date, callback){
 	query.exec(callback);
 };
 
-EventRepository.prototype.getByType = function(type, callback){
+EventRepository.prototype.getByType = function(typeId, callback){
 	var model = this.model;
-	var query = model.find({"type":type});
+	var query = model.find({"type":typeId});
 	query.exec(callback);
 };
 
-EventRepository.prototype.getByInterval = function(gteDate,lteDate, callback){
+EventRepository.prototype.getByInterval = function(gteDate, lteDate, callback){
 	var model = this.model;
 	var query = model.find( {"start": {"$gte": gteDate, "$lte": lteDate}}).sort({"start": 1});
 	query.exec(callback);
 };
+
+EventRepository.prototype.getByOwnerAndType = function(ownerId, typeId, callback){
+	var model = this.model;
+	//var query = model.find( {$and: [{'type' : typeId}, {'ownerId': ownerId}]} );
+	var query = model.find( { 'type' : typeId, 'ownerId': ownerId } );
+	query.exec(callback);
+};
+
 
 EventRepository.prototype.getPublicAndByOwner = function (id, callback) {
 	console.log('requesting events public and by owner for id: ', id);
