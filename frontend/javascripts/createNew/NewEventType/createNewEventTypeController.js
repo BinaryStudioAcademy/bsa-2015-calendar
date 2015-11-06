@@ -7,6 +7,14 @@ function createNewEventTypeController($scope, createNewEventTypeService, AuthSer
     var vm = this;
     vm.eventTypes = createNewEventTypeService.getEventTypesPublicByOwner();
 
+    vm.inputStyle = {};
+
+    vm.changeStyle = function(){
+        vm.inputStyle = {
+            background: vm.eventType.color
+        };
+    };
+
     vm.reset = function () {
         vm.eventType.title = '';
         vm.eventType.isPrivate = false;

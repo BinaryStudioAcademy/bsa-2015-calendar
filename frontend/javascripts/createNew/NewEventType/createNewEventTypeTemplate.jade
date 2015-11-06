@@ -7,6 +7,9 @@
             label.col-sm-2(for="eventType") Title:
             .col-sm-10
                 input#eventType.form-control(type='text', placeholder="Enter title", ng-model='cnetCtrl.eventType.title')
+            label.col-sm-2(for="eventColor") Color:
+            .col-sm-10
+                input#eventColor(ng-init="cnteCtrl.eventType.color='#FFFFFF'" ng-change="cnetCtrl.changeStyle()" ng-style="cnetCtrl.inputStyle" colorpicker="hex" ng-model="cnetCtrl.eventType.color" type="text")
             label.col-sm-2(for="eventPrivacy") Private:
             .col-sm-10
                 input#eventPrivacy(ng-init="cnetCtrl.eventType.isPrivate = false", type='checkbox', ng-model='cnetCtrl.eventType.isPrivate')
