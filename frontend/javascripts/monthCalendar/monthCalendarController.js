@@ -5,9 +5,9 @@ var app = require('../app'),
 app.controller('MonthController', MonthController);
 
 
-MonthController.$inject = ['$rootScope', '$scope', 'helpEventService', 'crudEvEventService', '$timeout', '$q', '$uibModal'];
+MonthController.$inject = ['$rootScope', '$scope', 'helpEventService', 'crudEvEventService', '$timeout', '$q', '$uibModal', '$stateParams'];
 
-function MonthController($rootScope, $scope, helpEventService, crudEvEventService, $timeout, $q, $uibModal) {
+function MonthController($rootScope, $scope, helpEventService, crudEvEventService, $timeout, $q, $uibModal, $stateParams) {
 
     vm = this;
 
@@ -203,17 +203,26 @@ function MonthController($rootScope, $scope, helpEventService, crudEvEventServic
         vm.maxDisplayEventsNumber = 3;
         vm.allDayEventsTemplateUrl = 'templates/monthCalendar/monthCalendarAllDaysEventTemplate.html';
 
-        vm.selected = vm.removeTime(vm.selected || moment());        
-        var nowMoment = moment();
+        vm.selected = vm.removeTime(vm.selected || moment());
 
-        vm.mViewStartMoment = moment({hour: 0, minute: 0});
+        var routeMonth, startMonth, endMonth;
+        if ($stateParams.year) {
+            routeMonth = moment([$stateParams.year, $stateParams.month, 3]);
+            startMonth = moment(new Date($stateParams.year, $stateParams.month, 1));
+            endMonth = moment(new Date($stateParams.year, $stateParams.month, new Date($stateParams.year, $stateParams.month+1, 0).getDate()));
+
+        }
+
+        var nowMoment = routeMonth || moment();
+
+        vm.mViewStartMoment = routeMonth || moment({hour: 0, minute: 0});
         vm.mViewStartMoment.add(-nowMoment.isoWeekday() +1, 'd');
         vm.mViewEndMoment = vm.mViewStartMoment.clone();
         vm.mViewEndMoment.add(5, 'w');
         vm.mViewEndMoment.set({'hour': 23, 'minute': 59});
+        vm.monthStartMoment = startMonth || moment().startOf('month');
+        vm.monthEndMoment = endMonth || moment().endOf('month');
 
-        vm.monthStartMoment = moment().startOf('month');
-        vm.monthEndMoment = moment().endOf('month');
 
         //will be pulled from server 
         vm.pullData();

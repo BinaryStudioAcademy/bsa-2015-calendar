@@ -2,6 +2,7 @@ var app = require('../app');
 
 app.directive('eventCalendarDirective', eventCalendarDirective);
 
+
 function eventCalendarDirective() {
     return {
         restrict: 'A',
@@ -21,19 +22,57 @@ function eventCalendarDirective() {
                 }     
             });    
 
-            $scope.$on('planAdded', function(event, data) {
-                var eventStartDate = new Date(data.start);
+            $scope.$on('addedPlanYearView', function(event, selectedDate, eventBody) {
+                for (var item=0; item <eventBody.length; item++) {
+                    var eventStartDate = new Date(eventBody[item].start);
+                    var evDate = eventStartDate.getDate()+'_'+(eventStartDate.getMonth()+1)+'_'+eventStartDate.getFullYear();
+                    $scope.dataObj[evDate].push(eventBody[item]);
+                    addEvents(evDate);
+                } 
+            });
+
+            $scope.$on('addedEventYearView', function(event, selectedDate, eventBody) {
+                var eventStartDate = new Date(eventBody.start);
                 var evDate = eventStartDate.getDate()+'_'+(eventStartDate.getMonth()+1)+'_'+eventStartDate.getFullYear();
-                $scope.dataObj[evDate].push(data);
+                $scope.dataObj[evDate].push(eventBody);
                 addEvents(evDate);
             });
 
-            $scope.$on('eventAdded', function(event, data) {
-                var eventStartDate = new Date(data.start);
+            $scope.$on('deletedEventYearView', function(event, selectedDate, eventBody) {
+                var eventStartDate = new Date(eventBody.start);
                 var evDate = eventStartDate.getDate()+'_'+(eventStartDate.getMonth()+1)+'_'+eventStartDate.getFullYear();
-                $scope.dataObj[evDate].push(data);
+                var indexOfEvent;
+                for (var i = 0; i < $scope.dataObj[evDate].length; i++){
+                    if ($scope.dataObj[evDate][i] == eventBody) {
+                        indexOfEvent = i;
+                        break;
+                    }
+                }
+                $scope.dataObj[evDate].splice(indexOfEvent,1);
                 addEvents(evDate);
             });
+
+            $scope.$on('editedEventWeekView', function(event, selectedDate, oldEventBody, newEventBody){
+        
+                var eventStartDate = new Date(oldEventBody.start);
+                var evDate = eventStartDate.getDate()+'_'+(eventStartDate.getMonth()+1)+'_'+eventStartDate.getFullYear();
+                var indexOfEvent;
+                for (var i = 0; i < $scope.dataObj[evDate].length; i++){
+                    if ($scope.dataObj[evDate][i] == oldEventBody) {
+                        indexOfEvent = i;
+                        break;
+                    }
+                }
+
+                $scope.dataObj[evDate].splice(indexOfEvent,1);
+                
+                eventStartDate = new Date(newEventBody.start);
+                var newEvDate = eventStartDate.getDate()+'_'+(eventStartDate.getMonth()+1)+'_'+eventStartDate.getFullYear();
+                $scope.dataObj[newEvDate].push(newEventBody);
+                addEvents(newEvDate);
+                
+            });
+
 
             function addEvents(day) {
                 if ($scope.dataObj[day].length > 0) {

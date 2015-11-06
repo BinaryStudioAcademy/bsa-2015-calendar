@@ -8,4 +8,4 @@ table.year-month-table
         td.dayoff Sat
         td.dayoff Sun
     tr(ng-repeat='week in weeks')
-        td(ng-repeat='day in week track by $index', ng-attr-id='{{day.dayId}}', class='item ng-class: {"dayoff": day.dayOff, "day-now": day.timePeriod == 1, "day-past": day.timePeriod === 0}', ng-dblClick='openModal($event)') {{day.dayDate}}
+        td(ng-repeat='day in week track by $index', ng-attr-id='{{day.dayId}}', class='item ng-class: {"dayoff": day.dayOff, "day-now": day.timePeriod == 1, "day-past": day.timePeriod === 0}', ng-dblClick='createEvent($event)') {{day.dayDate}}

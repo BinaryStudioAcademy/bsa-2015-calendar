@@ -1,6 +1,9 @@
 var app = require('../app');
+var moment = require('moment');
 
 app.directive('calendarDirective', calendarDirective);
+
+
 
 function calendarDirective($animate) {
     return {
@@ -9,7 +12,7 @@ function calendarDirective($animate) {
         scope: {
             calendar: '=',
             monthNum: '@',
-            modal: '&'
+            evntService: '@'
         },
 
         link: function ($scope, element, attr) {
@@ -40,11 +43,23 @@ function calendarDirective($animate) {
                 $animate.enter(element.children('.year-month-table'), element); 
             }, true);   
         },
-        controller: function($scope) {
-            $scope.openModal = function($event) {
+        controller: function($scope, $injector) {
+            var crudEvEventService = $injector.get($scope.evntService);
+
+            $scope.createEvent = function($event) {
                 var clickElem = $event.target.attributes.id.value;
-                $scope.modal({clickElem: clickElem});
+                var elemDate = clickElem.split('_');
+                var tmpDate = new Date(+elemDate[2], (+elemDate[1])-1, +elemDate[0]);
+                var mDate = moment(tmpDate);
+                crudEvEventService.creatingBroadcast(mDate, 'YearView');
             };
+
+            $scope.editEvent = function(selectedDate, eventBody) {
+                var tmpDate = moment(selectedDate);
+                crudEvEventService.editingBroadcast(tmpDate, eventBody, 'YearView');
+            };
+
+
         }
  
     };
