@@ -8,6 +8,7 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
 
 	var vm = this;
 
+
     $scope.$on('addedEventDayView', function(event, selectedDate, eventBody){
     	console.log('EVENT ADDED', eventBody);
     	if(!vm.allEvents) vm.allEvents = [];
