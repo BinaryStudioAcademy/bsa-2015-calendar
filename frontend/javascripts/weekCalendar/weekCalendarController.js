@@ -4,12 +4,13 @@ require('moment-range');
 
 app.controller('WeekViewController', WeekViewController);
 
-WeekViewController.$inject = ['crudEvEventService','helpEventService', '$scope', '$uibModal','$compile', '$templateCache'];
+WeekViewController.$inject = ['crudEvEventService','helpEventService', '$scope', '$uibModal','$compile', '$templateCache', '$rootScope'];
 
-function WeekViewController(crudEvEventService,helpEventService, $scope, $uibModal, $compile, $templateCache) {
+function WeekViewController(crudEvEventService,helpEventService, $scope, $uibModal, $compile, $templateCache, $rootScope) {
 	var vm = this;
 
     $scope.$on('eventsUpdated', function() {
+        // console.log('from  $scope.$on eventsUpdated', vm.eventObj);
         vm.buildEventCells(0);
     });
 
@@ -134,6 +135,18 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
         }
     };
 
+    vm.flagsInDaily = [];                                                  //medai
+    $rootScope.$on('flagFromCalendar', function (event, agrs) {           
+        var flagsFromCalendar = agrs.messege;
+        vm.flagsInDaily.length = 0;                                           
+            for (var i = 0; i < flagsFromCalendar.length; i++) {        
+                vm.flagsInDaily.push(flagsFromCalendar[i]);
+            }
+        // console.log('flagFromWeek', vm.flagsInDaily);
+        vm.clearCells();
+        vm.pullData();
+    });                                                                    //medai
+
     vm.previous = function(){
         vm.clearCells();
 
@@ -147,9 +160,16 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
    
         helpEventService.getEvents(vm.Start, vm.End).then(function(data) {
             if (data !== null){
-                vm.eventObj = data;
-                console.log(data);
-                $scope.$broadcast('eventsUpdated');
+                vm.eventObjOll = data;                                          //medai
+                vm.eventObj = [];
+                // console.log('from vm.pullData', vm.eventObj);
+                for (var i = 0; i < vm.eventObjOll.length; i++){
+                    for (var j = 0; j < vm.flagsInDaily.length; j++) {     
+                        if (vm.eventObjOll[i].type == vm.flagsInDaily[j]) vm.eventObj.push(vm.eventObjOll[i]);
+                    }                    
+                }
+                console.log('from vm.previous after for-for', vm.eventObj);               
+                $scope.$broadcast('eventsUpdated');                             //medai
             }
         });
     };
@@ -167,9 +187,16 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
 
         helpEventService.getEvents(vm.Start, vm.End).then(function(data) {
             if (data !== null){
-                vm.eventObj = data;
-                console.log(data);
-                $scope.$broadcast('eventsUpdated');
+                vm.eventObjOll = data;                                              //medai
+                vm.eventObj = [];
+                // console.log('from vm.pullData', vm.eventObj);
+                for (var i = 0; i < vm.eventObjOll.length; i++){
+                    for (var j = 0; j < vm.flagsInDaily.length; j++) {     
+                        if (vm.eventObjOll[i].type == vm.flagsInDaily[j]) vm.eventObj.push(vm.eventObjOll[i]);
+                    }                    
+                }
+                console.log('from vm.next after for-for', vm.eventObj);               
+                $scope.$broadcast('eventsUpdated');                                    //medai
             }
         });
     };
@@ -190,15 +217,26 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
         crudEvEventService.editingBroadcast(tmpDate, eventBody, 'WeekView');
     };
 
+
+
     vm.pullData = function() {
         helpEventService.getEvents(vm.Start, vm.End).then(function(data) {
             if (data !== null){
-                vm.eventObj = data;
-                console.log(data);
-                $scope.$broadcast('eventsUpdated');
+                vm.eventObjOll = data;                                              //medai
+                vm.eventObj = [];
+                // console.log('from vm.pullData', vm.eventObj);
+                for (var i = 0; i < vm.eventObjOll.length; i++){
+                    for (var j = 0; j < vm.flagsInDaily.length; j++) {     
+                        if (vm.eventObjOll[i].type == vm.flagsInDaily[j]) vm.eventObj.push(vm.eventObjOll[i]);
+                    }                    
+                }
+                console.log('from vm.pullData after for-for', vm.eventObj);               
+                $scope.$broadcast('eventsUpdated');                                 //medai
             }
         });
     };
+
+
 
     init();
 
