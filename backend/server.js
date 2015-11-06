@@ -10,6 +10,7 @@ var MongoStore = require('connect-mongo')(session);
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
+
 var connection = require('./db/dbconnect');
 
  //var faker = require('./faker/generate.js');
@@ -64,6 +65,9 @@ http.globalAgent.maxSockets = Infinity;
 var server = app.listen(3080);
 
 var socketio = require('./io/socketServer.js')(server);
+
+var eventTypeRepository = require('./repositories/eventTypeRepository');
+eventTypeRepository.init(['basic', 'general', 'general', 'google']);
 
 
 console.log('server start on port 3080');

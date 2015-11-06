@@ -33,4 +33,25 @@ EventTypeRepository.prototype.getPublicAndByOwner = function (id, callback) {
     query.exec(callback);
 };
 
+EventTypeRepository.prototype.addBasicType = function(title) {
+    var model = this.model;
+    model.findOne({'title': title}, function (err, type) {
+        if(err) {
+            console.log(err);
+            return;
+        }
+        
+        if(!type) {
+            var newitem = new model({'title' : title, 'isPrivate': false, 'events': []});
+            newitem.save();
+        }
+    });
+};
+
+EventTypeRepository.prototype.init = function (types) {
+    for(var i = 0; i < types.length; i++){
+        this.addBasicType(types[i]);
+    }
+};
+
 module.exports = new EventTypeRepository();

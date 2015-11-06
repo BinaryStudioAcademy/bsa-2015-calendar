@@ -13,6 +13,10 @@ function createNewEventTypeController($scope, createNewEventTypeService, AuthSer
         // vm.eventType.events = '';
     };
 
+    vm.getCurrentUser = function(){
+        return AuthService.getUser();
+    };
+
     vm.addEventType = function () {
         //console.log(AuthService.getUser());
         var newEventType = {

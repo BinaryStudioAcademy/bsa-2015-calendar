@@ -11,7 +11,7 @@ var eventSchema = new Schema({
     title : String,
     description : String,
     type : {type: Schema.Types.ObjectId, ref: 'EventType'},
-    // type : String, // 'basic', 'general', 'activity',
+    // type : String, // 'basic', 'general', 'activity', 'google',
     price : Number,
     plan : {type: Schema.Types.ObjectId, ref: 'Plan'}, /* plan id */
     isPrivate : Boolean,

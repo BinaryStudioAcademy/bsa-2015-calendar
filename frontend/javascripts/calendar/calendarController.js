@@ -28,6 +28,7 @@ function CalendarController($document, $modal, $resource, $scope, $rootScope, $s
     });
   };
 
+
   $document.bind("keypress", function(event) {
     //console.log(event.keyCode);
     if ((event.keyCode == 112) || (event.keyCode == 104)) {
@@ -37,6 +38,7 @@ function CalendarController($document, $modal, $resource, $scope, $rootScope, $s
       $("#myModal").modal("hide");
     }
   });
+
 
 
 
@@ -51,8 +53,7 @@ function CalendarController($document, $modal, $resource, $scope, $rootScope, $s
     } else {
       vm.flag.push(_id);
     }
-    console.log('flags from CalendarController $rootScope.$broadcast', vm.flag);
-
+    // console.log('flags from CalendarController $rootScope.$broadcast', vm.flag);
     $rootScope.$broadcast('flagFromCalendar', {   //push vm.flag to point $rootScope.$on
       messege: vm.flag
     });
@@ -65,22 +66,22 @@ function CalendarController($document, $modal, $resource, $scope, $rootScope, $s
     for (var i = 0; i < vm.eventTypes.length; i++) {   
       vm.flag.push(vm.eventTypes[i]._id);
       vm.eventTypes[i].flag = true;
-      console.log('flags from CalendarController selectAllEventType', vm.flag);
-
-      $rootScope.$broadcast('flagFromCalendar', {   //push vm.flag to point $rootScope.$on
-        messege: vm.flag
-      });
     }
+    // console.log('flags from CalendarController selectAllEventType', vm.flag);   
+    $rootScope.$broadcast('flagFromCalendar', {   //push vm.flag to point $rootScope.$on
+      messege: vm.flag
+    });
+
   };
 
   vm.clearAllEventType = function(){
     vm.flag.length = 0;
     for (var i = 0; i < vm.eventTypes.length; i++) {   
       vm.eventTypes[i].flag = false;
-
-      $rootScope.$broadcast('flagFromCalendar', {   //push vm.flag to point $rootScope.$on
-        messege: vm.flag
-      });
     }
+    // console.log('flags from CalendarController clearAllEventType', vm.flag);  
+    $rootScope.$broadcast('flagFromCalendar', {   //push vm.flag to point $rootScope.$on
+      messege: vm.flag
+    });    
   };
 }

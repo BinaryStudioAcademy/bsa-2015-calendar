@@ -25,14 +25,17 @@
         .content_for_eventType_list
             table.col-sm-12.table-responsive.table-hover.table.eventTypeTable(border='1')
                 tr
-                    th.col-sm-10 Event type
+                    th.col-sm-9 Event type
                     //th.col-sm-6 events
+                    th.col-sm-1 Private
                     th.col-sm-1 Edit
                     th.col-sm-1 Delete
                 tr(ng-repeat='eventType in cnetCtrl.eventTypes | filter: cnetCtrl.search')
                     td
                         input#inputEventTypeTitle.form-control(ng-model='eventType.title')
                     //td  {{ eventType.events }}
+                    td
+                        input(type="checkbox" ng-model="eventType.isPrivate" ng-disabled="eventType.ownerId != cnetCtrl.getCurrentUser().id")
                     td(align='center')
                         button.btn.btn-primary.btn-xs(ng-click='cnetCtrl.updateEventType(eventType)') save
                     td(align='center')

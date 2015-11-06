@@ -146,6 +146,10 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		return allEventsPromise;
 	}
 
+	function getAllUserEvents(){
+		return $http.get('api/eventPublicAndByOwner');
+	}
+
 
 	function getEvents(start, stop) {
 		var eventsPromise = $http.get('api/eventByInterval/'+ (+start)+ '/'+ (+stop))       
@@ -254,7 +258,7 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 	function getEventTypesPublicByOwner() {
 		return $http.get('api/eventTypePublicAndByOwner/')
 				.then(function (response) {
-					console.log('success Current number of types: ', response.data.length);
+					console.log('success Current number of types (public by owner): ', response.data.length);
 					return response.data;
 				}, function (reason) {
 					if (reason.status == 404) {
@@ -284,5 +288,6 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		getEventTypes: getEventTypes,
 		getUserEvents: getUserEvents,
 		getEventTypesPublicByOwner: getEventTypesPublicByOwner,
+		getAllUserEvents: getAllUserEvents
 	};
 }
