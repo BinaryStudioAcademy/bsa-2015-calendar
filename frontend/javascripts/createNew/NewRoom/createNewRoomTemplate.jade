@@ -1,45 +1,43 @@
-.room_list(ng-controller='createNewRoomController')
+.room_list
 
-  .room_list_header
-    h1(align='center') Create a new room
+    .room_list_header
+        h1(align='center') Create a new room
 
-    .form-group
-      label.col-sm-2(for="room") title: 
-      .col-sm-10
-        input(type='text', class="form-control", id="room", placeholder="Enter title", ng-model='cnrCtrl.room.title')
-      label.col-sm-2(for="description" class="form-control4") description: 
-      .col-sm-10
-        input(type='text', class="form-control", id="description", placeholder="Enter description", ng-model='cnrCtrl.room.description')
+        .form-group
+            label.col-sm-2(for="room") Title:
+            .col-sm-10
+                input.form-control(type='text', id="room", placeholder="Enter title", ng-model='cnrCtrl.room.title')
+            label.col-sm-2.form-control4(for="description") Description:
+            .col-sm-10
+                input.form-control(type='text', id="description", placeholder="Enter description", ng-model='cnrCtrl.room.description')
 
-    .form-group
-      .col-sm-offset-2.col-sm-10
-        button(ng-click='cnrCtrl.reset()' class="btn btn-warning form-btn") Reset form
-        button(ng-click='cnrCtrl.addRoom()' class='btn btn-info form-btn') Save
-    .button-div2
-      h4 Rooms: {{ cnrCtrl.rooms.length }}.   
-      button(ng-click='cnrCtrl.toggleViewRoom()') Display/hide all rooms
-    br
+        .form-group
+            .col-sm-offset-2.col-sm-10
+                button.btn.btn-default.form-btn(ng-click='cnrCtrl.reset()') Clear form
+                button.btn.btn-primary.form-btn(ng-click='cnrCtrl.addRoom()') Save
+        .button-div2
+            h4 Rooms: {{ cnrCtrl.rooms.length }}
+            .div_search
+                span.glyphicon.glyphicon-search
+                input(type='text', size='19', ng-model='cnrCtrl.search', style="margin-left: 10px")
+        br
 
-  room_list_body(align='center', ng-show='cnrCtrl.showRoomsList')
-    .div_search
-      b Search room:
-      input(type='text', size='19', border='1', ng-model='cnrCtrl.search')
-
-    .content_for_room_list
-      table.col-sm-12.table-responsive.table-hover.table.roomTable(border='1', ng-show='cnrCtrl.showRoomsList')
-          tr
-            th.col-sm-4 room title
-            th.col-sm-6 room description
-            th.col-sm-1 change
-            th.col-sm-1 delete
-          tr(ng-repeat='room in cnrCtrl.rooms | filter: cnrCtrl.search')
-            td  
-              input#inputRoomTitle(class="form-control", ng-model='room.title')
-            td  
-              input#inputRoomDescription(class="form-control", ng-model='room.description')
-            td(align='center')  
-              button(class="btn btn-info btn-xs" ng-click='cnrCtrl.updateRoom(room)') save            
-              //- a(ng-click='cnrCtrl.updateRoom(room)') save
-            td(align='center')  
-              button(class="btn btn-primary btn-xs btn-danger" ng-click='cnrCtrl.deleteRoom(room, $index)') delete
-              //- a(ng-click='cnrCtrl.deleteRoom(room, $index)') delete 
+    room_list_body(align='center')
+        .content_for_room_list
+            table.col-sm-12.table-responsive.table-hover.table.roomTable(border='1')
+                tr
+                    th.col-sm-4 Title
+                    th.col-sm-6 Description
+                    th.col-sm-1 Edit
+                    th.col-sm-1 Delete
+                tr(ng-repeat='room in cnrCtrl.rooms | filter: cnrCtrl.search')
+                    td
+                        input#inputRoomTitle.form-control(ng-model='room.title')
+                    td
+                        input#inputRoomDescription.form-control(ng-model='room.description')
+                    td(align='center')
+                        button.btn.btn-primary.btn-xs(ng-click='cnrCtrl.updateRoom(room)') save
+                        //- a(ng-click='cnrCtrl.updateRoom(room)') save
+                    td(align='center')
+                        button.btn.btn-xs.btn-danger(ng-click='cnrCtrl.deleteRoom(room, $index)') delete
+                        //- a(ng-click='cnrCtrl.deleteRoom(room, $index)') delete

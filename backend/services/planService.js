@@ -211,7 +211,7 @@ planService.prototype.add = function(data, callback){
 	},
 
 	function (cb){
-		eventRepository.getByPlanId(planData._id, function(err, events){
+		eventRepository.getByPlanIdPop(planData._id, function(err, events){
 				if (!events){
 					return cb(new Error("incorrect planId " + planData._id));
 				}

@@ -24,10 +24,14 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
 
     $scope.$on('addedPlanWeekView', function(event, selectedDate, events){
         var index = vm.eventObj.length-1;
+        console.log('addedPlanWeekView recieved');
         console.log(selectedDate,events);
         var range = moment().range(vm.weekStartMoment, vm.weekEndMoment);
+        console.log(range);
         for (var i = 0; i < events.length; i++){
+            console.log(range.contains(events[i].start));
             if (range.contains(events[i].start)){
+                console.log('УРРА!');
                 vm.eventObj.push(events[i]);
             }
             else break;
