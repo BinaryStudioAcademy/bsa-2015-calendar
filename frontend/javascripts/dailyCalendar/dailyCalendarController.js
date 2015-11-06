@@ -2,9 +2,9 @@ var app = require('../app');
 
 app.controller('DayViewController', DayViewController);
 
-DayViewController.$inject = ['DailyCalendarService', '$timeout', '$q', '$uibModal', 'socketService', 'helpEventService'];
+DayViewController.$inject = ['crudEvEventService', 'DailyCalendarService', '$timeout', '$q', '$uibModal', 'socketService', 'helpEventService'];
 
-function DayViewController(DailyCalendarService, $timeout, $q, $uibModal, socketService, helpEventService) {
+function DayViewController(crudEvEventService, DailyCalendarService, $timeout, $q, $uibModal, socketService, helpEventService) {
 
 	var vm = this;
 	
@@ -65,39 +65,42 @@ function DayViewController(DailyCalendarService, $timeout, $q, $uibModal, socket
 	};
 
 	vm.showCloseModal = function() {
-		vm.modalInstance = $uibModal.open({
-			animation: true,
-			templateUrl: 'templates/dailyCalendar/editEventTemplate.html',
-			controller: 'ModalController',
-			controllerAs: 'ModalCtrl',
-			bindToController: true,
-			resolve: {
-				rooms: function () {
-					return vm.availableRooms;
-				},
-				devices: function () {
-					return vm.availableInventory;
-				},
-				users: function () {
-					return vm.users;
-				},
-				selectedDate: function () {
-					return vm.selectedDate;
-				},
-				eventTypes: function () {
-					return vm.eventTypes;
-				},
-				allEvents: function () {
-					return vm.allEvents;
-				}
-			}
-		});
 
-		vm.modalInstance.result.then(function () {
-			getAllEvents();
-			filterEventsByTodayDate();
-			mapEvents();
-		});
+		crudEvEventService.creatingBroadcast(moment(vm.selectedDate), 'dayView');
+
+		// vm.modalInstance = $uibModal.open({
+		// 	animation: true,
+		// 	templateUrl: 'templates/dailyCalendar/editEventTemplate.html',
+		// 	controller: 'ModalController',
+		// 	controllerAs: 'ModalCtrl',
+		// 	bindToController: true,
+		// 	resolve: {
+		// 		rooms: function () {
+		// 			return vm.availableRooms;
+		// 		},
+		// 		devices: function () {
+		// 			return vm.availableInventory;
+		// 		},
+		// 		users: function () {
+		// 			return vm.users;
+		// 		},
+		// 		selectedDate: function () {
+		// 			return vm.selectedDate;
+		// 		},
+		// 		eventTypes: function () {
+		// 			return vm.eventTypes;
+		// 		},
+		// 		allEvents: function () {
+		// 			return vm.allEvents;
+		// 		}
+		// 	}
+		// });
+
+		// vm.modalInstance.result.then(function () {
+		// 	getAllEvents();
+		// 	filterEventsByTodayDate();
+		// 	mapEvents();
+		// });
 	};
 
 
