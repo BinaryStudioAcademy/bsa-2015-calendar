@@ -24,7 +24,7 @@
     "bootstrap-social": "~4.10.1",
     "moment": "~2.10.6",
     "moment-range": "~2.0.3",
-    "angular-bootstrap-colorpicker": "~3.0.19",
+    "angular-bootstrap-colorpicker": "~3.0.19"
 
   },
   "resolutions": {
