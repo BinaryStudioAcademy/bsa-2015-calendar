@@ -11,17 +11,6 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 
 	function init(){
 
-		vm.weekDays = [
-			{ name: 'Mo', selected: false },
-			{ name: 'Tu', selected: false },
-			{ name: 'We', selected: false },
-			{ name: 'Th', selected: false },
-			{ name: 'Fr', selected: false },
-			{ name: 'Sa', selected: false },
-			{ name: 'Su', selected: false }
-		];
-
-
 		vm.rooms = rooms;
 		vm.devices = devices;
 		vm.users = users;
@@ -41,7 +30,8 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 			vm.event.devices = [];
 			vm.event.room = {};
 			vm.event.type = {};
-
+			vm.event.start = vm.eventBody.start;
+			vm.event.end = vm.eventBody.end;
 			vm.event.title = vm.eventBody.title;
 			vm.event.description = vm.eventBody.description;
 
@@ -94,39 +84,13 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 					}
 				}
 			} 
-			// var dtPickerStart = document.querySelectorAll('#startTime');
-			// var dtPickerEnd = document.querySelectorAll('#endTime');
-			// console.log(dtPickerStart,dtPickerEnd);
-		 //    $(dtPickerStart).datetimepicker({
-		 //        format: 'HH:mm',
-		 //        pickDate: false,
-		 //        pickSeconds: false,
-		 //        pick12HourFormat: false            
-		 //    });
-		    // $(dtPickerEnd).datetimepicker({
-		    //     format: 'HH:mm',
-		    //     pickDate: false,
-		    //     pickSeconds: false,
-		    //     pick12HourFormat: false            
-		    // });
-   // 			var em = angular.element($('#startTime'));
-   // 			console.log(em);
-			// $('#startTime').timepicker({
-   //              minuteStep: 1,
-   //              template: 'modal',
-   //              appendWidgetTo: 'body',
-   //              showSeconds: true,
-   //              showMeridian: false,
-   //              defaultTime: false
 
-			vm.event.start = vm.eventBody.start;
-			vm.event.end = vm.eventBody.end;
+
+			
 
 			console.log('vm.event = ' ,vm.event);
 
 			vm.eventSuccess = false;
-
-			//dropEventInfo(vm.selectedDate);
 
 			vm.selectConfigDevices = {
 				buttonDefaultText: 'Select devices',
@@ -164,31 +128,8 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 	vm.editEvent = function() {
 	
 		console.log('editing');
-		vm.event.isValid = true;
 
-		// if(!vm.event.title){
-		// 	vm.event.titleError = true;
-		// 	vm.event.isValid = false;
-		// } else{
-		// 	vm.event.titleError = false;
-		// }
-
-		// if(!vm.event.type){
-		// 	vm.event.typeError = true;
-		// 	vm.event.isValid = false;
-		// } else {
-		// 	vm.event.typeError = false;
-		// }
-
-		// if(vm.event.startTime > vm.event.endTime){
-		// 	vm.event.isValid = false;
-		// }
-
-		// if(!vm.event.isValid){
-		// 	return;
-		// }
-
-		console.log('vm.event after editing', vm.event.title, vm.event.description, vm.event.start, vm.event.end);
+		console.log('vm.event after editing = ', vm.event.title, vm.event.description, vm.event.start, vm.event.end);
 		var event = {};
 		event.title = vm.event.title;
 		event.description = vm.event.description;
@@ -213,7 +154,7 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 				event.users[i] = vm.event.users[i]._id;
 			}
 		}
-		console.log('call subm', event);
+		console.log('call submiting event to submit = ', event);
 		vm.submitEdit(event);	
 	};
 
