@@ -299,6 +299,7 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 				if(vm.form.rooms.length) plan.rooms = vm.form.rooms;
 				if(vm.form.devices.length) plan.devices = vm.form.devices;
 				if(vm.form.users.length) plan.users = vm.form.users;
+				console.log(vm.form.users);
 			}
 
 			console.log('SUBMITTING PLAN >>>>>', plan);
@@ -312,7 +313,7 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 			event.start = vm.form.timeStart;
 			event.end = vm.form.timeEnd;
 			event.type = vm.form.type['_id'];
-
+//
 			if(vm.isPublic){
 				event.isPrivate = false;
 				if(vm.form.price) event.price = vm.form.price;
@@ -320,6 +321,7 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 				if(vm.form.devices.length) event.devices = vm.form.devices;
 				if(vm.form.users.length) event.users = vm.form.users;
 			}
+			console.log(vm.form.users);
 
 			console.log('SUBMITTING EVENT >>>>>', event);
 			submitEvent(event);

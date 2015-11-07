@@ -146,9 +146,9 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		return allEventsPromise;
 	}
 	// так делать не надо, есть же пример ниже!!
-	// function getAllUserEvents(){
-	// 	return $http.get('api/eventPublicAndByOwner');
-	// }
+	function getAllUserEvents(){
+		return $http.get('api/eventPublicAndByOwner');
+	}
 
 
 	function getEvents(start, stop) {
