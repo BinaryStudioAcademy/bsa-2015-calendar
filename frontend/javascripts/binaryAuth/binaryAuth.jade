@@ -1,0 +1,12 @@
+div.signin-container
+    .container
+        form.form-signin( name='signUpForm', novalidate='')
+            h2.form-signin-heading Please fill in the form
+            .form-group(ng-class="{ 'has-error' : (signUpForm.username.$invalid && !signUpForm.username.$pristine) }")
+                input#inputUsername.form-control(type='text', placeholder='Username', name='username', ng-model='user.newUsername', maxlength="10", required='')
+                p.help-block(ng-show='signUpForm.username.$invalid && !signUpForm.username.$pristine') Name is required.
+            .form-group
+                p.form-control(type='email', name="email", placeholder='Email',  required='') {{vm.user.email}}
+            .form-group
+            button.btn.btn-primary.pull-right(ng-click ='vm.signUp()', ng-disabled='signUpForm.$invalid') Sign Up
+            button.btn.pull-left(ui-sref='home') Back

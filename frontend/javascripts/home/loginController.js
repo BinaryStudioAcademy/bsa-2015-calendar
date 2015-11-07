@@ -5,9 +5,9 @@ var app = require('../app');
 
 app.controller('LoginController', LoginController);
 
-LoginController.$inject = ['$scope', '$state', '$resource', 'alertify','LoginService', 'AuthService', 'GoogleAuthService'];
+LoginController.$inject = ['$scope', '$state', '$resource', 'alertify','LoginService', 'AuthService', 'GoogleAuthService', 'BinaryAuthService'];
 
-function LoginController($scope, $state, $resource, alertify, LoginService, AuthService, GoogleAuthService) {
+function LoginController($scope, $state, $resource, alertify, LoginService, AuthService, GoogleAuthService, BinaryAuthService) {
     var vm = this;
 
     vm.googleLoginCode = "";
@@ -32,7 +32,7 @@ function LoginController($scope, $state, $resource, alertify, LoginService, Auth
 
         LoginService.signIn(userInfo)
         .then(function (response) {
-            console.log('RESPONSE: ', response);
+
             if (response.data.user) {
                 AuthService.setUser(response.data.user);
 

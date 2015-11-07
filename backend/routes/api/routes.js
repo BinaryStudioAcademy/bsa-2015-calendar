@@ -9,11 +9,14 @@ var userRoutes = require('./userRoutes');
 var holidayRoutes = require('./holidayRoutes');
 var googleEventRoutes = require('./googleEventRoutes');
 var eventTypeRoutes = require('./eventTypeRoutes');
+var binaryAuthRoutes = require('./binaryAuthRoutes.js');
+
 
 
 module.exports = function(app) {
 	return {
 		authRoutes: authRoutes(app),
+		//binaryAuthRoutes: binaryAuthRoutes(app),
 		googleEventRoutes: googleEventRoutes(app),
 		holidayRoutes: holidayRoutes(app),
 		eventRoutes: eventRoutes(app),

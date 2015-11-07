@@ -68,6 +68,10 @@ var userSchema = new Schema({
     googleCode: {
         type: 'string',
         defaultsTo: ''
+    }, 
+    role: {
+        type: 'string',
+        defaultsTo: 'user'
     },
     events: [{type: Schema.Types.ObjectId, ref: 'Event'}],
     googleEvents: [{type: Schema.Types.ObjectId, ref: 'GoogleEvent'}],

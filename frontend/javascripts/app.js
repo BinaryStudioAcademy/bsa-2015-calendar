@@ -30,7 +30,18 @@ var app = angular.module('calendar-app', ['ui.router', 'ngAlertify', 'btford.soc
                     controller: 'GoogleAuthController',
                     controllerAs: 'gaCtrl'
                 })
-                .state('signIn', {
+                .state('binaryAuth', {
+                    url: '/binaryAuth',
+                    templateUrl: './templates/binaryAuth/binaryAuth.html',
+                    controller: 'BinaryAuthController',
+                    controllerAs: 'vm',
+                          resolve: {
+                            Promise: ['BinaryAuthService', function(BinaryAuthService){
+                            return BinaryAuthService.getTokenData();
+                     }]
+                }
+                })
+                 .state('signIn', {
                     url: '/signIn',
                     templateUrl: './templates/home/signIn.html',
                     controller: 'LoginController',
