@@ -62,7 +62,7 @@ function MonthController($rootScope, $scope, helpEventService, crudEvEventServic
 
         for (var i = 0; i < vm.weeks[weekIndex].days[dayIndex].events.length; i++){
             // проверить выполнение равенства
-            if (vm.weeks[weekIndex].days[dayIndex].events[i] == eventBody){
+            if (vm.weeks[weekIndex].days[dayIndex].events[i] == oldEventBody){
                 indexInEvents = i;
                 break;
             }  

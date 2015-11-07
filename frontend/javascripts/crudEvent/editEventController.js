@@ -180,16 +180,20 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 
 		helpEventService.deleteEvent(vm.eventBody._id).then(function(response) {
 			console.log('success delete', response);
+			if(response.status == 400){
+				vm.deletingError = true;
+				return;
+			} else {
+				//socketService.emit('edit event', { event : response });	
 
-			//socketService.emit('edit event', { event : response });	
+				// тип селектеддейт проверить!!!!!!!!!!!!!!!!!!!!!!!
+				crudEvEventService.deletedEventBroadcast(vm.selectedDate, vm.eventBody, vm.viewType);
 
-			// тип селектеддейт проверить!!!!!!!!!!!!!!!!!!!!!!!
-			crudEvEventService.deletedEventBroadcast(vm.selectedDate, vm.eventBody, vm.viewType);
-
-			$timeout(function() {
-				$modalInstance.close();
-				vm.eventSuccess = false;
-			}, 1500);
+				$timeout(function() {
+					$modalInstance.close();
+					vm.eventSuccess = false;
+				}, 1500);
+			}
         });
 	};
 
@@ -197,19 +201,24 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 	vm.submitEdit = function(event) {
 		console.log('submiting an event...');
 		helpEventService.updateEvent(vm.eventBody._id, event).then(function(response) {
-           	vm.eventSuccess = true;
-			dropEventInfo();
-			console.log('success edit', response);
+           	
+			if(response.status == 400){
+				vm.editingError = true;
+				return;
+			} else {
+				vm.eventSuccess = true;
+				dropEventInfo();
+				console.log('success edit', response);
+				//socketService.emit('edit event', { event : response });	
+				// тип селектеддейт проверить!!!!!!!!!!!!!!!!!!!!!!!
 
-			//socketService.emit('edit event', { event : response });	
+				crudEvEventService.editedEventBroadcast(vm.selectedDate, vm.eventBody, response, vm.viewType);
 
-			// тип селектеддейт проверить!!!!!!!!!!!!!!!!!!!!!!!
-			crudEvEventService.editedEventBroadcast(vm.selectedDate, vm.eventBody, response, vm.viewType);
-
-			$timeout(function() {
-				$modalInstance.close();
-				vm.eventSuccess = false;
-			}, 1500);
+				$timeout(function() {
+					$modalInstance.close();
+					vm.eventSuccess = false;
+				}, 1500);
+			}
         });
 	};
 
