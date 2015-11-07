@@ -40,6 +40,7 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 			vm.event.users = [];
 			vm.event.devices = [];
 			vm.event.room = {};
+			vm.event.type = {};
 
 			vm.event.title = vm.eventBody.title;
 			vm.event.description = vm.eventBody.description;
@@ -83,16 +84,43 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 					}
 				}
 			}
-
+			console.log('body', vm.eventBody);
 			if (vm.eventBody.eventType){
 				for (i = 0; i < vm.eventType.length; i++){
 					if(vm.eventBody.eventType == vm.eventType[i]._id) {
-						vm.event.eventType._id = vm.eventType[i]._id;
-						vm.event.eventType.title = vm.eventType[i].title;
+						vm.event.type._id = vm.eventType[i]._id;
+						vm.event.type.title = vm.eventType[i].title;
 						break;
 					}
 				}
-			}
+			} 
+			// var dtPickerStart = document.querySelectorAll('#startTime');
+			// var dtPickerEnd = document.querySelectorAll('#endTime');
+			// console.log(dtPickerStart,dtPickerEnd);
+		 //    $(dtPickerStart).datetimepicker({
+		 //        format: 'HH:mm',
+		 //        pickDate: false,
+		 //        pickSeconds: false,
+		 //        pick12HourFormat: false            
+		 //    });
+		    // $(dtPickerEnd).datetimepicker({
+		    //     format: 'HH:mm',
+		    //     pickDate: false,
+		    //     pickSeconds: false,
+		    //     pick12HourFormat: false            
+		    // });
+   // 			var em = angular.element($('#startTime'));
+   // 			console.log(em);
+			// $('#startTime').timepicker({
+   //              minuteStep: 1,
+   //              template: 'modal',
+   //              appendWidgetTo: 'body',
+   //              showSeconds: true,
+   //              showMeridian: false,
+   //              defaultTime: false
+
+			vm.event.start = vm.eventBody.start;
+			vm.event.end = vm.eventBody.end;
 
 			console.log('vm.event = ' ,vm.event);
 
@@ -122,44 +150,56 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 		}	
 	}
 
+	vm.checkDuration = function(){
+		start = new Date(vm.event.start);
+        end = new Date(vm.event.end);
+		diff = end - start;
+		if (diff < 900000){
+			vm.timeError = true;
+		} else {
+			vm.timeError = false;
+		}
+	};
+
 	vm.editEvent = function() {
 	
-		
+		console.log('editing');
 		vm.event.isValid = true;
 
-		if(!vm.event.title){
-			vm.event.titleError = true;
-			vm.event.isValid = false;
-		} else{
-			vm.event.titleError = false;
-		}
+		// if(!vm.event.title){
+		// 	vm.event.titleError = true;
+		// 	vm.event.isValid = false;
+		// } else{
+		// 	vm.event.titleError = false;
+		// }
 
-		if(!vm.event.type){
-			vm.event.typeError = true;
-			vm.event.isValid = false;
-		} else {
-			vm.event.typeError = false;
-		}
+		// if(!vm.event.type){
+		// 	vm.event.typeError = true;
+		// 	vm.event.isValid = false;
+		// } else {
+		// 	vm.event.typeError = false;
+		// }
 
-		if(vm.event.startTime > vm.event.endTime){
-			vm.event.isValid = false;
-		}
+		// if(vm.event.startTime > vm.event.endTime){
+		// 	vm.event.isValid = false;
+		// }
 
-		if(!vm.event.isValid){
-			return;
-		}
+		// if(!vm.event.isValid){
+		// 	return;
+		// }
 
+		console.log('vm.event after editing', vm.event.title, vm.event.description, vm.event.start, vm.event.end);
 		var event = {};
 		event.title = vm.event.title;
 		event.description = vm.event.description;
 		if (vm.event.isPrivate !== undefined){
 				event.isPrivate = vm.eventBody.isPrivate;
 		}
-		event.start = vm.event.timeStart;
-		event.end = vm.event.timeEnd;
-		event.type = vm.event.type._id;
-		if(vm.event.price) event.price = vm.event.price;
-		if(vm.event.room) event.room = vm.event.room._id;
+		event.start = vm.event.start;
+		event.end = vm.event.end;
+		if (vm.event.type) event.type = vm.event.type._id;
+		if (vm.event.price) event.price = vm.event.price;
+		if (vm.event.room) event.room = vm.event.room._id;
 		
 		if(vm.event.devices.length){
 			event.devices = [];
@@ -173,10 +213,8 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 				event.users[i] = vm.event.users[i]._id;
 			}
 		}
-
-		vm.submitEdit(event);		
-		
-		console.log('Modal submited');	
+		console.log('call subm', event);
+		vm.submitEdit(event);	
 	};
 
 	vm.closeModal = function() {
@@ -186,13 +224,14 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 
 
 	vm.selectEventType = function(type) {
-		vm.event.type = type['_id'];
-		vm.eventType = type.title;
+		vm.event.type._id = type._id;
+		vm.event.type.title = type.title;
 	};
 
 
-	vm.selectRoom = function(title) {
-		vm.event.room = title;
+	vm.selectRoom = function(room) {
+		vm.event.room._id = room._id;
+		vm.event.room.title = room.title;
 	};
 
 	vm.submitDelete = function(){
@@ -216,7 +255,7 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 
 	vm.submitEdit = function(event) {
 		console.log('submiting an event...');
-		helpEventService.saveEvent(event).then(function(response) {
+		helpEventService.updateEvent(vm.eventBody._id, event).then(function(response) {
            	vm.eventSuccess = true;
 			dropEventInfo();
 			console.log('success edit', response);

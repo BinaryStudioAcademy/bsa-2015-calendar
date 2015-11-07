@@ -33,26 +33,26 @@ EventTypeRepository.prototype.getPublicAndByOwner = function (id, callback) {
     query.exec(callback);
 };
 
-EventTypeRepository.prototype.addBasicType = function(title, color) {
+EventTypeRepository.prototype.addBasicType = function(basicType) {
     var model = this.model;
-    model.findOne({'title': title}, function (err, type) {
+    model.findOne({'title': basicType.title}, function (err, type) {
         if(err) {
             console.log(err);
             return;
         }
         
         if(!type) {
-            var newitem = new model({'title' : title, 'isPrivate': false, 'events': [], 'color': color || '#ccc'});
+            var newitem = new model({'title' : basicType.title, 'isPrivate': false, 'events': [], 'color': basicType.color || '#ccc'});
             newitem.save();
         }
     });
 };
 
-EventTypeRepository.prototype.init = function () {
-    this.addBasicType('basic');
-    this.addBasicType('general');
-    this.addBasicType('activity');
-    this.addBasicType('google', '#c23321');
+EventTypeRepository.prototype.init = function (types) {
+    for(var i = 0; i < types.length; i++){
+        this.addBasicType(types[i]);
+    }
+
 };
 
 module.exports = new EventTypeRepository();

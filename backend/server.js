@@ -67,7 +67,7 @@ var server = app.listen(3080);
 var socketio = require('./io/socketServer.js')(server);
 
 var eventTypeRepository = require('./repositories/eventTypeRepository');
-eventTypeRepository.init();
+eventTypeRepository.init([{ title: 'basic' }, { title: 'general' }, { title: 'google', color: '#c23321' }]);
 
 
 console.log('server start on port 3080');

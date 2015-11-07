@@ -5,13 +5,11 @@ createNewEventTypeController.$inject = ['$scope', 'createNewEventTypeService', '
 
 function createNewEventTypeController($scope, createNewEventTypeService, AuthService) {
     var vm = this;
-    vm.eventTypes = createNewEventTypeService.getEventTypesPublicByOwner();
+    vm.eventTypes = [];
+
     vm.inputStyles = [];
 
-
-
     vm.inputStyle = {};
-
 
     vm.changeStyle = function(type){
         if(!type){
@@ -26,10 +24,16 @@ function createNewEventTypeController($scope, createNewEventTypeService, AuthSer
 
     };
 
-    for(var i = 0; i < vm.eventTypes.length; i++){
-        vm.inputStyles[vm.eventTypes[i]._id] = vm.eventTypes[i].color;
-        vm.changeStyle(vm.eventTypes[i]);
-    }
+    createNewEventTypeService.getEventTypesPublicByOwner()
+    .then(function(response){
+        vm.eventTypes = response.data;
+
+        for(var i = 0; i < vm.eventTypes.length; i++){
+            vm.inputStyles[vm.eventTypes[i]._id] = vm.eventTypes[i].color;
+            vm.changeStyle(vm.eventTypes[i]);
+        }
+
+    });
 
     vm.reset = function () {
         vm.eventType.title = '';

@@ -1,9 +1,9 @@
 var app = require('../../app');
 
 app.factory('createNewEventTypeService', createNewEventTypeService);
-createNewEventTypeService.$inject = ['$resource'];
+createNewEventTypeService.$inject = ['$resource', '$http'];
 
-function createNewEventTypeService($resource) {
+function createNewEventTypeService($resource, $http) {
     var dbEventTypes = $resource('http://localhost:3080/api/eventType/', {});
     var eventTypes = dbEventTypes.query();
 
@@ -15,7 +15,7 @@ function createNewEventTypeService($resource) {
     var eventTypesPublicByOwner = dbPublicEventTypesByOwner.query();
 
     function getEventTypesPublicByOwner() {
-        return eventTypesPublicByOwner;
+        return $http.get('http://localhost:3080/api/eventTypePublicAndByOwner/');
     }
 
     /*	var dbPublicEventTypes = $resource('http://localhost:3080/api/eventTypePublic/', {});
