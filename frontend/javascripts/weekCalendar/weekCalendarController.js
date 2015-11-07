@@ -220,7 +220,7 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
 
 
     vm.pullData = function() {
-        helpEventService.getEvents(vm.Start, vm.End).then(function(data) {
+        helpEventService.getUserEvents(vm.Start, vm.End).then(function(data) {
             if (data !== null){
                 vm.eventObjOll = data;                                              //medai
                 vm.eventObj = [];

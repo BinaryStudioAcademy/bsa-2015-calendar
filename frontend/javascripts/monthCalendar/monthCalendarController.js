@@ -186,7 +186,7 @@ function MonthController($rootScope, $scope, helpEventService, crudEvEventServic
         var startDate = new Date(vm.monthStartMoment.format("DD MMM YYYY HH:mm:ss")),
             endDate = new Date(vm.monthEndMoment.format("DD MMM YYYY HH:mm:ss"));
 
-        helpEventService.getEvents(startDate, endDate).then(function(data) {
+        helpEventService.getUserEvents(startDate, endDate).then(function(data) {
             if (data !== null){ 
                 vm.buildEventsObj(data);
             }

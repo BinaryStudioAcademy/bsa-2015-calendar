@@ -145,10 +145,10 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		});
 		return allEventsPromise;
 	}
-
-	function getAllUserEvents(){
-		return $http.get('api/eventPublicAndByOwner');
-	}
+	// так делать не надо, есть же пример ниже!!
+	// function getAllUserEvents(){
+	// 	return $http.get('api/eventPublicAndByOwner');
+	// }
 
 
 	function getEvents(start, stop) {
