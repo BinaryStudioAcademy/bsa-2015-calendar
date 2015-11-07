@@ -51,4 +51,10 @@ UserRepository.prototype.getUserEventsByInterval = function(userId, gteDate, lte
 	query.exec(callback);
 };
 
+UserRepository.prototype.updateHolidays = function(holidaysIds, callback){
+	var model = this.model;
+	var query = model.update({}, { $set: { holidays:  holidaysIds } }, { multi: true } );
+	query.exec(callback);
+};
+
 module.exports = new UserRepository();

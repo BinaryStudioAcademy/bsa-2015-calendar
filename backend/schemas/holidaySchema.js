@@ -4,7 +4,6 @@ var Schema = mongoose.Schema;
 
 var holidaySchema = new Schema({
     title : String,
-    description : String,
     start: Date, 
     end: Date
 });

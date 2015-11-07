@@ -44,6 +44,11 @@ var addToDb = function(events, user) {
 	var deferred = q.defer();
 	var googleEventIds = [];
 	eventTypeRepository.searchByTitle('google', function(err, type){
+		if (err) {
+			console.log('Cant find google type id', err);
+			deferred.reject(err);
+			return;
+		}
 		for(var i = 0; i < events.length; i++) {
 		var newEvent = {
 			ownerId : user.id,
@@ -51,7 +56,8 @@ var addToDb = function(events, user) {
 			start : new Date(events[i].start.date || events[i].start.dateTime),
 			end : new Date(events[i].end.date || events[i].end.dateTime),
 			description : events[i].description || "",
-			type : type._id
+			type : type._id,
+			users :  [user.id]
 		};
 		eventRepository.add(newEvent, function(err, data){
 			if(err) {
@@ -59,7 +65,7 @@ var addToDb = function(events, user) {
 				deferred.reject(err);
 			}
 			else {
-				console.log('Added to db: ' + data.title);
+				//console.log('Added to db: ' + data.title);
 				googleEventIds.push(data.id);
 			}
 
@@ -109,7 +115,7 @@ var saveGoogleEvents = function(code, username){
 				return;
 			}
 
-			console.log(token);
+			//console.log(token);
 
 			oauth2Client.credentials = token;
 
