@@ -7,6 +7,9 @@
             label.col-sm-2(for="eventType") Title:
             .col-sm-10
                 input#eventType.form-control(type='text', placeholder="Enter title", ng-model='cnetCtrl.eventType.title')
+            label.col-sm-2(for="eventColor") Color:
+            .col-sm-10
+                input#eventColor.form-control(ng-init="cnteCtrl.eventType.color='#FFFFFF'" ng-change="cnetCtrl.changeStyle()" ng-style="cnetCtrl.inputStyle" colorpicker="hex" ng-model="cnetCtrl.eventType.color" type="text")
             label.col-sm-2(for="eventPrivacy") Private:
             .col-sm-10
                 input#eventPrivacy(ng-init="cnetCtrl.eventType.isPrivate = false", type='checkbox', ng-model='cnetCtrl.eventType.isPrivate')
@@ -25,18 +28,20 @@
         .content_for_eventType_list
             table.col-sm-12.table-responsive.table-hover.table.eventTypeTable(border='1')
                 tr
-                    th.col-sm-9 Event type
+                    th.col-sm-6 Event type
+                    th.col-sm-3 Color
                     //th.col-sm-6 events
                     th.col-sm-1 Private
                     th.col-sm-1 Edit
                     th.col-sm-1 Delete
                 tr(ng-repeat='eventType in cnetCtrl.eventTypes | filter: cnetCtrl.search')
                     td
-                        input#inputEventTypeTitle.form-control(ng-model='eventType.title')
-                    //td  {{ eventType.events }}
+                        input#inputEventTypeTitle.form-control(ng-model='eventType.title' ng-disabled="eventType.ownerId != cnetCtrl.getCurrentUser().id")
+                    td
+                         input#eventColor.form-control(ng-change="cnetCtrl.changeStyle(eventType)" ng-style="cnetCtrl.inputStyles[eventType._id]" colorpicker="hex" ng-model="eventType.color" type="text" ng-disabled="eventType.ownerId != cnetCtrl.getCurrentUser().id")                       
                     td
                         input(type="checkbox" ng-model="eventType.isPrivate" ng-disabled="eventType.ownerId != cnetCtrl.getCurrentUser().id")
                     td(align='center')
-                        button.btn.btn-primary.btn-xs(ng-click='cnetCtrl.updateEventType(eventType)') save
+                        button.btn.btn-primary.btn-xs(ng-click='cnetCtrl.updateEventType(eventType)' ng-disabled="eventType.ownerId != cnetCtrl.getCurrentUser().id") save
                     td(align='center')
-                        button.btn.btn-xs.btn-danger(ng-click='cnetCtrl.deleteEventType(eventType, $index)') delete
+                        button.btn.btn-xs.btn-danger(ng-click='cnetCtrl.deleteEventType(eventType, $index)' ng-disabled="eventType.ownerId != cnetCtrl.getCurrentUser().id") delete
