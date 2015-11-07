@@ -49,7 +49,8 @@ var addToDb = function(holidays, usersIds) {
 				start : new Date(holidays[i].start.date),
 				end : new Date(holidays[i].end.date),
 				type : type._id,
-				users :  usersIds
+				users :  usersIds,
+				isPrivate: false
 			};
 			eventRepository.add(newHoliday, function(err, data){
 				if(err) {
