@@ -6,14 +6,30 @@ createNewEventTypeController.$inject = ['$scope', 'createNewEventTypeService', '
 function createNewEventTypeController($scope, createNewEventTypeService, AuthService) {
     var vm = this;
     vm.eventTypes = createNewEventTypeService.getEventTypesPublicByOwner();
+    vm.inputStyles = [];
+
+
 
     vm.inputStyle = {};
 
-    vm.changeStyle = function(){
-        vm.inputStyle = {
-            background: vm.eventType.color
-        };
+
+    vm.changeStyle = function(type){
+        if(!type){
+            vm.inputStyle = {
+                background: vm.eventType.color
+            };            
+        } else {
+            vm.inputStyles[type._id] = {
+                background: type.color
+            };
+        }
+
     };
+
+    for(var i = 0; i < vm.eventTypes.length; i++){
+        vm.inputStyles[vm.eventTypes[i]._id] = vm.eventTypes[i].color;
+        vm.changeStyle(vm.eventTypes[i]);
+    }
 
     vm.reset = function () {
         vm.eventType.title = '';
@@ -29,6 +45,7 @@ function createNewEventTypeController($scope, createNewEventTypeService, AuthSer
         //console.log(AuthService.getUser());
         var newEventType = {
             title: vm.eventType.title,
+            color: vm.eventType.color,
             isPrivate: vm.eventType.isPrivate,
             ownerId: AuthService.getUser().id
         };
@@ -37,6 +54,7 @@ function createNewEventTypeController($scope, createNewEventTypeService, AuthSer
             .$promise.then(
             function (response) {
                 vm.eventTypes.push(response);
+                vm.changeStyle(response);
                 console.log('success function addEventType', response);
             },
             function (response) {
