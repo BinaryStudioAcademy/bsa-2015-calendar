@@ -21,4 +21,10 @@ DeviceRepository.prototype.removeEvent = function(deviceId, eventId, callback) {
 	query.exec(callback);
 };
 
+DeviceRepository.prototype.getRoomEventsByInterval = function(deviceId, gteDate, lteDate, callback){
+	var model = this.model;
+	var query = model.findOne({_id:deviceId}, {events: 1}).populate('events', null, {"start": {"$gte": gteDate, "$lte": lteDate}});
+	query.exec(callback);
+};
+
 module.exports = new DeviceRepository();
