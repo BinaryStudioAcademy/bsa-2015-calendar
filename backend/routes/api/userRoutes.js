@@ -35,6 +35,14 @@ module.exports = function(app) {
 		});
 	}, apiResponse);
 
+	app.get('/api/userclipped/', function(req, res, next){
+		userRepository.getAllClipped(function(err, data){
+			res.data = data;
+			res.err = err;
+			next();
+		});
+	}, apiResponse);
+
 	app.get('/api/user/username/:username', function(req, res, next){
 		userRepository.getByUsername(req.params.username, function(err, data){
 			res.data = data;

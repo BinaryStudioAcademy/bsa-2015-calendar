@@ -34,7 +34,7 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
  
     });
 	
-	vm.timeStamps = DailyCalendarService.getTimeStamps();
+	vm.timeStamps = helpEventService.getTimeStampsDaily();
 	var COLORS = [
 		'#e21400', '#91580f', '#f8a700', '#f78b00',
 		'#58dc00', '#287b00', '#a8f07a', '#4ae8c4',
@@ -88,43 +88,8 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
 		return eventArr;
 	};
 
-	vm.showCloseModal = function() {
-
+	vm.createEvent = function() {
 		crudEvEventService.creatingBroadcast(moment(vm.selectedDate), 'DayView');
-
-		// vm.modalInstance = $uibModal.open({
-		// 	animation: true,
-		// 	templateUrl: 'templates/dailyCalendar/editEventTemplate.html',
-		// 	controller: 'ModalController',
-		// 	controllerAs: 'ModalCtrl',
-		// 	bindToController: true,
-		// 	resolve: {
-		// 		rooms: function () {
-		// 			return vm.availableRooms;
-		// 		},
-		// 		devices: function () {
-		// 			return vm.availableInventory;
-		// 		},
-		// 		users: function () {
-		// 			return vm.users;
-		// 		},
-		// 		selectedDate: function () {
-		// 			return vm.selectedDate;
-		// 		},
-		// 		eventTypes: function () {
-		// 			return vm.eventTypes;
-		// 		},
-		// 		allEvents: function () {
-		// 			return vm.allEvents;
-		// 		}
-		// 	}
-		// });
-
-		// vm.modalInstance.result.then(function () {
-		// 	getAllEvents();
-		// 	filterEventsByTodayDate();
-		// 	mapEvents();
-		// });
 	};
 
 
@@ -425,56 +390,18 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
 		}
 	}
 
-	function getRooms() {
-		// DailyCalendarService.getAllRooms()
-		// 	.$promise.then(
-		// 		function(response) {
-		// 			console.log('success Total rooms: ', response.length);
-		// 			vm.availableRooms = response;
-		// 		},
-		// 		function(response) {
-		// 			console.log('failure', response);
-		// 		}
-		// 	);
+	vm.pullData = function() {
+        var startDate = new Date(vm.monthStartMoment.format("DD MMM YYYY HH:mm:ss")),
+            endDate = new Date(vm.monthEndMoment.format("DD MMM YYYY HH:mm:ss"));
 
-		vm.availableRooms = helpEventService.getRooms();
-	}
+        helpEventService.getUserEvents(startDate, endDate).then(function(data) {
+            if (data !== null){ 
+                vm.buildEventsObj(data);
+            }
+            vm.buildMonth();
+        });
+    };
 
-	function getInventory() {
-		// DailyCalendarService.getAllDevices()
-		// 	.$promise.then(
-		// 		function(response) {
-		// 			console.log('success Inventory items: ', response.length);
-		// 			vm.availableInventory = response;
-		// 		},
-		// 		function(response) {
-		// 			console.log('failure', response);
-		// 		}
-		// 	);
-
-		vm.availableInventory = helpEventService.getDevices();
-	}
-
-	function getUsers() {
-		// DailyCalendarService.getAllUsers()
-		// 	.$promise.then(
-		// 		function(response) {
-		// 			console.log('success Number of Users: ', response.length);
-		// 			vm.users = response;
-		// 		},
-		// 		function(response) {
-		// 			console.log('failure', response);
-		// 		}
-		// 	);
-		
-		vm.users = helpEventService.getUsers();
-	}
-
-
-	function getEventTypes() {
-		vm.eventTypes = helpEventService.getEventTypesPublicByOwner();
-	}
-	
 	function getAllEvents() {
 		DailyCalendarService.getAllEvents()
 			.$promise.then(
@@ -490,15 +417,6 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
 					console.log('failure', response);
 				}
 			);
-
-		// helpEventService.getAllUserEvents()
-		// .then(function(response){
-		// 	console.log('received users events: ', response);
-		// 	vm.allEvents = response.data;
-		// 	filterEventsByTodayDate();
-		// 	mapEvents();
-
-		// });
 	}
 
 	function filterEventsByTodayDate() {
@@ -537,10 +455,6 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
 
 	function init() {
 		showWorkHours();
-		getRooms();
-		getInventory();
-		getUsers();
 		getAllEvents();
-		getEventTypes();
 	}
 }

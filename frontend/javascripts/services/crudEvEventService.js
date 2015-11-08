@@ -68,27 +68,27 @@ function crudEvEventService($rootScope, $uibModal, helpEventService) {
 
     pullData = function(cb){
 		console.log('pullData');
-		helpEventService.getRooms().then(function(data) {
+		helpEventService.getRooms(true).then(function(data) {
             if (data !== null){
                 vm.rooms = data;
             }
 
         }).then(function() {
-		    helpEventService.getDevices().then(function(data) {
+		    helpEventService.getDevices(true).then(function(data) {
 		        if (data !== null){
 		            vm.devices = data;
 		        }
 		    });
 		}).then(function() {
-		    helpEventService.getUsers().then(function(data) {
+		    helpEventService.getEventTypes(true).then(function(data) {
 		        if (data !== null){
-		            vm.users = data;
+		            vm.eventTypes = data;
 		        }
 		    });
 		}).then(function() {
-		    helpEventService.getEventTypes().then(function(data) {
+		    helpEventService.getUsers(true).then(function(data) {
 		        if (data !== null){
-		            vm.eventTypes = data;
+		            vm.users = data;
 		        }
 		        console.log('pullDataCb');
 		        cb();

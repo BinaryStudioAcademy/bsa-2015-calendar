@@ -67,7 +67,13 @@ var server = app.listen(3080);
 var socketio = require('./io/socketServer.js')(server);
 
 var eventTypeRepository = require('./repositories/eventTypeRepository');
-eventTypeRepository.init([{ title: 'basic' }, { title: 'general' }, { title: 'google', color: '#c23321' }]);
+
+eventTypeRepository.init([{ title: 'basic' }, { title: 'general' }, { title: 'google', color: '#c23321' }, { title: 'holiday', color: '#ad74f2' }]);
+
+var getHolidays = require('./googleapi/Events/holidays')();
+
+
+
 
 
 console.log('server start on port 3080');

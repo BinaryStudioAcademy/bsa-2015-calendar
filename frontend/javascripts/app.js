@@ -65,6 +65,13 @@ var app = angular.module('calendar-app', ['colorpicker.module', 'ui.router', 'ng
                     auth: true
                 })               
                 .state('calendar.monthView', {
+                    url: '/monthView',
+                    templateUrl: './templates/monthCalendar/monthCalendar.html',
+                    controller: 'MonthController',
+                    controllerAs: 'mCtrl',
+                    auth: true
+                })
+                .state('calendar.monthViewFromYear', {
                     url: '/monthView/:year/:month',
                     templateUrl: './templates/monthCalendar/monthCalendar.html',
                     controller: 'MonthController',

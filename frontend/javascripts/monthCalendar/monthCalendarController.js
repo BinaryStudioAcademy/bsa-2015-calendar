@@ -11,7 +11,6 @@ function MonthController($rootScope, $scope, helpEventService, crudEvEventServic
 
     vm = this;
 
-
     $scope.$on('addedEventMonthView', function(event, selectedDate, eventBody){
         var newEventDate = new moment(eventBody.start);
         var daysDiff = newEventDate.diff(vm.mViewStartMoment,'days');
@@ -62,7 +61,7 @@ function MonthController($rootScope, $scope, helpEventService, crudEvEventServic
 
         for (var i = 0; i < vm.weeks[weekIndex].days[dayIndex].events.length; i++){
             // проверить выполнение равенства
-            if (vm.weeks[weekIndex].days[dayIndex].events[i] == eventBody){
+            if (vm.weeks[weekIndex].days[dayIndex].events[i] == oldEventBody){
                 indexInEvents = i;
                 break;
             }  
@@ -186,7 +185,7 @@ function MonthController($rootScope, $scope, helpEventService, crudEvEventServic
         var startDate = new Date(vm.monthStartMoment.format("DD MMM YYYY HH:mm:ss")),
             endDate = new Date(vm.monthEndMoment.format("DD MMM YYYY HH:mm:ss"));
 
-        helpEventService.getEvents(startDate, endDate).then(function(data) {
+        helpEventService.getUserEvents(startDate, endDate).then(function(data) {
             if (data !== null){ 
                 vm.buildEventsObj(data);
             }

@@ -9,6 +9,12 @@ function EventTypeRepository() {
 
 EventTypeRepository.prototype = new Repository();
 
+EventTypeRepository.prototype.getAllClipped = function(callback){
+    var model = this.model;
+    var query = model.find({}, {ownerId: 1, title: 1, color: 1, icon: 1, isPrivate: 1});
+    query.exec(callback);
+};
+
 EventTypeRepository.prototype.addEvent = function (eventTypeId, eventId, callback) {
     var model = this.model;
     var query = model.findByIdAndUpdate({_id: eventTypeId}, {$push: {events: eventId}});

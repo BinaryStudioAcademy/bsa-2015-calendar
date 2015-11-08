@@ -100,6 +100,18 @@
 					i.glyphicon.glyphicon-remove
 			strong Success!
 			|  You've just saved the event! Check the calendar now.
+		.alert.alert-danger.alert-dismissible(role='alert' ng-show='editEvCtrl.deletingError')
+			button.close(type='button', data-dismiss='alert', aria-label='Close')
+				span(aria-hidden='true')
+					i.glyphicon.glyphicon-remove
+			strong Error!
+			|  Some error with deleting this event. We're sorry!
+		.alert.alert-danger.alert-dismissible(role='alert' ng-show='editEvCtrl.editingError')
+			button.close(type='button', data-dismiss='alert', aria-label='Close')
+				span(aria-hidden='true')
+					i.glyphicon.glyphicon-remove
+			strong Error!
+			|  Updating failed, conflict with room/device shedule. We're sorry!
 		.col-md-4.col-sm-4.col-xs-4
 			button.btn.btn-primary(type='submit', ng-disabled="newEventForm.$invalid || editEvCtrl.timeError", ng-click="editEvCtrl.editEvent()") Save
 		.col-md-4.col-sm-4.col-xs-4
