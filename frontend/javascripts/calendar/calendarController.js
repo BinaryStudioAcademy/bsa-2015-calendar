@@ -4,7 +4,7 @@ app.controller('CalendarController', CalendarController);
 CalendarController.$inject = ['filterService', '$document', '$modal', '$resource', '$scope', '$rootScope', '$state', 'LoginService', 'AuthService', 'GoogleAuthService', 'helpEventService'];
 
 
-function CalendarController('filterService', $document, $modal, $resource, $scope, $rootScope, $state, LoginService, AuthService, GoogleAuthService, helpEventService) {
+function CalendarController(filterService, $document, $modal, $resource, $scope, $rootScope, $state, LoginService, AuthService, GoogleAuthService, helpEventService) {
 
   var vm = this;
   
