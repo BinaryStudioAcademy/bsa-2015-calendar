@@ -2,9 +2,9 @@ var app = require('../app');
 
 app.controller('CalendarController', CalendarController);
 
-CalendarController.$inject = ['$document', '$modal', '$resource', '$scope', '$rootScope'];
+CalendarController.$inject = ['$document', '$modal', '$resource', '$scope', '$rootScope', '$state', 'LoginService', 'AuthService', 'GoogleAuthService', 'helpEventService'];
 
-function CalendarController($document, $modal, $resource, $scope, $rootScope, $state, LoginService, AuthService, GoogleAuthService) {
+function CalendarController($document, $modal, $resource, $scope, $rootScope, $state, LoginService, AuthService, GoogleAuthService, helpEventService) {
   var vm = this;
   
   var todayDate = Date.now();
@@ -42,9 +42,21 @@ function CalendarController($document, $modal, $resource, $scope, $rootScope, $s
 
 
 
-  var dbEventTypes = $resource('http://localhost:3080/api/eventTypePublicAndByOwner/', {});
-  vm.eventTypes = dbEventTypes.query();  // oll event type from db
+  vm.eventTypes = [];
+  helpEventService.getEventTypesPublicByOwner().then(function (data) {
+    vm.eventTypes = data;
+  });
   vm.flag = [];
+
+  $scope.$on('newEventTypeAdded', function (event, eventTypeBody) {
+    vm.eventTypes.push(eventTypeBody);
+  });
+
+  $scope.$on('eventTypeDeleted', function () {
+    helpEventService.getEventTypesPublicByOwner().then(function (data) {
+      vm.eventTypes = data;
+    });
+  });
 
   vm.checkFlag = function(_id){         // push check Flags tu vm.flag
     var index = vm.flag.indexOf(_id);
