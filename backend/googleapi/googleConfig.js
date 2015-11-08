@@ -8,5 +8,5 @@ module.exports = {
 	//"urn:ietf:wg:oauth:2.0:oob";
 	scopes : ['https://www.googleapis.com/auth/calendar.readonly'],
 	//'ru.ukrainian#holiday@group.v.calendar.google.com'
-	api_key: 'AIzaSyDSLdB6WFFcNNT9yijMsJKh6Q82TUJJ1e8'
+	api_key: 'AIzaSyCMA7TFpZ8_7lLTbgpDxsfQ9-rgldtJx3U'
 };

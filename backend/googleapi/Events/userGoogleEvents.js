@@ -2,16 +2,20 @@ var google = require('googleapis');
 var googleAuth = require('google-auth-library');
 var q = require('q');
 var googleEventRepository = require('../../repositories/googleEventRepository');
+var eventRepository = require('../../repositories/eventRepository');
+var eventTypeRepository = require('../../repositories/eventTypeRepository');
 var userRepository = require('../../repositories/userRepository');
 var googleConfig = require('./../googleConfig');
 
 var getUserEvents = function(auth) {
 	var deferred = q.defer();
+	var now = new Date();
 	var calendar = google.calendar('v3');
  	calendar.events.list({
 		auth: auth,
 		calendarId: 'primary',
 		timeMin: (new Date()).toISOString(),
+		timeMax: (new Date(now.getFullYear()+5, now.getMonth(), now.getDay())).toISOString(),
 		singleEvents: true,
 		orderBy: 'startTime'
 	}, function(err, response) {
@@ -19,6 +23,7 @@ var getUserEvents = function(auth) {
 		if (err) {
 			console.log('Error: ' + err);
 			deferred.reject(err);
+			return;
 		}
 		
 		var events = response.items;
@@ -26,6 +31,7 @@ var getUserEvents = function(auth) {
 			console.log('No upcoming calendars found.');
 			deferred.resolve([]);
 		} else {
+			//console.log(events);
 			deferred.resolve(events);
 		}
 
@@ -37,20 +43,30 @@ var getUserEvents = function(auth) {
 var addToDb = function(events, user) {
 	var deferred = q.defer();
 	var googleEventIds = [];
-	for(var i = 0; i < events.length; i++) {
+	eventTypeRepository.searchByTitle('google', function(err, type){
+		if (err) {
+			console.log('Cant find google type id', err);
+			deferred.reject(err);
+			return;
+		}
+		for(var i = 0; i < events.length; i++) {
 		var newEvent = {
 			ownerId : user.id,
 			title : events[i].summary,
-			start : new Date(events[i].start.date),
-			end : new Date(events[i].end.date)
+			start : new Date(events[i].start.date || events[i].start.dateTime),
+			end : new Date(events[i].end.date || events[i].end.dateTime),
+			description : events[i].description || "",
+			type : type._id,
+			users :  [user.id],
+			isPrivate: true
 		};
-		googleEventRepository.add(newEvent, function(err, data){
+		eventRepository.add(newEvent, function(err, data){
 			if(err) {
 				console.log(err);
 				deferred.reject(err);
 			}
 			else {
-				console.log('Added to db: ' + data.title);
+				//console.log('Added to db: ' + data.title);
 				googleEventIds.push(data.id);
 			}
 
@@ -61,13 +77,15 @@ var addToDb = function(events, user) {
 			}
 		});
 	}
+	});
+	
 	deferred.resolve();
 	return deferred.promise;
 };
 
 var clearUserEventsDb = function (eventIds) {
 	for(var i = 0; i < eventIds.length; i++) {
-		googleEventRepository.delete(eventIds[i], function (err, data) {
+		eventRepository.delete(eventIds[i], function (err, data) {
 			if(err) {
 				console.log(err);
 			}
@@ -98,7 +116,7 @@ var saveGoogleEvents = function(code, username){
 				return;
 			}
 
-			console.log(token);
+			//console.log(token);
 
 			oauth2Client.credentials = token;
 

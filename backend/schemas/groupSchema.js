@@ -8,4 +8,8 @@ var groupSchema = new Schema({
     users: [{type: Schema.Types.ObjectId, ref: 'User'}]
 });
 
+// groupSchema.statics.findAndModify = function (query, sort, doc, options, callback) {
+//   return this.collection.findAndModify(query, sort, doc, options, callback);
+// };
+
 module.exports = mongoose.model('Group', groupSchema);

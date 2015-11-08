@@ -6,7 +6,8 @@ var googleEventSchema = new Schema({
     ownerId : {type: Schema.Types.ObjectId, ref: 'User'},
     title : {type: 'string'},
     start: {type: 'date'}, 
-    end: {type: 'date'}
+    end: {type: 'date'},
+    description: {type: 'string'}
 });
 
 module.exports = mongoose.model('GoogleEvent', googleEventSchema);
