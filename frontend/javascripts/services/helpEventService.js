@@ -24,8 +24,9 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 					            { time: '9pm-11pm'},
 						          ];
 						          */
+    var timeStampsDaily = '12am|1am|2am|3am|4am|5am|6am|7am|8am|9am|10am|11am|12pm|1pm|2pm|3pm|4pm|5pm|6pm|7pm|8pm|9pm|10pm|11pm'.split('|');
 
-	 var timeSatmps = [	{ time: '12am'}, 
+	var timeStamps = [	{ time: '12am'}, 
 	 				           	{ time: '1am'}, 
 	 				           	{ time: '2am'},
 	 							{ time: '3am'}, 
@@ -49,7 +50,7 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 	 				            { time: '9pm'},
 	 				            { time: '10pm'},
 	 				            { time: '11pm'},
-	 					        ];
+	 					        ]; 					       
 
 	var days = [	{ name: 'Mon'}, 
 		           	{ name: 'Tue'}, 
@@ -67,7 +68,28 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 	}
 
 	function getTimeStamps(){
-		return timeSatmps;
+		return timeStamps;
+	}
+
+	function getTimeStampsDaily() {
+
+		var timeStampsObj = [];
+
+		var workingHours = [9, 18];
+
+		for(var i=0; i<timeStampsDaily.length; i+=1) {
+			var timeObj = {};
+			timeObj.value = timeStampsDaily[i];
+			if(i >= 9 && i <= 18) {
+				timeObj.isWorkingHour = true;
+			} else {
+				timeObj.isWorkingHour = false;
+			}
+			timeObj.index = i;
+			timeStampsObj.push(timeObj);
+		}
+
+		return timeStampsObj;
 	}
 
 
@@ -300,6 +322,7 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 	}
 
 	return {
+		getTimeStampsDaily: getTimeStampsDaily,
 		getTimeStamps: getTimeStamps,
 		getDays: getDays,
 		getDaysNames: getDaysNames,

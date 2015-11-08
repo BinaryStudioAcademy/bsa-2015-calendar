@@ -180,10 +180,7 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 
 		helpEventService.deleteEvent(vm.eventBody._id).then(function(response) {
 			console.log('success delete', response);
-			if(response.status == 400){
-				vm.deletingError = true;
-				return;
-			} else {
+			if(response.status == 200 || response.status == 201){
 				//socketService.emit('edit event', { event : response });	
 
 				// тип селектеддейт проверить!
@@ -193,6 +190,9 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 					$modalInstance.close();
 					vm.eventSuccess = false;
 				}, 1500);
+			} else {
+				vm.deletingError = true;
+				return;
 			}
         });
 	};
@@ -202,10 +202,7 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 		console.log('submiting an event...');
 		helpEventService.updateEvent(vm.eventBody._id, event).then(function(response) {
            	
-			if(response.status == 400){
-				vm.editingError = true;
-				return;
-			} else {
+			if(response.status == 200 || response.status == 201){
 				vm.eventSuccess = true;
 				dropEventInfo();
 				console.log('success edit', response);
@@ -218,6 +215,9 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 					$modalInstance.close();
 					vm.eventSuccess = false;
 				}, 1500);
+			} else {
+				vm.editingError = true;
+				return;
 			}
         });
 	};

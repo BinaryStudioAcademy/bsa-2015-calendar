@@ -98,11 +98,6 @@ function DailyCalendarService($q, $resource, $http) {
 			});
 	}
 
-	function savePlan(plan){
-		console.log('in service/savePlan');
-		return resourcePlan.save(plan);
-	}
-
 	return {
 		getTimeStamps: getTimeStamps,
 		getTodaysEvents: getTodaysEvents,
@@ -114,6 +109,5 @@ function DailyCalendarService($q, $resource, $http) {
 		getAllUsers: getAllUsers,
 		getAllEvents: getAllEvents,
 		getAllEventTypes: getAllEventTypes,
-		savePlan: savePlan,
 	};
 }

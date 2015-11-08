@@ -360,37 +360,47 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 		console.log('submiting an event...');
 		
 		helpEventService.saveEvent(event).then(function(response) {
-           	vm.formSuccess = true;
-			dropEventInfo();
-			console.log('success', response);
+           	if(response.status == 200 || response.status == 201){
+	           	vm.formSuccess = true;
+				dropEventInfo();
+				console.log('success', response);
 
-			socketService.emit('add event', { event : response });	
-			//$rootScope.$broadcast('eventAdded' + vm.viewType, response);
-			console.log(vm.viewType);
-			crudEvEventService.addedEventBroadcast(vm.selectedDateMoment, response, vm.viewType);
+				socketService.emit('add event', { event : response });	
+				//$rootScope.$broadcast('eventAdded' + vm.viewType, response);
+				console.log(vm.viewType);
+				crudEvEventService.addedEventBroadcast(vm.selectedDateMoment, response, vm.viewType);
 
-			$timeout(function() {
-				$modalInstance.close();
-				vm.formSuccess = false;
-			}, 1500);
+				$timeout(function() {
+					$modalInstance.close();
+					vm.formSuccess = false;
+				}, 1500);
+			} else {
+				vm.deletingError = true;
+				return;
+			}
         });
 	}
 
 
 	function submitPlan(plan){
 		helpEventService.savePlan(plan).then(function(response) {
-           	vm.formSuccess = true;
-			dropEventInfo();
-			console.log('success', response);
+			if(response.status == 200 || response.status == 201){
+	           	vm.formSuccess = true;
+				dropEventInfo();
+				console.log('success', response);
 
-			socketService.emit('add plan', { planEvents : response });	
-			//$rootScope.$broadcast('planAdded', response);
-			crudEvEventService.addedPlanBroadcast(vm.selectedDateMoment, response, vm.viewType);
+				socketService.emit('add plan', { planEvents : response });	
+				//$rootScope.$broadcast('planAdded', response);
+				crudEvEventService.addedPlanBroadcast(vm.selectedDateMoment, response, vm.viewType);
 
-			$timeout(function() {
-				$modalInstance.close();
-				vm.formSuccess = false;
-			}, 1500);
+				$timeout(function() {
+					$modalInstance.close();
+					vm.formSuccess = false;
+				}, 1500);
+			} else {
+				vm.deletingError = true;
+				return;
+			}
         });
 	}
 

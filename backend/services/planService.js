@@ -5,7 +5,7 @@ var async = require('async');
 
 var planService = function(){}; // ПЛАН - несколько событий повторяющихся по заданным интервалам
 
-//var pService = new planService();
+var pService = new planService();
 
 planService.prototype.availability = function(data, callback){
 	// операция проверки возможности добавления нового плана
@@ -120,7 +120,7 @@ planService.prototype.add = function(data, callback){
 
 	function (cb){ // выполняем проверку возможности добавления плана
 		console.log('checking availability');
-		this.availability(data, function(err, result){
+		pService.availability(data, function(err, result){
 			if(err){
 				console.log('availability error');
 				return cb(err, result);
@@ -285,7 +285,7 @@ planService.prototype.update = function(planId, data, callback){
 	async.waterfall([
 
 	function (cb){ // проверяем возможность обновления плана для новых данных
-		this.availability(data, function(err, result){
+		pService.availability(data, function(err, result){
 			if(err){
 				return cb(err, result);
 			}
@@ -294,7 +294,7 @@ planService.prototype.update = function(planId, data, callback){
 	},
 
 	function (cb){ // если проверка пройдена то выполняем операцию удаления плана со старыми данными
-		this.delete(planId, function(err, result){
+		pService.delete(planId, function(err, result){
 			if(err){
 				return cb(err, result);
 			}

@@ -11,7 +11,6 @@ function MonthController($rootScope, $scope, helpEventService, crudEvEventServic
 
     vm = this;
 
-
     $scope.$on('addedEventMonthView', function(event, selectedDate, eventBody){
         var newEventDate = new moment(eventBody.start);
         var daysDiff = newEventDate.diff(vm.mViewStartMoment,'days');
