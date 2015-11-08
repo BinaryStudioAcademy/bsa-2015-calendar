@@ -58,7 +58,7 @@ passport.deserializeUser(User.deserializeUser());
 app.set('view engine', 'jade');
 app.set('views', __dirname + '/../frontend/views');
 
-var routes = require('./routes/api/routes')(app);
+var routes = require('./routes/index')(app);
 
 http.globalAgent.maxSockets = Infinity;
 
