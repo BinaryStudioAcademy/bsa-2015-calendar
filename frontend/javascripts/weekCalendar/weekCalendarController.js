@@ -137,14 +137,14 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
         }
     };
 
-    vm.flagsInDaily = [];                                                  //medai
-    $rootScope.$on('flagFromCalendar', function (event, agrs) {           
+    vm.correctFlagsEventTypes = [];                                                  //medai
+    $rootScope.$on('checkEventTypes', function (event, agrs) {           
         var flagsFromCalendar = agrs.messege;
-        vm.flagsInDaily.length = 0;                                           
+        vm.correctFlagsEventTypes.length = 0;                                           
             for (var i = 0; i < flagsFromCalendar.length; i++) {        
-                vm.flagsInDaily.push(flagsFromCalendar[i]);
+                vm.correctFlagsEventTypes.push(flagsFromCalendar[i]);
             }
-        // console.log('flagFromWeek', vm.flagsInDaily);
+        // console.log('flagFromWeek', vm.correctFlagsEventTypes);
         vm.clearCells();
         vm.pullData();
     });                                                                    //medai
@@ -166,8 +166,8 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
                 vm.eventObj = [];
                 // console.log('from vm.pullData', vm.eventObj);
                 for (var i = 0; i < vm.eventObjOll.length; i++){
-                    for (var j = 0; j < vm.flagsInDaily.length; j++) {     
-                        if (vm.eventObjOll[i].type == vm.flagsInDaily[j]) vm.eventObj.push(vm.eventObjOll[i]);
+                    for (var j = 0; j < vm.correctFlagsEventTypes.length; j++) {     
+                        if (vm.eventObjOll[i].type == vm.correctFlagsEventTypes[j]) vm.eventObj.push(vm.eventObjOll[i]);
                     }                    
                 }
                 console.log('from vm.previous after for-for', vm.eventObj);               
@@ -193,8 +193,8 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
                 vm.eventObj = [];
                 // console.log('from vm.pullData', vm.eventObj);
                 for (var i = 0; i < vm.eventObjOll.length; i++){
-                    for (var j = 0; j < vm.flagsInDaily.length; j++) {     
-                        if (vm.eventObjOll[i].type == vm.flagsInDaily[j]) vm.eventObj.push(vm.eventObjOll[i]);
+                    for (var j = 0; j < vm.correctFlagsEventTypes.length; j++) {     
+                        if (vm.eventObjOll[i].type == vm.correctFlagsEventTypes[j]) vm.eventObj.push(vm.eventObjOll[i]);
                     }                    
                 }
                 console.log('from vm.next after for-for', vm.eventObj);               
@@ -228,8 +228,8 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
                 vm.eventObj = [];
                 // console.log('from vm.pullData', vm.eventObj);
                 for (var i = 0; i < vm.eventObjOll.length; i++){
-                    for (var j = 0; j < vm.flagsInDaily.length; j++) {     
-                        if (vm.eventObjOll[i].type == vm.flagsInDaily[j]) vm.eventObj.push(vm.eventObjOll[i]);
+                    for (var j = 0; j < vm.correctFlagsEventTypes.length; j++) {     
+                        if (vm.eventObjOll[i].type == vm.correctFlagsEventTypes[j]) vm.eventObj.push(vm.eventObjOll[i]);
                     }                    
                 }
                 console.log('from vm.pullData after for-for', vm.eventObj);               

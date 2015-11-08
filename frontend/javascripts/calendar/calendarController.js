@@ -47,44 +47,44 @@ function CalendarController(filterService, $document, $modal, $resource, $scope,
   vm.ollEventTypes = filterService.getOllEventTypes();    // oll event type from db
   console.log('vm.ollEventTypes', vm.ollEventTypes);  
 
-  vm.flag = [];
+  vm.checkEventTypes = [];
 
-  vm.checkFlag = function(_id){         // push check Flags tu vm.flag
-    var index = vm.flag.indexOf(_id);
+  vm.checkFlag = function(_id){         // push check Flags tu vm.checkEventTypes
+    var index = vm.checkEventTypes.indexOf(_id);
     if (index !== -1) {
-      vm.flag.splice(index, 1);
+      vm.checkEventTypes.splice(index, 1);
     } else {
-      vm.flag.push(_id);
+      vm.checkEventTypes.push(_id);
     }
-    // console.log('flags from CalendarController $rootScope.$broadcast', vm.flag);
-    $rootScope.$broadcast('flagFromCalendar', {   //push vm.flag to point $rootScope.$on
-      messege: vm.flag
+    // console.log('flags from CalendarController $rootScope.$broadcast', vm.checkEventTypes);
+    $rootScope.$broadcast('checkEventTypes', {   //push vm.checkEventTypes to point $rootScope.$on
+      messege: vm.checkEventTypes
     });
   };
 
 
 
   vm.selectAllEventType = function(){
-    vm.flag.length = 0;
+    vm.checkEventTypes.length = 0;
     for (var i = 0; i < vm.ollEventTypes.length; i++) {   
-      vm.flag.push(vm.ollEventTypes[i]._id);
+      vm.checkEventTypes.push(vm.ollEventTypes[i]._id);
       vm.ollEventTypes[i].flag = true;
     }
-    // console.log('flags from CalendarController selectAllEventType', vm.flag);   
-    $rootScope.$broadcast('flagFromCalendar', {   //push vm.flag to point $rootScope.$on
-      messege: vm.flag
+    // console.log('flags from CalendarController selectAllEventType', vm.checkEventTypes);   
+    $rootScope.$broadcast('checkEventTypes', {   //push vm.checkEventTypes to point $rootScope.$on
+      messege: vm.checkEventTypes
     });
 
   };
 
   vm.clearAllEventType = function(){
-    vm.flag.length = 0;
+    vm.checkEventTypes.length = 0;
     for (var i = 0; i < vm.ollEventTypes.length; i++) {   
       vm.ollEventTypes[i].flag = false;
     }
-    // console.log('flags from CalendarController clearAllEventType', vm.flag);  
-    $rootScope.$broadcast('flagFromCalendar', {   //push vm.flag to point $rootScope.$on
-      messege: vm.flag
+    // console.log('flags from CalendarController clearAllEventType', vm.checkEventTypes);  
+    $rootScope.$broadcast('checkEventTypes', {   //push vm.checkEventTypes to point $rootScope.$on
+      messege: vm.checkEventTypes
     });    
   };
 }

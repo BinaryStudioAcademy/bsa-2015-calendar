@@ -113,19 +113,19 @@ function MonthController($rootScope, $scope, helpEventService, crudEvEventServic
         // console.log(vm.events);
     };
 
-    var flagsInDaily = [];
-    $rootScope.$on('flagFromCalendar', function (event, agrs) {           
+    var correctFlagsEventTypes = [];
+    $rootScope.$on('checkEventTypes', function (event, agrs) {           
         var flagsFromCalendar = agrs.messege;
-        flagsInDaily.length = 0;                                           
+        correctFlagsEventTypes.length = 0;                                           
             for (var i = 0; i < flagsFromCalendar.length; i++) {        
-                flagsInDaily.push(flagsFromCalendar[i]);
+                correctFlagsEventTypes.push(flagsFromCalendar[i]);
             }
     });
 
     vm.selectTypeEvent = function(event){                                  
         // console.log('event in day.events', event);                    
-        for (var i = 0; i < flagsInDaily.length; i++) {     
-            if (event.type == flagsInDaily[i]) return true;
+        for (var i = 0; i < correctFlagsEventTypes.length; i++) {     
+            if (event.type == correctFlagsEventTypes[i]) return true;
         }
     };
 
