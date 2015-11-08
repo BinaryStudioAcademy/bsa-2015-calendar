@@ -9,9 +9,12 @@ var userRoutes = require('./userRoutes');
 var holidayRoutes = require('./holidayRoutes');
 var googleEventRoutes = require('./googleEventRoutes');
 var eventTypeRoutes = require('./eventTypeRoutes');
+var checkToken = require('../../middleware/checkToken');
+var tokenUserRoutes = require('./tokenUserRoutes');
 
 
 module.exports = function(app) {
+	app.use(checkToken);
 	return {
 		authRoutes: authRoutes(app),
 		googleEventRoutes: googleEventRoutes(app),
@@ -22,6 +25,8 @@ module.exports = function(app) {
 		groupRoutes: groupRoutes(app),
 		planRoutes: planRoutes(app),
 		userRoutes: userRoutes(app),
-		eventTypeRoutes: eventTypeRoutes(app)
+		eventTypeRoutes: eventTypeRoutes(app),
+		tokenUserRoutes: tokenUserRoutes(app)
+
 	};
 };

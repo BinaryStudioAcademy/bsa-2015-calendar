@@ -2,6 +2,12 @@ var app = angular.module('calendar-app', ['colorpicker.module', 'ui.router', 'ng
     .config(['$stateProvider', '$urlRouterProvider', '$resourceProvider', '$httpProvider', '$locationProvider',
         function ($stateProvider, $urlRouterProvider, $resourceProvider, $httpProvider, $locationProvider) {
             $urlRouterProvider.otherwise('/');
+   /*         $httpProvider.defaults.useXDomain = true;
+            $httpProvider.defaults.withCredentials = true;
+            delete $httpProvider.defaults.headers.common["X-Requested-With"];
+            $httpProvider.defaults.headers.common["Accept"] = "application/json";
+            $httpProvider.defaults.headers.common["Content-Type"] = "application/json";*/
+
             $stateProvider
                 .state('home', {
                     url: '',
@@ -143,4 +149,21 @@ app.run(['crudEvEventService', '$rootScope', '$state', '$window', 'AuthService',
     $anchorScroll.yOffset = 100;
 }]);
 
+/*var getHeader = function() {
+    var request = new XMLHttpRequest();
+    request.open('GET', 'http://team.binary-studio.com/app/header', true); //http://team.binary-studio.com/app/header
+    request.send();
+    request.onreadystatechange = function() {
+        if (request.readyState != 4) return;
+        if (request.status != 200) {
+            alert(request.status + ': ' + request.statusText);
+        } else {
+            var headerHtml = request.responseText;
+            var headerContainer = document.getElementById('header');
+            headerContainer.innerHTML =headerHtml;
+            headerFunction();
+        }
+    };
+};
+getHeader();*/
 module.exports = app;
