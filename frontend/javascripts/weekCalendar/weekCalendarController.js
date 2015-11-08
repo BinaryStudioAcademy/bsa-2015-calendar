@@ -130,7 +130,9 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
         for(var i = 0; i<7; i++){
             var evtCells = angular.element($('.'+ vm.daysNames[i]));
             for (var j = 0; j <24; j++){
-                evtCells[j].textContent = ''; 
+                if(evtCells[j]){
+                    evtCells[j].textContent = ''; 
+                }
             }
         }
     };
