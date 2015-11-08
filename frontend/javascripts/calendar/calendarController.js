@@ -45,10 +45,9 @@ function CalendarController(filterService, $document, $modal, $resource, $scope,
 
   // var resourceEventTypes = $resource('http://localhost:3080/api/eventTypePublicAndByOwner/', {});
   vm.ollEventTypes = filterService.getOllEventTypes();    // oll event type from db
-  console.log('vm.ollEventTypes', vm.ollEventTypes);  
+  // console.log('vm.ollEventTypes', vm.ollEventTypes);  
 
   vm.checkEventTypes = [];
-
   vm.checkFlag = function(_id){         // push check Flags tu vm.checkEventTypes
     var index = vm.checkEventTypes.indexOf(_id);
     if (index !== -1) {

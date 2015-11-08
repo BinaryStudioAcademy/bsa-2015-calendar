@@ -4,13 +4,32 @@ require('moment-range');
 
 app.controller('WeekViewController', WeekViewController);
 
-WeekViewController.$inject = ['crudEvEventService','helpEventService', '$scope', '$uibModal','$compile', '$templateCache', '$rootScope'];
+WeekViewController.$inject = ['crudEvEventService','helpEventService', '$scope', '$uibModal','$compile', '$templateCache', '$rootScope', 'filterService'];
 
-function WeekViewController(crudEvEventService,helpEventService, $scope, $uibModal, $compile, $templateCache, $rootScope) {
+function WeekViewController(crudEvEventService,helpEventService, $scope, $uibModal, $compile, $templateCache, $rootScope, filterService) {
 	var vm = this;
+    vm.correctFlagsEventTypes = filterService.correctFlags(); 
+    // vm.correctFlagsEventTypes = filterService.correctFlags(); 
+    // console.log('from WeekViewController', vm.correctFlagsEventTypes);
+ 
+
+     $rootScope.$on('checkEventTypes', function (event, agrs) {           
+        // var flagsFromFilterService = agrs.messege;
+        vm.correctFlagsEventTypes = agrs.messege;
+        console.log('flagFromWeek', vm.correctFlagsEventTypes);
+        // var newCorrectFlags = vm.correctFlagsEventTypes;
+        // return newCorrectFlags;                           
+            // for (var i = 0; i < flagsFromFilterService.length; i++) {        
+            //     vm.correctFlagsEventTypes.push(flagsFromFilterService[i]);
+            // }
+        // console.log('flagFromWeek', vm.correctFlagsEventTypes);
+        vm.clearCells();
+        vm.pullData();
+    });       
+
 
     $scope.$on('eventsUpdated', function() {
-        // console.log('from  $scope.$on eventsUpdated', vm.eventObj);
+        // console.log('from  $scope.$on eventsUpdated', vm.eventObjOll);
         vm.buildEventCells(0);
     });
 
@@ -83,6 +102,9 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
     });
 
 
+// vm.correctFlagsEventTypes
+
+
     vm.buildEventCells = function(index){
         for (var i = index; i < vm.eventObj.length; i++) { 
             var currEvt = vm.eventObj[i];
@@ -137,17 +159,11 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
         }
     };
 
-    vm.correctFlagsEventTypes = [];                                                  //medai
-    $rootScope.$on('checkEventTypes', function (event, agrs) {           
-        var flagsFromCalendar = agrs.messege;
-        vm.correctFlagsEventTypes.length = 0;                                           
-            for (var i = 0; i < flagsFromCalendar.length; i++) {        
-                vm.correctFlagsEventTypes.push(flagsFromCalendar[i]);
-            }
-        // console.log('flagFromWeek', vm.correctFlagsEventTypes);
-        vm.clearCells();
-        vm.pullData();
-    });                                                                    //medai
+
+    // console.log('flagFromWeek', vm.correctFlagsEventTypes);
+
+                                                                  //medai
+
 
     vm.previous = function(){
         vm.clearCells();
@@ -225,8 +241,8 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
         helpEventService.getUserEvents(vm.Start, vm.End).then(function(data) {
             if (data !== null){
                 vm.eventObjOll = data;                                              //medai
-                vm.eventObj = [];
-                // console.log('from vm.pullData', vm.eventObj);
+                vm.eventObj = [];              
+                console.log('from vm.pullData', vm.eventObjOll);
                 for (var i = 0; i < vm.eventObjOll.length; i++){
                     for (var j = 0; j < vm.correctFlagsEventTypes.length; j++) {     
                         if (vm.eventObjOll[i].type == vm.correctFlagsEventTypes[j]) vm.eventObj.push(vm.eventObjOll[i]);
@@ -258,5 +274,10 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
 
         // //will be pulled from server 
         vm.pullData();
+
+
+        // vm.correctFlagsEventTypes = filterService.correctFlags();    
+
+
     }
 }
