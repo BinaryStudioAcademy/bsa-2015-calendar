@@ -9,6 +9,10 @@ var eventTypeSchema = new Schema({
     icon: String,
     events: [{type: Schema.Types.ObjectId, ref: 'Event'}],
     isPrivate: Boolean,
+    icon: {
+    	css: String,
+    	name: String
+    }
 });
 
 module.exports = mongoose.model('EventType', eventTypeSchema);
