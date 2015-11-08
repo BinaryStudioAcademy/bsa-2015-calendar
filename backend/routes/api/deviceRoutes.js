@@ -20,6 +20,13 @@ module.exports = function(app) {
 		});
 	}, apiResponse);
 
+	app.get('/api/deviceclipped/', function(req, res, next){
+		deviceRepository.getAllClipped(function(err, data){
+			res.data = data;
+			res.err = err;
+			next();
+		});
+	}, apiResponse);
 
 	app.get('/api/deviceByTitle/:title', function(req, res, next){
 		deviceRepository.searchByTitle(req.params.title, function(err, data){

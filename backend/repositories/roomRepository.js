@@ -15,6 +15,12 @@ RoomRepository.prototype.addEvent = function(roomId, eventId, callback) {
 	query.exec(callback);
 };
 
+RoomRepository.prototype.getAllClipped = function(callback){
+	var model = this.model;
+	var query = model.find({}, { title: 1, description: 1, _id: 1 });
+	query.exec(callback);
+};
+
 RoomRepository.prototype.removeEvent = function(roomId, eventId, callback) {
 	var model = this.model;
 	var query = model.findByIdAndUpdate({_id:roomId}, { $pull: { events:  eventId } } );

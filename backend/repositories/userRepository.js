@@ -9,6 +9,12 @@ function UserRepository() {
 
 UserRepository.prototype = new Repository();
 
+UserRepository.prototype.getAllClipped = function(callback){
+	var model = this.model;
+	var query = model.find({}, { name: 1, email: 1, _id: 1 });
+	query.exec(callback);
+};
+
 UserRepository.prototype.removeEvent = function(userId, eventId, callback) {
 	var model = this.model;
 	var query = model.findByIdAndUpdate({_id:userId}, { $pull: { events:  eventId } } );

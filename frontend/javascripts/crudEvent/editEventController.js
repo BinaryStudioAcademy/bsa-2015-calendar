@@ -75,11 +75,11 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 				}
 			}
 			console.log('body', vm.eventBody);
-			if (vm.eventBody.eventType){
-				for (i = 0; i < vm.eventType.length; i++){
-					if(vm.eventBody.eventType == vm.eventType[i]._id) {
-						vm.event.type._id = vm.eventType[i]._id;
-						vm.event.type.title = vm.eventType[i].title;
+			if (vm.eventBody.type){
+				for (i = 0; i < vm.eventTypes.length; i++){
+					if(vm.eventBody.type == vm.eventTypes[i]._id) {
+						vm.event.type._id = vm.eventTypes[i]._id;
+						vm.event.type.title = vm.eventTypes[i].title;
 						break;
 					}
 				}
@@ -186,7 +186,7 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 			} else {
 				//socketService.emit('edit event', { event : response });	
 
-				// тип селектеддейт проверить!!!!!!!!!!!!!!!!!!!!!!!
+				// тип селектеддейт проверить!
 				crudEvEventService.deletedEventBroadcast(vm.selectedDate, vm.eventBody, vm.viewType);
 
 				$timeout(function() {
@@ -210,7 +210,7 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 				dropEventInfo();
 				console.log('success edit', response);
 				//socketService.emit('edit event', { event : response });	
-				// тип селектеддейт проверить!!!!!!!!!!!!!!!!!!!!!!!
+				// тип селектеддейт проверить!
 
 				crudEvEventService.editedEventBroadcast(vm.selectedDate, vm.eventBody, response, vm.viewType);
 

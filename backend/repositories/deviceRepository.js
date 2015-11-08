@@ -15,6 +15,13 @@ DeviceRepository.prototype.addEvent = function(deviceId, eventId, callback) {
 	query.exec(callback);
 };
 
+DeviceRepository.prototype.getAllClipped = function(callback){
+	var model = this.model;
+	var query = model.find({}, { title: 1, description: 1, _id: 1 });
+	query.exec(callback);
+};
+
+
 DeviceRepository.prototype.removeEvent = function(deviceId, eventId, callback) {
 	var model = this.model;
 	var query = model.findByIdAndUpdate({_id:deviceId}, { $pull: { events:  eventId } } );

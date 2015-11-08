@@ -145,6 +145,9 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		});
 		return allEventsPromise;
 	}
+
+
+
 	// так делать не надо, есть же пример ниже!!
 	function getAllUserEvents(){
 		return $http.get('api/eventPublicAndByOwner');
@@ -187,8 +190,14 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		return eventsPromise;
 	}
 
-	function getRooms() {
-		var roomsPromise = $http.get('api/room/')       
+	function getRooms(clipped) {
+		var addStr = '/';
+		if(!clipped){
+			addStr = 'clipped/';
+		} else {
+			addStr = '/';
+		}
+		var roomsPromise = $http.get('api/room'+ addStr)       
 		.then(function (response) {
 			 console.log('success Total rooms: items: ', response.data.length);
 			return response.data;
@@ -204,8 +213,14 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		return roomsPromise;
 	}
 
-	function getDevices() {
-		var devicesPromise = $http.get('api/device/')       
+	function getDevices(clipped) {
+		var addStr = '/';
+		if(!clipped){
+			addStr = 'clipped/';
+		} else {
+			addStr = '/';
+		}
+		var devicesPromise = $http.get('api/device' + addStr)       
 		.then(function (response) {
 			console.log('success Total devices: ', response.data.length);
 			return response.data;
@@ -221,8 +236,14 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		return devicesPromise;
 	}
 
-	function getUsers() {
-		var usersPromise = $http.get('api/user/')       
+	function getUsers(clipped) {
+		var addStr = '/';
+		if(!clipped){
+			addStr = 'clipped/';
+		} else {
+			addStr = '/';
+		}
+		var usersPromise = $http.get('api/user'+ addStr)       
 		.then(function (response) {
 			console.log('success Number of Users: ', response.data.length);
 			return response.data;
@@ -238,8 +259,14 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		return usersPromise;
 	}
 
-	function getEventTypes() {
-		var typesPromise = $http.get('api/eventType/')       
+	function getEventTypes(clipped) {
+		var addStr = '/';
+		if(!clipped){
+			addStr = 'clipped/';
+		} else {
+			addStr = '/';
+		}
+		var typesPromise = $http.get('api/eventType'+ addStr)         
 		.then(function (response) {
 			console.log('success Current number of types: ', response.data.length);
 			return response.data;
@@ -254,6 +281,7 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		});
 		return typesPromise;
 	}
+
 
 	function getEventTypesPublicByOwner() {
 		return $http.get('api/eventTypePublicAndByOwner/')
