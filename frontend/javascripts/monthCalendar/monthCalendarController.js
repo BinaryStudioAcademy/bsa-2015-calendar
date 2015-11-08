@@ -5,9 +5,9 @@ var app = require('../app'),
 app.controller('MonthController', MonthController);
 
 
-MonthController.$inject = ['$rootScope', '$scope', 'helpEventService', 'crudEvEventService', '$timeout', '$q', '$uibModal', '$stateParams'];
+MonthController.$inject = ['$rootScope', '$scope', 'helpEventService', 'crudEvEventService', '$timeout', '$q', '$uibModal', '$stateParams', 'filterService'];
 
-function MonthController($rootScope, $scope, helpEventService, crudEvEventService, $timeout, $q, $uibModal, $stateParams) {
+function MonthController($rootScope, $scope, helpEventService, crudEvEventService, $timeout, $q, $uibModal, $stateParams, filterService) {
 
     vm = this;
 
@@ -112,23 +112,6 @@ function MonthController($rootScope, $scope, helpEventService, crudEvEventServic
         // console.log(vm.events);
     };
 
-    var flagsInDaily = [];
-    $rootScope.$on('flagFromCalendar', function (event, agrs) {           
-        var flagsFromCalendar = agrs.messege;
-        flagsInDaily.length = 0;                                           
-            for (var i = 0; i < flagsFromCalendar.length; i++) {        
-                flagsInDaily.push(flagsFromCalendar[i]);
-            }
-    });
-
-    vm.selectTypeEvent = function(event){                                  
-        // console.log('event in day.events', event);                    
-        for (var i = 0; i < flagsInDaily.length; i++) {     
-            if (event.type == flagsInDaily[i]) return true;
-        }
-    };
-
-
     vm.buildMonth  = function(){
 
         var date = vm.mViewStartMoment.clone();
@@ -193,9 +176,18 @@ function MonthController($rootScope, $scope, helpEventService, crudEvEventServic
         });
     };
 
+    vm.selectTypeEvent = function(event){  
+        // console.log('flagFromMonth', vm.correctFlagsEventTypes);                                
+        // console.log('event in day.events', event);                    
+        for (var i = 0; i < vm.correctFlagsEventTypes.length; i++) {     
+            if (event.type == vm.correctFlagsEventTypes[i]) return true;
+        }
+    };
+
     init();
 
     function init() {
+        vm.correctFlagsEventTypes = filterService.correctFlags(); 
         vm.weeks = [];
         vm.events = {};
         vm.maxEventNameLength = 24;
@@ -226,3 +218,11 @@ function MonthController($rootScope, $scope, helpEventService, crudEvEventServic
         vm.pullData();
     }
 }
+
+    // vm.correctFlagsEventTypes = filterService.correctFlags(); 
+    // $rootScope.$on('checkEventTypes', function (event, agrs) {           
+    //     vm.correctFlagsEventTypes = agrs.messege;
+    //     console.log('flagFromWeek', vm.correctFlagsEventTypes);
+    //     vm.clearCells();
+    //     vm.pullData();
+    // }); 
