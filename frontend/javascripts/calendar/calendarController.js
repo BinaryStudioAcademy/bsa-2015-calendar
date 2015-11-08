@@ -2,9 +2,10 @@ var app = require('../app');
 
 app.controller('CalendarController', CalendarController);
 
-CalendarController.$inject = ['$document', '$modal', '$resource', '$scope', '$rootScope'];
 
-function CalendarController($document, $modal, $resource, $scope, $rootScope, $state, LoginService, AuthService, GoogleAuthService) {
+CalendarController.$inject = ['filterService', '$document', '$modal', '$resource', '$scope', '$rootScope'];
+
+function CalendarController(filterService, $document, $modal, $resource, $scope, $rootScope, $state, LoginService, AuthService, GoogleAuthService) {
   var vm = this;
   
   var todayDate = Date.now();
@@ -42,8 +43,10 @@ function CalendarController($document, $modal, $resource, $scope, $rootScope, $s
 
 
 
-  var dbEventTypes = $resource('http://localhost:3080/api/eventTypePublicAndByOwner/', {});
-  vm.eventTypes = dbEventTypes.query();  // oll event type from db
+  // var resourceEventTypes = $resource('http://localhost:3080/api/eventTypePublicAndByOwner/', {});
+  vm.ollEventTypes = filterService.getOllEventTypes();    // oll event type from db
+  console.log('vm.ollEventTypes', vm.ollEventTypes);  
+
   vm.flag = [];
 
   vm.checkFlag = function(_id){         // push check Flags tu vm.flag
@@ -63,9 +66,9 @@ function CalendarController($document, $modal, $resource, $scope, $rootScope, $s
 
   vm.selectAllEventType = function(){
     vm.flag.length = 0;
-    for (var i = 0; i < vm.eventTypes.length; i++) {   
-      vm.flag.push(vm.eventTypes[i]._id);
-      vm.eventTypes[i].flag = true;
+    for (var i = 0; i < vm.ollEventTypes.length; i++) {   
+      vm.flag.push(vm.ollEventTypes[i]._id);
+      vm.ollEventTypes[i].flag = true;
     }
     // console.log('flags from CalendarController selectAllEventType', vm.flag);   
     $rootScope.$broadcast('flagFromCalendar', {   //push vm.flag to point $rootScope.$on
@@ -76,8 +79,8 @@ function CalendarController($document, $modal, $resource, $scope, $rootScope, $s
 
   vm.clearAllEventType = function(){
     vm.flag.length = 0;
-    for (var i = 0; i < vm.eventTypes.length; i++) {   
-      vm.eventTypes[i].flag = false;
+    for (var i = 0; i < vm.ollEventTypes.length; i++) {   
+      vm.ollEventTypes[i].flag = false;
     }
     // console.log('flags from CalendarController clearAllEventType', vm.flag);  
     $rootScope.$broadcast('flagFromCalendar', {   //push vm.flag to point $rootScope.$on
