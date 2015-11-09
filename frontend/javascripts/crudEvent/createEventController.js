@@ -2,15 +2,26 @@ var app = require('../app');
 
 app.controller('createEventController', createEventController);
 
+
 createEventController.$inject = ['AuthService', 'crudEvEventService', 'socketService', 'alertify', 'helpEventService', '$rootScope', '$scope', '$timeout', '$modalInstance', 'selectedDate', 'viewType', 'rooms', 'devices', 'users', 'eventTypes'];
 
 function createEventController(AuthService, crudEvEventService, socketService, alertify, helpEventService, $rootScope, $scope, $timeout, $modalInstance, selectedDate, viewType, rooms, devices, users, eventTypes) {
 
 	var vm = this;
 
+	//set userList in localStorage if not exists
+	var loggedUserId = AuthService.getUser().id;
+	if (!localStorage["userlist"+loggedUserId]) {
+		localStorage.setItem("userlist"+loggedUserId, '[]');
+
+	}
+	if (!localUsersArr) {
+		var localUsersArr = [];
+	}
+
 	vm.rooms = rooms;
 	vm.devices = devices;
-	vm.users = users;
+	vm.users = getUpdateUsers(users);
 	vm.eventTypes = eventTypes;
 
 	console.log('createEvCtrl');
@@ -280,6 +291,7 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 				if(vm.form.rooms.length) plan.rooms = vm.form.rooms;
 				if(vm.form.devices.length) plan.devices = vm.form.devices;
 				if(vm.form.users.length) plan.users = vm.form.users;
+				updateLocalArr(vm.form.users);
 				console.log(vm.form.users);
 			}
 
@@ -301,6 +313,8 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 				if(vm.form.rooms.length) event.room = vm.form.room['_id'];
 				if(vm.form.devices.length) event.devices = vm.form.devices;
 				if(vm.form.users.length) event.users = vm.form.users;
+				updateLocalArr(vm.form.users);
+				console.log('form', vm.form.users);
 			}
 			console.log('users added =', vm.form.users);
 
@@ -308,7 +322,8 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 			submitEvent(event);
 		}
 
-		console.log('Modal submited');	
+		console.log('Modal submited');
+			
 	};
 
 	vm.closeModal = function() {
@@ -390,6 +405,7 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 				dropEventInfo();
 				console.log('success', response.status);
 
+
 				socketService.emit('add plan', { planEvents : response.data });	
 				//$rootScope.$broadcast('planAdded', data);
 				crudEvEventService.addedPlanBroadcast(vm.selectedDateMoment, response.data, vm.viewType);
@@ -420,4 +436,58 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 
 		vm.changeStartDate();
 	}
+
+
+	function updateLocalArr(userArr) {
+
+		if (userArr.length > 0) {
+			for (var i=0; i < userArr.length; i++) {
+				var index;
+				for (var y=0; y < localUsersArr.length; y++) {
+					if (_.isEqual(userArr[i], localUsersArr[y])) {
+						index = y;
+						break;
+					}
+				}
+				localUsersArr.splice(index, 1);
+			}
+			for (var u=0; u < userArr.length; u++) {
+				localUsersArr.unshift(userArr[u]);
+			}
+			localStorage["userlist"+loggedUserId] = JSON.stringify(localUsersArr);
+		}
+	}
+
+	function getUpdateUsers(data) {
+		localUsersArr = JSON.parse(localStorage.getItem("userlist"+loggedUserId));
+		//left only id and name fields
+		var usersArr = _.map(data, function(item) {return _.pick(item, '_id', 'name');});
+		//add to local array new users from sever
+		_.each(usersArr, function(userArrObj) {
+			var localUsersArrObj = _.find(localUsersArr, function(localUsersArrObj) {
+				return userArrObj['_id'] === localUsersArrObj['_id'];
+			});
+			if (!localUsersArrObj) {
+				localUsersArr.push(userArrObj);
+			}
+		});
+		//delete from local deleted users
+		var delUsers = [];
+		_.each(localUsersArr, function(localUserArrObj) {
+			var usersArrObj = _.find(usersArr, function(usersArrObj) {
+				return usersArrObj['_id'] === localUserArrObj['_id'];
+			});
+			if (!usersArrObj) {
+				delUsers.push(localUserArrObj);
+			}
+		});
+		_.each(delUsers, function(delItem) {
+			_.remove(localUsersArr, function(item) {
+				return item['_id'] === delItem['_id'];
+			});
+		});
+
+        return localUsersArr;
+	}
 }
+

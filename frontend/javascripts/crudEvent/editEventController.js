@@ -2,18 +2,25 @@ var app = require('../app');
 
 app.controller('editEventController', editEventController);
 
-editEventController.$inject = ['crudEvEventService', 'socketService', 'alertify', 'helpEventService', '$rootScope', '$scope', '$timeout', '$modalInstance', 'selectedDate', 'eventBody', 'viewType', 'rooms', 'devices', 'users', 'eventTypes'];
+editEventController.$inject = ['crudEvEventService', 'socketService', 'alertify', 'helpEventService', 'AuthService', '$rootScope', '$scope', '$timeout', '$modalInstance', 'selectedDate', 'eventBody', 'viewType', 'rooms', 'devices', 'users', 'eventTypes'];
 
-function editEventController(crudEvEventService, socketService, alertify, helpEventService, $rootScope, $scope, $timeout, $modalInstance, selectedDate, eventBody, viewType, rooms, devices, users, eventTypes) {
+function editEventController(crudEvEventService, socketService, alertify, helpEventService, AuthService, $rootScope, $scope, $timeout, $modalInstance, selectedDate, eventBody, viewType, rooms, devices, users, eventTypes) {
 
 	var vm = this;
 
+	var loggedUserId = AuthService.getUser().id;
+	if (!localStorage["userlist"+loggedUserId]) {
+		localStorage.setItem("userlist"+loggedUserId, '[]');
+	}
+	if (!localUsersArr) {
+		var localUsersArr = [];
+	}
 
 	function init(){
 
 		vm.rooms = rooms;
 		vm.devices = devices;
-		vm.users = users;
+		vm.users = getUpdateUsers(users);
 		vm.eventTypes = eventTypes;
 
 		vm.selectedDate = selectedDate;
@@ -153,6 +160,7 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 			for (i = 0; i < vm.event.users.length; i++){
 				event.users[i] = vm.event.users[i]._id;
 			}
+			//updateLocalArr(event.users);
 		}
 		console.log('call submiting event to submit = ', event);
 		vm.submitEdit(event);	
@@ -243,5 +251,57 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 		vm.event.type = undefined;
 		vm.event.price = undefined;
 
+	}
+
+	function updateLocalArr(userArr) {
+
+		if (userArr.length > 0) {
+			for (var i=0; i < userArr.length; i++) {
+				var index;
+				for (var y=0; y < localUsersArr.length; y++) {
+					if (_.isEqual(userArr[i], localUsersArr[y])) {
+						index = y;
+						break;
+					}
+				}
+				localUsersArr.splice(index, 1);
+			}
+			for (var u=0; u < userArr.length; u++) {
+				localUsersArr.unshift(userArr[u]);
+			}
+			localStorage["userlist"+loggedUserId] = JSON.stringify(localUsersArr);
+		}
+	}
+
+	function getUpdateUsers(data) {
+		localUsersArr = JSON.parse(localStorage.getItem("userlist"+loggedUserId));
+		//left only id and name fields
+		var usersArr = _.map(data, function(item) {return _.pick(item, '_id', 'name');});
+		//add to local array new users from sever
+		_.each(usersArr, function(userArrObj) {
+			var localUsersArrObj = _.find(localUsersArr, function(localUsersArrObj) {
+				return userArrObj['_id'] === localUsersArrObj['_id'];
+			});
+			if (!localUsersArrObj) {
+				localUsersArr.push(userArrObj);
+			}
+		});
+		//delete from local deleted users
+		var delUsers = [];
+		_.each(localUsersArr, function(localUserArrObj) {
+			var usersArrObj = _.find(usersArr, function(usersArrObj) {
+				return usersArrObj['_id'] === localUserArrObj['_id'];
+			});
+			if (!usersArrObj) {
+				delUsers.push(localUserArrObj);
+			}
+		});
+		_.each(delUsers, function(delItem) {
+			_.remove(localUsersArr, function(item) {
+				return item['_id'] === delItem['_id'];
+			});
+		});
+
+        return localUsersArr;
 	}
 }
