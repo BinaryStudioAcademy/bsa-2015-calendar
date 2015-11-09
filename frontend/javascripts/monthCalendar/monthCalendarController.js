@@ -5,12 +5,11 @@ var app = require('../app'),
 app.controller('MonthController', MonthController);
 
 
-MonthController.$inject = ['$rootScope', '$scope', 'helpEventService', 'crudEvEventService', '$timeout', '$q', '$uibModal', '$stateParams', 'filterService'];
+MonthController.$inject = ['$rootScope', '$scope', 'scheduleService', 'helpEventService', 'crudEvEventService', '$timeout', '$q', '$uibModal', '$stateParams', 'filterService'];
 
-function MonthController($rootScope, $scope, helpEventService, crudEvEventService, $timeout, $q, $uibModal, $stateParams, filterService) {
+function MonthController($rootScope, $scope, scheduleService, helpEventService, crudEvEventService, $timeout, $q, $uibModal, $stateParams, filterService) {
 
     vm = this;
-
     $scope.$on('addedEventMonthView', function(event, selectedDate, eventBody){
         var newEventDate = new moment(eventBody.start);
         var daysDiff = newEventDate.diff(vm.mViewStartMoment,'days');
@@ -72,6 +71,11 @@ function MonthController($rootScope, $scope, helpEventService, crudEvEventServic
         vm.weeks[weekIndex].days[dayIndex].events.push(newEventBody);
     });
 
+    $scope.$on('scheduleTypeChanged', function(){
+        vm.pullData();
+        vm.buildMonth();
+    });
+
     vm.next = function () {
         vm.monthStartMoment.add(1,'M');
         vm.monthStartMoment.startOf('month');
@@ -82,7 +86,6 @@ function MonthController($rootScope, $scope, helpEventService, crudEvEventServic
         vm.mViewEndMoment = vm.mViewStartMoment.clone();    
         vm.mViewEndMoment.add(5, 'w');
         vm.mViewEndMoment.set({'hour': 23, 'minute': 59});
-
         vm.pullData();
     };
 
@@ -167,13 +170,40 @@ function MonthController($rootScope, $scope, helpEventService, crudEvEventServic
     vm.pullData = function() {
         var startDate = new Date(vm.monthStartMoment.format("DD MMM YYYY HH:mm:ss")),
             endDate = new Date(vm.monthEndMoment.format("DD MMM YYYY HH:mm:ss"));
-
-        helpEventService.getUserEvents(startDate, endDate).then(function(data) {
-            if (data !== null){ 
-                vm.buildEventsObj(data);
+        console.log('pulling data, scheduleType: ', scheduleService.getType());
+        console.log('pulling data, scheduleType: ', scheduleService.getItemId());
+        switch (scheduleService.getType()){
+            case 'event':{
+                helpEventService.getUserEvents(startDate, endDate).then(function(data) {
+                    if (data !== null){ 
+                        vm.buildEventsObj(data);
+                    }
+                    vm.buildMonth();
+                });
+                console.log('user events shedule');
+                break;
             }
-            vm.buildMonth();
-        });
+            case 'room':{
+                helpEventService.getRoomEvents(scheduleService.getItemId(), startDate, endDate).then(function(data) {
+                    if (data !== null){ 
+                        vm.buildEventsObj(data);
+                    }
+                    vm.buildMonth();
+                });
+                console.log('room events shedule');
+                break;
+            }
+            case 'device':{
+                helpEventService.getDeviceEvents(scheduleService.getItemId(), startDate, endDate).then(function(data) {
+                    if (data !== null){ 
+                        vm.buildEventsObj(data);
+                    }
+                    vm.buildMonth();
+                });
+                console.log('device events shedule');
+                break;
+            }
+        }
     };
 
     vm.selectTypeEvent = function(event){  
@@ -190,39 +220,28 @@ function MonthController($rootScope, $scope, helpEventService, crudEvEventServic
         vm.correctFlagsEventTypes = filterService.correctFlags(); 
         vm.weeks = [];
         vm.events = {};
-        vm.maxEventNameLength = 24;
+        vm.maxEventNameLength = 18;
         vm.maxDisplayEventsNumber = 3;
         vm.allDayEventsTemplateUrl = 'templates/monthCalendar/monthCalendarAllDaysEventTemplate.html';
 
         vm.selected = vm.removeTime(vm.selected || moment());
 
-        var routeMonth, startMonth, endMonth;
+        var startMonth;
         if ($stateParams.year) {
-            routeMonth = moment([$stateParams.year, $stateParams.month, 3]);
             startMonth = moment(new Date($stateParams.year, $stateParams.month, 1));
-            endMonth = moment(new Date($stateParams.year, $stateParams.month, new Date($stateParams.year, $stateParams.month+1, 0).getDate()));
-
         }
+        vm.monthStartMoment = startMonth || moment();
+        vm.monthStartMoment.set({hour: 0, minute: 0});
+        vm.monthStartMoment.startOf('month');
+        vm.monthEndMoment = vm.monthStartMoment.clone().endOf('month');
 
-        var nowMoment = routeMonth || moment();
-        vm.mViewStartMoment = routeMonth || moment({hour: 0, minute: 0});
-        vm.mViewStartMoment.add(-nowMoment.isoWeekday() +1, 'd');
-        vm.mViewEndMoment = vm.mViewStartMoment.clone();
+        vm.mViewStartMoment = vm.monthStartMoment.clone();
+        vm.mViewStartMoment.add(-vm.monthStartMoment.isoWeekday() +1, 'd');
+        vm.mViewEndMoment = vm.mViewStartMoment.clone();    
         vm.mViewEndMoment.add(5, 'w');
         vm.mViewEndMoment.set({'hour': 23, 'minute': 59});
-        vm.monthStartMoment = startMonth || moment().startOf('month');
-        vm.monthEndMoment = endMonth || moment().endOf('month');
-
+       
         //will be pulled from server 
-
         vm.pullData();
     }
 }
-
-    // vm.correctFlagsEventTypes = filterService.correctFlags(); 
-    // $rootScope.$on('checkEventTypes', function (event, agrs) {           
-    //     vm.correctFlagsEventTypes = agrs.messege;
-    //     console.log('flagFromWeek', vm.correctFlagsEventTypes);
-    //     vm.clearCells();
-    //     vm.pullData();
-    // }); 

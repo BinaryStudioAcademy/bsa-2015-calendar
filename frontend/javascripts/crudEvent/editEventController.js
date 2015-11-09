@@ -160,6 +160,7 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 			for (i = 0; i < vm.event.users.length; i++){
 				event.users[i] = vm.event.users[i]._id;
 			}
+			//updateLocalArr(event.users);
 		}
 		console.log('call submiting event to submit = ', event);
 		vm.submitEdit(event);	
@@ -186,9 +187,8 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 		console.log('deleting an event...');
 
 		helpEventService.deleteEvent(vm.eventBody._id).then(function(response) {
-			console.log('success delete', response);
 			if(response.status == 200 || response.status == 201){
-				//socketService.emit('edit event', { event : response });	
+				//socketService.emit('edit event', { event : response.data });	
 
 				// тип селектеддейт проверить!
 				crudEvEventService.deletedEventBroadcast(vm.selectedDate, vm.eventBody, vm.viewType);
@@ -212,11 +212,11 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 			if(response.status == 200 || response.status == 201){
 				vm.eventSuccess = true;
 				dropEventInfo();
-				console.log('success edit', response);
+				console.log('success edit', response.status);
 				//socketService.emit('edit event', { event : response });	
 				// тип селектеддейт проверить!
 
-				crudEvEventService.editedEventBroadcast(vm.selectedDate, vm.eventBody, response, vm.viewType);
+				crudEvEventService.editedEventBroadcast(vm.selectedDate, vm.eventBody, response.data, vm.viewType);
 
 				$timeout(function() {
 					$modalInstance.close();

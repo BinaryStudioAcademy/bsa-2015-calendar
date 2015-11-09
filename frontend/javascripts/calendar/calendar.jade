@@ -40,8 +40,19 @@
 						//- 		a(href="#") Month
 						//- 	li
 						//- 		a(ui-sref='.yearView') Year
-						
-			
+			h4 Device/Room schedule
+			ul.nav.nav-pills
+				li.dropdown
+					a.schedule-label.btn-primary.btn-block.dropdown-toggle#roomsMenu(data-toggle="dropdown") Rooms
+					ul.dropdown-menu(role="lisbtox")
+						li(ng-repeat="room in calendarCtrl.rooms" role="listitem")
+							a.schedule-item(ng-click="calendarCtrl.sheduleChanged('room', room._id)" ) {{room.title}}
+				li.dropdown
+					a.schedule-label.btn-primary.btn-block.dropdown-toggle#devicesMenu(data-toggle="dropdown") Devices
+					ul.dropdown-menu(role="lisbtox")
+						li(ng-repeat="device in calendarCtrl.devices" role="listitem")
+							a.schedule-item(ng-click="calendarCtrl.sheduleChanged('device', device._id)") {{device.title}}
+			br
 			a.btn.btn-block.btn-social.btn-google(ng-controller='GoogleAuthController as gaCtrl'  ng-click='gaCtrl.login()')
 				span.fa.fa-google 
 				| Sync with Google
@@ -71,7 +82,6 @@
 			ui-view#calendar-content
 	.container_calendar_footer
 		h4(align='center' style="color: blue") Press  F2 to help window.
-
 
 
 	div(class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel")
