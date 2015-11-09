@@ -43,7 +43,8 @@ module.exports = function(app) {
 					username : req.user.username,
 					name : req.user.name,
 					events : req.user.events,
-					groups : req.user.groups
+					groups : req.user.groups,
+					completedTutorial: req.user.completedTutorial
 				};
 
 				return res.send({ user : userInfo });

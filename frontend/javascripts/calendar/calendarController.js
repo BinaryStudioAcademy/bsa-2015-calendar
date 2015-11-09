@@ -2,13 +2,14 @@ var app = require('../app');
 
 app.controller('CalendarController', CalendarController);
 
-CalendarController.$inject = ['$document', '$modal', '$resource', '$scope', '$rootScope'];
+CalendarController.$inject = ['$document', '$modal', '$resource', '$scope', '$rootScope', '$state', 'LoginService', 'AuthService', 'GoogleAuthService', '$uibModal', '$location'];
 
-function CalendarController($document, $modal, $resource, $scope, $rootScope, $state, LoginService, AuthService, GoogleAuthService) {
+function CalendarController($document, $modal, $resource, $scope, $rootScope, $state, LoginService, AuthService, GoogleAuthService, $uibModal, $location) {
   var vm = this;
   
   var todayDate = Date.now();
   vm.selectedDate = todayDate;
+  var userInfo = AuthService.getUser();
 
   vm.logOut = function(){
     LoginService.logOut()
@@ -28,6 +29,36 @@ function CalendarController($document, $modal, $resource, $scope, $rootScope, $s
     });
   };
 
+  vm.determineOpenedView = function () {
+    var path = $location.path();
+    var openedView = path.split('/')[2];
+    switch(openedView) {
+      case 'dayView' : return 0;
+      case 'weekView' : return 1;
+      case 'monthView' : return 2;
+      case 'yearView' : return 3;
+      default : return 0;
+    }
+  };
+
+  vm.showTutorial = function () {
+    vm.determineOpenedView();
+    var modalInstance = $uibModal.open({
+        animation: true,
+        templateUrl: 'templates/tutorial/tutorial.html',
+        controller: 'tutorialController',
+        controllerAs: 'tutorialCtrl',
+        bindToController: true,
+        resolve: {
+          openedViewIndex: vm.determineOpenedView()
+        }
+    });
+  };
+
+  if(!userInfo.completedTutorial){
+    vm.showTutorial();
+  }
+
 
   $document.bind("keydown", function(event) {
     // console.log(event.keyCode);
@@ -39,7 +70,7 @@ function CalendarController($document, $modal, $resource, $scope, $rootScope, $s
     }
   });
 
-
+  
 
 
   var dbEventTypes = $resource('http://localhost:3080/api/eventTypePublicAndByOwner/', {});

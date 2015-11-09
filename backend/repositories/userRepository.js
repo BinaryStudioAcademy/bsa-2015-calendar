@@ -63,4 +63,11 @@ UserRepository.prototype.updateHolidays = function(holidaysIds, callback){
 	query.exec(callback);
 };
 
+UserRepository.prototype.setTutorialCompleted = function(userId, tutorialCompleted, callback){
+	var model = this.model;
+	var query = model.update({_id: userId}, { $set: { completedTutorial:  tutorialCompleted } } );
+	console.log(tutorialCompleted);
+	query.exec(callback);
+};
+
 module.exports = new UserRepository();
