@@ -17,10 +17,10 @@ function tutorialController($document, AuthService, $rootScope, $scope, $timeout
 	$document.bind("keydown", function(event) {
 		//console.log(event.keyCode);
 		if (event.keyCode == 37) {
-			vm.changeTextLeft();
+			vm.changeTextByKeyBoardLeft();
 		}
 		if (event.keyCode == 39) {
-			vm.changeTextRight();
+			vm.changeTextByKeyBoardRight();
 		}
 		if (event.keyCode == 27) {
 			vm.closeModal();
@@ -43,6 +43,23 @@ function tutorialController($document, AuthService, $rootScope, $scope, $timeout
 	vm.changeTextLeft = function() {
 		if(vm.currentText > 0) {
 			vm.currentText--;
+			console.log(vm.currentText);
+		}
+	};
+
+	vm.changeTextByKeyBoardRight = function() {
+		if(vm.currentText < vm.tutorialTexts.length - 1) {
+			vm.currentText++;
+			console.log(vm.currentText);
+			$scope.$digest();
+		}
+	};
+
+	vm.changeTextByKeyBoardLeft = function() {
+		if(vm.currentText > 0) {
+			vm.currentText--;
+			console.log(vm.currentText);
+			$scope.$digest();
 		}
 	};
 
