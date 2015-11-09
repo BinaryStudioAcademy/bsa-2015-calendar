@@ -58,7 +58,7 @@ function eventCalendarDirective() {
                 var evDate = eventStartDate.getDate()+'_'+(eventStartDate.getMonth()+1)+'_'+eventStartDate.getFullYear();
                 var indexOfEvent;
                 for (var i = 0; i < $scope.dataObj[evDate].length; i++){
-                    if ($scope.dataObj[evDate][i] == oldEventBody) {
+                    if ($scope.dataObj[evDate][i]._id == oldEventBody._id) {
                         indexOfEvent = i;
                         break;
                     }

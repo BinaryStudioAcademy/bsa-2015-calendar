@@ -2,14 +2,25 @@ var app = require('../app');
 
 app.controller('createEventController', createEventController);
 
-createEventController.$inject = ['crudEvEventService', 'socketService', 'alertify', 'helpEventService', '$rootScope', '$scope', '$timeout', '$modalInstance', 'selectedDate', 'viewType'];
+createEventController.$inject = ['crudEvEventService', 'socketService', 'alertify', 'helpEventService', 'AuthService', '$rootScope', '$scope', '$timeout', '$modalInstance', 'selectedDate', 'viewType'];
 
-function createEventController(crudEvEventService, socketService, alertify, helpEventService, $rootScope, $scope, $timeout, $modalInstance, selectedDate, viewType) {
+function createEventController(crudEvEventService, socketService, alertify, helpEventService, AuthService, $rootScope, $scope, $timeout, $modalInstance, selectedDate, viewType) {
 
 	var vm = this;
 
 	console.log('createEvCtrl');
 	console.log(selectedDate);
+
+	//set userList in localStorage if not exists
+	var loggedUserId = AuthService.getUser().id;
+	if (!localStorage["userlist"+loggedUserId]) {
+		localStorage.setItem("userlist"+loggedUserId, '[]');
+
+	}
+	if (!localUsersArr) {
+		var localUsersArr = [];
+	}
+	
 
 	vm.selectedDateMoment = selectedDate;
 	vm.selectedDate = new Date(selectedDate.format("DD MMM YYYY HH:mm:ss"));
@@ -220,7 +231,8 @@ function createEventController(crudEvEventService, socketService, alertify, help
 
     helpEventService.getUsers().then(function(data) {
         if (data !== null){
-            vm.users = data;
+        	localUsersArr = getUpdateUsers(data);
+            vm.users = localUsersArr;
         }
     });
 
@@ -298,6 +310,7 @@ function createEventController(crudEvEventService, socketService, alertify, help
 				if(vm.form.rooms.length) plan.rooms = vm.form.rooms;
 				if(vm.form.devices.length) plan.devices = vm.form.devices;
 				if(vm.form.users.length) plan.users = vm.form.users;
+				updateLocalArr(vm.form.users);
 			}
 
 			console.log('SUBMITTING PLAN >>>>>', plan);
@@ -317,13 +330,16 @@ function createEventController(crudEvEventService, socketService, alertify, help
 				if(vm.form.rooms.length) event.room = vm.form.room['_id'];
 				if(vm.form.devices.length) event.devices = vm.form.devices;
 				if(vm.form.users.length) event.users = vm.form.users;
+				updateLocalArr(vm.form.users);
+				console.log('form', vm.form.users);
 			}
 
 			console.log('SUBMITTING EVENT >>>>>', event);
 			submitEvent(event);
 		}
 
-		console.log('Modal submited');	
+		console.log('Modal submited');
+			
 	};
 
 	vm.closeModal = function() {
@@ -411,6 +427,58 @@ function createEventController(crudEvEventService, socketService, alertify, help
 		vm.form.devices = [];
 
 		vm.changeStartDate();
+	}
+
+	function updateLocalArr(userArr) {
+
+		if (userArr.length > 0) {
+			for (var i=0; i < userArr.length; i++) {
+				var index;
+				for (var y=0; y < localUsersArr.length; y++) {
+					if (_.isEqual(userArr[i], localUsersArr[y])) {
+						index = y;
+						break;
+					}
+				}
+				localUsersArr.splice(index, 1);
+			}
+			for (var u=0; u < userArr.length; u++) {
+				localUsersArr.unshift(userArr[u]);
+			}
+			localStorage["userlist"+loggedUserId] = JSON.stringify(localUsersArr);
+		}
+	}
+
+	function getUpdateUsers(data) {
+		localUsersArr = JSON.parse(localStorage.getItem("userlist"+loggedUserId));
+		//left only id and name fields
+		var usersArr = _.map(data, function(item) {return _.pick(item, '_id', 'name');});
+		//add to local array new users from sever
+		_.each(usersArr, function(userArrObj) {
+			var localUsersArrObj = _.find(localUsersArr, function(localUsersArrObj) {
+				return userArrObj['_id'] === localUsersArrObj['_id'];
+			});
+			if (!localUsersArrObj) {
+				localUsersArr.push(userArrObj);
+			}
+		});
+		//delete from local deleted users
+		var delUsers = [];
+		_.each(localUsersArr, function(localUserArrObj) {
+			var usersArrObj = _.find(usersArr, function(usersArrObj) {
+				return usersArrObj['_id'] === localUserArrObj['_id'];
+			});
+			if (!usersArrObj) {
+				delUsers.push(localUserArrObj);
+			}
+		});
+		_.each(delUsers, function(delItem) {
+			_.remove(localUsersArr, function(item) {
+				return item['_id'] === delItem['_id'];
+			});
+		});
+
+        return localUsersArr;
 	}
 }
 
