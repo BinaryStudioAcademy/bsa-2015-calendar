@@ -2,9 +2,9 @@ var app = require('../app');
 
 app.controller('tutorialController', tutorialController);
 
-tutorialController.$inject = ['AuthService', '$rootScope', '$scope', '$timeout', '$modalInstance', '$resource', 'openedViewIndex'];
+tutorialController.$inject = ['$document', 'AuthService', '$rootScope', '$scope', '$timeout', '$modalInstance', '$resource', 'openedViewIndex'];
 
-function tutorialController(AuthService, $rootScope, $scope, $timeout, $modalInstance, $resource, openedViewIndex) {
+function tutorialController($document, AuthService, $rootScope, $scope, $timeout, $modalInstance, $resource, openedViewIndex) {
 
 	var vm = this;
 
@@ -14,7 +14,21 @@ function tutorialController(AuthService, $rootScope, $scope, $timeout, $modalIns
 
 	console.log('tutorialController');
 
+	$document.bind("keydown", function(event) {
+		//console.log(event.keyCode);
+		if (event.keyCode == 37) {
+			vm.changeTextLeft();
+		}
+		if (event.keyCode == 39) {
+			vm.changeTextRight();
+		}
+		if (event.keyCode == 27) {
+			vm.closeModal();
+		}
+	});
+
 	vm.closeModal = function() {
+		//$document.unbind("keydown");
 		$modalInstance.dismiss();
 		console.log('Modal closed');
 	};
@@ -22,6 +36,7 @@ function tutorialController(AuthService, $rootScope, $scope, $timeout, $modalIns
 	vm.changeTextRight = function() {
 		if(vm.currentText < vm.tutorialTexts.length - 1) {
 			vm.currentText++;
+			console.log(vm.currentText);
 		}
 	};
 
@@ -42,6 +57,7 @@ function tutorialController(AuthService, $rootScope, $scope, $timeout, $modalIns
 			user.completedTutorial = true;
 			AuthService.setUser(user);
 		}
+		//$document.unbind("keydown");
 		$modalInstance.dismiss();
 	};
 
