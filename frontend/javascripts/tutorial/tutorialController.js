@@ -33,14 +33,15 @@ function tutorialController(AuthService, $rootScope, $scope, $timeout, $modalIns
 
 	vm.completeTutorial = function () {
 		var user = AuthService.getUser();
-		var resourceCmplTutr = $resource('/api/user/completeTutorial/:id', {id:'@id'},{
-			'update': { method:'PUT' }
-		});
-		resourceCmplTutr.update({id:user.id}, JSON.stringify({completed: true}));
+		if(!user.completedTutorial){
+			var resourceCmplTutr = $resource('/api/user/completeTutorial/:id', {id:'@id'},{
+				'update': { method:'PUT' }
+			});
+			resourceCmplTutr.update({id:user.id}, JSON.stringify({completed: true}));
 
-		user.completedTutorial = true;
-		AuthService.setUser(user);
-
+			user.completedTutorial = true;
+			AuthService.setUser(user);
+		}
 		$modalInstance.dismiss();
 	};
 
