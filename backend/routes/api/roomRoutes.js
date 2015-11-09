@@ -38,7 +38,7 @@ module.exports = function(app) {
 		});
 	}, apiResponse);
 
-	app.get('/api/room/:id/:gteDate/:lteDate', function(req, res, next){
+	app.get('/api/room/events/:id/:gteDate/:lteDate', function(req, res, next){
 		roomRepository.getRoomEventsByInterval(req.params.id, req.params.gteDate, req.params.lteDate, function(err, data){
 			res.data = data;
 			res.err = err;

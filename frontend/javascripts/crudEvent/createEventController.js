@@ -363,19 +363,20 @@ function createEventController(AuthService, crudEvEventService, socketService, a
            	if(response.status == 200 || response.status == 201){
 	           	vm.formSuccess = true;
 				dropEventInfo();
-				console.log('success', response);
+				console.log('success', response.status);
 
-				socketService.emit('add event', { event : response });	
-				//$rootScope.$broadcast('eventAdded' + vm.viewType, response);
+				socketService.emit('add event', { event : response.data });	
+				//$rootScope.$broadcast('eventAdded' + vm.viewType, data);
 				console.log(vm.viewType);
-				crudEvEventService.addedEventBroadcast(vm.selectedDateMoment, response, vm.viewType);
+				crudEvEventService.addedEventBroadcast(vm.selectedDateMoment, response.data, vm.viewType);
 
 				$timeout(function() {
 					$modalInstance.close();
 					vm.formSuccess = false;
 				}, 1500);
 			} else {
-				vm.deletingError = true;
+								console.log('err');
+				vm.submitEventError = true;
 				return;
 			}
         });
@@ -387,18 +388,19 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 			if(response.status == 200 || response.status == 201){
 	           	vm.formSuccess = true;
 				dropEventInfo();
-				console.log('success', response);
+				console.log('success', response.status);
 
-				socketService.emit('add plan', { planEvents : response });	
-				//$rootScope.$broadcast('planAdded', response);
-				crudEvEventService.addedPlanBroadcast(vm.selectedDateMoment, response, vm.viewType);
+				socketService.emit('add plan', { planEvents : response.data });	
+				//$rootScope.$broadcast('planAdded', data);
+				crudEvEventService.addedPlanBroadcast(vm.selectedDateMoment, response.data, vm.viewType);
 
 				$timeout(function() {
 					$modalInstance.close();
 					vm.formSuccess = false;
 				}, 1500);
 			} else {
-				vm.deletingError = true;
+				console.log('err');
+				vm.submitPlanError = true;
 				return;
 			}
         });

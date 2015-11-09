@@ -1,13 +1,15 @@
 var app = require('../app');
 
 app.controller('CalendarController', CalendarController);
-CalendarController.$inject = ['filterService', '$document', '$modal', '$resource', '$scope', '$rootScope', '$state', 'LoginService', 'AuthService', 'GoogleAuthService', 'helpEventService'];
+CalendarController.$inject = ['filterService', 'scheduleService', '$document', '$modal', '$resource', '$scope', '$rootScope', '$state', 'LoginService', 'AuthService', 'GoogleAuthService', 'helpEventService'];
 
 
-function CalendarController(filterService, $document, $modal, $resource, $scope, $rootScope, $state, LoginService, AuthService, GoogleAuthService, helpEventService) {
+function CalendarController(filterService, scheduleService, $document, $modal, $resource, $scope, $rootScope, $state, LoginService, AuthService, GoogleAuthService, helpEventService) {
 
   var vm = this;
-  
+
+  pullData();
+
   var todayDate = Date.now();
   vm.selectedDate = todayDate;
 
@@ -29,7 +31,6 @@ function CalendarController(filterService, $document, $modal, $resource, $scope,
     });
   };
 
-
   $document.bind("keydown", function(event) {
     // console.log(event.keyCode);
     if (event.keyCode == 113) {
@@ -42,9 +43,6 @@ function CalendarController(filterService, $document, $modal, $resource, $scope,
 
 
   vm.eventTypes = [];
-  helpEventService.getEventTypesPublicByOwner().then(function (data) {
-    vm.eventTypes = data;
-  });
 
   $scope.$on('newEventTypeAdded', function (event, eventTypeBody) {
     vm.eventTypes.push(eventTypeBody);
@@ -56,6 +54,30 @@ function CalendarController(filterService, $document, $modal, $resource, $scope,
     });
   });
 
+  vm.sheduleChanged = function(scheduleItemType, scheduleItemId){
+    scheduleService.sheduleChanged(scheduleItemType, scheduleItemId);
+  };
+
+  function pullData(){
+    helpEventService.getRooms(true).then(function(data) {
+        if (data !== null){
+            vm.rooms = data;
+        }
+    }).then(function() {
+      helpEventService.getDevices(true).then(function(data) {
+          if (data !== null){
+            vm.devices = data;
+          }
+        });
+    }).then(function() {
+      //helpEventService.getEventTypesPublicByOwner()
+      helpEventService.getEventTypes(true).then(function(data) {
+        if (data !== null){
+          vm.eventTypes = data;
+        }
+      });
+    });
+  }
 
   vm.ollEventTypes = filterService.getOllEventTypes();    // oll event type from db
   // console.log('vm.ollEventTypes', vm.ollEventTypes);  
@@ -72,8 +94,6 @@ function CalendarController(filterService, $document, $modal, $resource, $scope,
       messege: vm.checkEventTypes
     });
   };
-
-
 
   vm.selectAllEventType = function(){
     vm.checkEventTypes.length = 0;

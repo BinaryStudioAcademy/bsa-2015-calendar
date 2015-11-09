@@ -13,12 +13,14 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
     $rootScope.$on('checkEventTypes', function (event, agrs) {           
         vm.correctFlagsEventTypes = agrs.messege;
         vm.clearCells();
-        vm.pullData();
+        //vm.pullData();
+        vm.buildEventCells(0);
     });       
 
     $scope.$on('eventsUpdated', function() {
         // console.log('from  $scope.$on eventsUpdated', vm.eventObj);
         vm.buildEventCells(0);
+
     });
 
     $scope.$on('addedEventWeekView', function(event, selectedDate, eventBody){
@@ -93,7 +95,7 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
 
     vm.buildEventCells = function(index){
         // console.log('privet iz buildEventCells1', vm.correctFlagsEventTypes);  
-        // console.log('privet iz buildEventCells2', vm.eventObj);                
+        console.log('privet iz buildEventCells2', vm.eventObj);                
         for (var i = index; i < vm.eventObj.length; i++) {           
             for (var j = 0; j < vm.correctFlagsEventTypes.length; j++) {
                 if (vm.eventObj[i].type == vm.correctFlagsEventTypes[j]) {

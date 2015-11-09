@@ -36,7 +36,7 @@ module.exports = function(app) {
 		});
 	}, apiResponse);
 
-	app.get('/api/device/:id/:gteDate/:lteDate', function(req, res, next){
+	app.get('/api/device/events/:id/:gteDate/:lteDate', function(req, res, next){
 		deviceRepository.getDeviceEventsByInterval(req.params.id, req.params.gteDate, req.params.lteDate, function(err, data){
 			res.data = data;
 			res.err = err;

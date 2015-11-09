@@ -102,7 +102,7 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		var saveEventPromise = $http.post('api/event/', event)       
 		.then(function (response) {
 			console.log('adding event status: ', response.status);
-			return response.data;
+			return response;
 		}, function(reason) {
 			return reason; 		
 		});
@@ -113,7 +113,7 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		var updateEventPromise = $http.put('api/event/' + eventId, eventBody)       
 		.then(function (response) {
 			console.log('updating event status: ', response.status);
-			return response.data;
+			return response;
 		}, function(reason) {
 			return reason; 		
 		});
@@ -124,7 +124,7 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		var deleteEventPromise = $http.delete('api/event/' + eventId)       
 		.then(function (response) {
 			console.log('deleting event status: ', response.status);
-			return response.data;
+			return response;
 		}, function(reason) {
 			return reason; 		
 		});
@@ -135,7 +135,7 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		var savePlanPromise = $http.post('api/plan/', plan)       
 		.then(function (response) {
 			console.log('adding plan status: ', response.status);
-			return response.data;
+			return response;
 		}, function(reason) {
 			return reason; 		
 		});
@@ -211,6 +211,45 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		});
 		return eventsPromise;
 	}
+
+	function getRoomEvents(roomId, start, stop) {
+		var roomEventsPromise = $http.get('api/room/events/'+ roomId+ '/' + (+start)+ '/'+ (+stop))       
+		.then(function (response) {
+			var eventsArr = response.data.events;
+			console.log('success! Searching events for room ID:'+ roomId + ' Number of finded events: ', eventsArr.length);
+			return eventsArr;
+		}, function(reason) {
+			if (reason.status == 404){
+				console.log('not found events');
+				return null;
+			}
+			else{
+				return reason; 
+			}			
+		});
+		return roomEventsPromise;
+	}
+
+	function getDeviceEvents(deviceId, start, stop) {
+		var deviceEventsPromise = $http.get('api/device/events/'+ deviceId+ '/' + (+start)+ '/'+ (+stop))       
+		.then(function (response) {
+			var eventsArr = response.data.events;
+			console.log('success! Searching events for device ID:'+ deviceId + ' Number of finded events: ', eventsArr.length);
+			return eventsArr;
+		}, function(reason) {
+			if (reason.status == 404){
+				console.log('not found events');
+				return null;
+			}
+			else{
+				return reason; 
+			}			
+		});
+		return deviceEventsPromise;
+	}
+
+
+
 
 	function getRooms(clipped) {
 		var addStr = '/';
@@ -335,6 +374,8 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		getDevices: getDevices,
 		getUsers: getUsers,
 		getEvents: getEvents,
+		getRoomEvents: getRoomEvents,
+		getDeviceEvents: getDeviceEvents,
 		getAllEvents: getAllEvents,
 		getEventTypes: getEventTypes,
 		getUserEvents: getUserEvents,
