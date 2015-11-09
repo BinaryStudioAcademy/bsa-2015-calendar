@@ -25,6 +25,7 @@ function eventCalendarDirective($rootScope, filterService) {
                 } 
                 // console.log('from $scope.$on eventsUpdated', $scope.dataObj);
                 for (var item in $scope.dataObj) {
+                    delEvents(item);
                     addEvents(item);
                 }
             });            
@@ -44,9 +45,11 @@ function eventCalendarDirective($rootScope, filterService) {
                 } 
                 // console.log('from $scope.$on eventsUpdated', $scope.dataObj);
                 for (var item in $scope.dataObj) {
+                    delEvents(item);
                     addEvents(item);
                 } 
             });    
+
 
             $scope.$on('addedPlanYearView', function(event, selectedDate, eventBody) {
                 for (var item=0; item <eventBody.length; item++) {
@@ -84,7 +87,7 @@ function eventCalendarDirective($rootScope, filterService) {
                 var evDate = eventStartDate.getDate()+'_'+(eventStartDate.getMonth()+1)+'_'+eventStartDate.getFullYear();
                 var indexOfEvent;
                 for (var i = 0; i < $scope.dataObj[evDate].length; i++){
-                    if ($scope.dataObj[evDate][i] == oldEventBody) {
+                    if ($scope.dataObj[evDate][i]._id == oldEventBody._id) {
                         indexOfEvent = i;
                         break;
                     }
@@ -98,6 +101,8 @@ function eventCalendarDirective($rootScope, filterService) {
                 addEvents(newEvDate);
                 
             });
+
+
 
 
             function addEvents(day) {
@@ -163,23 +168,19 @@ function eventCalendarDirective($rootScope, filterService) {
                                     }
                                 }
 
-
-
-
-
                             }
                         }
                     }
-
-
-
-
-
-
-
-
                 }
            }
+
+            function delEvents(day) {
+                var dayCell = $('#'+day);
+                if(dayCell.data('bs.popover')) {
+                   $('#'+day + ' .popover').remove();
+                    dayCell.css('background-color', '');
+                }
+            }
         }
     };
 }
