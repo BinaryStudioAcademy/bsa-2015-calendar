@@ -69,6 +69,10 @@ var userSchema = new Schema({
         type: 'string',
         defaultsTo: ''
     },
+    completedTutorial: {
+        type: 'boolean',
+        defaultsTo: false
+    },
     events: [{type: Schema.Types.ObjectId, ref: 'Event'}],
     googleEvents: [{type: Schema.Types.ObjectId, ref: 'Event'}],
     holidays: [{type: Schema.Types.ObjectId, ref: 'Event'}],
