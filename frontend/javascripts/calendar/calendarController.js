@@ -10,6 +10,10 @@ function CalendarController($document, $modal, $resource, $scope, $rootScope, $s
   var todayDate = Date.now();
   vm.selectedDate = todayDate;
 
+  setInterval(function(){
+    console.log('boom');
+  }, 1000);
+
   vm.logOut = function(){
     LoginService.logOut()
     .then(function(response){

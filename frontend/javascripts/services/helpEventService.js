@@ -321,11 +321,15 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 				});
 	}
 
+	function checkEventNotification(){
+		return $http.get('api/checkNotification');
+	}
+
 	return {
 		getTimeStampsDaily: getTimeStampsDaily,
 		getTimeStamps: getTimeStamps,
-		getDays: getDays,
 		getDaysNames: getDaysNames,
+		getDays: getDays,
 		configureEventData: configureEventData,
 		saveEvent: saveEvent,
 		updateEvent: updateEvent,
@@ -339,6 +343,7 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		getEventTypes: getEventTypes,
 		getUserEvents: getUserEvents,
 		getEventTypesPublicByOwner: getEventTypesPublicByOwner,
-		getAllUserEvents: getAllUserEvents
+		getAllUserEvents: getAllUserEvents,
+		checkEventNotification: checkEventNotification 
 	};
 }
