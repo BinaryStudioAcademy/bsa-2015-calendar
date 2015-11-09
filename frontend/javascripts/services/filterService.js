@@ -9,7 +9,7 @@ function filterService($resource, $rootScope) {
   var resourceEventTypes = $resource('http://localhost:3080/api/eventTypePublicAndByOwner/', {});
   vm.correctFlagsEventTypes = [];
 
-	function getOllEventTypes(){
+	function getAllEventTypes(){
 		return resourceEventTypes.query();
 	}
 
@@ -26,7 +26,7 @@ function filterService($resource, $rootScope) {
   });
 
 	return  {
-		getOllEventTypes: getOllEventTypes,
+		getAllEventTypes: getAllEventTypes,
 		correctFlags: correctFlags
 	};
 }
