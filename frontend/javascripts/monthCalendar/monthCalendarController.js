@@ -10,7 +10,6 @@ MonthController.$inject = ['$rootScope', '$scope', 'helpEventService', 'crudEvEv
 function MonthController($rootScope, $scope, helpEventService, crudEvEventService, $timeout, $q, $uibModal, $stateParams) {
 
     vm = this;
-
     $scope.$on('addedEventMonthView', function(event, selectedDate, eventBody){
         var newEventDate = new moment(eventBody.start);
         var daysDiff = newEventDate.diff(vm.mViewStartMoment,'days');
@@ -198,29 +197,27 @@ function MonthController($rootScope, $scope, helpEventService, crudEvEventServic
     function init() {
         vm.weeks = [];
         vm.events = {};
-        vm.maxEventNameLength = 24;
+        vm.maxEventNameLength = 18;
         vm.maxDisplayEventsNumber = 3;
         vm.allDayEventsTemplateUrl = 'templates/monthCalendar/monthCalendarAllDaysEventTemplate.html';
 
         vm.selected = vm.removeTime(vm.selected || moment());
 
-        var routeMonth, startMonth, endMonth;
+        var startMonth;
         if ($stateParams.year) {
-            routeMonth = moment([$stateParams.year, $stateParams.month, 3]);
             startMonth = moment(new Date($stateParams.year, $stateParams.month, 1));
-            endMonth = moment(new Date($stateParams.year, $stateParams.month, new Date($stateParams.year, $stateParams.month+1, 0).getDate()));
-
         }
+        vm.monthStartMoment = startMonth || moment();
+        vm.monthStartMoment.set({hour: 0, minute: 0});
+        vm.monthStartMoment.startOf('month');
+        vm.monthEndMoment = vm.monthStartMoment.clone().endOf('month');
 
-        var nowMoment = routeMonth || moment();
-        vm.mViewStartMoment = routeMonth || moment({hour: 0, minute: 0});
-        vm.mViewStartMoment.add(-nowMoment.isoWeekday() +1, 'd');
-        vm.mViewEndMoment = vm.mViewStartMoment.clone();
+        vm.mViewStartMoment = vm.monthStartMoment.clone();
+        vm.mViewStartMoment.add(-vm.monthStartMoment.isoWeekday() +1, 'd');
+        vm.mViewEndMoment = vm.mViewStartMoment.clone();    
         vm.mViewEndMoment.add(5, 'w');
         vm.mViewEndMoment.set({'hour': 23, 'minute': 59});
-        vm.monthStartMoment = startMonth || moment().startOf('month');
-        vm.monthEndMoment = endMonth || moment().endOf('month');
-
+       
         //will be pulled from server 
 
         vm.pullData();

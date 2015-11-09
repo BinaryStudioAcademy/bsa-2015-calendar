@@ -29,7 +29,7 @@ RoomRepository.prototype.removeEvent = function(roomId, eventId, callback) {
 
 RoomRepository.prototype.getRoomEventsByInterval = function(roomId, gteDate, lteDate, callback){
 	var model = this.model;
-	var query = model.findOne({_id:roomId}, {events: 1}).populate('events', null, {"start": {"$gte": gteDate, "$lte": lteDate}});
+	var query = model.findOne({_id:roomId}, {events: 1}).populate('events', null, {"start": {"$gte": gteDate, "$lte": lteDate}}, {sort: {"start": 1}});
 	query.exec(callback);
 };
 

@@ -36,6 +36,14 @@ module.exports = function(app) {
 		});
 	}, apiResponse);
 
+	app.get('/api/device/:id/:gteDate/:lteDate', function(req, res, next){
+		deviceRepository.getDeviceEventsByInterval(req.params.id, req.params.gteDate, req.params.lteDate, function(err, data){
+			res.data = data;
+			res.err = err;
+			next();
+		});
+	}, apiResponse);
+
 	app.post('/api/device/', function(req, res, next){
 		console.log(req.body);
 		deviceRepository.add(req.body, function(err, data){
@@ -57,14 +65,6 @@ module.exports = function(app) {
 
 	app.delete('/api/device/:id', function(req, res, next){
 		deviceService.delete(req.params.id, function(err, data){
-			res.data = data;
-			res.err = err;
-			next();
-		});
-	}, apiResponse);
-
-	app.get('/apiold/device/:id/:dateStart/:dateEnd', function(req, res, next){
-		deviceService.availability(req.params.id, req.params.dateStart, req.params.dateEnd, function(err, data){
 			res.data = data;
 			res.err = err;
 			next();
