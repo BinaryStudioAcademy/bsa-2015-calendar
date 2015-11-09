@@ -9,6 +9,12 @@ function EventTypeRepository() {
 
 EventTypeRepository.prototype = new Repository();
 
+EventTypeRepository.prototype.getAllClipped = function(callback){
+    var model = this.model;
+    var query = model.find({}, {ownerId: 1, title: 1, color: 1, icon: 1, isPrivate: 1});
+    query.exec(callback);
+};
+
 EventTypeRepository.prototype.addEvent = function (eventTypeId, eventId, callback) {
     var model = this.model;
     var query = model.findByIdAndUpdate({_id: eventTypeId}, {$push: {events: eventId}});
@@ -31,6 +37,28 @@ EventTypeRepository.prototype.getPublicAndByOwner = function (id, callback) {
     var model = this.model;
     var query = model.find({$or: [{'isPrivate': false}, {'ownerId': id}]});
     query.exec(callback);
+};
+
+EventTypeRepository.prototype.addBasicType = function(basicType) {
+    var model = this.model;
+    model.findOne({'title': basicType.title}, function (err, type) {
+        if(err) {
+            console.log(err);
+            return;
+        }
+        
+        if(!type) {
+            var newitem = new model({'title' : basicType.title, 'isPrivate': false, 'events': [], 'color': basicType.color || '#ccc'});
+            newitem.save();
+        }
+    });
+};
+
+EventTypeRepository.prototype.init = function (types) {
+    for(var i = 0; i < types.length; i++){
+        this.addBasicType(types[i]);
+    }
+
 };
 
 module.exports = new EventTypeRepository();

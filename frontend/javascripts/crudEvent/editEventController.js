@@ -2,179 +2,167 @@ var app = require('../app');
 
 app.controller('editEventController', editEventController);
 
-editEventController.$inject = ['crudEvEventService', 'socketService', 'alertify', 'helpEventService', '$rootScope', '$scope', '$timeout', '$modalInstance', 'selectedDate', 'eventBody', 'viewType'];
+editEventController.$inject = ['crudEvEventService', 'socketService', 'alertify', 'helpEventService', 'AuthService', '$rootScope', '$scope', '$timeout', '$modalInstance', 'selectedDate', 'eventBody', 'viewType', 'rooms', 'devices', 'users', 'eventTypes'];
 
-function editEventController(crudEvEventService, socketService, alertify, helpEventService, $rootScope, $scope, $timeout, $modalInstance, selectedDate, eventBody, viewType) {
+function editEventController(crudEvEventService, socketService, alertify, helpEventService, AuthService, $rootScope, $scope, $timeout, $modalInstance, selectedDate, eventBody, viewType, rooms, devices, users, eventTypes) {
 
 	var vm = this;
 
-	vm.selectedDate = selectedDate;
-	vm.viewType = viewType;
+	var loggedUserId = AuthService.getUser().id;
+	if (!localStorage["userlist"+loggedUserId]) {
+		localStorage.setItem("userlist"+loggedUserId, '[]');
+	}
+	if (!localUsersArr) {
+		var localUsersArr = [];
+	}
 
-	vm.activeTab = function(tab){
-		if(tab === 'plan'){
-			vm.isPlan = true;
-		} else {
-			vm.isPlan = false;
-		}
-		console.log('isPlan', vm.isPlan);
-	};
+	function init(){
 
-	vm.weekDays = [
-		{ name: 'Mo', selected: false },
-		{ name: 'Tu', selected: false },
-		{ name: 'We', selected: false },
-		{ name: 'Th', selected: false },
-		{ name: 'Fr', selected: false },
-		{ name: 'Sa', selected: false },
-		{ name: 'Su', selected: false }
-	];
+		vm.rooms = rooms;
+		vm.devices = devices;
+		vm.users = getUpdateUsers(users);
+		vm.eventTypes = eventTypes;
 
-	vm.planIntervals = [];
+		vm.selectedDate = selectedDate;
+		vm.viewType = viewType;
+		vm.eventBody = eventBody;
 
-	vm.computeIntervals = function(selectedDay){
-		var selectIndex = vm.weekDays.indexOf(selectedDay);
-		console.log('selectIndex', selectIndex);
+		console.log(eventBody);
 
-		var startDay = vm.plan.timeStart.getDay() - 1;
-		if(startDay === -1) {
-			startDay = 6;
-		}
-		console.log('start day', startDay);
+		initEvent();
 
-		if(!vm.planRoom && selectedDay){
-			if(selectedDay.name != vm.weekDays[startDay].name){
-				alertify.error('Please choose a room for your events');
-				selectedDay.selected = false;
-				return;				
+		function initEvent(){
+			vm.event = {};
+			vm.event.users = [];
+			vm.event.devices = [];
+			vm.event.room = {};
+			vm.event.type = {};
+			vm.event.start = vm.eventBody.start;
+			vm.event.end = vm.eventBody.end;
+			vm.event.title = vm.eventBody.title;
+			vm.event.description = vm.eventBody.description;
+
+			if (vm.eventBody.isPrivate !== undefined){
+				vm.event.isPrivate = vm.eventBody.isPrivate;
 			}
-		}
 
-		vm.weekDays[startDay].selected = true;
-
-		var currentDay, i;
-		vm.planIntervals = [];
-
-		if(startDay === 0){
-			currentDay = 0;
-			for(i = 1; i < 7; i++){
-				if(vm.weekDays[i].selected){					
-					vm.planIntervals.push(i - currentDay);
-					currentDay = i;
-				}
+			if(vm.eventBody.price){
+				vm.event.price = vm.eventBody.price;
 			}
-			if(vm.planIntervals.length)
-				vm.planIntervals.push(7 - currentDay);
-		} else if(startDay === 6){
-			currentDay = 0;
-			for(i = 0; i < 6; i++){
-				if(vm.weekDays[i].selected){
-					if(vm.planIntervals.length === 0){
-						vm.planIntervals.push(i - currentDay + 1);
-					} else{
-						vm.planIntervals.push(i - currentDay);
+
+			if (vm.eventBody.room){
+				for (i = 0; i < vm.rooms.length; i++){
+					if(vm.eventBody.room == vm.rooms[i]._id) {
+						vm.event.room._id = vm.rooms[i]._id;
+						vm.event.room.title = vm.rooms[i].title;
+						break;
 					}
-
-					currentDay = i;					
 				}
 			}
 
-			if(vm.planIntervals.length)
-				vm.planIntervals.push(6 - currentDay);
+			if (vm.eventBody.devices){
+				for (j = 0; j < vm.eventBody.devices.length; j++){
+					for (k = 0; k < vm.devices.length; k++){
+						if(vm.eventBody.devices[j] == vm.devices[k]._id) {
+							vm.event.devices.push({_id: vm.devices[k]._id, title: vm.devices[k].title});
+							break;
+						}
+					}
+				}
+			}
 
+			if (vm.eventBody.users){
+				for (var j = 0; j < vm.eventBody.users.length; j++){
+					for (var k = 0; k < vm.users.length; k++){
+						if(vm.eventBody.users[j] == vm.users[k]._id) {
+							vm.event.users.push({_id: vm.users[k]._id, title: vm.users[k].title});
+							break;
+						}
+					}
+				}
+			}
+			console.log('body', vm.eventBody);
+			if (vm.eventBody.type){
+				for (i = 0; i < vm.eventTypes.length; i++){
+					if(vm.eventBody.type == vm.eventTypes[i]._id) {
+						vm.event.type._id = vm.eventTypes[i]._id;
+						vm.event.type.title = vm.eventTypes[i].title;
+						break;
+					}
+				}
+			} 
+
+
+			
+
+			console.log('vm.event = ' ,vm.event);
+
+			vm.eventSuccess = false;
+
+			vm.selectConfigDevices = {
+				buttonDefaultText: 'Select devices',
+				enableSearch: true,
+				scrollableHeight: '200px', 
+				scrollable: true,
+				displayProp: 'title',
+				idProp: '_id',
+				externalIdProp: '',
+			};
+			vm.selectConfigUsers = {
+				buttonDefaultText: 'Add people to event', 
+				enableSearch: true, 
+				smartButtonMaxItems: 3, 
+				scrollableHeight: '200px', 
+				scrollable: true,
+				displayProp: 'name',
+				idProp: '_id',
+				externalIdProp: '',
+			};
+		}	
+	}
+
+	vm.checkDuration = function(){
+		start = new Date(vm.event.start);
+        end = new Date(vm.event.end);
+		diff = end - start;
+		if (diff < 900000){
+			vm.timeError = true;
 		} else {
-			currentDay = startDay;
-			for(i = currentDay + 1; i < 7; i++){
-				if(vm.weekDays[i].selected){
-					vm.planIntervals.push(i - currentDay);
-					currentDay = i;
-				}
-			}
-
-			var daysToEndOfWeek = 6 - currentDay;
-			var isDayOnPreviousWeek = true;
-
-			for(i = 0; i < startDay; i++){
-				if(vm.weekDays[i].selected){
-					if(isDayOnPreviousWeek){
-						vm.planIntervals.push(i + daysToEndOfWeek + 1);
-						isDayOnPreviousWeek = false;
-						currentDay = i;
-					} else{
-						vm.planIntervals.push(i - currentDay);
-						currentDay = i;
-						console.log('i', i);
-						console.log('current day', currentDay);
-					}					
-				}
-			}
-
-			if(vm.planIntervals.length){
-				if(currentDay > startDay){
-					vm.planIntervals.push(6 - currentDay + startDay + 1);
-				} else {
-					vm.planIntervals.push(startDay - currentDay);
-				}
-			}
+			vm.timeError = false;
 		}
-
-		console.log(vm.planIntervals);
-		if(vm.planIntervals.length){
-			vm.plan.intervals = [];
-			vm.plan.rooms = [];
-			for(i = 0; i < vm.planIntervals.length; i++){
-				if(vm.planRoom){
-					vm.plan.rooms.push(vm.planRoom._id);
-				}
-				vm.plan.intervals.push(86400000 * vm.planIntervals[i]);
-			}
-			console.log('plan intervals: ', vm.plan.intervals);
-		}
-
-
 	};
 
-	vm.isPlan = false;
-	vm.formSuccess = false;
-	vm.event = {};
-	vm.plan = {};
-
+	vm.editEvent = function() {
 	
-	helpEventService.getRooms().then(function(data) {
-            if (data !== null){
-                vm.rooms = data;
-            }
-        });
+		console.log('editing');
 
-    helpEventService.getDevices().then(function(data) {
-        if (data !== null){
-            vm.devices = data;
-        }
-    });
-
-    helpEventService.getUsers().then(function(data) {
-        if (data !== null){
-            vm.users = data;
-        }
-    });
-
-    helpEventService.getEventTypes().then(function(data) {
-        if (data !== null){
-            vm.eventTypes = data;
-        }
-    });
-
-
-	dropEventInfo(vm.selectedDate);
-
-	vm.submitModal = function() {
-		console.log('is plan', vm.isPlan);
-		if(vm.isPlan){
-			submitPlan(vm.plan);
-		} else{
-			submitEvent(vm.event);		
+		console.log('vm.event after editing = ', vm.event.title, vm.event.description, vm.event.start, vm.event.end);
+		var event = {};
+		event.title = vm.event.title;
+		event.description = vm.event.description;
+		if (vm.event.isPrivate !== undefined){
+				event.isPrivate = vm.eventBody.isPrivate;
 		}
-		console.log('Modal submited');	
+		event.start = vm.event.start;
+		event.end = vm.event.end;
+		if (vm.event.type) event.type = vm.event.type._id;
+		if (vm.event.price) event.price = vm.event.price;
+		if (vm.event.room) event.room = vm.event.room._id;
+		
+		if(vm.event.devices.length){
+			event.devices = [];
+			for (i = 0; i < vm.event.devices.length; i++){
+				event.devices[i] = vm.event.devices[i]._id;
+			}
+		} 
+		if(vm.event.users.length){
+			event.users = [];
+			for (i = 0; i < vm.event.users.length; i++){
+				event.users[i] = vm.event.users[i]._id;
+			}
+		}
+		console.log('call submiting event to submit = ', event);
+		vm.submitEdit(event);	
 	};
 
 	vm.closeModal = function() {
@@ -182,88 +170,66 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 		console.log('Modal closed');
 	};
 
-	vm.selectConfigDevices = {
-		buttonDefaultText: 'Select devices',
-		enableSearch: true,
-		scrollableHeight: '200px', 
-		scrollable: true,
-		displayProp: 'title',
-		idProp: '_id',
-		externalIdProp: '',
-	};
-	vm.selectConfigUsers = {
-		buttonDefaultText: 'Add people to event', 
-		enableSearch: true, 
-		smartButtonMaxItems: 3, 
-		scrollableHeight: '200px', 
-		scrollable: true,
-		displayProp: 'name',
-		idProp: '_id',
-		externalIdProp: '',
-	};
 
 	vm.selectEventType = function(type) {
-		vm.event.type = type['_id'];
-		vm.eventType = type.title;
+		vm.event.type._id = type._id;
+		vm.event.type.title = type.title;
 	};
 
-	vm.selectPlanType = function(type){
-		vm.plan.type = type['_id'];
-		vm.planType = type.title;
+
+	vm.selectRoom = function(room) {
+		vm.event.room._id = room._id;
+		vm.event.room.title = room.title;
 	};
 
-	vm.selectRoom = function(title) {
-		vm.event.room = title;
+	vm.submitDelete = function(){
+		console.log('deleting an event...');
+
+		helpEventService.deleteEvent(vm.eventBody._id).then(function(response) {
+			console.log('success delete', response);
+			if(response.status == 200 || response.status == 201){
+				//socketService.emit('edit event', { event : response });	
+
+				// тип селектеддейт проверить!
+				crudEvEventService.deletedEventBroadcast(vm.selectedDate, vm.eventBody, vm.viewType);
+
+				$timeout(function() {
+					$modalInstance.close();
+					vm.eventSuccess = false;
+				}, 1500);
+			} else {
+				vm.deletingError = true;
+				return;
+			}
+        });
 	};
 
-	vm.selectPlanRoom = function(title){
-		console.log(title);
-		vm.planRoom = title;
-	};
 
-	function submitEvent(event) {
+	vm.submitEdit = function(event) {
 		console.log('submiting an event...');
+		helpEventService.updateEvent(vm.eventBody._id, event).then(function(response) {
+           	
+			if(response.status == 200 || response.status == 201){
+				vm.eventSuccess = true;
+				dropEventInfo();
+				console.log('success edit', response);
+				//socketService.emit('edit event', { event : response });	
+				// тип селектеддейт проверить!
 
-		helpEventService.saveEvent(event).then(function(response) {
-           	vm.formSuccess = true;
-			dropEventInfo();
-			console.log('success', response);
+				crudEvEventService.editedEventBroadcast(vm.selectedDate, vm.eventBody, response, vm.viewType);
 
-			//socketService.emit('edit event', { event : response });	
-			//$rootScope.$broadcast('eventAdded' + vm.viewType, response);
-			// тип селектеддейт проверить!!!!!!!!!!!!!!!!!!!!!!!
-			crudEvEventService.editedEventBroadcast(vm.selectedDate, response, vm.viewType);
-
-			$timeout(function() {
-				$modalInstance.close();
-				vm.formSuccess = false;
-			}, 1500);
+				$timeout(function() {
+					$modalInstance.close();
+					vm.eventSuccess = false;
+				}, 1500);
+			} else {
+				vm.editingError = true;
+				return;
+			}
         });
-	}
+	};
 
-	function submitPlan(plan){
-		console.log('submiting plan');
-		plan.dateStart = new Date(plan.timeStart);
-		plan.dateEnd = new Date(plan.dateStart);
-		plan.dateEnd.setFullYear(2016);
-
-		console.log('plan', plan);
-
-		helpEventService.savePlan(plan).then(function(response) {
-           	vm.formSuccess = true;
-			dropEventInfo();
-			console.log('success', response);
-
-			//socketService.emit('edit plan', { planEvents : response });	
-
-			//crudEvEventService.editedPlanBroadcast(vm.selectedDate, response, vm.viewType);
-
-			$timeout(function() {
-				$modalInstance.close();
-				vm.formSuccess = false;
-			}, 1500);
-        });
-	}
+	init();
 
 	function dropEventInfo(selDate) {
 
@@ -273,17 +239,6 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 		}
 		newEventDate.setHours(0);
 		newEventDate.setMinutes(0);
-
-		vm.plan.title = '';
-		vm.plan.description = '';
-		vm.plan.timeStart = newEventDate;
-		vm.plan.timeEnd = newEventDate;
-		vm.plan.devices = [];
-		vm.plan.users = [];
-		vm.plan.rooms = [];
-		vm.plan.isPrivate = false;
-		vm.plan.type = undefined;
-		vm.plan.price = undefined;
 
 		vm.event.title = '';
 		vm.event.description = '';
@@ -296,6 +251,57 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 		vm.event.type = undefined;
 		vm.event.price = undefined;
 
-		vm.computeIntervals();
+	}
+
+	function updateLocalArr(userArr) {
+
+		if (userArr.length > 0) {
+			for (var i=0; i < userArr.length; i++) {
+				var index;
+				for (var y=0; y < localUsersArr.length; y++) {
+					if (_.isEqual(userArr[i], localUsersArr[y])) {
+						index = y;
+						break;
+					}
+				}
+				localUsersArr.splice(index, 1);
+			}
+			for (var u=0; u < userArr.length; u++) {
+				localUsersArr.unshift(userArr[u]);
+			}
+			localStorage["userlist"+loggedUserId] = JSON.stringify(localUsersArr);
+		}
+	}
+
+	function getUpdateUsers(data) {
+		localUsersArr = JSON.parse(localStorage.getItem("userlist"+loggedUserId));
+		//left only id and name fields
+		var usersArr = _.map(data, function(item) {return _.pick(item, '_id', 'name');});
+		//add to local array new users from sever
+		_.each(usersArr, function(userArrObj) {
+			var localUsersArrObj = _.find(localUsersArr, function(localUsersArrObj) {
+				return userArrObj['_id'] === localUsersArrObj['_id'];
+			});
+			if (!localUsersArrObj) {
+				localUsersArr.push(userArrObj);
+			}
+		});
+		//delete from local deleted users
+		var delUsers = [];
+		_.each(localUsersArr, function(localUserArrObj) {
+			var usersArrObj = _.find(usersArr, function(usersArrObj) {
+				return usersArrObj['_id'] === localUserArrObj['_id'];
+			});
+			if (!usersArrObj) {
+				delUsers.push(localUserArrObj);
+			}
+		});
+		_.each(delUsers, function(delItem) {
+			_.remove(localUsersArr, function(item) {
+				return item['_id'] === delItem['_id'];
+			});
+		});
+
+        return localUsersArr;
 	}
 }

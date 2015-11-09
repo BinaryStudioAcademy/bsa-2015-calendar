@@ -24,8 +24,9 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 					            { time: '9pm-11pm'},
 						          ];
 						          */
+    var timeStampsDaily = '12am|1am|2am|3am|4am|5am|6am|7am|8am|9am|10am|11am|12pm|1pm|2pm|3pm|4pm|5pm|6pm|7pm|8pm|9pm|10pm|11pm'.split('|');
 
-	 var timeSatmps = [	{ time: '12am'}, 
+	var timeStamps = [	{ time: '12am'}, 
 	 				           	{ time: '1am'}, 
 	 				           	{ time: '2am'},
 	 							{ time: '3am'}, 
@@ -49,7 +50,7 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 	 				            { time: '9pm'},
 	 				            { time: '10pm'},
 	 				            { time: '11pm'},
-	 					        ];
+	 					        ]; 					       
 
 	var days = [	{ name: 'Mon'}, 
 		           	{ name: 'Tue'}, 
@@ -67,13 +68,35 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 	}
 
 	function getTimeStamps(){
-		return timeSatmps;
+		return timeStamps;
+	}
+
+	function getTimeStampsDaily() {
+
+		var timeStampsObj = [];
+
+		var workingHours = [9, 18];
+
+		for(var i=0; i<timeStampsDaily.length; i+=1) {
+			var timeObj = {};
+			timeObj.value = timeStampsDaily[i];
+			if(i >= 9 && i <= 18) {
+				timeObj.isWorkingHour = true;
+			} else {
+				timeObj.isWorkingHour = false;
+			}
+			timeObj.index = i;
+			timeStampsObj.push(timeObj);
+		}
+
+		return timeStampsObj;
 	}
 
 
 	function getDays(){
 		return days;
 	}
+
 
 	function saveEvent(event) {
 		var saveEventPromise = $http.post('api/event/', event)       
@@ -84,6 +107,28 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 			return reason; 		
 		});
 		return saveEventPromise;
+	}
+
+	function updateEvent(eventId, eventBody) {
+		var updateEventPromise = $http.put('api/event/' + eventId, eventBody)       
+		.then(function (response) {
+			console.log('updating event status: ', response.status);
+			return response.data;
+		}, function(reason) {
+			return reason; 		
+		});
+		return updateEventPromise;
+	}
+
+	function deleteEvent(eventId) {
+		var deleteEventPromise = $http.delete('api/event/' + eventId)       
+		.then(function (response) {
+			console.log('deleting event status: ', response.status);
+			return response.data;
+		}, function(reason) {
+			return reason; 		
+		});
+		return deleteEventPromise;
 	}
 
 	function savePlan(plan) {
@@ -124,6 +169,13 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 	}
 
 
+
+	// так делать не надо, есть же пример ниже!!
+	function getAllUserEvents(){
+		return $http.get('api/eventPublicAndByOwner');
+	}
+
+
 	function getEvents(start, stop) {
 		var eventsPromise = $http.get('api/eventByInterval/'+ (+start)+ '/'+ (+stop))       
 		.then(function (response) {
@@ -160,8 +212,14 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		return eventsPromise;
 	}
 
-	function getRooms() {
-		var roomsPromise = $http.get('api/room/')       
+	function getRooms(clipped) {
+		var addStr = '/';
+		if(!clipped){
+			addStr = 'clipped/';
+		} else {
+			addStr = '/';
+		}
+		var roomsPromise = $http.get('api/room'+ addStr)       
 		.then(function (response) {
 			 console.log('success Total rooms: items: ', response.data.length);
 			return response.data;
@@ -177,8 +235,14 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		return roomsPromise;
 	}
 
-	function getDevices() {
-		var devicesPromise = $http.get('api/device/')       
+	function getDevices(clipped) {
+		var addStr = '/';
+		if(!clipped){
+			addStr = 'clipped/';
+		} else {
+			addStr = '/';
+		}
+		var devicesPromise = $http.get('api/device' + addStr)       
 		.then(function (response) {
 			console.log('success Total devices: ', response.data.length);
 			return response.data;
@@ -194,8 +258,14 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		return devicesPromise;
 	}
 
-	function getUsers() {
-		var usersPromise = $http.get('api/user/')       
+	function getUsers(clipped) {
+		var addStr = '/';
+		if(!clipped){
+			addStr = 'clipped/';
+		} else {
+			addStr = '/';
+		}
+		var usersPromise = $http.get('api/user'+ addStr)       
 		.then(function (response) {
 			console.log('success Number of Users: ', response.data.length);
 			return response.data;
@@ -211,8 +281,14 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		return usersPromise;
 	}
 
-	function getEventTypes() {
-		var typesPromise = $http.get('api/eventType/')       
+	function getEventTypes(clipped) {
+		var addStr = '/';
+		if(!clipped){
+			addStr = 'clipped/';
+		} else {
+			addStr = '/';
+		}
+		var typesPromise = $http.get('api/eventType'+ addStr)         
 		.then(function (response) {
 			console.log('success Current number of types: ', response.data.length);
 			return response.data;
@@ -228,10 +304,11 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		return typesPromise;
 	}
 
+
 	function getEventTypesPublicByOwner() {
 		return $http.get('api/eventTypePublicAndByOwner/')
 				.then(function (response) {
-					console.log('success Current number of types: ', response.data.length);
+					console.log('success Current number of types (public by owner): ', response.data.length);
 					return response.data;
 				}, function (reason) {
 					if (reason.status == 404) {
@@ -245,11 +322,14 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 	}
 
 	return {
+		getTimeStampsDaily: getTimeStampsDaily,
 		getTimeStamps: getTimeStamps,
 		getDays: getDays,
 		getDaysNames: getDaysNames,
 		configureEventData: configureEventData,
 		saveEvent: saveEvent,
+		updateEvent: updateEvent,
+		deleteEvent: deleteEvent,
 		savePlan: savePlan,
 		getRooms: getRooms,
 		getDevices: getDevices,
@@ -259,5 +339,6 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		getEventTypes: getEventTypes,
 		getUserEvents: getUserEvents,
 		getEventTypesPublicByOwner: getEventTypesPublicByOwner,
+		getAllUserEvents: getAllUserEvents
 	};
 }

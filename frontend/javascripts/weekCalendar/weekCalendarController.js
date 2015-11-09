@@ -4,12 +4,20 @@ require('moment-range');
 
 app.controller('WeekViewController', WeekViewController);
 
-WeekViewController.$inject = ['crudEvEventService','helpEventService', '$scope', '$uibModal','$compile', '$templateCache'];
+WeekViewController.$inject = ['crudEvEventService','helpEventService', '$scope', '$uibModal','$compile', '$templateCache', '$rootScope', 'filterService'];
 
-function WeekViewController(crudEvEventService,helpEventService, $scope, $uibModal, $compile, $templateCache) {
+function WeekViewController(crudEvEventService,helpEventService, $scope, $uibModal, $compile, $templateCache, $rootScope, filterService) {
 	var vm = this;
+    vm.correctFlagsEventTypes = filterService.correctFlags(); 
+
+    $rootScope.$on('checkEventTypes', function (event, agrs) {           
+        vm.correctFlagsEventTypes = agrs.messege;
+        vm.clearCells();
+        vm.pullData();
+    });       
 
     $scope.$on('eventsUpdated', function() {
+        // console.log('from  $scope.$on eventsUpdated', vm.eventObj);
         vm.buildEventCells(0);
     });
 
@@ -53,7 +61,7 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
         vm.eventObj.splice(indexOfEvent,1);
 
         // подумать над способом перерисовки без очистки всех ячеек
-        clearCells();
+        vm.clearCells();
         vm.buildEventCells(0);
     });
 
@@ -77,62 +85,75 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
         }
 
         // подумать над способом перерисовки без очистки всех ячеек
-        clearCells();
+        vm.clearCells();
         vm.buildEventCells(0);
     });
 
 
-    vm.buildEventCells = function(index){
-        for (var i = index; i < vm.eventObj.length; i++) { 
-            var currEvt = vm.eventObj[i];
-            var evtStart = new Date(currEvt.start);
-            var evtHour = evtStart.getHours();
-            var evtDay = (evtStart.getDay() || 7) - 1;
-            var evtCell = angular.element($('[ng-class="'+ evtHour +'"].'+ vm.daysNames[evtDay]));
-            var eventDiv = angular.element('<div class="event-cell-week"></div>'); 
-            eventDiv.text(currEvt.title);
-            var tmpl = '<div>'+currEvt.description+'</div><div>Start at: '+moment(currEvt.start).format('hh:mm')+'</div><div>End at: '+moment(currEvt.end).format('hh:mm')+'</div>';
-            $templateCache.put('evtTmpl'+i+'.html', tmpl);
-            eventDiv.attr('uib-popover-template', '"evtTmpl'+i+'.html"');
-            eventDiv.attr('popover-title', currEvt.title);
-            eventDiv.attr('popover-append-to-body', "true");
-            eventDiv.attr('trigger', 'focus');
-            eventDiv.attr('index', i);
-            eventDiv.attr('date', evtStart);
-            eventDiv.on( 'dblclick', function(event){
-                var date = new Date($(event.currentTarget).attr('date'));
-                vm.editEvent(date, vm.eventObj[$(event.currentTarget).attr('index')]); 
-                event.stopPropagation();
-            });
-            
-            //background color for different types of events
-            switch(currEvt.type) {
-                case('basic'):
-                    eventDiv.css('background-color', 'rgba(255, 228, 196, 0.7)');
-                    break;
-                case('general'):
-                    eventDiv.css('background-color', 'rgba(135, 206, 250, 0.7)');
-                    break;
-                case('activity'):
-                    eventDiv.css('background-color', 'rgba(60, 179, 113, 0.7)');
-                    break;
-                default:
-                    eventDiv.css('background-color', 'rgba(205, 205, 193, 0.7)');
-            }
 
-            $compile(eventDiv)($scope);
-            evtCell.append(eventDiv);
+    vm.buildEventCells = function(index){
+        // console.log('privet iz buildEventCells1', vm.correctFlagsEventTypes);  
+        // console.log('privet iz buildEventCells2', vm.eventObj);                
+        for (var i = index; i < vm.eventObj.length; i++) {           
+            for (var j = 0; j < vm.correctFlagsEventTypes.length; j++) {
+                if (vm.eventObj[i].type == vm.correctFlagsEventTypes[j]) {
+                    var currEvt = vm.eventObj[i];
+                    var evtStart = new Date(currEvt.start);
+                    var evtHour = evtStart.getHours();
+                    var evtDay = (evtStart.getDay() || 7) - 1;
+                    var evtCell = angular.element($('[ng-class="'+ evtHour +'"].'+ vm.daysNames[evtDay]));
+                    var eventDiv = angular.element('<div class="event-cell-week"></div>'); 
+                    eventDiv.text(currEvt.title);
+                    var tmpl = '<div>'+currEvt.description+'</div><div>Start at: '+moment(currEvt.start).format('hh:mm')+'</div><div>End at: '+moment(currEvt.end).format('hh:mm')+'</div>';
+                    $templateCache.put('evtTmpl'+i+'.html', tmpl);
+                    eventDiv.attr('uib-popover-template', '"evtTmpl'+i+'.html"');
+                    eventDiv.attr('popover-title', currEvt.title);
+                    eventDiv.attr('popover-append-to-body', "true");
+                    eventDiv.attr('trigger', 'focus');
+                    eventDiv.attr('index', i);
+                    eventDiv.attr('date', evtStart);
+                    eventDiv.on( 'dblclick', function(event){
+                        var date = new Date($(event.currentTarget).attr('date'));
+                        vm.editEvent(date, vm.eventObj[$(event.currentTarget).attr('index')]); 
+                        event.stopPropagation();
+                    });
+            
+                    //background color for different types of events
+                    switch(currEvt.type) {
+                        case('basic'):
+                            eventDiv.css('background-color', 'rgba(255, 228, 196, 0.7)');
+                            break;
+                        case('general'):
+                            eventDiv.css('background-color', 'rgba(135, 206, 250, 0.7)');
+                            break;
+                        case('activity'):
+                            eventDiv.css('background-color', 'rgba(60, 179, 113, 0.7)');
+                            break;
+                        default:
+                            eventDiv.css('background-color', 'rgba(205, 205, 193, 0.7)');
+                    }
+
+                    $compile(eventDiv)($scope);
+                    evtCell.append(eventDiv);
+                }
+            }
         }
     };
+
 
     vm.clearCells = function(){
         for(var i = 0; i<7; i++){
             var evtCells = angular.element($('.'+ vm.daysNames[i]));
             for (var j = 0; j <24; j++){
-                evtCells[j].textContent = ''; 
+                if(evtCells[j]){
+                    evtCells[j].textContent = ''; 
+                }
             }
         }
     };
+
+
+
 
     vm.previous = function(){
         vm.clearCells();
@@ -147,9 +168,8 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
    
         helpEventService.getEvents(vm.Start, vm.End).then(function(data) {
             if (data !== null){
-                vm.eventObj = data;
-                console.log(data);
-                $scope.$broadcast('eventsUpdated');
+                vm.eventObj = data;                                           
+                $scope.$broadcast('eventsUpdated');                     
             }
         });
     };
@@ -167,9 +187,8 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
 
         helpEventService.getEvents(vm.Start, vm.End).then(function(data) {
             if (data !== null){
-                vm.eventObj = data;
-                console.log(data);
-                $scope.$broadcast('eventsUpdated');
+                vm.eventObj = data;                                            
+                $scope.$broadcast('eventsUpdated');                           
             }
         });
     };
@@ -190,15 +209,18 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
         crudEvEventService.editingBroadcast(tmpDate, eventBody, 'WeekView');
     };
 
+
+
     vm.pullData = function() {
-        helpEventService.getEvents(vm.Start, vm.End).then(function(data) {
+        helpEventService.getUserEvents(vm.Start, vm.End).then(function(data) {
             if (data !== null){
-                vm.eventObj = data;
-                console.log(data);
-                $scope.$broadcast('eventsUpdated');
+                vm.eventObj = data;                                               
+                $scope.$broadcast('eventsUpdated');                         
             }
         });
     };
+
+
 
     init();
 
@@ -218,5 +240,10 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
 
         // //will be pulled from server 
         vm.pullData();
+
+
+        // vm.correctFlagsEventTypes = filterService.correctFlags();    
+
+
     }
 }

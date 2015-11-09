@@ -20,7 +20,7 @@
 								button(ng-click='calendarCtrl.clearAllEventType()') clear all
 								ul.dropdown-menu(role="menu")
 									form.form-inline
-										li(ng-repeat="eventType in calendarCtrl.eventTypes")
+										li(ng-repeat="eventType in calendarCtrl.ollEventTypes")
 											label.checkbox
 												input(type="checkbox",id="eventType", ng-model = "eventType.flag", name ="{{ eventType.title }}", ng-change = "calendarCtrl.checkFlag(eventType._id)")
 												span.eventTypeFilters {{ eventType.title }}
@@ -51,7 +51,7 @@
 				button(ng-click='calendarCtrl.clearAllEventType()') clear all
 				ul
 					form.form-inline
-						li(ng-repeat="eventType in calendarCtrl.eventTypes")
+						li(ng-repeat="eventType in calendarCtrl.ollEventTypes")
 							label.checkbox
 								input(type="checkbox",id="eventType", ng-model = "eventType.flag", name ="{{ eventType.name }}", ng-change = "calendarCtrl.checkFlag(eventType._id)")
 								span.eventTypeFilters {{ eventType.title }}
@@ -70,9 +70,7 @@
 		.col-sm-10
 			ui-view#calendar-content
 	.container_calendar_footer
-		h4(align='center' style="color: blue") Press  F1 or H, in addiction on your web browser, to help window.
-
-
+		h4(align='center' style="color: blue") Press  F2 to help window.
 
 
 

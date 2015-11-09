@@ -22,6 +22,14 @@ module.exports = function(app) {
 		});
 	}, apiResponse);
 
+	app.get('/api/roomclipped/', function(req, res, next){
+		roomRepository.getAllClipped(function(err, data){
+			res.data = data;
+			res.err = err;
+			next();
+		});
+	}, apiResponse);
+
 	app.get('/api/roomByTitle/:title', function(req, res, next){
 		roomRepository.searchByTitle(req.params.title, function(err, data){
 			res.data = data;

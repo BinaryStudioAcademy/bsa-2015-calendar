@@ -15,17 +15,17 @@
 								.input-group
 									.input-group-addon
 										i.glyphicon.glyphicon-time
-									uib-timepicker(ng-model='createEvCtrl.form.timeStart', show-spinners='false', minute-step=5)
+									uib-timepicker(ng-model='createEvCtrl.form.timeStart', show-meridian='false', show-spinners='false', ng-change='createEvCtrl.checkDuration()', minute-step=5)
 							.col-md-6.col-sm-6.col-xs-6
 								.input-group
 									.input-group-addon
 										i.glyphicon.glyphicon-time
-									uib-timepicker(ng-model='createEvCtrl.form.timeEnd', show-spinners='false', minute-step=5)
+									uib-timepicker(ng-model='createEvCtrl.form.timeEnd', show-meridian='false', show-spinners='false', ng-change='createEvCtrl.checkDuration()', minute-step=5)
 					.form-group
-						.col-md-10.col-sm-10.col-md-offset-2.col-sm-offset-2
-							.alert.alert-danger(role='alert' ng-show='createEvCtrl.form.timeStart > createEvCtrl.form.timeEnd')
+						.col-md-12.col-sm-12
+							.alert.alert-danger(role='alert' ng-show='createEvCtrl.timeError')
 								strong Error!
-								|  Start time must be less than the end time					
+								|  Event duration may be more than 15 minutes					
 					.form-group
 						label.col-md-2.control-label(for="planTitle") Title:
 						.col-md-10
@@ -82,7 +82,7 @@
 												a(href='') 
 													| {{ room.title }}
 									input.form-control(type='text', aria-label='...' ng-model="createEvCtrl.form.room.title" placeholder="Room..." disabled)
-					.form-group(ng-show="createEvCtrl.isPublic")
+					.form-group(ng-show="createEvCtrl.isPublic" autocomplete="off")
 						.col-md-10.col-sm-10.col-md-offset-2.col-sm-offset-2
 							.col-md-6.col-sm-6
 								div(ng-dropdown-multiselect='', 

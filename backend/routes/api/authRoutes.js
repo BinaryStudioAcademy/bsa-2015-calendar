@@ -18,11 +18,11 @@ module.exports = function(app) {
 
 			userGoogleEvents.save(req.body.googleCode, req.body.username);
 
-			eventRepository.getByPrivate(false, function(err, events) {
-			if (err) return console.error(err);
-			events.forEach(function(evnt) {
-				userRepository.addEventByUserName(req.body.username, evnt.id);
-				});
+			eventRepository.getPublic(function(err, events) {
+				if (err) return console.error(err);
+				events.forEach(function(evnt) {
+					userRepository.addEventByUserName(req.body.username, evnt.id);
+				 });
 			});			
 			console.log('user registered!');
 			res.send({success : 'true'});

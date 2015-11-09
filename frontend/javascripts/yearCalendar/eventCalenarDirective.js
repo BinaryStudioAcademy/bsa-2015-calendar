@@ -18,9 +18,12 @@ function eventCalendarDirective() {
                 } 
 
                 for (var item in $scope.dataObj) {
+                    delEvents(item);
                     addEvents(item);
+                    
                 }     
-            });    
+            }); 
+  
 
             $scope.$on('addedPlanYearView', function(event, selectedDate, eventBody) {
                 for (var item=0; item <eventBody.length; item++) {
@@ -74,6 +77,8 @@ function eventCalendarDirective() {
             });
 
 
+
+
             function addEvents(day) {
                 if ($scope.dataObj[day].length > 0) {
                     var dayCell = $('#'+day);
@@ -122,6 +127,14 @@ function eventCalendarDirective() {
                                 break;
                         }
                     }
+                }
+            }
+
+            function delEvents(day) {
+                var dayCell = $('#'+day);
+                if(dayCell.data('bs.popover')) {
+                   $('#'+day + ' .popover').remove();
+                    dayCell.css('background-color', '');
                 }
             }
 

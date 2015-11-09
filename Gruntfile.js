@@ -158,6 +158,7 @@ module.exports = function(grunt) {
 					'bower_components/angular/angular.js',
 					'bower_components/angular-animate/angular-animate.min.js',
 					'bower_components/lodash/dist/lodash.js',
+					'bower_components/lodash/lodash.js',
 					'bower_components/angularjs-dropdown-multiselect/dist/angularjs-dropdown-multiselect.min.js',
 					'bower_components/angular-ui-router/release/angular-ui-router.min.js',
 					'bower_components/angular-resource/angular-resource.js',
@@ -165,7 +166,8 @@ module.exports = function(grunt) {
 					'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
 					'bower_components/angular-socket-io/socket.js',
 					'bower_components/alertify.js/dist/js/alertify.js',
-					'bower_components/alertify.js/dist/js/ngAlertify.js'
+					'bower_components/alertify.js/dist/js/ngAlertify.js',
+					'bower_components/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.js'
 				],
 				dest: 'public/javascripts/libs.js',
 			},
@@ -173,7 +175,8 @@ module.exports = function(grunt) {
 				src: [
 					'bower_components/bootstrap/dist/css/bootstrap.css',
 					'bower_components/font-awesome/css/font-awesome.css',
-					'bower_components/bootstrap-social/bootstrap-social.css'
+					'bower_components/bootstrap-social/bootstrap-social.css',
+					'bower_components/angular-bootstrap-colorpicker/css/colorpicker.css'
 				],
 				dest: 'public/styles/css/libs.css'
 			}
