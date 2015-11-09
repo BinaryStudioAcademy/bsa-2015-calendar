@@ -1,10 +1,10 @@
 var app = require('../app');
 
 app.controller('CalendarController', CalendarController);
-CalendarController.$inject = ['filterService', 'scheduleService', '$document', '$modal', '$resource', '$scope', '$rootScope', '$state', 'LoginService', 'AuthService', 'GoogleAuthService', 'helpEventService'];
 
+CalendarController.$inject = ['filterService', 'scheduleService', '$document', '$modal', '$resource', '$scope', '$rootScope', '$state', 'LoginService', 'AuthService', 'GoogleAuthService', 'helpEventService', '$uibModal', '$location'];
 
-function CalendarController(filterService, scheduleService, $document, $modal, $resource, $scope, $rootScope, $state, LoginService, AuthService, GoogleAuthService, helpEventService) {
+function CalendarController(filterService, scheduleService, $document, $modal, $resource, $scope, $rootScope, $state, LoginService, AuthService, GoogleAuthService, helpEventService, $uibModal, $location) {
 
   var vm = this;
 
@@ -12,6 +12,7 @@ function CalendarController(filterService, scheduleService, $document, $modal, $
 
   var todayDate = Date.now();
   vm.selectedDate = todayDate;
+  var userInfo = AuthService.getUser();
 
   vm.logOut = function(){
     LoginService.logOut()
@@ -30,6 +31,36 @@ function CalendarController(filterService, scheduleService, $document, $modal, $
             }   
     });
   };
+
+  vm.determineOpenedView = function () {
+    var path = $location.path();
+    var openedView = path.split('/')[2];
+    switch(openedView) {
+      case 'dayView' : return 0;
+      case 'weekView' : return 1;
+      case 'monthView' : return 2;
+      case 'yearView' : return 3;
+      default : return 0;
+    }
+  };
+
+  vm.showTutorial = function () {
+    vm.determineOpenedView();
+    var modalInstance = $uibModal.open({
+        animation: true,
+        templateUrl: 'templates/tutorial/tutorial.html',
+        controller: 'tutorialController',
+        controllerAs: 'tutorialCtrl',
+        bindToController: true,
+        resolve: {
+          openedViewIndex: vm.determineOpenedView()
+        }
+    });
+  };
+
+  if(!userInfo.completedTutorial){
+    vm.showTutorial();
+  }
 
   $document.bind("keydown", function(event) {
     // console.log(event.keyCode);
