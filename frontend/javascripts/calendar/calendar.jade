@@ -56,6 +56,8 @@
 			a.btn.btn-block.btn-social.btn-google(ng-controller='GoogleAuthController as gaCtrl'  ng-click='gaCtrl.login()')
 				span.fa.fa-google 
 				| Sync with Google
+			a.btn.btn-block.btn-default(ng-click='calendarCtrl.showTutorial()')
+				| Show Tutorial
 			.filters.hidden-xs
 				h3 Filters
 				button(ng-click='calendarCtrl.selectAllEventType()') select all
