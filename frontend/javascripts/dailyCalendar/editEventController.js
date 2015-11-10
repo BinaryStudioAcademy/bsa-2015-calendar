@@ -242,7 +242,6 @@ function ModalController(DailyCalendarService, socketService, $timeout, $modalIn
 
 					vm.formSuccess = true;
 					console.log('success', response);
-					vm.allEvents.push(vm.event);
 
 					socketService.emit('add plan', { plan : plan });
 				},
