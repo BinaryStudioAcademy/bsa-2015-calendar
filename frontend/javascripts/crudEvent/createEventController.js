@@ -452,55 +452,64 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 
 
 	function updateLocalArr(userArr) {
-
 		if (userArr.length > 0) {
 			for (var i=0; i < userArr.length; i++) {
-				var index;
-				for (var y=0; y < localUsersArr.length; y++) {
-					if (_.isEqual(userArr[i], localUsersArr[y])) {
-						index = y;
-						break;
+				if (userArr[i]['_id'] !== loggedUserId) {
+					var index;
+					for (var y=0; y < localUsersArr.length; y++) {
+						if (userArr[i]['_id'] === localUsersArr[y]['_id']) {
+							index = y;
+							break;
+						}
 					}
+				  localUsersArr.splice(index, 1);
 				}
-				localUsersArr.splice(index, 1);
 			}
 			for (var u=0; u < userArr.length; u++) {
-				localUsersArr.unshift(userArr[u]);
+				if (userArr[u]['_id'] !== loggedUserId) {
+					localUsersArr.unshift(userArr[u]);
+				}
 			}
 			localStorage["userlist"+loggedUserId] = JSON.stringify(localUsersArr);
 		}
 	}
 
-	function getUpdateUsers(data) {
-		localUsersArr = JSON.parse(localStorage.getItem("userlist"+loggedUserId));
-		//left only id and name fields
-		var usersArr = _.map(data, function(item) {return _.pick(item, '_id', 'name');});
-		//add to local array new users from sever
-		_.each(usersArr, function(userArrObj) {
-			var localUsersArrObj = _.find(localUsersArr, function(localUsersArrObj) {
-				return userArrObj['_id'] === localUsersArrObj['_id'];
-			});
-			if (!localUsersArrObj) {
-				localUsersArr.push(userArrObj);
-			}
-		});
-		//delete from local deleted users
-		var delUsers = [];
-		_.each(localUsersArr, function(localUserArrObj) {
-			var usersArrObj = _.find(usersArr, function(usersArrObj) {
-				return usersArrObj['_id'] === localUserArrObj['_id'];
-			});
-			if (!usersArrObj) {
-				delUsers.push(localUserArrObj);
-			}
-		});
-		_.each(delUsers, function(delItem) {
-			_.remove(localUsersArr, function(item) {
-				return item['_id'] === delItem['_id'];
-			});
-		});
+function getUpdateUsers(data) {
+	localUsersArr = [];
+  // localUsersArr = JSON.parse(localStorage.getItem("userlist"+loggedUserId));
+  console.log('IN', localUsersArr);
+  //left only id and name fields
+  var usersArr = _.map(data, function(item) {return _.pick(item, '_id', 'name');});
+  //add to local array new users from sever
+  _.each(usersArr, function(userArrObj) {
+   var localUsersArrObj = _.find(localUsersArr, function(localUsersArrObj) {
+    return userArrObj['_id'] === localUsersArrObj['_id'];
+   });
+   if (!localUsersArrObj) {
+    localUsersArr.push(userArrObj);
+   }
+  });
+  //delete from local deleted users
+  var delUsers = [];
+  _.each(localUsersArr, function(localUserArrObj) {
+   var usersArrObj = _.find(usersArr, function(usersArrObj) {
+    return usersArrObj['_id'] === localUserArrObj['_id'];
+   });
+   if (!usersArrObj) {
+    delUsers.push(localUserArrObj);
+   }
+   if (localUserArrObj['_id'] == loggedUserId) {
+    delUsers.push(localUserArrObj);
+   }
 
+  });
+  _.each(delUsers, function(delItem) {
+   _.remove(localUsersArr, function(item) {
+    return item['_id'] === delItem['_id'];
+   });
+  });
+  console.log('OUT', localUsersArr);
         return localUsersArr;
-	}
+ }
 }
 

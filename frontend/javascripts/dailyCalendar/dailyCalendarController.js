@@ -140,8 +140,10 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
 			// resizeBlock is a little block in the bottom of event block which is created for resizeing event
 			// paragraph - small block which appears on event hover and contain title of the event
 			var block = document.createElement('div');
-			var resizeBlock = document.createElement('div');
+			var resizeBottom = document.createElement('div');
+			var resizeTop = document.createElement('div');
 			var paragraph = document.createElement('div');
+			var icon = document.createElement('div');
 
 			// setting content, class as styles for paragraph
 			paragraph.innerHTML = vm.computedEvents[c].eventAsItIs.title;
@@ -157,22 +159,36 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
 			block.style.height = vm.computedEvents[c].heightVal.toPrecision(3) + 'px';
 			block.style.top = vm.computedEvents[c].topVal.toPrecision(4) + 'px';
 			block.id = vm.computedEvents[c].eventAsItIs._id;
-			block.style.background =  vm.computedEvents[c].eventAsItIs.type.color || COLORS[getRandomInt(0, COLORS.length)];
-			// if(!vm.computedEvents[c].eventAsItIs.type) block.style.background = COLORS[0];
-			// TODO else block.style.background = vm.computedEvents[c].eventAsItIs.type.color;
-			
+			if(!vm.computedEvents[c].eventAsItIs.type) block.style.background = 'grey';
+			else block.style.background = vm.computedEvents[c].eventAsItIs.type.color;
+
+			// if(!vm.computedEvents[c].eventAsItIs.type.icon.css){
+			// 	icon.className = vm.computedEvents[c].eventAsItIs.type.icon.css;
+			// 	icon.style.width = '10%';
+			// 	icon.style.float = 'left';
+			// 	paragraph.appendChild(icon);
+			// }			
 			// setting styles for resize block
-			resizeBlock.style.width = '100%';
-			resizeBlock.style.bottom = '-7px';
-			resizeBlock.style.height = '14px';
-			resizeBlock.style.cursor = 's-resize';
-			resizeBlock.style.zIndex = '11';
-			resizeBlock.style.position = 'absolute';
-			resizeBlock.className = 'resize-block';
+			resizeBottom.style.width = '100%';
+			resizeBottom.style.bottom = '-5px';
+			resizeBottom.style.height = '10px';
+			resizeBottom.style.cursor = 's-resize';
+			resizeBottom.style.zIndex = '11';
+			resizeBottom.style.position = 'absolute';
+			resizeBottom.className = 'resize-block';
+
+			resizeTop.style.width = '100%';
+			resizeTop.style.top = '-5px';
+			resizeTop.style.height = '10px';
+			resizeTop.style.cursor = 's-resize';
+			resizeTop.style.zIndex = '11';
+			resizeTop.style.position = 'absolute';
+			resizeTop.className = 'resize-block-top';
 
 			// appending paragraph and resize block inside event block and appending it to the table of hours
 			block.appendChild(paragraph);
-			block.appendChild(resizeBlock);
+			block.appendChild(resizeBottom);
+			block.appendChild(resizeTop);
 			document.getElementById('day-events-place').appendChild(block);
 		}
 
@@ -377,10 +393,8 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
 							parent.style.height = e.clientY - parent.getBoundingClientRect().top + 'px';
 					// if we move up
 					if(changedMouseY < mouseY){
-						console.log('move up');
 						// and height is still bigger than one quarter of the hour(15 minutes)
 						if(Number(parent.style.height.split('px')[0]) > (parent.parentNode.getBoundingClientRect().height + 1) / 4 / 24){
-							console.log('change height');
 							// we set new height to the event block
 							parent.style.height = e.clientY - parent.getBoundingClientRect().top + 'px';
 						}
@@ -391,6 +405,118 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
 
 					if(Number(parent.style.height.split('px')[0]) > (parent.parentNode.getBoundingClientRect().height + 1) - Number(parent.style.top.split('px')[0]).toPrecision(3))
 						parent.style.height = (parent.parentNode.getBoundingClientRect().height + 1) - Number(parent.style.top.split('px')[0]).toPrecision(3) + 'px';
+				}
+
+				// function which tracks mouse position and changes dynamically the height of the event block
+				function resizeTrackMouseWhenLeave(e) {
+					document.addEventListener('mousemove', resizeTrackMouseDoc);
+					document.addEventListener('mouseleave', resizeMouseAway);
+					document.addEventListener('mouseup', resizeMouseAway);
+				}
+
+				// add event listeners to the resize blocks whicl resizing
+				self.addEventListener('mouseup', resizeMouseAway);
+				self.addEventListener('mouseleave', resizeTrackMouseWhenLeave);
+			}, true);
+		}
+
+		var resizeTops = document.getElementsByClassName('resize-block-top');
+
+		for(var o = 0; o < resizeTops.length; o++){
+			resizeTops[o].addEventListener('mousedown', function(e) {
+				// stop continueing event handling
+				// if comment next line the block can bu drugged while resizing
+				e.stopPropagation();
+
+				var self = this;
+				// remember parent of the resize block(the event block) so we can update dates after resizing
+				var parent = self.parentNode;
+				// y coordinate of the mouse
+				var mouseY = e.offsetY === undefined ? e.layerY : e.offsetY;
+
+				// method that handles when you leave resize block or make mouseup
+				function resizeMouseAway() {
+					// remove event listeners for tracking mousemove, mouseleave and mouseup so it would not track the mouse after we drop the block
+					self.removeEventListener('mouseup', resizeMouseAway);
+					self.removeEventListener('mouseleave', resizeTrackMouseWhenLeave);
+					document.removeEventListener('mousemove', resizeTrackMouseDoc);
+					document.removeEventListener('mouseleave', resizeMouseAway);
+					document.removeEventListener('mouseup', resizeMouseAway);
+
+					var thisEvent = findById(vm.todayEvents, parent.id);
+					var oldStart = new Date(thisEvent.start);
+					var oldEnd = new Date(thisEvent.end);
+					// calculating the newStart date
+					var zeroDate = new Date();
+					zeroDate.setHours(0, 0, 0, 0);
+				
+					var todaysMilSecStart = 86400000 * (Number(parent.style.top.split('px')[0])) / 888;
+					// if the amount of millisecond can't be divided by five minutes we cut eat so it can be
+					if(todaysMilSecStart % 300000 !== 0)
+						todaysMilSecStart -= todaysMilSecStart % 300000;
+
+					// set top property of the event block to the new values which can be divided by 5 minutes
+					
+					var newStart = new Date(zeroDate.getTime() + todaysMilSecStart);
+					newStart.setSeconds(0);
+					newStart.setMilliseconds(0);
+
+					// calculating new height for the block after resizing
+					var newHeight = 86400000 * Number(parent.style.height.split('px')[0]) / 888;
+					// if now the duration of the event(height of the block) can't be divided by 5 minutes, make it dividible
+					if(newHeight % 300000 !== 0) newHeight += (300000 - newHeight % 300000);
+					// if duration is 10 minutes make it 15 minutes, cause 10 is too short
+					if(newHeight === 600000) newHeight += 300000;
+					// set the height of the corrsponding event block to the new duration
+					parent.style.height = 888 * newHeight / 86400000 + 'px';
+					parent.style.top =  888 * todaysMilSecStart / 86400000 + 'px';
+					// calculate new event end on the base of start and duration
+					var newEnd = new Date(newStart.getTime() + newHeight);
+					// remove seconds and mls
+					newEnd.setSeconds(0);
+					newEnd.setMilliseconds(0);
+					newStart.setFullYear(oldStart.getFullYear(), oldStart.getMonth(), oldStart.getDate());
+					newEnd.setFullYear(oldEnd.getFullYear(), oldEnd.getMonth(), oldEnd.getDate());
+					alert('newStart: ' + newStart + ';\nnewEnd: ' + newEnd);
+					// create object to send to the server with new dates
+					var newElement = {
+						start: newStart,
+						end: newEnd
+					};
+					// update dates for event
+					DailyCalendarService.updateEvent(parent.id, newElement);
+					thisEvent.start = newStart;
+					thisEvent.end = newEnd;
+					replaceEvent(vm.todayEvents, thisEvent);
+				}
+
+				function resizeTrackMouseDoc(e) {
+					var clientY = e.clientY;
+					var eventTop = parent.getBoundingClientRect().top;
+					var eventHeight = parent.getBoundingClientRect().height;
+					var minHeight = parent.parentNode.getBoundingClientRect().height / 24 / 4;
+
+					if(clientY > eventTop) {
+						if((clientY - eventTop) > (eventHeight - minHeight)){
+							parent.style.height = minHeight + 'px';
+							parent.style.top = Number(parent.style.top.split('px')[0]) + eventHeight - minHeight + 'px';
+						} else {
+							if(eventHeight > minHeight) {
+								parent.style.height = eventHeight - (clientY - eventTop) + 'px';
+								parent.style.top = Number(parent.style.top.split('px')[0]) + (clientY - eventTop) + 'px';
+							}
+						}
+					}
+
+					if(clientY < eventTop){
+						if((eventTop - clientY) > Number(parent.style.top.split('px')[0])){
+							parent.style.height = eventHeight + Number(parent.style.top.split('px')[0]) + 'px';
+							parent.style.top = '0px';
+						} else {
+							parent.style.height = eventHeight + eventTop - clientY + 'px';
+							parent.style.top = Number(parent.style.top.split('px')[0]) - eventTop + clientY + 'px';
+						}
+					}
 				}
 
 				// function which tracks mouse position and changes dynamically the height of the event block

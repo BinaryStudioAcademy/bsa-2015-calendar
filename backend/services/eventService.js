@@ -11,6 +11,50 @@ var _ = require('lodash');
 var eventService = function(){};
 // сервис для обработки CRUD операций при работе с сущностью - событие
 
+eventService.prototype.checkNotification = function(userId, callback){
+	var events = [];
+	var user;
+
+	//console.log('checking notification');
+
+	async.waterfall([
+		function(cb){
+			userRepository.getById(userId, function(err, result){
+				if(err){
+					return cb(err);
+				}
+				user = result;
+				return cb();
+			});
+		},
+		function(cb){
+			async.forEach(user.events, function(eventId, next){
+				eventRepository.getById(eventId, function(err, data){
+					//console.log('data: ', data);
+					var lapse = new Date(data.start) - new Date();
+					console.log('LAPSE: ', lapse);
+					if(lapse < 300000 && lapse > 0){
+						console.log('pushing lapse', lapse);
+						console.log('pushing ', data);
+						events.push(data);
+					}
+					next();
+				});
+				}, function(err, result){
+						if(err){
+							return cb(err);
+						}
+						return cb();
+			});
+		}
+	], function(err, result){
+		if(err){
+			callback(err, null);
+		}
+		callback(null, events);
+	});
+};
+
 eventService.prototype.add = function(data, callback){ 
 	// операция добавления ивента
 	var event;
