@@ -322,7 +322,7 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 	}
 
 	function checkEventNotification(){
-		return $http.get('api/checkNotification');
+		return $http.get('api/checkEventNotification');
 	}
 
 	return {

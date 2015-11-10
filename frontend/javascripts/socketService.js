@@ -1,7 +1,18 @@
 var app = require('./app');
 
-app.factory('socketService', ['socketFactory', 'alertify', function(socketFactory, alertify){
+app.factory('socketService', ['socketFactory', 'Notification', 'alertify', function(socketFactory, Notification, alertify){
         var socket = socketFactory();
+
+        socket.on('notify', function(events){
+            console.log('notify for events', events);
+          for(var i = 0; i < events.length; i++){
+            var lapse = new Date(events[i].start) - new Date();
+            lapse = lapse / ( 1000 * 60 ) + 1;
+            lapse = Math.floor(lapse);
+            Notification.success({message: "Event '" + events[i].title + "' starts in " + lapse + " minute(s).", delay: 300000});
+            //alertify.delay(300000).closeLogOnClick(true).log("Event '" + result.data[i].title + "' starts in " + lapse + " minutes.");
+          }
+        });
 
         socket.on('add device notification', function(device){
 

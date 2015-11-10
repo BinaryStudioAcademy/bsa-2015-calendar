@@ -15,6 +15,8 @@ eventService.prototype.checkNotification = function(userId, callback){
 	var events = [];
 	var user;
 
+	//console.log('checking notification');
+
 	async.waterfall([
 		function(cb){
 			userRepository.getById(userId, function(err, result){
@@ -28,8 +30,12 @@ eventService.prototype.checkNotification = function(userId, callback){
 		function(cb){
 			async.forEach(user.events, function(eventId, next){
 				eventRepository.getById(eventId, function(err, data){
-					var lapse = new Date(data.startTime) - new Date();
-					if(lapse < 300000){
+					//console.log('data: ', data);
+					var lapse = new Date(data.start) - new Date();
+					console.log('LAPSE: ', lapse);
+					if(lapse < 300000 && lapse > 0){
+						console.log('pushing lapse', lapse);
+						console.log('pushing ', data);
 						events.push(data);
 					}
 					next();

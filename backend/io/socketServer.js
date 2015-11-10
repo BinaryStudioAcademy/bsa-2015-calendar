@@ -32,6 +32,11 @@ module.exports = function(server){
 		// 	socket.disconnect();
 		// });
 
+		socket.on('notify', function(data){
+			console.log('notify about events: ', data);
+			socket.broadcast.emit('notify', data);
+		});
+
 		socket.on('disconnect', function () {
 			// socketManager.removeSocketForUser(socket.request.user._id, socket.id);
 			console.log('user disconnected: ' + socket.request.user.username);
