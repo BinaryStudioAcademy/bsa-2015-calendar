@@ -4,7 +4,7 @@ app.controller('CalendarController', CalendarController);
 
 CalendarController.$inject = ['socketService', 'Notification', 'filterService', 'scheduleService', '$document', '$modal', '$resource', '$scope', '$rootScope', '$state', 'LoginService', 'AuthService', 'GoogleAuthService', 'helpEventService', '$uibModal', '$location'];
 
-function CalendarController(filterService, scheduleService, $document, $modal, $resource, $scope, $rootScope, $state, LoginService, AuthService, GoogleAuthService, helpEventService, $uibModal, $location) {
+function CalendarController(socketService, Notification, filterService, scheduleService, $document, $modal, $resource, $scope, $rootScope, $state, LoginService, AuthService, GoogleAuthService, helpEventService, $uibModal, $location) {
 
   var vm = this;
   vm.eventTypes = [];
@@ -33,7 +33,7 @@ function CalendarController(filterService, scheduleService, $document, $modal, $
       //}
       
     });
-  }, 5000);
+  }, 50000);
 
   vm.logOut = function(){
     LoginService.logOut()
