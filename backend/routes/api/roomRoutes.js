@@ -22,8 +22,24 @@ module.exports = function(app) {
 		});
 	}, apiResponse);
 
+	app.get('/api/roomclipped/', function(req, res, next){
+		roomRepository.getAllClipped(function(err, data){
+			res.data = data;
+			res.err = err;
+			next();
+		});
+	}, apiResponse);
+
 	app.get('/api/roomByTitle/:title', function(req, res, next){
 		roomRepository.searchByTitle(req.params.title, function(err, data){
+			res.data = data;
+			res.err = err;
+			next();
+		});
+	}, apiResponse);
+
+	app.get('/api/room/events/:id/:gteDate/:lteDate', function(req, res, next){
+		roomRepository.getRoomEventsByInterval(req.params.id, req.params.gteDate, req.params.lteDate, function(err, data){
 			res.data = data;
 			res.err = err;
 			next();
@@ -49,14 +65,6 @@ module.exports = function(app) {
 
 	app.delete('/api/room/:id', function(req, res, next){
 		roomService.delete(req.params.id, function(err, data){
-			res.data = data;
-			res.err = err;
-			next();
-		});
-	}, apiResponse);	
-
-	app.get('/apiold/room/:id/:dateStart/:dateEnd', function(req, res, next){
-		roomService.availability(req.params.id, req.params.dateStart, req.params.dateEnd, function(err, data){
 			res.data = data;
 			res.err = err;
 			next();

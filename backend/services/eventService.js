@@ -94,6 +94,36 @@ eventService.prototype.add = function(data, callback){
 				cb();
 			}
 		},
+		function(cb){ //add event to owner events
+			if(event.ownerId){
+				userRepository.addEvent(event.ownerId, event._id, function(err, data){
+	 				if(err){				
+	 					return cb(err, null);
+	 				}
+	 				console.log('added to user');
+				});
+				cb();
+			}
+			else{
+				console.log('no ownerId');
+				cb();
+			}
+		}, 
+		function(cb){ //add to all public events
+			if(event.isPrivate === false){
+				userRepository.addEventToAll(event._id, function(err, data){
+	 				if(err){				
+	 					return cb(err, null);
+	 				}
+	 				console.log('added to all users');
+				});
+				cb();
+			}
+			else{
+				console.log('event is private');
+				cb();
+			}
+		},
 		function(cb){ // добавляем запись об ивенте в каждый экземпляр device
 			if(event.devices.length){
 				event.devices.forEach(function(deviceId){
@@ -158,6 +188,7 @@ eventService.prototype.delete = function(eventId, callback){
 			if (event.room !== undefined){
 				roomRepository.removeEvent(event.room, eventId, function(err, data){
 	 				if(err){
+	 					console.log('removing from room err');
 	 					return	cb(err, null);
 	 				}
 	 				console.log('delete from room');
@@ -176,6 +207,7 @@ eventService.prototype.delete = function(eventId, callback){
 				event.users.forEach(function(userId){
 					userRepository.removeEvent(userId, eventId, function(err, data){
 	 					if(err){
+	 						console.log('removing from users err');
 	 						return	cb(err, null);
 	 					}
 	 					console.log('delete from user');
@@ -194,6 +226,7 @@ eventService.prototype.delete = function(eventId, callback){
 				event.devices.forEach(function(deviceId){
 					deviceRepository.removeEvent(deviceId, eventId, function(err, data){
 	 					if(err){
+	 						console.log('removing from devices err');
 	 						return	cb(err, null);
 	 					}
 	 					console.log('delete from device');
@@ -212,6 +245,7 @@ eventService.prototype.delete = function(eventId, callback){
 			if (event.type !== undefined){
 				eventTypeRepository.removeEvent(event.type, eventId, function(err, data){
  					if(err){
+ 						console.log('removing from eventTypes err');
  						return	cb(err, null);
  					}
  					console.log('delete from eventType');
@@ -228,7 +262,9 @@ eventService.prototype.delete = function(eventId, callback){
 
 		function(cb){ // удаляем запись об event из групповых попдисок
 			groupRepository.removeEvent(eventId, function(err, data){
+				// игнорируем ошибки
 				if(err){
+					console.log('removing from groups err');
 					return	cb(err, null);
 				}
 				console.log('delete from groups');
@@ -239,18 +275,21 @@ eventService.prototype.delete = function(eventId, callback){
 		function(cb){
 			eventRepository.delete(event._id, function(err, data){
 				if(err){
+					console.log('removing from repository err');
 					return cb(err, null);
 				}
+				console.log(data);
 				cb(null, data);
 			});
 		} // удаляем event из БД
 
 	], function(err, result){
 		if(err){
-			//console.log(err);
+			console.log(err);
 			return callback(err, {success: false});
 		}
-		return callback(null, {success: true});
+		console.log(result);
+		return callback(null, result);
 	});
 };
 
@@ -373,22 +412,49 @@ eventService.prototype.update = function(eventId, newEvent, callback){
 						return cb(err, null);
 					}
 				}); // добавляем запись об ивенте в новую комнату
+			}
+			cb();
+		},
+		function(cb){
+				async.waterfall([
 
+				function(cb){ 
+					eventRepository.update(eventId, newEvent, function(err, data){
+						if(err){
+							return cb(err, data);
+						}
+						cb();
+					});
+				}, // обновляем экземпляр event
+				
+				function(cb){
+					eventRepository.getById(eventId, function(err, data){
+						if (!data){
+							return cb(new Error("incorrect eventId " + eventId));
+						}
+						if(err){				
+							return cb(err);
+						}
+						else{
+							console.log(data);
+							cb(null, data);
+						}		
+					});
+				}],
+			 	function(err, result){
+					if(err){
+						return callback(err, result);	
+					}
+					return cb(null, result);	
+				});
 			}
 
-			eventRepository.update(eventId, newEvent, function(err, data){
-				if(err){
-					return cb(err, data);
-				}
-			}); // обновляем экземпляр event
-
-			cb();
-		}
 	], function(err, result){
 		if(err){
 			return callback(err, {success: false});
 		}
-		return callback(null, data);
+		return callback(null, result);
+
 	});
 };
 

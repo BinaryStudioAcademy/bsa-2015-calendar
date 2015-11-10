@@ -2,6 +2,7 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var User = require('../../schemas/userSchema');
 var userRepository = require('../../repositories/userRepository');
+var eventRepository = require('../../repositories/eventRepository');
 var userGoogleEvents = require('./../../googleapi/Events/userGoogleEvents');
 
 module.exports = function(app) {
@@ -16,9 +17,16 @@ module.exports = function(app) {
 			}
 
 			userGoogleEvents.save(req.body.googleCode, req.body.username);
+
+			eventRepository.getPublic(function(err, events) {
+				if (err) return console.error(err);
+				events.forEach(function(evnt) {
+					userRepository.addEventByUserName(req.body.username, evnt.id);
+				 });
+			});			
 			console.log('user registered!');
 			res.send({success : 'true'});
-		});		
+		});
 	});
 
 	app.post('/api/login', function(req, res, next){
@@ -31,10 +39,12 @@ module.exports = function(app) {
 			req.logIn(user, function(err){
 				if(err) { return next(err); }
 				var userInfo = {
+					id : req.user._id,
 					username : req.user.username,
 					name : req.user.name,
 					events : req.user.events,
-					groups : req.user.groups
+					groups : req.user.groups,
+					completedTutorial: req.user.completedTutorial
 				};
 
 				return res.send({ user : userInfo });

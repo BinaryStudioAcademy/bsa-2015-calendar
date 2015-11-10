@@ -20,9 +20,24 @@ module.exports = function(app) {
 		});
 	}, apiResponse);
 
+	app.get('/api/deviceclipped/', function(req, res, next){
+		deviceRepository.getAllClipped(function(err, data){
+			res.data = data;
+			res.err = err;
+			next();
+		});
+	}, apiResponse);
 
 	app.get('/api/deviceByTitle/:title', function(req, res, next){
 		deviceRepository.searchByTitle(req.params.title, function(err, data){
+			res.data = data;
+			res.err = err;
+			next();
+		});
+	}, apiResponse);
+
+	app.get('/api/device/events/:id/:gteDate/:lteDate', function(req, res, next){
+		deviceRepository.getDeviceEventsByInterval(req.params.id, req.params.gteDate, req.params.lteDate, function(err, data){
 			res.data = data;
 			res.err = err;
 			next();
@@ -50,14 +65,6 @@ module.exports = function(app) {
 
 	app.delete('/api/device/:id', function(req, res, next){
 		deviceService.delete(req.params.id, function(err, data){
-			res.data = data;
-			res.err = err;
-			next();
-		});
-	}, apiResponse);
-
-	app.get('/apiold/device/:id/:dateStart/:dateEnd', function(req, res, next){
-		deviceService.availability(req.params.id, req.params.dateStart, req.params.dateEnd, function(err, data){
 			res.data = data;
 			res.err = err;
 			next();

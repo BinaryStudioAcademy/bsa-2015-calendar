@@ -1,4 +1,4 @@
-var app = angular.module('calendar-app', ['ui.router', 'ngAlertify', 'btford.socket-io', 'ngResource', 'ui.bootstrap', 'ngAnimate', 'angularjs-dropdown-multiselect'])
+var app = angular.module('calendar-app', ['ui.checkbox', 'colorpicker.module', 'ui.router', 'ngAlertify', 'btford.socket-io', 'ngResource', 'ui.bootstrap', 'ngAnimate', 'angularjs-dropdown-multiselect'])
     .config(['$stateProvider', '$urlRouterProvider', '$resourceProvider', '$httpProvider', '$locationProvider',
         function ($stateProvider, $urlRouterProvider, $resourceProvider, $httpProvider, $locationProvider) {
             $urlRouterProvider.otherwise('/');
@@ -71,6 +71,13 @@ var app = angular.module('calendar-app', ['ui.router', 'ngAlertify', 'btford.soc
                     controllerAs: 'mCtrl',
                     auth: true
                 })
+                .state('calendar.monthViewFromYear', {
+                    url: '/monthView/:year/:month',
+                    templateUrl: './templates/monthCalendar/monthCalendar.html',
+                    controller: 'MonthController',
+                    controllerAs: 'mCtrl',
+                    auth: true
+                })
                 .state('calendar.createNewDevice', {
                     url: '/createNewDevice',
                     templateUrl: './templates/createNew/NewDevice/createNewDeviceTemplate.html',
@@ -102,8 +109,14 @@ var app = angular.module('calendar-app', ['ui.router', 'ngAlertify', 'btford.soc
 		}
 	]);
 
-app.run(['$rootScope', '$state', 'AuthService', '$anchorScroll', function($rootScope, $state, AuthService, $anchorScroll) {
-	$rootScope.$on('$stateChangeStart', function(evt, to, params) {
+app.run(['crudEvEventService', '$rootScope', '$state', '$window', 'AuthService', '$anchorScroll', function(crudEvEventService, $rootScope, $state, $window, AuthService, $anchorScroll) {
+	
+    console.log('editing service listen call');
+    crudEvEventService.editingListen();
+    console.log('creating service listen call');
+    crudEvEventService.creatingListen();
+
+    $rootScope.$on('$stateChangeStart', function(evt, to, params) {
 		if (to.redirectTo) {
 			evt.preventDefault();
 			$state.go(to.redirectTo, params);
@@ -113,7 +126,21 @@ app.run(['$rootScope', '$state', 'AuthService', '$anchorScroll', function($rootS
         //console.log('STATECHANGE!');
         //console.log('AUTHService.getUser(): ', AuthService.getUser());
 
-        
+        AuthService.checkAuth()
+        .then(function(response){
+            console.log('check auth response', response);
+            if(!response.data.user){
+                AuthService.unSetUser();
+                if(to.auth){
+                    $state.transitionTo('signIn');
+                    $window.location.reload();
+                }
+            }
+        })
+        .then(function(response){
+            console.log('error check auth response: ', response);
+        });
+
         if(to.auth && !AuthService.getUser()){
             evt.preventDefault();
             $state.transitionTo('signIn');          

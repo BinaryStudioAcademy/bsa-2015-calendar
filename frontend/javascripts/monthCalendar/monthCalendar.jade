@@ -1,2 +1,32 @@
-div(ng-controller='MonthController')
-    calendar(selected='day')
+#monthView(ng-cloak)
+    //-div(ng-controller='LayoutController')
+    //-crud-event-directive(clickedDate = 'mCtrl.monthStartMoment()', event='mCtrl.weeks[0]')
+    div.month-header
+        i.glyphicon.pull-left.glyphicon-chevron-left.bigger-icon.month-chevron(class="btn btn-large btn-info" ng-click='mCtrl.previous()')
+        span.month-header-title {{mCtrl.monthStartMoment.format("MMMM, YYYY")}}
+        i.glyphicon.pull-right.glyphicon-chevron-right.bigger-icon.month-chevron(class="btn btn-large btn-info" ng-click='mCtrl.next()')
+    div
+        table.month-table-grid(width="100%")
+            col(width='14.28%')
+            col(width='14.28%')
+            col(width='14.28%')
+            col(width='14.29%')
+            col(width='14.29%')
+            col(width='14.29%')
+            col(width='14.29%')
+            tr
+                th.tg-month-yw4l.month-day-header Mon
+                th.tg-month-yw4l.month-day-header Tue
+                th.tg-month-yw4l.month-day-header Wed
+                th.tg-month-yw4l.month-day-header Thu
+                th.tg-month-yw4l.month-day-header Fri
+                th.tg-month-yw4l.month-day-header.dayoff Sat
+                th.tg-month-yw4l.month-day-header.dayoff Sun
+            tr(ng-repeat='week in mCtrl.weeks')
+                //-| filter : mCtrl.selectTypeEvent 
+                td.tg-month-yw4l.month-day(ng-dblClick="mCtrl.createEvent(day.date)", ng-class="{ 'month-day-today': day.isToday, 'different-month': !day.isCurrentMonth, 'dayoff': $last || $index == 5}", ng-repeat='day in week.days') {{day.number}} 
+                    div.month-event(ng-repeat='event in day.events | filter : mCtrl.selectTypeEvent | limitTo: (mCtrl.maxDisplayEventsNumber)',
+                    ng-dblClick="mCtrl.editEvent(day.date, event); $event.stopPropagation();", uib-popover='Starting at {{event.momentStartDate.format("HH:mm")}}', popover-trigger='mouseenter', popover-title='{{event.title | limitTo: mCtrl.maxEventNameLength}}') {{event.title | limitTo: mCtrl.maxEventNameLength}}
+                    button.btn-link.month-all-events(ng-show='day.events.length > mCtrl.maxDisplayEventsNumber', ng-click='mCtrl.showAllDayEvents(day)',
+                        uib-popover-template='mCtrl.allDayEventsTemplateUrl', popover-trigger='focus', popover-title="Events for {{day.date.format('MMMM Do')}}") Show all&nbsp;
+                        span.badge.month-badge {{day.events.length}}

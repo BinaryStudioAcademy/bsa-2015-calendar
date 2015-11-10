@@ -1,63 +1,102 @@
 var app = require('../../app');
 
 app.controller('createNewEventTypeController', createNewEventTypeController);
-createNewEventTypeController.$inject = ['$scope', 'createNewEventTypeService'];
+createNewEventTypeController.$inject = ['$scope', 'createNewEventTypeService', 'AuthService', '$rootScope'];
 
-function createNewEventTypeController($scope, createNewEventTypeService){
-  var vm = this;
-  vm.showEventTypesList = false;
-  vm.eventTypes = createNewEventTypeService.getEventTypes();
+function createNewEventTypeController($scope, createNewEventTypeService, AuthService, $rootScope) {
+    var vm = this;
+    vm.eventTypes = [];
 
-  vm.toggleViewEventType = function(){
-      vm.showEventTypesList = !vm.showEventTypesList;
-      vm.eventTypes = createNewEventTypeService.getEventTypes();
-  };
+    vm.inputStyles = [];
 
-  vm.reset = function (){
-      vm.eventType.title = '';
-      // vm.eventType.events = '';
-  };
+    vm.inputStyle = {};
 
-  vm.addEventType = function(){
-      var newEventType = {title: vm.eventType.title};
-      console.log(newEventType); 
-      createNewEventTypeService.saveEventType(newEventType)
-        .$promise.then(
-          function(response) {
-            vm.eventTypes.push(response);         
-            console.log('success function addEventType', response);
-          },
-          function(response) {
-            console.log('failure function addEventType', response);
-          } 
-        );  
-      vm.eventType.title = '';
-  };
+    vm.changeStyle = function(type){
+        if(!type){
+            vm.inputStyle = {
+                background: vm.eventType.color
+            };            
+        } else {
+            vm.inputStyles[type._id] = {
+                background: type.color
+            };
+        }
 
+    };
 
-  vm.updateEventType = function(eventType){  
-    console.log('element', eventType); 
-    createNewEventTypeService.updateEventType(eventType)   
-      .$promise.then(
-        function(response) {   
-          console.log('success function updateEventType', response);
-        },
-        function(response) {
-          console.log('failure function updateEventType', response);
-        } 
-      ); 
-  };
+    createNewEventTypeService.getEventTypesPublicByOwner()
+    .then(function(response){
+        vm.eventTypes = response.data;
 
-  vm.deleteEventType = function(eventType, $index){
-    createNewEventTypeService.deleteEventType(eventType)
-      .$promise.then(
-        function(response) {
-          console.log('success function deleteEventType', response);
-          vm.eventTypes.splice($index, 1);
-        },
-        function(response) {
-          console.log('failure function deleteEventType', response);
-        } 
-      );
-  };
+        for(var i = 0; i < vm.eventTypes.length; i++){
+            vm.inputStyles[vm.eventTypes[i]._id] = vm.eventTypes[i].color;
+            vm.changeStyle(vm.eventTypes[i]);
+        }
+
+    });
+
+    vm.reset = function () {
+        vm.eventType.title = '';
+        vm.eventType.isPrivate = false;
+        vm.eventType.color = '';
+        vm.changeStyle();
+        // vm.eventType.events = '';
+    };
+
+    vm.getCurrentUser = function(){
+        return AuthService.getUser();
+    };
+
+    vm.addEventType = function () {
+        //console.log(AuthService.getUser());
+        var newEventType = {
+            title: vm.eventType.title,
+            color: vm.eventType.color,
+            isPrivate: vm.eventType.isPrivate,
+            ownerId: AuthService.getUser().id
+        };
+        console.log(newEventType);
+        createNewEventTypeService.saveEventType(newEventType)
+            .$promise.then(
+            function (response) {
+                vm.eventTypes.push(response);
+                vm.changeStyle(response);
+                console.log('success function addEventType', response);
+
+                $rootScope.$broadcast('newEventTypeAdded', response);
+            },
+            function (response) {
+                console.log('failure function addEventType', response);
+            }
+        );
+        vm.reset();
+    };
+
+    vm.updateEventType = function (eventType) {
+        console.log('element', eventType);
+        createNewEventTypeService.updateEventType(eventType)
+            .$promise.then(
+            function (response) {
+                console.log('success function updateEventType', response);
+            },
+            function (response) {
+                console.log('failure function updateEventType', response);
+            }
+        );
+    };
+
+    vm.deleteEventType = function (eventType, $index) {
+        createNewEventTypeService.deleteEventType(eventType)
+            .$promise.then(
+            function (response) {
+                console.log('success function deleteEventType', response);
+                vm.eventTypes.splice($index, 1);
+
+                $rootScope.$broadcast('eventTypeDeleted', response);
+            },
+            function (response) {
+                console.log('failure function deleteEventType', response);
+            }
+        );
+    };
 }

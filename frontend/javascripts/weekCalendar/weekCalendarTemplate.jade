@@ -1,9 +1,9 @@
 #weekView(ng-cloak)
   div
     .week_header
-      i.glyphicon.pull-left.week-chevron.glyphicon-chevron-left.bigger-icon.week_prev(class="btn btn-large btn-info"  ng-click='wCtrl.prevWeek()') 
+      i.glyphicon.pull-left.week-chevron.glyphicon-chevron-left.bigger-icon.week_prev(class="btn btn-large btn-info"  ng-click='wCtrl.previous()') 
       span.week_header_title {{wCtrl.Start | date: 'd MMM yyyy'}} - {{wCtrl.End | date: 'd MMM yyyy'}}
-      i.glyphicon.pull-right.week-chevron.glyphicon-chevron-right.bigger-icon.week_next(class="btn btn-large btn-info" ng-click='wCtrl.nextWeek()')
+      i.glyphicon.pull-right.week-chevron.glyphicon-chevron-right.bigger-icon.week_next(class="btn btn-large btn-info" ng-click='wCtrl.next()')
 
     .content_for_week(time-week-directive events-week-directive)
       table.week_in_table(width='100%')
@@ -20,11 +20,12 @@
                 th.tg-month-yw4l.month-day-header.dayoff Sun
         tr(ng-repeat="timeSt in wCtrl.timeStamps")
           td.hourCell {{timeSt.time}}
-          td.eventCell.mon(ng-class='{{$index}}', ng-dblclick = 'wCtrl.showCloseModal(0, $index)')
-          td.eventCell.tue(ng-class='{{$index}}', ng-dblclick = 'wCtrl.showCloseModal(1, $index)')
-          td.eventCell.wed(ng-class='{{$index}}', ng-dblclick = 'wCtrl.showCloseModal(2, $index)')
-          td.eventCell.thu(ng-class='{{$index}}', ng-dblclick = 'wCtrl.showCloseModal(3, $index)')
-          td.eventCell.fri(ng-class='{{$index}}', ng-dblclick = 'wCtrl.showCloseModal(4, $index)')
-          td.eventCell.sat(ng-class='{{$index}}', ng-dblclick = 'wCtrl.showCloseModal(5, $index)')
-          td.eventCell.sun(ng-class='{{$index}}', ng-dblclick = 'wCtrl.showCloseModal(6, $index)')
+          //-td.eventCell(ng-repeat="day in wCtrl.daysNames"ng-class='{{$index}}', ng-dblclick = 'wCtrl.createEvent(0, $index)')
+          td.eventCell.mon(ng-class='{{$index}}', ng-dblclick = 'wCtrl.createEvent(0, $index)')
+          td.eventCell.tue(ng-class='{{$index}}', ng-dblclick = 'wCtrl.createEvent(1, $index)')
+          td.eventCell.wed(ng-class='{{$index}}', ng-dblclick = 'wCtrl.createEvent(2, $index)')
+          td.eventCell.thu(ng-class='{{$index}}', ng-dblclick = 'wCtrl.createEvent(3, $index)')
+          td.eventCell.fri(ng-class='{{$index}}', ng-dblclick = 'wCtrl.createEvent(4, $index)')
+          td.eventCell.sat(ng-class='{{$index}}', ng-dblclick = 'wCtrl.createEvent(5, $index)')
+          td.eventCell.sun(ng-class='{{$index}}', ng-dblclick = 'wCtrl.createEvent(6, $index)')
 

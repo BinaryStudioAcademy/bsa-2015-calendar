@@ -1,0 +1,120 @@
+#editEvent(ng-cloak)
+.modal-body.clearfix
+	button.close(type='button' ng-click='editEvCtrl.closeModal()') ×
+	ul.nav.nav-tabs(role='tablist')
+			form(role='form' name='newEventForm')
+				form.form-horizontal
+					.form-group
+						label.col-md-2.col-sm-2.control-label Time:
+						.col-md-10.col-sm-10
+							.col-md-6.col-sm-6.col-xs-6
+								.input-group
+									.input-group-addon
+										i.glyphicon.glyphicon-time
+									uib-timepicker#startTime(ng-model='editEvCtrl.event.start', show-meridian='false', show-spinners='false', ng-change='editEvCtrl.checkDuration()', minute-step=5)
+							.col-md-6.col-sm-6.col-xs-6
+								.input-group
+									.input-group-addon
+										i.glyphicon.glyphicon-time
+									uib-timepicker#endTime(ng-model='editEvCtrl.event.end', show-meridian='false', show-spinners='false', ng-change='editEvCtrl.checkDuration()', minute-step=5)
+						.form-group.clearfix
+							.col-md-12.col-sm-12
+								.alert.alert-danger(role='alert' ng-show='editEvCtrl.timeError')
+									strong Error!
+									|  Event duration may be more than 15 minutes			
+					.form-group.text-center
+						.col-md-10.col-sm-10.col-md-offset-2.col-sm-offset-2
+							.col-md-6.col-sm-6.col-xs-6
+								span.badge
+									| {{editEvCtrl.event.start | date: 'short'}}
+							.col-md-6.col-sm-6.col-xs-6
+								span.badge
+									| {{editEvCtrl.event.end | date: 'short' }}
+					.form-group
+						label.col-md-2.control-label(for="eventTitle") Title:
+						.col-md-10
+							.col-md-12
+								input.form-control(type='text', id="eventTitle" placeholder='Name the event...', ng-model="editEvCtrl.event.title", required)
+					.form-group
+						label.col-md-2.control-label(for="eventDescription") About:
+						.col-md-10
+							.col-md-12
+								textarea.form-control(rows='5', id="eventDescription" placeholder='Description...', ng-model="editEvCtrl.event.description" required) 
+					.form-group
+						label.col-md-2.col-sm-2.control-label Organization:
+						.col-md-10.col-sm-10
+							.col-md-6.col-sm-6.col-xs-6
+								.input-group
+									.input-group-addon 
+										i.glyphicon.glyphicon-piggy-bank
+									input.form-control(type='text', placeholder='Price...', ng-model='editEvCtrl.event.price')
+							.col-md-6.col-sm-6.col-xs-6
+								.input-group
+									.input-group-btn
+										button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+											| Type 
+											span.caret
+										ul.dropdown-menu
+											li(ng-repeat="type in editEvCtrl.eventTypes" ng-click="editEvCtrl.selectEventType(type)")
+												a(href="") 
+													| {{ type.title }}
+									input.form-control(type='text', aria-label='...' ng-model="editEvCtrl.event.type.title" placeholder="..." 
+									)
+					.form-group
+						.col-md-10.col-sm-10.col-md-offset-2.col-sm-offset-2
+							.col-md-6.col-sm-6
+								.input-group
+									.input-group-btn
+										button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+											span
+												i.glyphicon.glyphicon-home
+										ul.dropdown-menu.scrollable-menu
+											li(ng-repeat="room in editEvCtrl.rooms" ng-click="editEvCtrl.selectRoom(room)")
+												a(href='') 
+													| {{ room.title }}
+									input.form-control(type='text', aria-label='...' ng-model="editEvCtrl.event.room.title" placeholder="Room..." disabled)
+							.col-md-6.col-sm-6
+								.checkbox
+									label
+										input(type='checkbox', value='', ng-model='editEvCtrl.event.isPrivate')
+										| &nbsp;Private
+					.form-group
+						.col-md-10.col-sm-10.col-md-offset-2.col-sm-offset-2
+							.col-md-6.col-sm-6
+								div(ng-dropdown-multiselect='', 
+									translation-texts='editEvCtrl.selectConfigDevices', 
+									selected-model='editEvCtrl.event.devices', 
+									options='editEvCtrl.devices', 
+									extra-settings='editEvCtrl.selectConfigDevices')
+							.col-md-6.col-sm-6
+								div(ng-dropdown-multiselect='', 
+									translation-texts='editEvCtrl.selectConfigUsers', 
+									selected-model='editEvCtrl.event.users', 
+									options='editEvCtrl.users', 
+									extra-settings='editEvCtrl.selectConfigUsers')
+.modal-footer
+	.save-area
+		.alert.alert-success.alert-dismissible(role='alert' ng-show='editEvCtrl.formSuccess')
+			button.close(type='button', data-dismiss='alert', aria-label='Close')
+				span(aria-hidden='true')
+					i.glyphicon.glyphicon-remove
+			strong Success!
+			|  You've just saved the event! Check the calendar now.
+		.alert.alert-danger.alert-dismissible(role='alert' ng-show='editEvCtrl.deletingError')
+			button.close(type='button', data-dismiss='alert', aria-label='Close')
+				span(aria-hidden='true')
+					i.glyphicon.glyphicon-remove
+			strong Error!
+			|  Some error with deleting this event. We're sorry!
+		.alert.alert-danger.alert-dismissible(role='alert' ng-show='editEvCtrl.editingError')
+			button.close(type='button', data-dismiss='alert', aria-label='Close')
+				span(aria-hidden='true')
+					i.glyphicon.glyphicon-remove
+			strong Error!
+			|  Updating failed, conflict with room/device shedule. We're sorry!
+		.col-md-4.col-sm-4.col-xs-4
+			button.btn.btn-primary(type='submit', ng-disabled="newEventForm.$invalid || editEvCtrl.timeError", ng-click="editEvCtrl.editEvent()") Save
+		.col-md-4.col-sm-4.col-xs-4
+			button.btn.btn-danger(type='submit', ng-disabled="newEventForm.$invalid", ng-click="editEvCtrl.submitDelete()") Delete
+		.col-md-4.col-sm-4
+			button.btn.btn-default(ng-click="editEvCtrl.closeModal()") Cancel

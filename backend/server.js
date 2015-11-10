@@ -10,17 +10,20 @@ var MongoStore = require('connect-mongo')(session);
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
+
 var connection = require('./db/dbconnect');
 
-// var faker = require('./faker/generate.js');
+ //var faker = require('./faker/generate.js');
 
-// faker({
+ //faker({
 //   device: 1,
 //   user: 1,
 //   room: 1,
 //   group: 1,
 //   eventType: 1
-// });
+    //event: 10
+ //});
+
 
 
 
@@ -62,6 +65,15 @@ http.globalAgent.maxSockets = Infinity;
 var server = app.listen(3080);
 
 var socketio = require('./io/socketServer.js')(server);
+
+var eventTypeRepository = require('./repositories/eventTypeRepository');
+
+eventTypeRepository.init([{ title: 'basic' }, { title: 'general' }, { title: 'google', color: '#c23321' }, { title: 'holiday', color: '#ad74f2' }]);
+
+var getHolidays = require('./googleapi/Events/holidays')();
+
+
+
 
 
 console.log('server start on port 8000');

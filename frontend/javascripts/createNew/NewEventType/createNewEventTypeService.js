@@ -1,44 +1,60 @@
 var app = require('../../app');
 
 app.factory('createNewEventTypeService', createNewEventTypeService);
-createNewEventTypeService.$inject = ['$resource'];
+createNewEventTypeService.$inject = ['$resource', '$http'];
 
-function createNewEventTypeService ($resource) {
-	var dbEventTypes = $resource('http://localhost:3080/api/eventType/', {});
-	var eventTypes = dbEventTypes.query();
-	
-	function getEventTypes(){
-		return eventTypes;
-	}
+function createNewEventTypeService($resource, $http) {
+    var dbEventTypes = $resource('http://localhost:3080/api/eventType/', {});
+    var eventTypes = dbEventTypes.query();
 
-	// function getEventTypeByTitle(eventType){
-	// 	var dbEventTypeByTitle = $resource('http://localhost:3080/api/eventTypeByTitle/:title', {title: eventType.title});
-	// 	var newType = dbEventTypeByTitle.get(eventType);
-	// 	console.log(newType);
-	// 	return newType;
-	// }
+    function getEventTypes() {
+        return eventTypes;
+    }
+
+    var dbPublicEventTypesByOwner = $resource('http://localhost:3080/api/eventTypePublicAndByOwner/', {});
+    var eventTypesPublicByOwner = dbPublicEventTypesByOwner.query();
+
+    function getEventTypesPublicByOwner() {
+        return $http.get('http://localhost:3080/api/eventTypePublicAndByOwner/');
+    }
+
+    /*	var dbPublicEventTypes = $resource('http://localhost:3080/api/eventTypePublic/', {});
+     var eventTypesPublic = dbPublicEventTypes.query();
+
+     function getEventTypesPublic(){
+     return eventTypesPublic;
+     }*/
+
+    // function getEventTypeByTitle(eventType){
+    // 	var dbEventTypeByTitle = $resource('http://localhost:3080/api/eventTypeByTitle/:title', {title: eventType.title});
+    // 	var newType = dbEventTypeByTitle.get(eventType);
+    // 	console.log(newType);
+    // 	return newType;
+    // }
 
 
-	function saveEventType(newEventType) {
-		return dbEventTypes.save(newEventType);
-	}
+    function saveEventType(newEventType) {
+        return dbEventTypes.save(newEventType);
+    }
 
-	function updateEventType(eventType){	
-		var dbEventTypeById = $resource('http://localhost:3080/api/eventType/:id', {id: eventType._id}, {'update': { method:'PUT'}});
-		// delete eventType._id;
-		return dbEventTypeById.update(eventType);
-	}
+    function updateEventType(eventType) {
+        var dbEventTypeById = $resource('http://localhost:3080/api/eventType/:id', {id: eventType._id}, {'update': {method: 'PUT'}});
+        // delete eventType._id;
+        return dbEventTypeById.update(eventType);
+    }
 
-	function deleteEventType(eventType) {
-		var dbEventTypedel = $resource('http://localhost:3080/api/eventType/:id', {id: eventType._id});
-		console.log(eventType);
-		return dbEventTypedel.delete(eventType);
-	}
+    function deleteEventType(eventType) {
+        var dbEventTypedel = $resource('http://localhost:3080/api/eventType/:id', {id: eventType._id});
+        console.log(eventType);
+        return dbEventTypedel.delete(eventType);
+    }
 
-	return  {
-		getEventTypes: getEventTypes,
-		saveEventType: saveEventType,
-		updateEventType: updateEventType,
-		deleteEventType: deleteEventType
-	};
+    return {
+        getEventTypes: getEventTypes,
+        //getEventTypesPublic: getEventTypesPublic,
+        getEventTypesPublicByOwner: getEventTypesPublicByOwner,
+        saveEventType: saveEventType,
+        updateEventType: updateEventType,
+        deleteEventType: deleteEventType
+    };
 }
