@@ -18,22 +18,22 @@ function CalendarController(socketService, Notification, filterService, schedule
   setInterval(function(){
     helpEventService.checkEventNotification()
     .then(function(result){
-      console.log(result.data);
-      if(result.data) {
-        console.log('emitting');
-        socketService.emit('notify', result.data);
-      }
+      console.log('notify', result.data);
+      // if(result.data) {
+      //   console.log('emitting');
+      //   socketService.emit('notify', result.data);
+      // }
 
-      //for(var i = 0; i < result.data.length; i++){
-        // var lapse = new Date(result.data[i].start) - new Date();
-        // lapse = lapse / ( 1000 * 60 ) + 1;
-        // lapse = Math.floor(lapse);
-        // Notification.success({message: "Event '" + result.data[i].title + "' starts in " + lapse + " minute(s).", delay: 300000});
+      for(var i = 0; i < result.data.length; i++){
+        var lapse = new Date(result.data[i].start) - new Date();
+        lapse = lapse / ( 1000 * 60 ) + 1;
+        lapse = Math.floor(lapse);
+        Notification.success({message: "Event '" + result.data[i].title + "' starts in " + lapse + " minute(s).", delay: 300000});
         //alertify.delay(300000).closeLogOnClick(true).log("Event '" + result.data[i].title + "' starts in " + lapse + " minutes.");
-      //}
+      }
       
     });
-  }, 50000);
+  }, 5000);
 
   vm.logOut = function(){
     LoginService.logOut()
