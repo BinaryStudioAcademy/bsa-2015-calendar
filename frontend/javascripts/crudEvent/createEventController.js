@@ -8,7 +8,6 @@ createEventController.$inject = ['AuthService', 'crudEvEventService', 'socketSer
 function createEventController(AuthService, crudEvEventService, socketService, alertify, helpEventService, $rootScope, $scope, $timeout, $modalInstance, selectedDate, viewType, rooms, devices, users, eventTypes) {
 
 	var vm = this;
-
 	//set userList in localStorage if not exists
 	var loggedUserId = AuthService.getUser().id;
 	if (!localStorage["userlist"+loggedUserId]) {
@@ -18,7 +17,7 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 	if (!localUsersArr) {
 		var localUsersArr = [];
 	}
-
+	
 	vm.rooms = rooms;
 	vm.devices = devices;
 	vm.users = getUpdateUsers(users);
@@ -444,20 +443,23 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 
 
 	function updateLocalArr(userArr) {
-
 		if (userArr.length > 0) {
 			for (var i=0; i < userArr.length; i++) {
-				var index;
-				for (var y=0; y < localUsersArr.length; y++) {
-					if (_.isEqual(userArr[i], localUsersArr[y])) {
-						index = y;
-						break;
+				if (userArr[i]['_id'] !== loggedUserId) {
+					var index;
+					for (var y=0; y < localUsersArr.length; y++) {
+						if (userArr[i]['_id'] === localUsersArr[y]['_id']) {
+							index = y;
+							break;
+						}
 					}
+					localUsersArr.splice(index, 1);
 				}
-				localUsersArr.splice(index, 1);
 			}
 			for (var u=0; u < userArr.length; u++) {
-				localUsersArr.unshift(userArr[u]);
+				if (userArr[u]['_id'] !== loggedUserId) {
+					localUsersArr.unshift(userArr[u]);
+				}
 			}
 			localStorage["userlist"+loggedUserId] = JSON.stringify(localUsersArr);
 		}
@@ -465,6 +467,7 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 
 	function getUpdateUsers(data) {
 		localUsersArr = JSON.parse(localStorage.getItem("userlist"+loggedUserId));
+		console.log('IN', localUsersArr);
 		//left only id and name fields
 		var usersArr = _.map(data, function(item) {return _.pick(item, '_id', 'name');});
 		//add to local array new users from sever
@@ -485,13 +488,17 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 			if (!usersArrObj) {
 				delUsers.push(localUserArrObj);
 			}
+			if (localUserArrObj['_id'] == loggedUserId) {
+				delUsers.push(localUserArrObj);
+			}
+
 		});
 		_.each(delUsers, function(delItem) {
 			_.remove(localUsersArr, function(item) {
 				return item['_id'] === delItem['_id'];
 			});
 		});
-
+		console.log('OUT', localUsersArr);
         return localUsersArr;
 	}
 }

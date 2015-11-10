@@ -4,9 +4,9 @@ require('moment-range');
 
 app.controller('WeekViewController', WeekViewController);
 
-WeekViewController.$inject = ['crudEvEventService','helpEventService', '$scope', '$uibModal','$compile', '$templateCache', '$rootScope', 'filterService'];
+WeekViewController.$inject = ['crudEvEventService','helpEventService', 'scheduleService', '$scope', '$uibModal','$compile', '$templateCache', '$rootScope', 'filterService'];
 
-function WeekViewController(crudEvEventService,helpEventService, $scope, $uibModal, $compile, $templateCache, $rootScope, filterService) {
+function WeekViewController(crudEvEventService,helpEventService, scheduleService, $scope, $uibModal, $compile, $templateCache, $rootScope, filterService) {
 	var vm = this;
     vm.correctFlagsEventTypes = filterService.correctFlags(); 
 
@@ -163,7 +163,7 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
 
         vm.selectedDate = new Date(vm.weekStartMoment.format("DD MMM YYYY HH:mm:ss"));       
    
-        helpEventService.getEvents(vm.Start, vm.End).then(function(data) {
+        helpEventService.getUserEvents(vm.Start, vm.End).then(function(data) {
             if (data !== null){
                 vm.eventObj = data;                                           
                 $scope.$broadcast('eventsUpdated');                     
@@ -182,7 +182,7 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
 
         vm.selectedDate = new Date( vm.weekStartMoment.format("DD MMM YYYY HH:mm:ss"));     
 
-        helpEventService.getEvents(vm.Start, vm.End).then(function(data) {
+        helpEventService.getUserEvents(vm.Start, vm.End).then(function(data) {
             if (data !== null){
                 vm.eventObj = data;                                            
                 $scope.$broadcast('eventsUpdated');                           
@@ -194,7 +194,6 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
         var tmpDate = vm.weekStartMoment.clone();
         tmpDate.add(day, 'd');
         tmpDate.set({'hour': hours, 'minute': 0});
-
         console.log('eventService creatingBroadcast call');
         crudEvEventService.creatingBroadcast(tmpDate, 'WeekView');
     };
@@ -209,12 +208,42 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
 
 
     vm.pullData = function() {
-        helpEventService.getUserEvents(vm.Start, vm.End).then(function(data) {
-            if (data !== null){
-                vm.eventObj = data;                                               
-                $scope.$broadcast('eventsUpdated');                         
+        var startDate = new Date(vm.weekStartMoment.format("DD MMM YYYY HH:mm:ss")),
+            endDate = new Date(vm.weekEndMoment.format("DD MMM YYYY HH:mm:ss"));
+        console.log('pulling data, scheduleType: ', scheduleService.getType());
+        console.log('pulling data, scheduleType: ', scheduleService.getItemId());
+        switch (scheduleService.getType()){
+            case 'event':{
+                helpEventService.getUserEvents(startDate, endDate).then(function(data) {
+                    if (data !== null){ 
+                        vm.eventsObj = data;
+                        vm.buildEventCells(0);
+                    }  
+                });
+                console.log('user events shedule');
+                break;
             }
-        });
+            case 'room':{
+                helpEventService.getRoomEvents(scheduleService.getItemId(), startDate, endDate).then(function(data) {
+                    if (data !== null){ 
+                        vm.eventsObj = data;
+                        vm.buildEventCells(0);
+                    }
+                });
+                console.log('room events shedule');
+                break;
+            }
+            case 'device':{
+                helpEventService.getDeviceEvents(scheduleService.getItemId(), startDate, endDate).then(function(data) {
+                    if (data !== null){ 
+                        vm.eventsObj = data;
+                        vm.buildEventCells(0);
+                    }
+                });
+                console.log('device events shedule');
+                break;
+            }
+        }
     };
 
 
