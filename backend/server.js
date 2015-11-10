@@ -70,7 +70,7 @@ var eventTypeRepository = require('./repositories/eventTypeRepository');
 
 eventTypeRepository.init([{ title: 'basic' }, { title: 'general' }, { title: 'google', color: '#c23321' }, { title: 'holiday', color: '#ad74f2' }]);
 
-var getHolidays = require('./googleapi/Events/holidays')();
+// var getHolidays = require('./googleapi/Events/holidays')();
 
 
 

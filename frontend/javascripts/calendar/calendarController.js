@@ -2,9 +2,9 @@ var app = require('../app');
 
 app.controller('CalendarController', CalendarController);
 
-CalendarController.$inject = ['filterService', 'scheduleService', '$document', '$modal', '$resource', '$scope', '$rootScope', '$state', 'LoginService', 'AuthService', 'GoogleAuthService', 'helpEventService', '$uibModal', '$location'];
+CalendarController.$inject = ['socketService', 'Notification', 'filterService', 'scheduleService', '$document', '$modal', '$resource', '$scope', '$rootScope', '$state', 'LoginService', 'AuthService', 'GoogleAuthService', 'helpEventService', '$uibModal', '$location'];
 
-function CalendarController(filterService, scheduleService, $document, $modal, $resource, $scope, $rootScope, $state, LoginService, AuthService, GoogleAuthService, helpEventService, $uibModal, $location) {
+function CalendarController(socketService, Notification, filterService, scheduleService, $document, $modal, $resource, $scope, $rootScope, $state, LoginService, AuthService, GoogleAuthService, helpEventService, $uibModal, $location) {
 
   var vm = this;
   vm.eventTypes = [];
@@ -14,6 +14,26 @@ function CalendarController(filterService, scheduleService, $document, $modal, $
   var todayDate = Date.now();
   vm.selectedDate = todayDate;
   var userInfo = AuthService.getUser();
+
+  setInterval(function(){
+    helpEventService.checkEventNotification()
+    .then(function(result){
+      console.log('notify', result.data);
+      // if(result.data) {
+      //   console.log('emitting');
+      //   socketService.emit('notify', result.data);
+      // }
+
+      for(var i = 0; i < result.data.length; i++){
+        var lapse = new Date(result.data[i].start) - new Date();
+        lapse = lapse / ( 1000 * 60 ) + 1;
+        lapse = Math.floor(lapse);
+        Notification.success({message: "Event '" + result.data[i].title + "' starts in " + lapse + " minute(s).", delay: 300000});
+        //alertify.delay(300000).closeLogOnClick(true).log("Event '" + result.data[i].title + "' starts in " + lapse + " minutes.");
+      }
+      
+    });
+  }, 5000);
 
   vm.logOut = function(){
     LoginService.logOut()

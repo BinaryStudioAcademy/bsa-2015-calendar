@@ -3,6 +3,14 @@ var eventRepository = require('../../repositories/eventRepository');
 var eventService = require('../../services/eventService');
 
 module.exports = function(app) {
+	app.get('/api/checkEventNotification', function(req, res, next){
+		eventService.checkNotification(req.user._id, function(err, data){
+			res.data = data;
+			res.err = err;
+			next();
+		});
+	}, apiResponse);
+
 	app.get('/api/event/:id', function(req, res, next) {
 		eventRepository.getById(req.params.id, function(err, data) {
 			res.data = data;

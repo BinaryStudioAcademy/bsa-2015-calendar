@@ -5,6 +5,42 @@ createNewEventTypeController.$inject = ['$scope', 'createNewEventTypeService', '
 
 function createNewEventTypeController($scope, createNewEventTypeService, AuthService, $rootScope) {
     var vm = this;
+
+    vm.icons = [
+        { css: null, name: 'None' },
+        { css: 'fa fa-users', name: 'Meeting' },
+        { css: 'fa fa-microphone', name: 'Speech' },        
+        { css: 'fa fa-line-chart', name: 'Line chart' },
+        { css: 'fa fa-plane', name: 'Plane' },
+        { css: 'fa fa-birthday-cake', name: 'Birthay Cake' },
+        { css: 'fa fa-code', name: 'Code' },
+        { css: 'fa fa-cogs', name: 'Cogs' },
+        { css: 'fa fa-film', name: 'Film' },
+        { css: 'fa fa-television', name: 'Television' },
+        { css: 'fa fa-pie-chart', name: 'Pie chart' },
+        { css: 'fa fa-music', name: 'Music' },
+        { css: 'fa fa-graduation-cap', name: 'Education' },
+        { css: 'fa fa-futbol-o', name: 'Football' },
+        { css: 'fa fa-coffee', name: 'Coffee' },
+        { css: 'fa fa-bicycle', name: 'Bicycle' },
+        { css: 'fa fa-heart', name: 'Heart' },
+        { css: 'fa fa-beer', name: 'Beer' }
+    ];
+
+    vm.eventType = {};
+    vm.eventType.icon = vm.icons[0];
+
+    vm.setIcon = function(eventType, icon){
+        // console.log('new icon: ', icon);
+        console.log(eventType);
+        if(eventType === null){
+            vm.eventType.icon = icon;
+        } else{
+            eventType.icon = icon;
+        }
+        
+    };
+
     vm.eventTypes = [];
 
     vm.inputStyles = [];
@@ -53,6 +89,7 @@ function createNewEventTypeController($scope, createNewEventTypeService, AuthSer
             title: vm.eventType.title,
             color: vm.eventType.color,
             isPrivate: vm.eventType.isPrivate,
+            icon: vm.eventType.icon,
             ownerId: AuthService.getUser().id
         };
         console.log(newEventType);
