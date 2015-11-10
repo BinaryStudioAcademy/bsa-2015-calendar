@@ -590,8 +590,9 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
 
 	init();
 
-	function init() {
-		showWorkHours();
-		getAllEvents();
-	}
+	// function init() {
+	// 	showWorkHours();
+	// 	getAllEvents();
+	// }
+};
 }

@@ -66,7 +66,6 @@
 				button(ng-click='calendarCtrl.selectAllEventType()') select all
 				button(ng-click='calendarCtrl.clearAllEventType()') clear all
 				ul
-<<<<<<< HEAD
 					li
 						.checkbox
 							label
@@ -98,14 +97,12 @@
 								input(type="checkbox") 
 								| Birthdays
 			h3 Create
-=======
 					form.form-inline
 						li(ng-repeat="eventType in calendarCtrl.allEventTypes")
 							label.checkbox
 								checkbox(type="checkbox",id="eventType", ng-model = "eventType.flag", name ="{{ eventType.name }}", ng-change = "calendarCtrl.checkFlag(eventType._id)")
 								span.eventTypeFilters {{ eventType.title }}
 			h3 CRUD
->>>>>>> 87db64266870e1a6a4e8de032bf7e2f6c4deafa0
 			.navbar.navbar-default(role="navigation")
 				ul.nav.navbar-nav.text-center
 					li
@@ -136,7 +133,7 @@
 					h3 
 					h3 Will bee the power with us!
 				div(class="modal-footer")
-					h5(align='center') If you want to get out of the help window, press ESC or click on the &times.
+					h5(align='center') If you want to get out of the help window, press ESC.
 
 
 
