@@ -17,11 +17,11 @@
 							span
 								i.glyphicon.glyphicon-arrow-right
 			.container-fluid
-				.col-md-10
-					.col-md-12.col-md-offset-4
-						img.img-responsive(ng-src="../../javascripts/tutorial{{tutorialCtrl.tutorialTexts[tutorialCtrl.currentText].img}}")
+				.col-md-8
+					.col-md-10
+						img.col-md-12.img-responsive(ng-src="../../javascripts/tutorial{{tutorialCtrl.tutorialTexts[tutorialCtrl.currentText].img}}")
 						span(ng-model="tutorialCtrl.currentText") {{ tutorialCtrl.tutorialTexts[tutorialCtrl.currentText].text }}
-						//.text-center(id="tutorialText")
+						
 .modal-footer
 	.save-area
 		.col-md-6.col-sm-6.col-xs-6

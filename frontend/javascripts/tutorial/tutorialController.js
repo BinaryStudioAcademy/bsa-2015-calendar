@@ -21,10 +21,10 @@ function tutorialController($document, AuthService, $rootScope, $scope, $timeout
 		text: 'To create recurring events you should choose start and end date, and set desired days of week',
 		img: '/img/4.png'
 	}, {
-		text: 'Right click on the event to change event data. To change duration and start/end time you can drag and resize event block with left click',
+		text: 'Right click on the event to change event data',
 		img: '/img/5.png'
 	}, {
-		text: 'Use double click to create event and right click to change event',
+		text: 'To change duration and start/end time you can drag and resize event block with left click',
 		img: '/img/6.png'
 	}, {
 		text: 'Use double click to create event and right click to change event',
