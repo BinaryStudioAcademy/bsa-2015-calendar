@@ -2,15 +2,26 @@ var app = require('../app');
 
 app.controller('createEventController', createEventController);
 
+
 createEventController.$inject = ['AuthService', 'crudEvEventService', 'socketService', 'alertify', 'helpEventService', '$rootScope', '$scope', '$timeout', '$modalInstance', 'selectedDate', 'viewType', 'rooms', 'devices', 'users', 'eventTypes'];
 
 function createEventController(AuthService, crudEvEventService, socketService, alertify, helpEventService, $rootScope, $scope, $timeout, $modalInstance, selectedDate, viewType, rooms, devices, users, eventTypes) {
 
 	var vm = this;
 
+	//set userList in localStorage if not exists
+	var loggedUserId = AuthService.getUser().id;
+	if (!localStorage["userlist"+loggedUserId]) {
+		localStorage.setItem("userlist"+loggedUserId, '[]');
+
+	}
+	if (!localUsersArr) {
+		var localUsersArr = [];
+	}
+
 	vm.rooms = rooms;
 	vm.devices = devices;
-	vm.users = users;
+	vm.users = getUpdateUsers(users);
 	vm.eventTypes = eventTypes;
 
 	console.log('createEvCtrl');
@@ -218,6 +229,7 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 		console.log('form title', vm.form.title);
 
 		vm.form.isValid = true;
+		var user = AuthService.getUser();
 
 		if(!vm.form.title){
 			vm.form.titleError = true;
@@ -250,7 +262,7 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 
 		if(vm.isPlan){ //plan
 			var plan = {};
-			plan.ownerId = AuthService.getUser().id;
+			plan.ownerId = user.id;
 			plan.title = vm.form.title;
 			plan.description = vm.form.description;
 			plan.isPrivate = true;
@@ -279,7 +291,12 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 				if(vm.form.price) plan.price = vm.form.price;
 				if(vm.form.rooms.length) plan.rooms = vm.form.rooms;
 				if(vm.form.devices.length) plan.devices = vm.form.devices;
-				if(vm.form.users.length) plan.users = vm.form.users;
+				if(vm.form.users.length){
+					plan.users = vm.form.users;
+					event.users.push({_id:user.id, name:user.name});
+					console.log('users in plan', plan.users);
+				}
+				updateLocalArr(vm.form.users);
 				console.log(vm.form.users);
 			}
 
@@ -287,28 +304,31 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 			submitPlan(plan);
 		} else{ //event
 			var event = {};
-			event.ownerId = AuthService.getUser().id;
+			event.ownerId = user.id;
 			event.title = vm.form.title;
 			event.description = vm.form.description;
 			event.isPrivate = true;
 			event.start = vm.form.timeStart;
 			event.end = vm.form.timeEnd;
 			event.type = vm.form.type['_id'];
-//
 			if(vm.isPublic){
 				event.isPrivate = false;
 				if(vm.form.price) event.price = vm.form.price;
 				if(vm.form.rooms.length) event.room = vm.form.room['_id'];
 				if(vm.form.devices.length) event.devices = vm.form.devices;
-				if(vm.form.users.length) event.users = vm.form.users;
+				if(vm.form.users.length) {
+					event.users = vm.form.users;
+					event.users.push({_id:user.id, name:user.name});
+					console.log('users in event', event.users);
+				}
+				updateLocalArr(vm.form.users);
 			}
-			console.log('users added =', vm.form.users);
-
 			console.log('SUBMITTING EVENT >>>>>', event);
 			submitEvent(event);
 		}
 
-		console.log('Modal submited');	
+		console.log('Modal submited');
+			
 	};
 
 	vm.closeModal = function() {
@@ -363,19 +383,20 @@ function createEventController(AuthService, crudEvEventService, socketService, a
            	if(response.status == 200 || response.status == 201){
 	           	vm.formSuccess = true;
 				dropEventInfo();
-				console.log('success', response);
+				console.log('success', response.status);
 
-				socketService.emit('add event', { event : response });	
-				//$rootScope.$broadcast('eventAdded' + vm.viewType, response);
+				socketService.emit('add event', { event : response.data });	
+				//$rootScope.$broadcast('eventAdded' + vm.viewType, data);
 				console.log(vm.viewType);
-				crudEvEventService.addedEventBroadcast(vm.selectedDateMoment, response, vm.viewType);
+				crudEvEventService.addedEventBroadcast(vm.selectedDateMoment, response.data, vm.viewType);
 
 				$timeout(function() {
 					$modalInstance.close();
 					vm.formSuccess = false;
 				}, 1500);
 			} else {
-				vm.deletingError = true;
+								console.log('err');
+				vm.submitEventError = true;
 				return;
 			}
         });
@@ -387,18 +408,20 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 			if(response.status == 200 || response.status == 201){
 	           	vm.formSuccess = true;
 				dropEventInfo();
-				console.log('success', response);
+				console.log('success', response.status);
 
-				socketService.emit('add plan', { planEvents : response });	
-				//$rootScope.$broadcast('planAdded', response);
-				crudEvEventService.addedPlanBroadcast(vm.selectedDateMoment, response, vm.viewType);
+
+				socketService.emit('add plan', { planEvents : response.data });	
+				//$rootScope.$broadcast('planAdded', data);
+				crudEvEventService.addedPlanBroadcast(vm.selectedDateMoment, response.data, vm.viewType);
 
 				$timeout(function() {
 					$modalInstance.close();
 					vm.formSuccess = false;
 				}, 1500);
 			} else {
-				vm.deletingError = true;
+				console.log('err');
+				vm.submitPlanError = true;
 				return;
 			}
         });
@@ -418,4 +441,58 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 
 		vm.changeStartDate();
 	}
+
+
+	function updateLocalArr(userArr) {
+
+		if (userArr.length > 0) {
+			for (var i=0; i < userArr.length; i++) {
+				var index;
+				for (var y=0; y < localUsersArr.length; y++) {
+					if (_.isEqual(userArr[i], localUsersArr[y])) {
+						index = y;
+						break;
+					}
+				}
+				localUsersArr.splice(index, 1);
+			}
+			for (var u=0; u < userArr.length; u++) {
+				localUsersArr.unshift(userArr[u]);
+			}
+			localStorage["userlist"+loggedUserId] = JSON.stringify(localUsersArr);
+		}
+	}
+
+	function getUpdateUsers(data) {
+		localUsersArr = JSON.parse(localStorage.getItem("userlist"+loggedUserId));
+		//left only id and name fields
+		var usersArr = _.map(data, function(item) {return _.pick(item, '_id', 'name');});
+		//add to local array new users from sever
+		_.each(usersArr, function(userArrObj) {
+			var localUsersArrObj = _.find(localUsersArr, function(localUsersArrObj) {
+				return userArrObj['_id'] === localUsersArrObj['_id'];
+			});
+			if (!localUsersArrObj) {
+				localUsersArr.push(userArrObj);
+			}
+		});
+		//delete from local deleted users
+		var delUsers = [];
+		_.each(localUsersArr, function(localUserArrObj) {
+			var usersArrObj = _.find(usersArr, function(usersArrObj) {
+				return usersArrObj['_id'] === localUserArrObj['_id'];
+			});
+			if (!usersArrObj) {
+				delUsers.push(localUserArrObj);
+			}
+		});
+		_.each(delUsers, function(delItem) {
+			_.remove(localUsersArr, function(item) {
+				return item['_id'] === delItem['_id'];
+			});
+		});
+
+        return localUsersArr;
+	}
 }
+

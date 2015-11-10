@@ -38,6 +38,14 @@ module.exports = function(app) {
 		});
 	}, apiResponse);
 
+	app.get('/api/room/events/:id/:gteDate/:lteDate', function(req, res, next){
+		roomRepository.getRoomEventsByInterval(req.params.id, req.params.gteDate, req.params.lteDate, function(err, data){
+			res.data = data;
+			res.err = err;
+			next();
+		});
+	}, apiResponse);
+
 	app.post('/api/room/', function(req, res, next){
 		roomRepository.add(req.body, function(err, data){
 			console.log('rout', req.body);
@@ -57,14 +65,6 @@ module.exports = function(app) {
 
 	app.delete('/api/room/:id', function(req, res, next){
 		roomService.delete(req.params.id, function(err, data){
-			res.data = data;
-			res.err = err;
-			next();
-		});
-	}, apiResponse);	
-
-	app.get('/apiold/room/:id/:dateStart/:dateEnd', function(req, res, next){
-		roomService.availability(req.params.id, req.params.dateStart, req.params.dateEnd, function(err, data){
 			res.data = data;
 			res.err = err;
 			next();

@@ -26,6 +26,8 @@
     "moment-range": "~2.0.3",
     "angular-bootstrap-colorpicker": "~3.0.19",
     "angular-ui-notification": "~0.0.14"
+    "angular-bootstrap-checkbox": "~0.3.1"
+
   },
   "resolutions": {
     "lodash": "~3.10.1",

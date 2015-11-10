@@ -169,6 +169,8 @@ module.exports = function(grunt) {
 					'bower_components/alertify.js/dist/js/ngAlertify.js',
 					'bower_components/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.js',
 					'bower_components/angular-ui-notification/dist/angular-ui-notification.min.js'
+					'bower_components/angular-bootstrap-checkbox/angular-bootstrap-checkbox.js'
+
 				],
 				dest: 'public/javascripts/libs.js',
 			},
