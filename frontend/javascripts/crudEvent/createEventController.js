@@ -229,6 +229,7 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 		console.log('form title', vm.form.title);
 
 		vm.form.isValid = true;
+		var user = AuthService.getUser();
 
 		if(!vm.form.title){
 			vm.form.titleError = true;
@@ -261,7 +262,7 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 
 		if(vm.isPlan){ //plan
 			var plan = {};
-			plan.ownerId = AuthService.getUser().id;
+			plan.ownerId = user.id;
 			plan.title = vm.form.title;
 			plan.description = vm.form.description;
 			plan.isPrivate = true;
@@ -290,7 +291,11 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 				if(vm.form.price) plan.price = vm.form.price;
 				if(vm.form.rooms.length) plan.rooms = vm.form.rooms;
 				if(vm.form.devices.length) plan.devices = vm.form.devices;
-				if(vm.form.users.length) plan.users = vm.form.users;
+				if(vm.form.users.length){
+					plan.users = vm.form.users;
+					event.users.push({_id:user.id, name:user.name});
+					console.log('users in plan', plan.users);
+				}
 				updateLocalArr(vm.form.users);
 				console.log(vm.form.users);
 			}
@@ -299,25 +304,25 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 			submitPlan(plan);
 		} else{ //event
 			var event = {};
-			event.ownerId = AuthService.getUser().id;
+			event.ownerId = user.id;
 			event.title = vm.form.title;
 			event.description = vm.form.description;
 			event.isPrivate = true;
 			event.start = vm.form.timeStart;
 			event.end = vm.form.timeEnd;
 			event.type = vm.form.type['_id'];
-//
 			if(vm.isPublic){
 				event.isPrivate = false;
 				if(vm.form.price) event.price = vm.form.price;
 				if(vm.form.rooms.length) event.room = vm.form.room['_id'];
 				if(vm.form.devices.length) event.devices = vm.form.devices;
-				if(vm.form.users.length) event.users = vm.form.users;
+				if(vm.form.users.length) {
+					event.users = vm.form.users;
+					event.users.push({_id:user.id, name:user.name});
+					console.log('users in event', event.users);
+				}
 				updateLocalArr(vm.form.users);
-				console.log('form', vm.form.users);
 			}
-			console.log('users added =', vm.form.users);
-
 			console.log('SUBMITTING EVENT >>>>>', event);
 			submitEvent(event);
 		}
