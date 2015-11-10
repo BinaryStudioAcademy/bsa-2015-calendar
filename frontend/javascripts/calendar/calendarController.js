@@ -2,16 +2,10 @@ var app = require('../app');
 
 app.controller('CalendarController', CalendarController);
 
-<<<<<<< HEAD
-CalendarController.$inject = ['socketService', 'Notification', '$document', '$modal', '$resource', '$scope', '$rootScope', '$state', 'LoginService', 'AuthService', 'GoogleAuthService', 'helpEventService'];
-
-function CalendarController(socketService, Notification, $document, $modal, $resource, $scope, $rootScope, $state, LoginService, AuthService, GoogleAuthService, helpEventService) {
-=======
-CalendarController.$inject = ['filterService', 'scheduleService', '$document', '$modal', '$resource', '$scope', '$rootScope', '$state', 'LoginService', 'AuthService', 'GoogleAuthService', 'helpEventService', '$uibModal', '$location'];
+CalendarController.$inject = ['socketService', 'Notification', 'filterService', 'scheduleService', '$document', '$modal', '$resource', '$scope', '$rootScope', '$state', 'LoginService', 'AuthService', 'GoogleAuthService', 'helpEventService', '$uibModal', '$location'];
 
 function CalendarController(filterService, scheduleService, $document, $modal, $resource, $scope, $rootScope, $state, LoginService, AuthService, GoogleAuthService, helpEventService, $uibModal, $location) {
 
->>>>>>> develop
   var vm = this;
   vm.eventTypes = [];
   
