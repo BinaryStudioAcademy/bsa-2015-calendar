@@ -20,7 +20,7 @@
 								button(ng-click='calendarCtrl.clearAllEventType()') clear all
 								ul.dropdown-menu(role="menu")
 									form.form-inline
-										li(ng-repeat="eventType in calendarCtrl.ollEventTypes")
+										li(ng-repeat="eventType in calendarCtrl.allEventTypes")
 											label.checkbox
 												input(type="checkbox",id="eventType", ng-model = "eventType.flag", name ="{{ eventType.title }}", ng-change = "calendarCtrl.checkFlag(eventType._id)")
 												span.eventTypeFilters {{ eventType.title }}
@@ -64,7 +64,7 @@
 				button(ng-click='calendarCtrl.clearAllEventType()') clear all
 				ul
 					form.form-inline
-						li(ng-repeat="eventType in calendarCtrl.ollEventTypes")
+						li(ng-repeat="eventType in calendarCtrl.allEventTypes")
 							label.checkbox
 								input(type="checkbox",id="eventType", ng-model = "eventType.flag", name ="{{ eventType.name }}", ng-change = "calendarCtrl.checkFlag(eventType._id)")
 								span.eventTypeFilters {{ eventType.title }}
