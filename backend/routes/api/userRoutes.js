@@ -5,6 +5,7 @@ var userService = require('../../services/userService');
 module.exports = function(app) {
 	app.get('/api/user/:id', function(req, res, next) {
 		userRepository.getById(req.params.id, function(err, data) {
+			console.log(data);
 			res.data = data;
 			res.err = err;
 			next();
@@ -35,6 +36,14 @@ module.exports = function(app) {
 		});
 	}, apiResponse);
 
+	app.get('/api/userclipped/', function(req, res, next){
+		userRepository.getAllClipped(function(err, data){
+			res.data = data;
+			res.err = err;
+			next();
+		});
+	}, apiResponse);
+
 	app.get('/api/user/username/:username', function(req, res, next){
 		userRepository.getByUsername(req.params.username, function(err, data){
 			res.data = data;
@@ -53,6 +62,14 @@ module.exports = function(app) {
 
 	app.put('/api/user/:id', function(req, res, next){
 		userRepository.update(req.params.id, req.body, function(err, data){
+			res.data = data;
+			res.err = err;
+			next();
+		});
+	}, apiResponse);
+
+	app.put('/api/user/completeTutorial/:id', function(req, res, next){
+		userRepository.setTutorialCompleted(req.params.id, req.body.completed, function(err, data){
 			res.data = data;
 			res.err = err;
 			next();

@@ -2,29 +2,25 @@ var app = require('../app');
 
 app.controller('editEventController', editEventController);
 
-editEventController.$inject = ['crudEvEventService', 'socketService', 'alertify', 'helpEventService', '$rootScope', '$scope', '$timeout', '$modalInstance', 'selectedDate', 'eventBody', 'viewType', 'rooms', 'devices', 'users', 'eventTypes'];
+editEventController.$inject = ['crudEvEventService', 'socketService', 'alertify', 'helpEventService', 'AuthService', '$rootScope', '$scope', '$timeout', '$modalInstance', 'selectedDate', 'eventBody', 'viewType', 'rooms', 'devices', 'users', 'eventTypes'];
 
-function editEventController(crudEvEventService, socketService, alertify, helpEventService, $rootScope, $scope, $timeout, $modalInstance, selectedDate, eventBody, viewType, rooms, devices, users, eventTypes) {
+function editEventController(crudEvEventService, socketService, alertify, helpEventService, AuthService, $rootScope, $scope, $timeout, $modalInstance, selectedDate, eventBody, viewType, rooms, devices, users, eventTypes) {
 
 	var vm = this;
 
+	var loggedUserId = AuthService.getUser().id;
+	if (!localStorage["userlist"+loggedUserId]) {
+		localStorage.setItem("userlist"+loggedUserId, '[]');
+	}
+	if (!localUsersArr) {
+		var localUsersArr = [];
+	}
 
 	function init(){
 
-		vm.weekDays = [
-			{ name: 'Mo', selected: false },
-			{ name: 'Tu', selected: false },
-			{ name: 'We', selected: false },
-			{ name: 'Th', selected: false },
-			{ name: 'Fr', selected: false },
-			{ name: 'Sa', selected: false },
-			{ name: 'Su', selected: false }
-		];
-
-
 		vm.rooms = rooms;
 		vm.devices = devices;
-		vm.users = users;
+		vm.users = getUpdateUsers(users);
 		vm.eventTypes = eventTypes;
 
 		vm.selectedDate = selectedDate;
@@ -41,7 +37,8 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 			vm.event.devices = [];
 			vm.event.room = {};
 			vm.event.type = {};
-
+			vm.event.start = vm.eventBody.start;
+			vm.event.end = vm.eventBody.end;
 			vm.event.title = vm.eventBody.title;
 			vm.event.description = vm.eventBody.description;
 
@@ -85,48 +82,22 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 				}
 			}
 			console.log('body', vm.eventBody);
-			if (vm.eventBody.eventType){
-				for (i = 0; i < vm.eventType.length; i++){
-					if(vm.eventBody.eventType == vm.eventType[i]._id) {
-						vm.event.type._id = vm.eventType[i]._id;
-						vm.event.type.title = vm.eventType[i].title;
+			if (vm.eventBody.type){
+				for (i = 0; i < vm.eventTypes.length; i++){
+					if(vm.eventBody.type == vm.eventTypes[i]._id) {
+						vm.event.type._id = vm.eventTypes[i]._id;
+						vm.event.type.title = vm.eventTypes[i].title;
 						break;
 					}
 				}
 			} 
-			// var dtPickerStart = document.querySelectorAll('#startTime');
-			// var dtPickerEnd = document.querySelectorAll('#endTime');
-			// console.log(dtPickerStart,dtPickerEnd);
-		 //    $(dtPickerStart).datetimepicker({
-		 //        format: 'HH:mm',
-		 //        pickDate: false,
-		 //        pickSeconds: false,
-		 //        pick12HourFormat: false            
-		 //    });
-		    // $(dtPickerEnd).datetimepicker({
-		    //     format: 'HH:mm',
-		    //     pickDate: false,
-		    //     pickSeconds: false,
-		    //     pick12HourFormat: false            
-		    // });
-   // 			var em = angular.element($('#startTime'));
-   // 			console.log(em);
-			// $('#startTime').timepicker({
-   //              minuteStep: 1,
-   //              template: 'modal',
-   //              appendWidgetTo: 'body',
-   //              showSeconds: true,
-   //              showMeridian: false,
-   //              defaultTime: false
 
-			vm.event.start = vm.eventBody.start;
-			vm.event.end = vm.eventBody.end;
+
+			
 
 			console.log('vm.event = ' ,vm.event);
 
 			vm.eventSuccess = false;
-
-			//dropEventInfo(vm.selectedDate);
 
 			vm.selectConfigDevices = {
 				buttonDefaultText: 'Select devices',
@@ -164,31 +135,8 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 	vm.editEvent = function() {
 	
 		console.log('editing');
-		vm.event.isValid = true;
 
-		// if(!vm.event.title){
-		// 	vm.event.titleError = true;
-		// 	vm.event.isValid = false;
-		// } else{
-		// 	vm.event.titleError = false;
-		// }
-
-		// if(!vm.event.type){
-		// 	vm.event.typeError = true;
-		// 	vm.event.isValid = false;
-		// } else {
-		// 	vm.event.typeError = false;
-		// }
-
-		// if(vm.event.startTime > vm.event.endTime){
-		// 	vm.event.isValid = false;
-		// }
-
-		// if(!vm.event.isValid){
-		// 	return;
-		// }
-
-		console.log('vm.event after editing', vm.event.title, vm.event.description, vm.event.start, vm.event.end);
+		console.log('vm.event after editing = ', vm.event.title, vm.event.description, vm.event.start, vm.event.end);
 		var event = {};
 		event.title = vm.event.title;
 		event.description = vm.event.description;
@@ -212,8 +160,9 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 			for (i = 0; i < vm.event.users.length; i++){
 				event.users[i] = vm.event.users[i]._id;
 			}
+			//updateLocalArr(event.users);
 		}
-		console.log('call subm', event);
+		console.log('call submiting event to submit = ', event);
 		vm.submitEdit(event);	
 	};
 
@@ -238,17 +187,20 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 		console.log('deleting an event...');
 
 		helpEventService.deleteEvent(vm.eventBody._id).then(function(response) {
-			console.log('success delete', response);
+			if(response.status == 200 || response.status == 201){
+				//socketService.emit('edit event', { event : response.data });	
 
-			//socketService.emit('edit event', { event : response });	
+				// тип селектеддейт проверить!
+				crudEvEventService.deletedEventBroadcast(vm.selectedDate, vm.eventBody, vm.viewType);
 
-			// тип селектеддейт проверить!!!!!!!!!!!!!!!!!!!!!!!
-			crudEvEventService.deletedEventBroadcast(vm.selectedDate, vm.eventBody, vm.viewType);
-
-			$timeout(function() {
-				$modalInstance.close();
-				vm.eventSuccess = false;
-			}, 1500);
+				$timeout(function() {
+					$modalInstance.close();
+					vm.eventSuccess = false;
+				}, 1500);
+			} else {
+				vm.deletingError = true;
+				return;
+			}
         });
 	};
 
@@ -256,19 +208,24 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 	vm.submitEdit = function(event) {
 		console.log('submiting an event...');
 		helpEventService.updateEvent(vm.eventBody._id, event).then(function(response) {
-           	vm.eventSuccess = true;
-			dropEventInfo();
-			console.log('success edit', response);
+           	
+			if(response.status == 200 || response.status == 201){
+				vm.eventSuccess = true;
+				dropEventInfo();
+				console.log('success edit', response.status);
+				//socketService.emit('edit event', { event : response });	
+				// тип селектеддейт проверить!
 
-			//socketService.emit('edit event', { event : response });	
+				crudEvEventService.editedEventBroadcast(vm.selectedDate, vm.eventBody, response.data, vm.viewType);
 
-			// тип селектеддейт проверить!!!!!!!!!!!!!!!!!!!!!!!
-			crudEvEventService.editedEventBroadcast(vm.selectedDate, vm.eventBody, response, vm.viewType);
-
-			$timeout(function() {
-				$modalInstance.close();
-				vm.eventSuccess = false;
-			}, 1500);
+				$timeout(function() {
+					$modalInstance.close();
+					vm.eventSuccess = false;
+				}, 1500);
+			} else {
+				vm.editingError = true;
+				return;
+			}
         });
 	};
 
@@ -294,5 +251,57 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 		vm.event.type = undefined;
 		vm.event.price = undefined;
 
+	}
+
+	function updateLocalArr(userArr) {
+
+		if (userArr.length > 0) {
+			for (var i=0; i < userArr.length; i++) {
+				var index;
+				for (var y=0; y < localUsersArr.length; y++) {
+					if (_.isEqual(userArr[i], localUsersArr[y])) {
+						index = y;
+						break;
+					}
+				}
+				localUsersArr.splice(index, 1);
+			}
+			for (var u=0; u < userArr.length; u++) {
+				localUsersArr.unshift(userArr[u]);
+			}
+			localStorage["userlist"+loggedUserId] = JSON.stringify(localUsersArr);
+		}
+	}
+
+	function getUpdateUsers(data) {
+		localUsersArr = JSON.parse(localStorage.getItem("userlist"+loggedUserId));
+		//left only id and name fields
+		var usersArr = _.map(data, function(item) {return _.pick(item, '_id', 'name');});
+		//add to local array new users from sever
+		_.each(usersArr, function(userArrObj) {
+			var localUsersArrObj = _.find(localUsersArr, function(localUsersArrObj) {
+				return userArrObj['_id'] === localUsersArrObj['_id'];
+			});
+			if (!localUsersArrObj) {
+				localUsersArr.push(userArrObj);
+			}
+		});
+		//delete from local deleted users
+		var delUsers = [];
+		_.each(localUsersArr, function(localUserArrObj) {
+			var usersArrObj = _.find(usersArr, function(usersArrObj) {
+				return usersArrObj['_id'] === localUserArrObj['_id'];
+			});
+			if (!usersArrObj) {
+				delUsers.push(localUserArrObj);
+			}
+		});
+		_.each(delUsers, function(delItem) {
+			_.remove(localUsersArr, function(item) {
+				return item['_id'] === delItem['_id'];
+			});
+		});
+
+        return localUsersArr;
 	}
 }

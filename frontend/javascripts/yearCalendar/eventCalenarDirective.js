@@ -3,24 +3,53 @@ var app = require('../app');
 app.directive('eventCalendarDirective', eventCalendarDirective);
 
 
-function eventCalendarDirective() {
+function eventCalendarDirective($rootScope, filterService) {
     return {
         restrict: 'A',
         link: function ($scope, element, attr) {
-            
-            $scope.$on('eventsUpdated', function(event, dataObj) {
-                $scope.dataObj = dataObj;
+            var vm = this;
+            vm.correctFlagsEventTypes = filterService.correctFlags(); 
+            vm.dataObjOll = [];
+
+
+            $rootScope.$on('checkEventTypes', function (event, agrs) {           
+                vm.correctFlagsEventTypes = agrs.messege;
+                // console.log('year $rootScope.$on checkEventTypes', vm.correctFlagsEventTypes);
+                // console.log('year vm.dataObjOll from $rootScope.$on checkEventTypes', vm.dataObjOll);                
+                $scope.dataObj = vm.dataObjOll;
                 $scope.maximumLength = 0;
                 for (var day in $scope.dataObj) {
                     if ($scope.dataObj[day].length > $scope.maximumLength) { //maximum events number in day
                         $scope.maximumLength = $scope.dataObj[day].length;
                     }
                 } 
-
+                // console.log('from $scope.$on eventsUpdated', $scope.dataObj);
                 for (var item in $scope.dataObj) {
+                    delEvents(item);
                     addEvents(item);
-                }     
+                }
+            });            
+ 
+
+
+
+            $scope.$on('eventsUpdated', function(event, dataObj) {
+                $scope.dataObj = dataObj;
+                vm.dataObjOll = $scope.dataObj;
+
+                $scope.maximumLength = 0;
+                for (var day in $scope.dataObj) {
+                    if ($scope.dataObj[day].length > $scope.maximumLength) { //maximum events number in day
+                        $scope.maximumLength = $scope.dataObj[day].length;
+                    }
+                } 
+                // console.log('from $scope.$on eventsUpdated', $scope.dataObj);
+                for (var item in $scope.dataObj) {
+                    delEvents(item);
+                    addEvents(item);
+                } 
             });    
+
 
             $scope.$on('addedPlanYearView', function(event, selectedDate, eventBody) {
                 for (var item=0; item <eventBody.length; item++) {
@@ -58,7 +87,7 @@ function eventCalendarDirective() {
                 var evDate = eventStartDate.getDate()+'_'+(eventStartDate.getMonth()+1)+'_'+eventStartDate.getFullYear();
                 var indexOfEvent;
                 for (var i = 0; i < $scope.dataObj[evDate].length; i++){
-                    if ($scope.dataObj[evDate][i] == oldEventBody) {
+                    if ($scope.dataObj[evDate][i]._id == oldEventBody._id) {
                         indexOfEvent = i;
                         break;
                     }
@@ -74,57 +103,84 @@ function eventCalendarDirective() {
             });
 
 
+
+
             function addEvents(day) {
+                // console.log('privet iz function addEvents1', vm.correctFlagsEventTypes);  
+                // console.log('privet iz function addEvents2', $scope.dataObj[day]);    
                 if ($scope.dataObj[day].length > 0) {
-                    var dayCell = $('#'+day);
-                    //create popover template with events titles
-                    var tmpl = '<ul class="list-group">';
-                    for (var i=0; i<$scope.dataObj[day].length; i++) {
-                        tmpl += '<li class="list-group-item">'+$scope.dataObj[day][i].title + '</li>';
-                    }
-                    tmpl +='</ul>';
+                    for (var j = 0; j < vm.correctFlagsEventTypes.length; j++) {
+                        // console.log('from year !!!!!!!!!!!!!!!', $scope.dataObj[day]);         
+                        for (var k = 0; k <  $scope.dataObj[day].length; k++) {  
+                            // console.log('from year 2 !!!!!!!!!!!!!!!', $scope.dataObj[day]); 
+                            if ( $scope.dataObj[day][k].type == vm.correctFlagsEventTypes[j]) {
 
-                    //update template if popover exists
-                    if(dayCell.data('bs.popover')) {
-                        dayCell.data('bs.popover').options.content = tmpl;
-                    } else {
-                    //add popover
-                        dayCell.popover({
-                            trigger: 'hover',
-                            delay: 500,
-                            container: 'body',
-                            placement: 'top',
-                            title: 'Events:',
-                            html: true,
-                            content: tmpl
-                        });
-                    }
 
-                    //add color background for events
-                    var evtNum = $scope.dataObj[day].length;
-                    var colorGray;
-                    if ($scope.maximumLength !== 0) {
-                        var colorStep = Math.round(64/$scope.maximumLength);
-                        var addWhite = 160+(64 -$scope.dataObj[day].length*colorStep); //basic gray + (64 shades of gray - events length* shades step length)
-                        colorGray = 'rgb('+addWhite+', '+addWhite+', '+addWhite+')';
-                        dayCell.css('background-color', colorGray);
-                    } else {
-                     //if fails use old variant
-                        switch(true) {
-                            case (evtNum < 3):
-                                dayCell.css('background-color', 'rgb(224, 224, 224)');
-                                break;
-                            case (evtNum > 2 && evtNum < 5):
-                                dayCell.css('background-color', 'rgb(192, 192, 192)');
-                                break;
-                            case (evtNum > 4):
-                                dayCell.css('background-color', 'rgb(160, 160, 160)');
-                                break;
+ 
+
+
+                                var dayCell = $('#'+day);
+                                //create popover template with events titles
+                                var tmpl = '<ul class="list-group">';
+                                for (var i=0; i<$scope.dataObj[day].length; i++) {
+                                    // console.log('from function addEvents  for', $scope.dataObj[day][i]);                          
+
+                                  tmpl += '<li class="list-group-item">'+$scope.dataObj[day][i].title + '</li>';
+                                }
+                                tmpl +='</ul>';
+
+                                //update template if popover exists
+                                if(dayCell.data('bs.popover')) {
+                                    dayCell.data('bs.popover').options.content = tmpl;
+                                } else {
+                                //add popover
+                                    dayCell.popover({
+                                        trigger: 'hover',
+                                        delay: 500,
+                                        container: 'body',
+                                        placement: 'top',
+                                        title: 'Events:',
+                                        html: true,
+                                        content: tmpl
+                                    });
+                                }
+
+                                //add color background for events
+                                var evtNum = $scope.dataObj[day].length;
+                                var colorGray;
+                                if ($scope.maximumLength !== 0) {
+                                    var colorStep = Math.round(64/$scope.maximumLength);
+                                    var addWhite = 160+(64 -$scope.dataObj[day].length*colorStep); //basic gray + (64 shades of gray - events length* shades step length)
+                                    colorGray = 'rgb('+addWhite+', '+addWhite+', '+addWhite+')';
+                                    dayCell.css('background-color', colorGray);
+                                } else {
+                                //if fails use old variant
+                                    switch(true) {
+                                        case (evtNum < 3):
+                                            dayCell.css('background-color', 'rgb(224, 224, 224)');
+                                            break;
+                                        case (evtNum > 2 && evtNum < 5):
+                                            dayCell.css('background-color', 'rgb(192, 192, 192)');
+                                            break;
+                                        case (evtNum > 4):
+                                            dayCell.css('background-color', 'rgb(160, 160, 160)');
+                                            break;
+                                    }
+                                }
+
+                            }
                         }
                     }
                 }
-            }
+           }
 
+            function delEvents(day) {
+                var dayCell = $('#'+day);
+                if(dayCell.data('bs.popover')) {
+                   $('#'+day + ' .popover').remove();
+                    dayCell.css('background-color', '');
+                }
+            }
         }
     };
 }

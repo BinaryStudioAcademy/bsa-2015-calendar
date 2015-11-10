@@ -2,13 +2,38 @@ var app = require('../app');
 
 app.controller('CalendarController', CalendarController);
 
-CalendarController.$inject = ['$document', '$modal', '$resource', '$scope', '$rootScope'];
+CalendarController.$inject = ['socketService', 'Notification', 'filterService', 'scheduleService', '$document', '$modal', '$resource', '$scope', '$rootScope', '$state', 'LoginService', 'AuthService', 'GoogleAuthService', 'helpEventService', '$uibModal', '$location'];
 
-function CalendarController($document, $modal, $resource, $scope, $rootScope, $state, LoginService, AuthService, GoogleAuthService) {
+function CalendarController(socketService, Notification, filterService, scheduleService, $document, $modal, $resource, $scope, $rootScope, $state, LoginService, AuthService, GoogleAuthService, helpEventService, $uibModal, $location) {
+
   var vm = this;
+  vm.eventTypes = [];
   
+  pullData();
+  console.log(vm.eventTypes);
   var todayDate = Date.now();
   vm.selectedDate = todayDate;
+  var userInfo = AuthService.getUser();
+
+  setInterval(function(){
+    helpEventService.checkEventNotification()
+    .then(function(result){
+      console.log('notify', result.data);
+      // if(result.data) {
+      //   console.log('emitting');
+      //   socketService.emit('notify', result.data);
+      // }
+
+      for(var i = 0; i < result.data.length; i++){
+        var lapse = new Date(result.data[i].start) - new Date();
+        lapse = lapse / ( 1000 * 60 ) + 1;
+        lapse = Math.floor(lapse);
+        Notification.success({message: "Event '" + result.data[i].title + "' starts in " + lapse + " minute(s).", delay: 300000});
+        //alertify.delay(300000).closeLogOnClick(true).log("Event '" + result.data[i].title + "' starts in " + lapse + " minutes.");
+      }
+      
+    });
+  }, 5000);
 
   vm.logOut = function(){
     LoginService.logOut()
@@ -28,10 +53,39 @@ function CalendarController($document, $modal, $resource, $scope, $rootScope, $s
     });
   };
 
+  vm.determineOpenedView = function () {
+    var path = $location.path();
+    var openedView = path.split('/')[2];
+    switch(openedView) {
+      case 'dayView' : return 0;
+      case 'weekView' : return 1;
+      case 'monthView' : return 2;
+      case 'yearView' : return 3;
+      default : return 0;
+    }
+  };
 
-  $document.bind("keypress", function(event) {
-    //console.log(event.keyCode);
-    if ((event.keyCode == 112) || (event.keyCode == 104)) {
+  vm.showTutorial = function () {
+    vm.determineOpenedView();
+    var modalInstance = $uibModal.open({
+        animation: true,
+        templateUrl: 'templates/tutorial/tutorial.html',
+        controller: 'tutorialController',
+        controllerAs: 'tutorialCtrl',
+        bindToController: true,
+        resolve: {
+          openedViewIndex: vm.determineOpenedView()
+        }
+    });
+  };
+
+  if(!userInfo.completedTutorial){
+    vm.showTutorial();
+  }
+
+  $document.bind("keydown", function(event) {
+    // console.log(event.keyCode);
+    if (event.keyCode == 113) {
       $("#myModal").modal("show");
     }
     if (event.keyCode == 27) {
@@ -39,49 +93,84 @@ function CalendarController($document, $modal, $resource, $scope, $rootScope, $s
     }
   });
 
+  $scope.$on('newEventTypeAdded', function (event, eventTypeBody) {
+    vm.eventTypes.push(eventTypeBody);
+  });
+
+  $scope.$on('eventTypeDeleted', function () {
+    helpEventService.getEventTypesPublicByOwner().then(function (data) {
+      vm.eventTypes = data;
+    });
+  });
+
+  vm.sheduleChanged = function(scheduleItemType, scheduleItemId){
+    scheduleService.sheduleChanged(scheduleItemType, scheduleItemId);
+  };
+
+  function pullData(){
+    helpEventService.getRooms(true).then(function(data) {
+        if (data !== null){
+            vm.rooms = data;
+        }
+    }).then(function() {
+      helpEventService.getDevices(true).then(function(data) {
+          if (data !== null){
+            vm.devices = data;
+          }
+        });
+    }).then(function() {
+      //helpEventService.getEventTypesPublicByOwner()
+      //helpEventService.getEventTypes(true)
+      helpEventService.getEventTypesPublicByOwner().then(function(data) {
+        console.log('types public and by owner calling in calendar controoler from service = ', data);
+        if (data !== null){
+          vm.eventTypes = data;
+        }
+      });
+    });
+  }
+
+  vm.allEventTypes = filterService.getAllEventTypes();    // all event type from db
 
 
-
-  var dbEventTypes = $resource('http://localhost:3080/api/eventTypePublicAndByOwner/', {});
-  vm.eventTypes = dbEventTypes.query();  // oll event type from db
-  vm.flag = [];
-
-  vm.checkFlag = function(_id){         // push check Flags tu vm.flag
-    var index = vm.flag.indexOf(_id);
+  vm.checkEventTypes = [];
+  vm.checkFlag = function(_id){         // push check Flags tu vm.checkEventTypes
+    var index = vm.checkEventTypes.indexOf(_id);
     if (index !== -1) {
-      vm.flag.splice(index, 1);
+      vm.checkEventTypes.splice(index, 1);
     } else {
-      vm.flag.push(_id);
+      vm.checkEventTypes.push(_id);
     }
-    // console.log('flags from CalendarController $rootScope.$broadcast', vm.flag);
-    $rootScope.$broadcast('flagFromCalendar', {   //push vm.flag to point $rootScope.$on
-      messege: vm.flag
+    $rootScope.$broadcast('checkEventTypes', {   //push vm.checkEventTypes to point $rootScope.$on
+      messege: vm.checkEventTypes
     });
   };
 
-
-
   vm.selectAllEventType = function(){
-    vm.flag.length = 0;
-    for (var i = 0; i < vm.eventTypes.length; i++) {   
-      vm.flag.push(vm.eventTypes[i]._id);
-      vm.eventTypes[i].flag = true;
+    vm.checkEventTypes.length = 0;
+    for (var i = 0; i < vm.allEventTypes.length; i++) {   
+      vm.checkEventTypes.push(vm.allEventTypes[i]._id);
+      vm.allEventTypes[i].flag = true;
     }
-    // console.log('flags from CalendarController selectAllEventType', vm.flag);   
-    $rootScope.$broadcast('flagFromCalendar', {   //push vm.flag to point $rootScope.$on
-      messege: vm.flag
+
+    // console.log('flags from CalendarController selectAllEventType', vm.checkEventTypes);   
+    $rootScope.$broadcast('checkEventTypes', {   //push vm.checkEventTypes to point $rootScope.$on
+      messege: vm.checkEventTypes
     });
 
   };
 
   vm.clearAllEventType = function(){
-    vm.flag.length = 0;
-    for (var i = 0; i < vm.eventTypes.length; i++) {   
-      vm.eventTypes[i].flag = false;
+    vm.checkEventTypes.length = 0;
+    for (var i = 0; i < vm.allEventTypes.length; i++) {   
+      vm.allEventTypes[i].flag = false;
     }
-    // console.log('flags from CalendarController clearAllEventType', vm.flag);  
-    $rootScope.$broadcast('flagFromCalendar', {   //push vm.flag to point $rootScope.$on
-      messege: vm.flag
+    // console.log('flags from CalendarController clearAllEventType', vm.checkEventTypes);  
+    $rootScope.$broadcast('checkEventTypes', {   //push vm.checkEventTypes to point $rootScope.$on
+      messege: vm.checkEventTypes
     });    
   };
+
+  console.log(vm.allEventTypes);
+  console.log(vm.eventTypes);
 }

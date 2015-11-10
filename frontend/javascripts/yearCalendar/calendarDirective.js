@@ -39,7 +39,7 @@ function calendarDirective($animate) {
                     }
                 }
                 $scope.weeks.push(week); //add last week
-
+                // console.log('from $scope.weeks.push(week)', week);
                 $animate.enter(element.children('.year-month-table'), element); 
             }, true);   
         },

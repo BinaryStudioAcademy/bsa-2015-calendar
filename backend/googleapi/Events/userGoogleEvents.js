@@ -57,7 +57,8 @@ var addToDb = function(events, user) {
 			end : new Date(events[i].end.date || events[i].end.dateTime),
 			description : events[i].description || "",
 			type : type._id,
-			users :  [user.id]
+			users :  [user.id],
+			isPrivate: true
 		};
 		eventRepository.add(newEvent, function(err, data){
 			if(err) {

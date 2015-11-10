@@ -1,0 +1,30 @@
+.modal-body.clearfix
+	button.close(type='button' ng-click='tutorialCtrl.closeModal()') ×
+	ul.nav.nav-tabs(role='tablist')
+		li.active(role='presentation')
+			a(href="#everything" aria-controls="everything" role="tab" data-toggle="tab")
+				| Tutorial
+	.tab-content
+		.tab-pane.active(role="tabpanel" id="everything")
+			.container-fluid
+				.col-md-10
+					.col-sm-2.pull-left
+						button.btn.btn-block.btn-default(ng-click="tutorialCtrl.changeTextLeft()")
+							span
+								i.glyphicon.glyphicon-arrow-left
+					.col-sm-2.pull-right
+						button.btn.btn-block.btn-default(ng-click="tutorialCtrl.changeTextRight()")
+							span
+								i.glyphicon.glyphicon-arrow-right
+			.container-fluid
+				.col-md-10
+					.col-md-12.col-md-offset-4
+						img.img-responsive(ng-src="../../javascripts/tutorial{{tutorialCtrl.tutorialTexts[tutorialCtrl.currentText].img}}")
+						span(ng-model="tutorialCtrl.currentText") {{ tutorialCtrl.tutorialTexts[tutorialCtrl.currentText].text }}
+						//.text-center(id="tutorialText")
+.modal-footer
+	.save-area
+		.col-md-6.col-sm-6.col-xs-6
+			button.btn.btn-danger(type='submit' ng-click="tutorialCtrl.completeTutorial()") Never to show
+		.col-md-6.col-sm-6
+			button.btn.btn-primary(ng-click="tutorialCtrl.closeModal()") Hide

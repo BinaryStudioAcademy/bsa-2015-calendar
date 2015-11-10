@@ -16,4 +16,4 @@
 			tbody
 				tr(ng-repeat="timeSt in dvCtrl.timeStamps")
 					td.hourCell {{timeSt.value}}
-					td.eventCell(ng-dblclick="dvCtrl.showCloseModal()")
+					td.eventCell(ng-dblclick="dvCtrl.createEvent()")

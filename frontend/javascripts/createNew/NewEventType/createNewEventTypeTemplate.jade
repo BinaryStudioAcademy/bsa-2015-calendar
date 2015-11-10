@@ -10,6 +10,17 @@
             label.col-sm-2(for="eventColor") Color:
             .col-sm-10
                 input#eventColor.form-control(ng-init="cnteCtrl.eventType.color='#FFFFFF'" ng-change="cnetCtrl.changeStyle()" ng-style="cnetCtrl.inputStyle" colorpicker="hex" ng-model="cnetCtrl.eventType.color" type="text")
+            label.col-sm-2(for="eventIcon") Icon:
+            .col-sm-10
+                .btn-group(uib-dropdown is-open='cnetCtrl.isDDopen')
+                    button#single-button.btn.btn-default(type='button' uib-dropdown-toggle)
+                        i(ng-class='cnetCtrl.eventType.icon.css' ng-show='cnetCtrl.eventType.icon.css') 
+                        &nbsp;{{cnetCtrl.eventType.icon.name}}
+                    ul.uib-dropdown-menu(role="menu" aria-labeledby='single-button')
+                        li(role='menuitem' ng-repeat='icon in cnetCtrl.icons' ng-click='cnetCtrl.setIcon(null, icon)')
+                            a(href="") 
+                                i(ng-class='icon.css' ng-show="icon.css")  
+                                &nbsp;{{icon.name}}
             label.col-sm-2(for="eventPrivacy") Private:
             .col-sm-10
                 input#eventPrivacy(ng-init="cnetCtrl.eventType.isPrivate = false", type='checkbox', ng-model='cnetCtrl.eventType.isPrivate')
@@ -28,7 +39,8 @@
         .content_for_eventType_list
             table.col-sm-12.table-responsive.table-hover.table.eventTypeTable(border='1')
                 tr
-                    th.col-sm-6 Event type
+                    th.col-sm-3 Event type
+                    th.col-sm-3 Icon
                     th.col-sm-3 Color
                     //th.col-sm-6 events
                     th.col-sm-1 Private
@@ -37,6 +49,16 @@
                 tr(ng-repeat='eventType in cnetCtrl.eventTypes | filter: cnetCtrl.search')
                     td
                         input#inputEventTypeTitle.form-control(ng-model='eventType.title' ng-disabled="eventType.ownerId != cnetCtrl.getCurrentUser().id")
+                    td
+                        .btn-group(uib-dropdown)
+                            button#single-button.btn.btn-default(type='button' uib-dropdown-toggle)
+                                i(ng-class='eventType.icon.css' ng-show='eventType.icon.css') 
+                                &nbsp;{{eventType.icon.name}}
+                            ul.uib-dropdown-menu(role="menu" aria-labeledby='single-button')
+                                li(role='menuitem' ng-repeat='icon in cnetCtrl.icons' ng-click='cnetCtrl.setIcon(eventType, icon)')
+                                    a(href="") 
+                                        i(ng-class='icon.css' ng-show="icon.css")  
+                                        &nbsp;{{icon.name}}                    
                     td
                          input#eventColor.form-control(ng-change="cnetCtrl.changeStyle(eventType)" ng-style="cnetCtrl.inputStyles[eventType._id]" colorpicker="hex" ng-model="eventType.color" type="text" ng-disabled="eventType.ownerId != cnetCtrl.getCurrentUser().id")                       
                     td

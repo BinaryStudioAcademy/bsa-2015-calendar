@@ -24,8 +24,9 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 					            { time: '9pm-11pm'},
 						          ];
 						          */
+    var timeStampsDaily = '12am|1am|2am|3am|4am|5am|6am|7am|8am|9am|10am|11am|12pm|1pm|2pm|3pm|4pm|5pm|6pm|7pm|8pm|9pm|10pm|11pm'.split('|');
 
-	 var timeSatmps = [	{ time: '12am'}, 
+	var timeStamps = [	{ time: '12am'}, 
 	 				           	{ time: '1am'}, 
 	 				           	{ time: '2am'},
 	 							{ time: '3am'}, 
@@ -49,7 +50,7 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 	 				            { time: '9pm'},
 	 				            { time: '10pm'},
 	 				            { time: '11pm'},
-	 					        ];
+	 					        ]; 					       
 
 	var days = [	{ name: 'Mon'}, 
 		           	{ name: 'Tue'}, 
@@ -67,7 +68,28 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 	}
 
 	function getTimeStamps(){
-		return timeSatmps;
+		return timeStamps;
+	}
+
+	function getTimeStampsDaily() {
+
+		var timeStampsObj = [];
+
+		var workingHours = [9, 18];
+
+		for(var i=0; i<timeStampsDaily.length; i+=1) {
+			var timeObj = {};
+			timeObj.value = timeStampsDaily[i];
+			if(i >= 9 && i <= 18) {
+				timeObj.isWorkingHour = true;
+			} else {
+				timeObj.isWorkingHour = false;
+			}
+			timeObj.index = i;
+			timeStampsObj.push(timeObj);
+		}
+
+		return timeStampsObj;
 	}
 
 
@@ -80,7 +102,7 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		var saveEventPromise = $http.post('api/event/', event)       
 		.then(function (response) {
 			console.log('adding event status: ', response.status);
-			return response.data;
+			return response;
 		}, function(reason) {
 			return reason; 		
 		});
@@ -91,7 +113,7 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		var updateEventPromise = $http.put('api/event/' + eventId, eventBody)       
 		.then(function (response) {
 			console.log('updating event status: ', response.status);
-			return response.data;
+			return response;
 		}, function(reason) {
 			return reason; 		
 		});
@@ -102,7 +124,7 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		var deleteEventPromise = $http.delete('api/event/' + eventId)       
 		.then(function (response) {
 			console.log('deleting event status: ', response.status);
-			return response.data;
+			return response;
 		}, function(reason) {
 			return reason; 		
 		});
@@ -113,7 +135,7 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		var savePlanPromise = $http.post('api/plan/', plan)       
 		.then(function (response) {
 			console.log('adding plan status: ', response.status);
-			return response.data;
+			return response;
 		}, function(reason) {
 			return reason; 		
 		});
@@ -146,6 +168,9 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		return allEventsPromise;
 	}
 
+
+
+	// так делать не надо, есть же пример ниже!!
 	function getAllUserEvents(){
 		return $http.get('api/eventPublicAndByOwner');
 	}
@@ -187,8 +212,53 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		return eventsPromise;
 	}
 
-	function getRooms() {
-		var roomsPromise = $http.get('api/room/')       
+	function getRoomEvents(roomId, start, stop) {
+		var roomEventsPromise = $http.get('api/room/events/'+ roomId+ '/' + (+start)+ '/'+ (+stop))       
+		.then(function (response) {
+			var eventsArr = response.data.events;
+			console.log('success! Searching events for room ID:'+ roomId + ' Number of finded events: ', eventsArr.length);
+			return eventsArr;
+		}, function(reason) {
+			if (reason.status == 404){
+				console.log('not found events');
+				return null;
+			}
+			else{
+				return reason; 
+			}			
+		});
+		return roomEventsPromise;
+	}
+
+	function getDeviceEvents(deviceId, start, stop) {
+		var deviceEventsPromise = $http.get('api/device/events/'+ deviceId+ '/' + (+start)+ '/'+ (+stop))       
+		.then(function (response) {
+			var eventsArr = response.data.events;
+			console.log('success! Searching events for device ID:'+ deviceId + ' Number of finded events: ', eventsArr.length);
+			return eventsArr;
+		}, function(reason) {
+			if (reason.status == 404){
+				console.log('not found events');
+				return null;
+			}
+			else{
+				return reason; 
+			}			
+		});
+		return deviceEventsPromise;
+	}
+
+
+
+
+	function getRooms(clipped) {
+		var addStr = '/';
+		if(!clipped){
+			addStr = 'clipped/';
+		} else {
+			addStr = '/';
+		}
+		var roomsPromise = $http.get('api/room'+ addStr)       
 		.then(function (response) {
 			 console.log('success Total rooms: items: ', response.data.length);
 			return response.data;
@@ -204,8 +274,14 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		return roomsPromise;
 	}
 
-	function getDevices() {
-		var devicesPromise = $http.get('api/device/')       
+	function getDevices(clipped) {
+		var addStr = '/';
+		if(!clipped){
+			addStr = 'clipped/';
+		} else {
+			addStr = '/';
+		}
+		var devicesPromise = $http.get('api/device' + addStr)       
 		.then(function (response) {
 			console.log('success Total devices: ', response.data.length);
 			return response.data;
@@ -221,8 +297,14 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		return devicesPromise;
 	}
 
-	function getUsers() {
-		var usersPromise = $http.get('api/user/')       
+	function getUsers(clipped) {
+		var addStr = '/';
+		if(!clipped){
+			addStr = 'clipped/';
+		} else {
+			addStr = '/';
+		}
+		var usersPromise = $http.get('api/user'+ addStr)       
 		.then(function (response) {
 			console.log('success Number of Users: ', response.data.length);
 			return response.data;
@@ -238,8 +320,14 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		return usersPromise;
 	}
 
-	function getEventTypes() {
-		var typesPromise = $http.get('api/eventType/')       
+	function getEventTypes(clipped) {
+		var addStr = '/';
+		if(!clipped){
+			addStr = 'clipped/';
+		} else {
+			addStr = '/';
+		}
+		var typesPromise = $http.get('api/eventType'+ addStr)         
 		.then(function (response) {
 			console.log('success Current number of types: ', response.data.length);
 			return response.data;
@@ -255,26 +343,33 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		return typesPromise;
 	}
 
+
 	function getEventTypesPublicByOwner() {
-		return $http.get('api/eventTypePublicAndByOwner/')
-				.then(function (response) {
-					console.log('success Current number of types (public by owner): ', response.data.length);
-					return response.data;
-				}, function (reason) {
-					if (reason.status == 404) {
-						console.log('not found types');
-						return null;
-					}
-					else {
-						return reason;
-					}
-				});
+		var eventTypesPublicByOwnerPromise = $http.get('api/eventTypePublicAndByOwner/')
+		.then(function (response) {
+			console.log('success Current number of types (public by owner): ', response.data.length);
+			return response.data;
+		}, function (reason) {
+			if (reason.status == 404) {
+				console.log('not found types public and by owner');
+				return null;
+			}
+			else {
+				return reason;
+			}
+		});
+		return eventTypesPublicByOwnerPromise;
+	}
+
+	function checkEventNotification(){
+		return $http.get('api/checkEventNotification');
 	}
 
 	return {
+		getTimeStampsDaily: getTimeStampsDaily,
 		getTimeStamps: getTimeStamps,
-		getDays: getDays,
 		getDaysNames: getDaysNames,
+		getDays: getDays,
 		configureEventData: configureEventData,
 		saveEvent: saveEvent,
 		updateEvent: updateEvent,
@@ -284,10 +379,13 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		getDevices: getDevices,
 		getUsers: getUsers,
 		getEvents: getEvents,
+		getRoomEvents: getRoomEvents,
+		getDeviceEvents: getDeviceEvents,
 		getAllEvents: getAllEvents,
 		getEventTypes: getEventTypes,
 		getUserEvents: getUserEvents,
 		getEventTypesPublicByOwner: getEventTypesPublicByOwner,
-		getAllUserEvents: getAllUserEvents
+		getAllUserEvents: getAllUserEvents,
+		checkEventNotification: checkEventNotification 
 	};
 }

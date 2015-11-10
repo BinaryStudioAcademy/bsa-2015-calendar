@@ -9,6 +9,12 @@ function UserRepository() {
 
 UserRepository.prototype = new Repository();
 
+UserRepository.prototype.getAllClipped = function(callback){
+	var model = this.model;
+	var query = model.find({}, { name: 1, email: 1, _id: 1 });
+	query.exec(callback);
+};
+
 UserRepository.prototype.removeEvent = function(userId, eventId, callback) {
 	var model = this.model;
 	var query = model.findByIdAndUpdate({_id:userId}, { $pull: { events:  eventId } } );
@@ -54,6 +60,13 @@ UserRepository.prototype.getUserEventsByInterval = function(userId, gteDate, lte
 UserRepository.prototype.updateHolidays = function(holidaysIds, callback){
 	var model = this.model;
 	var query = model.update({}, { $set: { holidays:  holidaysIds } }, { multi: true } );
+	query.exec(callback);
+};
+
+UserRepository.prototype.setTutorialCompleted = function(userId, tutorialCompleted, callback){
+	var model = this.model;
+	var query = model.update({_id: userId}, { $set: { completedTutorial:  tutorialCompleted } } );
+	console.log(tutorialCompleted);
 	query.exec(callback);
 };
 

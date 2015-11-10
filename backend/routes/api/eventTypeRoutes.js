@@ -20,6 +20,14 @@ module.exports = function (app) {
         });
     }, apiResponse);
 
+    app.get('/api/eventTypeclipped/', function(req, res, next){
+        eventTypeRepository.getAllClipped(function(err, data){
+            res.data = data;
+            res.err = err;
+            next();
+        });
+    }, apiResponse);
+
     //gets public event types
     app.get('/api/eventTypePublic/', function (req, res, next) {
         eventTypeRepository.getPublic(function (err, data) {

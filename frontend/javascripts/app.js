@@ -1,4 +1,4 @@
-var app = angular.module('calendar-app', [/*'colorpicker.module',*/ 'ui.router', 'ngAlertify', 'btford.socket-io', 'ngResource', 'ui.bootstrap', 'ngAnimate', 'angularjs-dropdown-multiselect'])
+var app = angular.module('calendar-app', ['ui-notification', 'ui.checkbox', 'colorpicker.module', 'ui.router', 'ngAlertify', 'btford.socket-io', 'ngResource', 'ui.bootstrap', 'ngAnimate', 'angularjs-dropdown-multiselect'])
     .config(['$stateProvider', '$urlRouterProvider', '$resourceProvider', '$httpProvider', '$locationProvider',
         function ($stateProvider, $urlRouterProvider, $resourceProvider, $httpProvider, $locationProvider) {
             $urlRouterProvider.otherwise('/');
@@ -65,6 +65,13 @@ var app = angular.module('calendar-app', [/*'colorpicker.module',*/ 'ui.router',
                     auth: true
                 })               
                 .state('calendar.monthView', {
+                    url: '/monthView',
+                    templateUrl: './templates/monthCalendar/monthCalendar.html',
+                    controller: 'MonthController',
+                    controllerAs: 'mCtrl',
+                    auth: true
+                })
+                .state('calendar.monthViewFromYear', {
                     url: '/monthView/:year/:month',
                     templateUrl: './templates/monthCalendar/monthCalendar.html',
                     controller: 'MonthController',

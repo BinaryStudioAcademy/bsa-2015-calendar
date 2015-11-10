@@ -20,10 +20,11 @@
 								button(ng-click='calendarCtrl.clearAllEventType()') clear all
 								ul.dropdown-menu(role="menu")
 									form.form-inline
-										li(ng-repeat="eventType in calendarCtrl.eventTypes")
+										li(ng-repeat="eventType in calendarCtrl.allEventTypes")
 											label.checkbox
 												input(type="checkbox",id="eventType", ng-model = "eventType.flag", name ="{{ eventType.title }}", ng-change = "calendarCtrl.checkFlag(eventType._id)")
 												span.eventTypeFilters {{ eventType.title }}
+								input(type="checkbox", ng-model="string", name="Alloha", ng-true-value="", ng-false-value="", ng-change="")
 							li
 								.datepicker(style="position: relative")
 									button.btn.btn-default#header-pickdate
@@ -40,20 +41,35 @@
 						//- 		a(href="#") Month
 						//- 	li
 						//- 		a(ui-sref='.yearView') Year
-						
-			
+			h4 Device/Room schedule
+			ul.nav.nav-pills
+				li.dropdown
+					a.schedule-label.btn-success#userEvents(data-toggle="dropdown", ng-click="calendarCtrl.sheduleChanged('event', null)") User events
+				li.dropdown
+					a.schedule-label.btn-primary.dropdown-toggle#roomsMenu(data-toggle="dropdown") Rooms
+					ul.dropdown-menu(role="lisbtox")
+						li(ng-repeat="room in calendarCtrl.rooms" role="listitem")
+							a.schedule-item(ng-click="calendarCtrl.sheduleChanged('room', room._id)" ) {{room.title}}
+				li.dropdown
+					a.schedule-label.btn-primary.dropdown-toggle#devicesMenu(data-toggle="dropdown") Devices
+					ul.dropdown-menu(role="lisbtox")
+						li(ng-repeat="device in calendarCtrl.devices" role="listitem")
+							a.schedule-item(ng-click="calendarCtrl.sheduleChanged('device', device._id)") {{device.title}}
+			br
 			a.btn.btn-block.btn-social.btn-google(ng-controller='GoogleAuthController as gaCtrl'  ng-click='gaCtrl.login()')
 				span.fa.fa-google 
 				| Sync with Google
+			a.btn.btn-block.btn-default(ng-click='calendarCtrl.showTutorial()')
+				| Show Tutorial
 			.filters.hidden-xs
 				h3 Filters
 				button(ng-click='calendarCtrl.selectAllEventType()') select all
 				button(ng-click='calendarCtrl.clearAllEventType()') clear all
 				ul
 					form.form-inline
-						li(ng-repeat="eventType in calendarCtrl.eventTypes")
+						li(ng-repeat="eventType in calendarCtrl.allEventTypes")
 							label.checkbox
-								input(type="checkbox",id="eventType", ng-model = "eventType.flag", name ="{{ eventType.name }}", ng-change = "calendarCtrl.checkFlag(eventType._id)")
+								checkbox(type="checkbox",id="eventType", ng-model = "eventType.flag", name ="{{ eventType.name }}", ng-change = "calendarCtrl.checkFlag(eventType._id)")
 								span.eventTypeFilters {{ eventType.title }}
 			h3 CRUD
 			.navbar.navbar-default(role="navigation")
@@ -70,10 +86,7 @@
 		.col-sm-10
 			ui-view#calendar-content
 	.container_calendar_footer
-		h4(align='center' style="color: blue") Press  F1 or H, in addiction on your web browser, to help window.
-
-
-
+		h4(align='center' style="color: blue") Press  F2 to help window.
 
 
 	div(class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel")

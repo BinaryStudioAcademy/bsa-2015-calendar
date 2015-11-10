@@ -158,6 +158,7 @@ module.exports = function(grunt) {
 					'bower_components/angular/angular.js',
 					'bower_components/angular-animate/angular-animate.min.js',
 					'bower_components/lodash/dist/lodash.js',
+					'bower_components/lodash/lodash.js',
 					'bower_components/angularjs-dropdown-multiselect/dist/angularjs-dropdown-multiselect.min.js',
 					'bower_components/angular-ui-router/release/angular-ui-router.min.js',
 					'bower_components/angular-resource/angular-resource.js',
@@ -166,7 +167,10 @@ module.exports = function(grunt) {
 					'bower_components/angular-socket-io/socket.js',
 					'bower_components/alertify.js/dist/js/alertify.js',
 					'bower_components/alertify.js/dist/js/ngAlertify.js',
-					'bower_components/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.js'
+					'bower_components/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.js',
+					'bower_components/angular-ui-notification/dist/angular-ui-notification.min.js',
+					'bower_components/angular-bootstrap-checkbox/angular-bootstrap-checkbox.js'
+
 				],
 				dest: 'public/javascripts/libs.js',
 			},
@@ -175,7 +179,8 @@ module.exports = function(grunt) {
 					'bower_components/bootstrap/dist/css/bootstrap.css',
 					'bower_components/font-awesome/css/font-awesome.css',
 					'bower_components/bootstrap-social/bootstrap-social.css',
-					'bower_components/angular-bootstrap-colorpicker/css/colorpicker.css'
+					'bower_components/angular-bootstrap-colorpicker/css/colorpicker.css',
+					'bower_components/angular-ui-notification/dist/angular-ui-notification.min.css'
 				],
 				dest: 'public/styles/css/libs.css'
 			}
