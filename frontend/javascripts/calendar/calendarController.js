@@ -7,9 +7,10 @@ CalendarController.$inject = ['filterService', 'scheduleService', '$document', '
 function CalendarController(filterService, scheduleService, $document, $modal, $resource, $scope, $rootScope, $state, LoginService, AuthService, GoogleAuthService, helpEventService, $uibModal, $location) {
 
   var vm = this;
-
+  vm.eventTypes = [];
+  
   pullData();
-
+  console.log(vm.eventTypes);
   var todayDate = Date.now();
   vm.selectedDate = todayDate;
   var userInfo = AuthService.getUser();
@@ -72,9 +73,6 @@ function CalendarController(filterService, scheduleService, $document, $modal, $
     }
   });
 
-
-  vm.eventTypes = [];
-
   $scope.$on('newEventTypeAdded', function (event, eventTypeBody) {
     vm.eventTypes.push(eventTypeBody);
   });
@@ -102,7 +100,9 @@ function CalendarController(filterService, scheduleService, $document, $modal, $
         });
     }).then(function() {
       //helpEventService.getEventTypesPublicByOwner()
-      helpEventService.getEventTypes(true).then(function(data) {
+      //helpEventService.getEventTypes(true)
+      helpEventService.getEventTypesPublicByOwner().then(function(data) {
+        console.log('types public and by owner calling in calendar controoler from service = ', data);
         if (data !== null){
           vm.eventTypes = data;
         }
@@ -132,6 +132,7 @@ function CalendarController(filterService, scheduleService, $document, $modal, $
       vm.checkEventTypes.push(vm.allEventTypes[i]._id);
       vm.allEventTypes[i].flag = true;
     }
+
     // console.log('flags from CalendarController selectAllEventType', vm.checkEventTypes);   
     $rootScope.$broadcast('checkEventTypes', {   //push vm.checkEventTypes to point $rootScope.$on
       messege: vm.checkEventTypes
@@ -149,4 +150,7 @@ function CalendarController(filterService, scheduleService, $document, $modal, $
       messege: vm.checkEventTypes
     });    
   };
+
+  console.log(vm.allEventTypes);
+  console.log(vm.eventTypes);
 }

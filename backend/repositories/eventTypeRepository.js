@@ -35,7 +35,7 @@ EventTypeRepository.prototype.getPublic = function (callback) {
 
 EventTypeRepository.prototype.getPublicAndByOwner = function (id, callback) {
     var model = this.model;
-    var query = model.find({$or: [{'isPrivate': false}, {'ownerId': id}]});
+    var query = model.find({$or: [{'isPrivate': false}, {'ownerId': id}]}, {events:0});
     query.exec(callback);
 };
 

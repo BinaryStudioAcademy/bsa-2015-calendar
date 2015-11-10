@@ -345,19 +345,20 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 
 
 	function getEventTypesPublicByOwner() {
-		return $http.get('api/eventTypePublicAndByOwner/')
-				.then(function (response) {
-					console.log('success Current number of types (public by owner): ', response.data.length);
-					return response.data;
-				}, function (reason) {
-					if (reason.status == 404) {
-						console.log('not found types');
-						return null;
-					}
-					else {
-						return reason;
-					}
-				});
+		var eventTypesPublicByOwnerPromise = $http.get('api/eventTypePublicAndByOwner/')
+		.then(function (response) {
+			console.log('success Current number of types (public by owner): ', response.data.length);
+			return response.data;
+		}, function (reason) {
+			if (reason.status == 404) {
+				console.log('not found types public and by owner');
+				return null;
+			}
+			else {
+				return reason;
+			}
+		});
+		return eventTypesPublicByOwnerPromise;
 	}
 
 	return {
