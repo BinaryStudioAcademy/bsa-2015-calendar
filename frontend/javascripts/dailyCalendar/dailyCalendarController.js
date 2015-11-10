@@ -140,6 +140,7 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
 			var resizeBottom = document.createElement('div');
 			var resizeTop = document.createElement('div');
 			var paragraph = document.createElement('div');
+			var icon = document.createElement('div');
 
 			// setting content, class as styles for paragraph
 			paragraph.innerHTML = vm.computedEvents[c].eventAsItIs.title;
@@ -155,10 +156,17 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
 			block.style.height = vm.computedEvents[c].heightVal.toPrecision(3) + 'px';
 			block.style.top = vm.computedEvents[c].topVal.toPrecision(4) + 'px';
 			block.id = vm.computedEvents[c].eventAsItIs._id;
-			block.style.background = COLORS[getRandomInt(0, COLORS.length)];
-			// if(!vm.computedEvents[c].eventAsItIs.type) block.style.background = COLORS[0];
-			// TODO else block.style.background = vm.computedEvents[c].eventAsItIs.type.color;
+			if(!vm.computedEvents[c].eventAsItIs.type) block.style.background = 'grey';
+			else block.style.background = vm.computedEvents[c].eventAsItIs.type.color;
+			/*
+			if(!vm.computedEvents[c].eventAsItIs.type.icon.css){
+				icon.className = vm.computedEvents[c].eventAsItIs.type.icon.css;
+				icon.style.width = '10%';
+				icon.style.float = 'left';
+				paragraph.appendChild(icon);
+			}
 			
+			*/
 			// setting styles for resize block
 			resizeBottom.style.width = '100%';
 			resizeBottom.style.bottom = '-5px';
@@ -370,10 +378,8 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
 							parent.style.height = e.clientY - parent.getBoundingClientRect().top + 'px';
 					// if we move up
 					if(changedMouseY < mouseY){
-						console.log('move up');
 						// and height is still bigger than one quarter of the hour(15 minutes)
 						if(Number(parent.style.height.split('px')[0]) > (parent.parentNode.getBoundingClientRect().height + 1) / 4 / 24){
-							console.log('change height');
 							// we set new height to the event block
 							parent.style.height = e.clientY - parent.getBoundingClientRect().top + 'px';
 						}
@@ -496,40 +502,6 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
 							parent.style.top = Number(parent.style.top.split('px')[0]) - eventTop + clientY + 'px';
 						}
 					}
-					/*// new mouse y coordinate
-					var changedMouseY = e.offsetY === undefined ? e.layerY : e.offsetY;
-					var clientY = e.clientY;
-					var parentTop = parent.getBoundingClientRect().top;
-					var cond = true;
-					var minHeight = (parent.parentNode.getBoundingClientRect().height + 1) / 4 / 24;
-					minHeight = minHeight.toPrecision(5);
-					// if we move down
-					if(clientY < parentTop)
-						// and it is still possible to increase the height of the event block
-						if(Number(parent.style.top.split('px')[0]) > 0){
-							// we increase it
-							parent.style.height = Number(parent.style.height.split('px')[0]) + parentTop - clientY + 'px';
-							parent.style.top = Number(parent.style.top.split('px')[0]) - parentTop + clientY + 'px';
-						}
-					// if we move up
-					if(clientY > parentTop){
-						// and height is still bigger than one quarter of the hour(15 minutes)
-						if(Number(parent.style.height.split('px')[0]) > minHeight){
-							// we set new height to the event block
-							parent.style.height = Number(parent.style.height.split('px')[0]) + parentTop - clientY + 'px';
-							parent.style.top = Number(parent.style.top.split('px')[0]) - parentTop + clientY + 'px';
-						}
-					}
-
-					if(Number(parent.style.height.split('px')[0]) < minHeight){
-						parent.style.height = minHeight + 'px';
-						parent.style.top = Number(parent.style.top.split('px')[0]) - clientY + parentTop + 'px';
-					}
-
-					if(Number(parent.style.top.split('px')[0]) < 0){
-						parent.style.top = '0px';
-						parent.style.height = Number(parent.style.height.split('px')[0]) + clientY - parentTop + 'px';
-					}*/
 				}
 
 				// function which tracks mouse position and changes dynamically the height of the event block
