@@ -15,5 +15,5 @@
 			time-indicator(table='#calendar' table-row-height='dvCtrl.rowHeight')
 			tbody
 				tr(ng-repeat="timeSt in dvCtrl.timeStamps")
-					td.hourCell {{timeSt.value}}
-					td.eventCell(ng-dblclick="dvCtrl.createEvent()")
+					td.hourCell {{timeSt.value}}:00
+					td.eventCell(ng-dblclick="dvCtrl.createEvent(timeSt.value)")

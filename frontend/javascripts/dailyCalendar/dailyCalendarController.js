@@ -88,7 +88,10 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
 		return eventArr;
 	};
 
-	vm.createEvent = function() {
+	vm.createEvent = function(timeSt) {
+		console.log(timeSt);
+		vm.selectedDate.setHours(timeSt);
+		console.log(vm.selectedDate);
 		crudEvEventService.creatingBroadcast(moment(vm.selectedDate), 'DayView');
 	};
 
@@ -108,7 +111,7 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
 		}
 	}
 
-	// gets all the events that corrspond to the rodays date
+	// gets all the events that corre spond to the todays date
 	function mapEvents(){
 		$('#calendar').css('margin-bottom', 0);
 		//computing top and height values for all geted events
@@ -154,7 +157,7 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
 			block.style.height = vm.computedEvents[c].heightVal.toPrecision(3) + 'px';
 			block.style.top = vm.computedEvents[c].topVal.toPrecision(4) + 'px';
 			block.id = vm.computedEvents[c].eventAsItIs._id;
-			block.style.background = COLORS[getRandomInt(0, COLORS.length)];
+			block.style.background =  vm.computedEvents[c].eventAsItIs.type.color || COLORS[getRandomInt(0, COLORS.length)];
 			// if(!vm.computedEvents[c].eventAsItIs.type) block.style.background = COLORS[0];
 			// TODO else block.style.background = vm.computedEvents[c].eventAsItIs.type.color;
 			
@@ -167,12 +170,23 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
 			resizeBlock.style.position = 'absolute';
 			resizeBlock.className = 'resize-block';
 
-			// appending paragraph and resize block inside event block and appending it to tha table of hours
+			// appending paragraph and resize block inside event block and appending it to the table of hours
 			block.appendChild(paragraph);
 			block.appendChild(resizeBlock);
 			document.getElementById('day-events-place').appendChild(block);
 		}
 
+		// var timestCells = document.getElementsByClassName('eventCell');
+		// console.log(timestCells.length);
+		// for (i = 0; i < timestCells.length; i++){
+		// 	timestCells[i].addEventListener('mousedown', function(e){
+		// 		if(e.button == 2 ){
+		// 			alert('Context Menu event has fired!');
+		// 			e.stopPropagation();
+		// 			return false;
+		// 		} 
+		// 	}); 
+		// }
 		// take all the events displayed
 		var blocks = document.getElementsByClassName('day-event-blocks');
 		// and in the loop put for all of the event listeners for 'mousedown' event
@@ -229,10 +243,13 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
 						end: newEnd
 					};
 					// send new dates to the server for uodating
-					DailyCalendarService.updateEvent(self.id, newElement);
-					thisEvent.start = newStart;
-					thisEvent.end = newEnd;
-					replaceEvent(vm.todayEvents, thisEvent);
+					helpEventService.updateEventStartEnd(self.id,newElement).then(function(response) {
+				        if (response.status == 200){
+				            thisEvent.start = newStart;
+							thisEvent.end = newEnd;
+							replaceEvent(vm.todayEvents, thisEvent);
+				        }
+				    });
 				}
 
 

@@ -24,8 +24,8 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 					            { time: '9pm-11pm'},
 						          ];
 						          */
-    var timeStampsDaily = '12am|1am|2am|3am|4am|5am|6am|7am|8am|9am|10am|11am|12pm|1pm|2pm|3pm|4pm|5pm|6pm|7pm|8pm|9pm|10pm|11pm'.split('|');
-
+    var timeStampsDailyAmPm = '12am|1am|2am|3am|4am|5am|6am|7am|8am|9am|10am|11am|12pm|1pm|2pm|3pm|4pm|5pm|6pm|7pm|8pm|9pm|10pm|11pm'.split('|');
+    var timeStampsDaily = '00|01|02|03|04|05|06|07|08|09|10|11|12|13|14|15|16|17|18|19|20|21|22|23'.split('|');
 	var timeStamps = [	{ time: '12am'}, 
 	 				           	{ time: '1am'}, 
 	 				           	{ time: '2am'},
@@ -109,6 +109,7 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		return saveEventPromise;
 	}
 
+
 	function updateEvent(eventId, eventBody) {
 		var updateEventPromise = $http.put('api/event/' + eventId, eventBody)       
 		.then(function (response) {
@@ -118,6 +119,17 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 			return reason; 		
 		});
 		return updateEventPromise;
+	}
+
+	function updateEventStartEnd(eventId, body) {
+		var updateStartEndEventPromise = $http.put('api/event/newdate/' + eventId, body)
+		.then(function (response) {
+			console.log('updating event start end status: ', response.status);
+			return response;
+		}, function(reason) {
+			return reason; 		
+		});
+		return updateEventPromise;  
 	}
 
 	function deleteEvent(eventId) {
@@ -369,6 +381,7 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		configureEventData: configureEventData,
 		saveEvent: saveEvent,
 		updateEvent: updateEvent,
+		updateEventStartEnd : updateEventStartEnd,
 		deleteEvent: deleteEvent,
 		savePlan: savePlan,
 		getRooms: getRooms,
