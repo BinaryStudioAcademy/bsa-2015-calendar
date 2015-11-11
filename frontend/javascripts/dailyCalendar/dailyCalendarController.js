@@ -2,18 +2,19 @@ var app = require('../app');
 
 app.controller('DayViewController', DayViewController);
 
-DayViewController.$inject = ['AuthService', '$scope', 'crudEvEventService', 'DailyCalendarService', '$timeout', '$q', '$uibModal', 'socketService', 'helpEventService'];
+DayViewController.$inject = ['Notification', 'AuthService', '$scope', 'crudEvEventService', '$timeout', '$q', '$uibModal', 'socketService', 'helpEventService'];
 
-function DayViewController(AuthService, $scope, crudEvEventService, DailyCalendarService, $timeout, $q, $uibModal, socketService, helpEventService) {
+function DayViewController(Notification, AuthService, $scope, crudEvEventService, $timeout, $q, $uibModal, socketService, helpEventService) {
 
 	var vm = this;
 
     $scope.$on('addedEventDayView', function(event, selectedDate, eventBody){
     	console.log('EVENT ADDED', eventBody);
+    	console.log('allEvents', vm.allEvents);
     	if(!vm.allEvents) vm.allEvents = [];
    		vm.allEvents.push(eventBody);
-   		filterEventsByTodayDate();
-   		mapEvents();
+   		console.log('allEvents after', vm.allEvents);
+   		reBuildDailyView();
     });
  
     $scope.$on('addedPlanDayView', function(event, selectedDate, events){
@@ -22,8 +23,7 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
  		for(var i = 0; i < events.length; i++){
  			vm.allEvents.push(events[i]);
  		}
- 		filterEventsByTodayDate();
- 		mapEvents();
+ 		reBuildDailyView();
     });
  
     $scope.$on('deletedEventDayView', function(event, selectedDate, eventBody){
@@ -34,26 +34,21 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
  
     });
 	
+    document.addEventListener('contextmenu', function(e){
+		e.preventDefault();
+	});
+
 	vm.timeStamps = helpEventService.getTimeStampsDaily();
-	var COLORS = [
-		'#e21400', '#91580f', '#f8a700', '#f78b00',
-		'#58dc00', '#287b00', '#a8f07a', '#4ae8c4',
-		'#3b88eb', '#3824aa', '#a700ff', '#d300e7'
-		];
+
 	var todayDate = new Date();
 	vm.computedEvents = [];
 	vm.selectedDate = vm.selectedDate || todayDate;
 	vm.eventSelected = false;
 	vm.event = vm.event || {};
 	vm.plan = vm.plan || {};
-
-	function getRandomInt(min, max) {
-		return Math.floor(Math.random() * (max - min)) + min;
-	}
-
+	
 	vm.showDay = function(step) {
 		var date = new Date(vm.selectedDate);
-
 		date.setDate(
 			step === 1 ?
 				date.getDate() + 1
@@ -61,7 +56,6 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
 				date.getDate() - 1
 		);
 
-		
 		var children = $('.day-event-blocks');
 		for(var i = 0; i < children.length; i++){
 			var id = children[i].id;
@@ -69,23 +63,8 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
 		}
 		vm.computedEvents = [];
 		vm.selectedDate = date;
-
-		filterEventsByTodayDate();
-
-		mapEvents();
-
-	};
-
-	vm.rangeForEvents = function(num) {
-		return new Array(num);
-	};
-
-	vm.getEventsByStart = function(index) {
-		var eventArr = vm.todayEvents.filter(function (event) {
-			var date = new Date(event.start);
-			return date.getHours() === index;
-		});
-		return eventArr;
+		reBuildDailyView(vm.selectedDate, null);
+		getAllEvents();
 	};
 
 	vm.createEvent = function(timeSt) {
@@ -94,7 +73,6 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
 		console.log(vm.selectedDate);
 		crudEvEventService.creatingBroadcast(moment(vm.selectedDate), 'DayView');
 	};
-
 
 	// function gets array of event objects and return the one with _id == criteria
 	function findById(array, criteria) {
@@ -146,21 +124,28 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
 			var icon = document.createElement('div');
 
 			// setting content, class as styles for paragraph
-			paragraph.innerHTML = vm.computedEvents[c].eventAsItIs.title;
+			paragraph.innerHTML = vm.computedEvents[c].eventAsItIs.description;
 			paragraph.className = 'event-info';
-			paragraph.style.width = '85%';
-			paragraph.style.float = 'right';	
+			paragraph.style.width = '80%';
+			paragraph.style.float = 'left';	
 			paragraph.style.opacity = '1';
 			paragraph.style.color = 'black';
 			paragraph.style.display = 'none';
 
 			// setting computed top and height values for event block, and id so in the future we could use it for updating dates
 			block.className = 'day-event-blocks';
+			block.innerHTML = vm.computedEvents[c].eventAsItIs.title;
+			block.style['font-weight'] = 900;
+			block.style['text-align'] = 'center';
+			block.style['font-color'] = 'black';
 			block.style.height = vm.computedEvents[c].heightVal.toPrecision(3) + 'px';
 			block.style.top = vm.computedEvents[c].topVal.toPrecision(4) + 'px';
 			block.id = vm.computedEvents[c].eventAsItIs._id;
-			if(!vm.computedEvents[c].eventAsItIs.type) block.style.background = 'grey';
-			else block.style.background = vm.computedEvents[c].eventAsItIs.type.color;
+			if(vm.computedEvents[c].eventAsItIs.type.color){
+				block.style.background = vm.computedEvents[c].eventAsItIs.type.color;
+			} else {
+				block.style.background = 'grey';
+			}
 
 			// if(!vm.computedEvents[c].eventAsItIs.type.icon.css){
 			// 	icon.className = vm.computedEvents[c].eventAsItIs.type.icon.css;
@@ -192,17 +177,6 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
 			document.getElementById('day-events-place').appendChild(block);
 		}
 
-		// var timestCells = document.getElementsByClassName('eventCell');
-		// console.log(timestCells.length);
-		// for (i = 0; i < timestCells.length; i++){
-		// 	timestCells[i].addEventListener('mousedown', function(e){
-		// 		if(e.button == 2 ){
-		// 			alert('Context Menu event has fired!');
-		// 			e.stopPropagation();
-		// 			return false;
-		// 		} 
-		// 	}); 
-		// }
 		// take all the events displayed
 		var blocks = document.getElementsByClassName('day-event-blocks');
 		// and in the loop put for all of the event listeners for 'mousedown' event
@@ -210,107 +184,24 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
 			blocks[k].addEventListener('mousedown', function(e) {
 				var self = this;
 				// get Y value of the mouse 
-				var mouseY = e.offsetY === undefined ? e.layerY : e.offsetY;
+				self.mouseY = e.offsetY === undefined ? e.layerY : e.offsetY;
 				// set block z-index to 10 so it is upper than others and you can't touch them whil dragging
 				self.style.zIndex = '10';
 				// set resize block display to none so it can't do any problens for us while drugging
-				self.getElementsByClassName('resize-block')[0].style.display = 'none';
+				
 
-				// function which is called when mouse leave the event block on dragging, or simply drops it
-				function mouseAway(){
-					// remove event listeners for tracking mousemove, mouseleave and mouseup so it would not track the mouse after we drop the block
-					self.removeEventListener('mousemove', trackMouse);
-					self.removeEventListener('mouseup', mouseAway);
-					self.removeEventListener('mouseleave', mouseAway);
-					// return resize block to normal view
-					self.getElementsByClassName('resize-block')[0].style.display = 'block';
-					// put event block to the same levels as others
-					self.style.zIndex = '0';
-
-					// create date that is equal to the beginnig of the day
-					var zeroDate = new Date();
-					zeroDate.setHours(0, 0, 0, 0);
-					// calculate amount of milliseconds that is between the beginning of the day and new event start
-					var todaysMilSec = 86400000 * (Number(self.style.top.split('px')[0])) / 888;
-
-					// if the amount of millisecond can't be divided by five minutes we cut eat so it can be
-					if(todaysMilSec % 300000 !== 0)
-						todaysMilSec -= todaysMilSec % 300000;
-
-					// set top property of the event block to the new values which can bi divided by 5 minutes
-					self.style.top =  888 * todaysMilSec / 86400000 + 'px';
-					// create newStart date which will be sent to the server after event drop
-					var newStart = new Date(zeroDate.getTime() + todaysMilSec);
-					// set seconds and milliseconds of the event to 0
-					newStart.setSeconds(0);
-					newStart.setMilliseconds(0);
-					// get event from the array to calculate its true duration
-					var thisEvent = findById(vm.todayEvents, self.id);
-					var oldStart = new Date(thisEvent.start);
-					var oldEnd = new Date(thisEvent.end);
-					// calculating events end by the sum of start and calculated duration
-					var newEnd = new Date(newStart.getTime() + (oldEnd.getTime() - oldStart.getTime()));
-					newStart.setFullYear(oldStart.getFullYear(), oldStart.getMonth(), oldStart.getDate());
-					newEnd.setFullYear(oldEnd.getFullYear(), oldEnd.getMonth(), oldEnd.getDate());
-					alert('newStart: ' + newStart + ';\nnewEnd: ' + newEnd);
-					//object to send to the server for update
-					var newElement = {
-						start: newStart,
-						end: newEnd
-					};
-					// send new dates to the server for uodating
-					helpEventService.updateEventStartEnd(self.id,newElement).then(function(response) {
-				        if (response.status == 200){
-				            thisEvent.start = newStart;
-							thisEvent.end = newEnd;
-							replaceEvent(vm.todayEvents, thisEvent);
-				        }
-				    });
+				if (e.button == 2){
+					crudEvEventService.editingBroadcast(new Date(), findById(vm.todayEvents, self.id), 'DailyView');
+					//e.stopPropagation();
+					//e.preventDefault();
+					return false;
+				} else {
+					// add event listeners while dragging for tracking mouse and updating dates if mouse leave block or mouse is up
+					self.addEventListener.apply(self, ['mousemove', trackMouse]);
+					self.addEventListener.apply(self, ['mouseup', mouseAway]);
+					self.addEventListener.apply(self, ['mouseleave', mouseAway]);
 				}
 
-
-				// function to track mouse y coordinate changes
-				function trackMouse(e){
-					// y coordinate of the moue after moving
-					var changedMouseY = e.offsetY === undefined ? e.layerY : e.offsetY;
-					// current top value of the event blocks converted to number
-					var topValue = self.style.top.split('px');
-					topValue = Number(topValue[0]);
-
-					// if mouse moved down
-					if ((topValue + ((topValue + changedMouseY) - (topValue + mouseY))) > Number(self.style.top.split('px')[0]))
-						// if event didn't reach the bottom of the table and we can asign it new top value which is bigger than previous
-						// de facto, we move can move block down
-						if (Number(self.style.top.split('px')[0]) < ((888 - Number(self.style.height.split('px')[0])).toPrecision(3))){
-							// and we do it
-							self.style.top = topValue + ((topValue + changedMouseY) - (topValue + mouseY))  + 'px';
-						}
-
-					// if mouse moved up
-					if ((topValue + ((topValue + changedMouseY) - (topValue + mouseY))) < Number(self.style.top.split('px')[0]))
-						// if event didn't reach the top of the table and we can asign top value smaller than previous
-						// de facte, we can move block up
-						if (Number(self.style.top.split('px')[0]) > 0)
-							// and we do it
-							self.style.top = topValue + ((topValue + changedMouseY) - (topValue + mouseY))  + 'px';
-
-					// if block is moved upper than upper boundary we move it to possible top value
-					// other words if someone moved mouse very fast and it it's top value became -10px
-					if (Number(self.style.top.split('px')[0]) < 0)
-						// we set it to 0
-						self.style.top = '0px';
-
-					// if block is moved lower than lower boundary we move it to possible top value
-					// other words if someone moved mouse very fast and it it's top value became 900px
-					if (Number(self.style.top.split('px')[0]) > ((888 - Number(self.style.height.split('px')[0])).toPrecision(3)))
-						// we set it to the (height of the table - height of the event) possible top value
-						self.style.top = 888 - Number(self.style.height.split('px')[0]).toPrecision(3) + 'px';
-				}
-
-				// add event listeners while dragging for tracking mouse and updating dates if mouse leave block or mouse is up
-				self.addEventListener('mousemove', trackMouse);
-				self.addEventListener('mouseup', mouseAway);
-				self.addEventListener('mouseleave', mouseAway);
 			});
 			// add event listener which move block with the title of the event on the block when you hover the event block
 			blocks[k].addEventListener('mouseover', function(){
@@ -368,17 +259,20 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
 					newEnd.setMilliseconds(0);
 					newStart.setFullYear(oldStart.getFullYear(), oldStart.getMonth(), oldStart.getDate());
 					newEnd.setFullYear(oldEnd.getFullYear(), oldEnd.getMonth(), oldEnd.getDate());
-					alert('newStart: ' + newStart + ';\nnewEnd: ' + newEnd);
+					Notification.success({message: 'newStart: ' + newStart + ';\nnewEnd: ' + newEnd });
 					// create object to send to the server with new dates
 					var newElement = {
 						start: newStart,
 						end: newEnd
 					};
 					// update dates for event
-					DailyCalendarService.updateEvent(parent.id, newElement);
-					thisEvent.start = newStart;
-					thisEvent.end = newEnd;
-					replaceEvent(vm.todayEvents, thisEvent);
+					helpEventService.updateEventStartEnd(parent.id,newElement).then(function(response) {
+				        if (response.status == 200){
+				            thisEvent.start = newStart;
+							thisEvent.end = newEnd;
+							replaceEvent(vm.todayEvents, thisEvent);
+				        }
+				    });
 				}
 
 				function resizeTrackMouseDoc(e) {
@@ -449,7 +343,6 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
 					// calculating the newStart date
 					var zeroDate = new Date();
 					zeroDate.setHours(0, 0, 0, 0);
-				
 					var todaysMilSecStart = 86400000 * (Number(parent.style.top.split('px')[0])) / 888;
 					// if the amount of millisecond can't be divided by five minutes we cut eat so it can be
 					if(todaysMilSecStart % 300000 !== 0)
@@ -477,17 +370,20 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
 					newEnd.setMilliseconds(0);
 					newStart.setFullYear(oldStart.getFullYear(), oldStart.getMonth(), oldStart.getDate());
 					newEnd.setFullYear(oldEnd.getFullYear(), oldEnd.getMonth(), oldEnd.getDate());
-					alert('newStart: ' + newStart + ';\nnewEnd: ' + newEnd);
+					Notification.success({message: 'newStart: ' + newStart + ';\nnewEnd: ' + newEnd });
 					// create object to send to the server with new dates
 					var newElement = {
 						start: newStart,
 						end: newEnd
 					};
 					// update dates for event
-					DailyCalendarService.updateEvent(parent.id, newElement);
-					thisEvent.start = newStart;
-					thisEvent.end = newEnd;
-					replaceEvent(vm.todayEvents, thisEvent);
+					helpEventService.updateEventStartEnd(parent.id,newElement).then(function(response) {
+				        if (response.status == 200){
+				            thisEvent.start = newStart;
+							thisEvent.end = newEnd;
+							replaceEvent(vm.todayEvents, thisEvent);
+				        }
+				    });
 				}
 
 				function resizeTrackMouseDoc(e) {
@@ -533,71 +429,139 @@ function DayViewController(AuthService, $scope, crudEvEventService, DailyCalenda
 		}
 	}
 
-	vm.pullData = function() {
-        var startDate = new Date(vm.monthStartMoment.format("DD MMM YYYY HH:mm:ss")),
-            endDate = new Date(vm.monthEndMoment.format("DD MMM YYYY HH:mm:ss"));
+	// function which is called when mouse leave the event block on dragging, or simply drops it
+	function mouseAway(){
+		self = this;
+		self.getElementsByClassName('resize-block')[0].style.display = 'none';
+		// remove event listeners for tracking mousemove, mouseleave and mouseup so it would not track the mouse after we drop the block
+		self.removeEventListener('mousemove', trackMouse);
+		self.removeEventListener('mouseup', mouseAway);
+		self.removeEventListener('mouseleave', mouseAway);
+		// return resize block to normal view
+		self.getElementsByClassName('resize-block')[0].style.display = 'block';
+		// put event block to the same levels as others
+		self.style.zIndex = '0';
 
-        helpEventService.getUserEvents(startDate, endDate).then(function(data) {
-            if (data !== null){ 
-                vm.buildEventsObj(data);
-            }
-            vm.buildMonth();
-        });
-    };
+		// create date that is equal to the beginnig of the day
+		var zeroDate = new Date();
+		zeroDate.setHours(0, 0, 0, 0);
+		// calculate amount of milliseconds that is between the beginning of the day and new event start
+		var todaysMilSec = 86400000 * (Number(self.style.top.split('px')[0])) / 888;
 
-	function getAllEvents() {
-		DailyCalendarService.getAllEvents()
-			.$promise.then(
-				function(response) {
-					console.log('success Number of Events: ', response.length);
-					vm.allEvents = response;
+		// if the amount of millisecond can't be divided by five minutes we cut eat so it can be
+		if(todaysMilSec % 300000 !== 0)
+			todaysMilSec -= todaysMilSec % 300000;
 
-					filterEventsByTodayDate();
+		// set top property of the event block to the new values which can bi divided by 5 minutes
+		self.style.top =  888 * todaysMilSec / 86400000 + 'px';
+		// create newStart date which will be sent to the server after event drop
+		var newStart = new Date(zeroDate.getTime() + todaysMilSec);
+		// set seconds and milliseconds of the event to 0
+		newStart.setSeconds(0);
+		newStart.setMilliseconds(0);
+		// get event from the array to calculate its true duration
+		var thisEvent = findById(vm.todayEvents, self.id);
+		var oldStart = new Date(thisEvent.start);
+		var oldEnd = new Date(thisEvent.end);
+		// calculating events end by the sum of start and calculated duration
+		var newEnd = new Date(newStart.getTime() + (oldEnd.getTime() - oldStart.getTime()));
+		newStart.setFullYear(oldStart.getFullYear(), oldStart.getMonth(), oldStart.getDate());
+		newEnd.setFullYear(oldEnd.getFullYear(), oldEnd.getMonth(), oldEnd.getDate());
+		Notification.success({message: 'newStart: ' + newStart + ';\nnewEnd: ' + newEnd });
+		//object to send to the server for update
+		var newElement = {
+			start: newStart,
+			end: newEnd
+		};
+		// send new dates to the server for uodating
+		helpEventService.updateEventStartEnd(self.id,newElement).then(function(response) {
+	        if (response.status == 200){
+	            thisEvent.start = newStart;
+				thisEvent.end = newEnd;
+				replaceEvent(vm.todayEvents, thisEvent);
+	        }
+	    });
+	}
+	// function to track mouse y coordinate changes
+	function trackMouse(e){
+		self = this;
+		// y coordinate of the moue after moving
+		var changedMouseY = e.offsetY === undefined ? e.layerY : e.offsetY;
+		// current top value of the event blocks converted to number
+		var topValue = self.style.top.split('px');
+		topValue = Number(topValue[0]);
 
-					mapEvents();
-				},
-				function(response) {
-					console.log('failure', response);
-				}
-			);
+		// if mouse moved down
+		if ((topValue + ((topValue + changedMouseY) - (topValue + self.mouseY))) > Number(self.style.top.split('px')[0]))
+			// if event didn't reach the bottom of the table and we can asign it new top value which is bigger than previous
+			// de facto, we move can move block down
+			if (Number(self.style.top.split('px')[0]) < ((888 - Number(self.style.height.split('px')[0])).toPrecision(3))){
+				// and we do it
+				self.style.top = topValue + ((topValue + changedMouseY) - (topValue + self.mouseY))  + 'px';
+			}
+
+		// if mouse moved up
+		if ((topValue + ((topValue + changedMouseY) - (topValue + self.mouseY))) < Number(self.style.top.split('px')[0]))
+			// if event didn't reach the top of the table and we can asign top value smaller than previous
+			// de facte, we can move block up
+			if (Number(self.style.top.split('px')[0]) > 0)
+				// and we do it
+				self.style.top = topValue + ((topValue + changedMouseY) - (topValue + self.mouseY))  + 'px';
+
+		// if block is moved upper than upper boundary we move it to possible top value
+		// other words if someone moved mouse very fast and it it's top value became -10px
+		if (Number(self.style.top.split('px')[0]) < 0)
+			// we set it to 0
+			self.style.top = '0px';
+
+		// if block is moved lower than lower boundary we move it to possible top value
+		// other words if someone moved mouse very fast and it it's top value became 900px
+		if (Number(self.style.top.split('px')[0]) > ((888 - Number(self.style.height.split('px')[0])).toPrecision(3)))
+			// we set it to the (height of the table - height of the event) possible top value
+			self.style.top = 888 - Number(self.style.height.split('px')[0]).toPrecision(3) + 'px';
+	}
+
+	function getAllEvents(selectedDate, cb) {
+		date = selectedDate || new Date();
+		start = new Date();
+		start.setDate(date.getDate() -2);
+		end = new Date();
+		end.setDate(date.getDate() +2);
+		console.log('start end', start, end);
+		helpEventService.getUserEvents(start, end).then(function(response) {
+	        if (response){
+	            vm.allEvents = response;
+	            if (cb){
+	            	cb();
+	            } 
+	        }
+	        else {
+	        	console.log('failure');
+	        }
+	    });
 	}
 
 	function filterEventsByTodayDate() {
 		vm.todayEvents = vm.allEvents.filter(function(event) {
 			if(event.start) {
-				var currentUserId = AuthService.getUser().id;
 				var date = new Date(event.start);
-				return date.getDate() === vm.selectedDate.getDate() && 
-				(event.ownerId === currentUserId || event.users.indexOf(currentUserId) != -1);
-				//event.ownerId === currentUserId;
-				//event.users.indexOf(currentUserId) != -1;
+				return date.getDate() === vm.selectedDate.getDate();
 			}
 		});
 	}
-	//TODO: implement example approach to API calls
-	// function getLatestCurrencyRateByCode(code, callback){
-	// 		var fxRatesResource = $resource(appConfig.apiUrl + 'metadata/fx/:code', {code: code}, null);
-
-	// 		if (currencies[code]){
-	// 			return $q.resolve(currencies[code]);
-	// 		} else {
-
-	// 			return fxRatesResource.get().$promise.then(function(res){
-	// 				currencies[code] = res;
-	// 				return res;
-	// 			}, function(error, status){
-	// 				return $q.reject(error);
-	// 			});	
-	// 		}
-	// 	}
 	function showWorkHours() {
 		
+	}
+
+	function reBuildDailyView() {
+		filterEventsByTodayDate();
+		mapEvents();
 	}
 
 	init();
 
 	function init() {
-		showWorkHours();
-		getAllEvents();
+		//showWorkHours();	
+		getAllEvents(new Date(), reBuildDailyView);
 	}
 }

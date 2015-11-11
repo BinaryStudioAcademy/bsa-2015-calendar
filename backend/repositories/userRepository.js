@@ -1,6 +1,7 @@
 var connection = require('../db/dbconnect');
 var Repository = require('./generalRepository');
 var User = require('../schemas/userSchema');
+var Event = require('../schemas/eventSchema');
 
 function UserRepository() {
 	Repository.prototype.constructor.call(this);
@@ -54,7 +55,14 @@ UserRepository.prototype.getUserEvents = function(userId, callback){
 UserRepository.prototype.getUserEventsByInterval = function(userId, gteDate, lteDate, callback){
 	var model = this.model;
 	var query = model.findOne({_id:userId}, {events: 1}).populate('events', null, {"start": {"$gte": gteDate, "$lte": lteDate}});
-	query.exec(callback);
+	query.populate('type');
+	query.exec(function(err, doc){
+            Event.populate(doc.events, {path:'type', populate: 'type._id type.title type.color type.isPrivate type.icon'},
+                   function(err, data){
+                        callback(null, doc);
+                   }
+             );     
+          });           
 };
 
 UserRepository.prototype.updateHolidays = function(holidaysIds, callback){
