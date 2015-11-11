@@ -6,6 +6,7 @@ module.exports = function(app) {
 	app.get('/api/checkEventNotification', function(req, res, next){
 		eventService.checkNotification(req.user._id, function(err, data){
 			res.data = data;
+			console.log('err=', err, 'data=', data);
 			res.err = err;
 			next();
 		});

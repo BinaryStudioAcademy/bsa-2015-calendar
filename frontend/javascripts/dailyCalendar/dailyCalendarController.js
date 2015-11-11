@@ -9,17 +9,20 @@ function DayViewController(Notification, AuthService, $scope, crudEvEventService
 	var vm = this;
 
     $scope.$on('addedEventDayView', function(event, selectedDate, eventBody){
+    	//$( ".day-event-blocks" ).remove();
     	console.log('EVENT ADDED', eventBody);
-    	console.log('allEvents', vm.allEvents);
-    	if(!vm.allEvents) vm.allEvents = [];
+    	if(!vm.allEvents){
+    		vm.allEvents = [];
+    	} 
    		vm.allEvents.push(eventBody);
-   		console.log('allEvents after', vm.allEvents);
    		reBuildDailyView();
     });
  
     $scope.$on('addedPlanDayView', function(event, selectedDate, events){
  		console.log('PLAN ADDED', events);
-     	if(!vm.allEvents) vm.allEvents = [];		
+     	if(!vm.allEvents){
+     		vm.allEvents = [];	
+     	}		
  		for(var i = 0; i < events.length; i++){
  			vm.allEvents.push(events[i]);
  		}
@@ -27,11 +30,13 @@ function DayViewController(Notification, AuthService, $scope, crudEvEventService
     });
  
     $scope.$on('deletedEventDayView', function(event, selectedDate, eventBody){
- 
+    	console.log('event deleted recieved');
+ 		getAllEvents(vm.selectedDate, reBuildDailyView);
     });
  
     $scope.$on('editedEventDayView', function(event, selectedDate, oldEventBody, newEventBody){
- 
+    	console.log('event edited recieved');
+ 		getAllEvents(vm.selectedDate, reBuildDailyView);
     });
 	
     document.addEventListener('contextmenu', function(e){
@@ -40,13 +45,9 @@ function DayViewController(Notification, AuthService, $scope, crudEvEventService
 
 	vm.timeStamps = helpEventService.getTimeStampsDaily();
 
-	var todayDate = new Date();
 	vm.computedEvents = [];
-	vm.selectedDate = vm.selectedDate || todayDate;
-	vm.eventSelected = false;
-	vm.event = vm.event || {};
-	vm.plan = vm.plan || {};
-	
+	vm.selectedDate = vm.selectedDate || new Date();
+
 	vm.showDay = function(step) {
 		var date = new Date(vm.selectedDate);
 		date.setDate(
@@ -55,13 +56,6 @@ function DayViewController(Notification, AuthService, $scope, crudEvEventService
 					:
 				date.getDate() - 1
 		);
-
-		var children = $('.day-event-blocks');
-		for(var i = 0; i < children.length; i++){
-			var id = children[i].id;
-			document.getElementById(id).parentNode.removeChild(document.getElementById(id));
-		}
-		vm.computedEvents = [];
 		vm.selectedDate = date;
 		reBuildDailyView(vm.selectedDate, null);
 		getAllEvents();
@@ -89,11 +83,18 @@ function DayViewController(Notification, AuthService, $scope, crudEvEventService
 		}
 	}
 
-	// gets all the events that corre spond to the todays date
-	function mapEvents(){
-		$('#calendar').css('margin-bottom', 0);
+	function clearEvents(){
+		vm.computedEvents = [];
+		var children = $('.day-event-blocks');
+		for(i = 0; i < children.length; i++){
+			var id = children[i].id;
+			document.getElementById(id).parentNode.removeChild(document.getElementById(id));
+		}
+	}
+
+	function computingEvents() {
 		//computing top and height values for all geted events
-		for(var i = 0; i < vm.todayEvents.length; i++) {
+		for (var i = 0; i < vm.todayEvents.length; i++) {
 			// temp - object to save top and height values for further event displaying
 			var temp = {};
 			var eventEnd = new Date(vm.todayEvents[i].end);
@@ -108,9 +109,14 @@ function DayViewController(Notification, AuthService, $scope, crudEvEventService
 			temp.topVal = 888 * (eventStart.getTime() - now.getTime()) / 86400000;
 			// save computed values to the array
 			vm.computedEvents.push(temp);
-			
 		}
-		
+	}
+
+	// gets all the events that corre spond to the todays date
+	function mapEvents(){
+		$('#calendar').css('margin-bottom', 0);
+		clearEvents();
+		computingEvents();
 		//creating and appending blocks which display events for today
 		for(var c = 0; c < vm.computedEvents.length; c++) {
 
@@ -191,7 +197,7 @@ function DayViewController(Notification, AuthService, $scope, crudEvEventService
 				
 
 				if (e.button == 2){
-					crudEvEventService.editingBroadcast(new Date(), findById(vm.todayEvents, self.id), 'DailyView');
+					crudEvEventService.editingBroadcast(new Date(), findById(vm.todayEvents, self.id), 'DayView');
 					//e.stopPropagation();
 					//e.preventDefault();
 					return false;
@@ -427,6 +433,7 @@ function DayViewController(Notification, AuthService, $scope, crudEvEventService
 				self.addEventListener('mouseleave', resizeTrackMouseWhenLeave);
 			}, true);
 		}
+		console.log('after builidng', document.getElementsByClassName('day-event-blocks'));
 	}
 
 	// function which is called when mouse leave the event block on dragging, or simply drops it
@@ -542,12 +549,14 @@ function DayViewController(Notification, AuthService, $scope, crudEvEventService
 	}
 
 	function filterEventsByTodayDate() {
+		console.log('events in filter', vm.allEvents);
 		vm.todayEvents = vm.allEvents.filter(function(event) {
 			if(event.start) {
 				var date = new Date(event.start);
 				return date.getDate() === vm.selectedDate.getDate();
 			}
 		});
+		console.log('events after filter', vm.allEvents);
 	}
 	function showWorkHours() {
 		
