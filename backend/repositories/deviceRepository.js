@@ -1,6 +1,7 @@
 var connection = require('../db/dbconnect');
 var Repository = require('./generalRepository');
 var Device = require('../schemas/deviceSchema');
+var Event = require('../schemas/eventSchema');
 
 function DeviceRepository() {
 	Repository.prototype.constructor.call(this);
@@ -30,8 +31,15 @@ DeviceRepository.prototype.removeEvent = function(deviceId, eventId, callback) {
 
 DeviceRepository.prototype.getDeviceEventsByInterval = function(deviceId, gteDate, lteDate, callback){
 	var model = this.model;
-	var query = model.findOne({_id:deviceId}, {events: 1}).populate('events', null, {"start": {"$gte": gteDate, "$lte": lteDate}}, {sort: {"start": 1}});
-	query.exec(callback);
-};
+	var query = model.findOne({_id:deviceId}, {events: 1}).populate('events', null, {"start": {"$gte": gteDate, "$lte": lteDate}});
+	query.populate('type');
+	query.exec(function(err, doc){
+            Event.populate(doc.events, {path:'type', select: '_id title color isPrivate icon'},
+                   function(err, data){
+                        callback(null, doc);
+                   }
+             );     
+          });           
+}; //{path:'type', select: '_id title color isPrivate icon'}
 
 module.exports = new DeviceRepository();

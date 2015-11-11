@@ -8,12 +8,15 @@ function eventCalendarDirective($rootScope, filterService) {
         restrict: 'A',
         link: function ($scope, element, attr) {
 
-            $scope.correctFlagsEventTypes = filterService.correctFlags(); 
+
+            $scope.correctFlagsEventTypes = filterService.getActualEventTypes(); 
             $scope.dataObjOll = [];
 
+            console.log('actual in year', $scope.correctFlagsEventTypes);
 
-            $rootScope.$on('checkEventTypes', function (event, agrs) {           
-                $scope.correctFlagsEventTypes = agrs.messege;
+
+            $rootScope.$on('filterTypesChanged', function (event, actualEventTypes) {           
+                $scope.correctFlagsEventTypes = actualEventTypes;
                 // console.log('year $rootScope.$on checkEventTypes', vm.correctFlagsEventTypes);
                 // console.log('year vm.dataObjOll from $rootScope.$on checkEventTypes', vm.dataObjOll);                
                 $scope.dataObj = $scope.dataObjOll;
@@ -62,6 +65,7 @@ function eventCalendarDirective($rootScope, filterService) {
             });
 
             $scope.$on('addedEventYearView', function(event, selectedDate, eventBody) {
+                console.log('broadcast added');
                 var eventStartDate = new Date(eventBody.start);
                 var evDate = eventStartDate.getDate()+'_'+(eventStartDate.getMonth()+1)+'_'+eventStartDate.getFullYear();
                 $scope.dataObj[evDate].push(eventBody);
@@ -114,7 +118,8 @@ function eventCalendarDirective($rootScope, filterService) {
                         // console.log('from year !!!!!!!!!!!!!!!', $scope.dataObj[day]);         
                         for (var k = 0; k <  $scope.dataObj[day].length; k++) {  
                             // console.log('from year 2 !!!!!!!!!!!!!!!', $scope.dataObj[day]); 
-                            if ( $scope.dataObj[day][k].type == $scope.correctFlagsEventTypes[j]) {
+
+                            if ( $scope.dataObj[day][k].type._id == $scope.correctFlagsEventTypes[j].id) {
 
 
                                 // var evtCell = angular.element($('[ng-class="'+ evtHour +'"].'+ vm.daysNames[evtDay]));
@@ -153,7 +158,7 @@ function eventCalendarDirective($rootScope, filterService) {
                                 } else {
                                 //add popover
                                     dayCell.popover({
-                                        trigger: 'click',
+                                        trigger: 'hover',
                                         delay: 500,
                                         container: 'body',
                                         placement: 'top',

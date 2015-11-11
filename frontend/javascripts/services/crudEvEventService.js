@@ -90,14 +90,16 @@ function crudEvEventService($rootScope, $uibModal, helpEventService) {
 		        if (data !== null){
 		            vm.users = data;
 		        }
-		        console.log('pullDataCb');
+		        console.log('pullDataCb finish');
 		        cb();
 		    });
 		});
 	};
 
 	initCreateModal = function(selectedDate, viewType) {
-	  var modalInstance = $uibModal.open({
+        console.log('initialazing Create model');
+
+	    var modalInstance = $uibModal.open({
             animation: true,
             templateUrl: 'templates/crudEvent/createEvent.html',
             controller: 'createEventController',
@@ -110,7 +112,7 @@ function crudEvEventService($rootScope, $uibModal, helpEventService) {
                	viewType: function () {
                     return vm.viewType;
                 },
-                rooms: function (){
+                rooms: function (){ 
                 	return vm.rooms;
                 },
                 devices: function (){
@@ -127,7 +129,8 @@ function crudEvEventService($rootScope, $uibModal, helpEventService) {
 	};
 
 	initEditModal = function(selectedDate, eventBody, viewType) {
-	  var modalInstance = $uibModal.open({
+        console.log('initialazing Edit model');
+        var modalInstance = $uibModal.open({
             animation: true,
             templateUrl: 'templates/crudEvent/editEvent.html',
             controller: 'editEventController',

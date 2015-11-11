@@ -41,4 +41,18 @@ RoomRepository.prototype.getRoomEventsByInterval = function(roomId, gteDate, lte
     });
 };
 
+
+RoomRepository.prototype.getRoomEventsByInterval = function(roomId, gteDate, lteDate, callback){
+	var model = this.model;
+	var query = model.findOne({_id:roomId}, {events: 1}).populate('events', null, {"start": {"$gte": gteDate, "$lte": lteDate}});
+	query.populate('type');
+	query.exec(function(err, doc){
+            Event.populate(doc.events, {path:'type', select: '_id title color isPrivate icon'},
+                   function(err, data){
+                        callback(null, doc);
+                   }
+             );     
+          });           
+}; //{path:'type', select: '_id title color isPrivate icon'}
+
 module.exports = new RoomRepository();

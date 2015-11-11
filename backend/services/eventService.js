@@ -15,8 +15,6 @@ eventService.prototype.checkNotification = function(userId, callback){
 	var events = [];
 	var user;
 
-	//console.log('checking notification');
-
 	async.waterfall([
 		function(cb){
 			userRepository.getById(userId, function(err, result){
@@ -51,7 +49,13 @@ eventService.prototype.checkNotification = function(userId, callback){
 		if(err){
 			callback(err, null);
 		}
-		callback(null, events);
+		if (events.length){
+			console.log(events.length);
+			callback(null, events);
+		} else {
+			console.log('soon nothing planned');
+			callback(null, { messege: 'soon nothing planned'});
+		}
 	});
 };
 
@@ -139,36 +143,6 @@ eventService.prototype.add = function(data, callback){
 				cb();
 			}
 		},
-		// function(cb){ //add event to owner events
-		// 	if(event.ownerId){
-		// 		userRepository.addEvent(event.ownerId, event._id, function(err, data){
-	 // 				if(err){				
-	 // 					return cb(err, null);
-	 // 				}
-	 // 				console.log('added to user');
-		// 		});
-		// 		cb();
-		// 	}
-		// 	else{
-		// 		console.log('no ownerId');
-		// 		cb();
-		// 	}
-		// }, 
-		// function(cb){ //add to all public events
-		// 	if(event.isPrivate === false){
-		// 		userRepository.addEventToAll(event._id, function(err, data){
-	 // 				if(err){				
-	 // 					return cb(err, null);
-	 // 				}
-	 // 				console.log('added to all users');
-		// 		});
-		// 		cb();
-		// 	}
-		// 	else{
-		// 		console.log('event is private');
-		// 		cb();
-		// 	}
-		// },
 		function(cb){ // добавляем запись об ивенте в каждый экземпляр device
 			if(event.devices.length){
 				event.devices.forEach(function(deviceId){
@@ -194,15 +168,25 @@ eventService.prototype.add = function(data, callback){
 	 					return cb(err, null);
 	 				}
 	 				console.log('added to eventType');
-	 				cb(null, event);
+	 				cb();
 				});
 			}
 			else {
 				console.log('no eventType');
-				cb(null, event);
+				cb();
 			}
 		},
-
+		function(cb){ // получаем event в populate полем eventType
+			eventRepository.getEventPopulateType(event._id, function(err, data){
+				if(err){				
+					return cb(err);
+				}
+				if (!data){
+					return cb(new Error("incorrect eventId " + eventId));
+				}
+				cb(null, data);
+			});
+		},
 	], function(err, result){
 		if(err){
 			//console.log(err.message);
@@ -473,7 +457,7 @@ eventService.prototype.update = function(eventId, newEvent, callback){
 				}, // обновляем экземпляр event
 				
 				function(cb){
-					eventRepository.getById(eventId, function(err, data){
+					eventRepository.getEventPopulateType(eventId, function(err, data){
 						if (!data){
 							return cb(new Error("incorrect eventId " + eventId));
 						}

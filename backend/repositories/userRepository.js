@@ -57,7 +57,7 @@ UserRepository.prototype.getUserEventsByInterval = function(userId, gteDate, lte
 	var query = model.findOne({_id:userId}, {events: 1}).populate('events', null, {"start": {"$gte": gteDate, "$lte": lteDate}});
 	query.populate('type');
 	query.exec(function(err, doc){
-            Event.populate(doc.events, {path:'type', populate: 'type._id type.title type.color type.isPrivate type.icon'},
+            Event.populate(doc.events, {path:'type', select: '_id title color isPrivate icon'},
                    function(err, data){
                         callback(null, doc);
                    }
