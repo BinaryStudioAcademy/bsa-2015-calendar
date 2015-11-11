@@ -4,17 +4,16 @@ require('moment-range');
 
 app.controller('WeekViewController', WeekViewController);
 
-WeekViewController.$inject = ['crudEvEventService','helpEventService', '$scope', '$uibModal','$compile', '$templateCache', '$rootScope', 'filterService'];
+WeekViewController.$inject = ['scheduleService', 'crudEvEventService','helpEventService', '$scope', '$uibModal','$compile', '$templateCache', '$rootScope', 'filterService'];
 
-function WeekViewController(crudEvEventService,helpEventService, $scope, $uibModal, $compile, $templateCache, $rootScope, filterService) {
+function WeekViewController(scheduleService, crudEvEventService,helpEventService, $scope, $uibModal, $compile, $templateCache, $rootScope, filterService) {
 	var vm = this;
     vm.actualEventTypes = filterService.getActualEventTypes(); 
 
     $scope.$on('scheduleTypeChanged', function(){
         console.log('scheduleTypeChanged');
-        
         vm.clearCells();
-        vm.buildEventCells(0);
+        vm.pullData();
     });
 
     $rootScope.$on('filterTypesChanged', function (event, actualEventTypes) {           
@@ -209,12 +208,47 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
 
 
     vm.pullData = function() {
-        helpEventService.getUserEvents(vm.Start, vm.End).then(function(data) {
-            if (data !== null){
-                vm.eventObj = data;                                               
-                $scope.$broadcast('eventsUpdated');                         
+        // helpEventService.getUserEvents(vm.Start, vm.End).then(function(data) {
+        //     if (data !== null){
+                // vm.eventObj = data;                                               
+                // $scope.$broadcast('eventsUpdated');                         
+        //     }
+        // });
+        console.log('pulling data, scheduleType: ', scheduleService.getType());
+        console.log('pulling data, scheduleType: ', scheduleService.getItemId());
+        switch (scheduleService.getType()){
+            case 'event':{
+                helpEventService.getUserEvents(vm.Start, vm.End).then(function(data) {
+                    if (data !== null){ 
+                        vm.eventObj = data;                                               
+                        $scope.$broadcast('eventsUpdated');     
+                    }
+                });
+                console.log('user events shedule');
+                break;
             }
-        });
+            case 'room':{
+                helpEventService.getRoomEvents(scheduleService.getItemId(), vm.Start, vm.End).then(function(data) {
+                    if (data !== null){ 
+                        vm.eventObj = data;                                               
+                        $scope.$broadcast('eventsUpdated');  
+                    }
+                });
+                console.log('room events shedule');
+                break;
+            }
+            case 'device':{
+                helpEventService.getDeviceEvents(scheduleService.getItemId(), vm.Start, vm.End).then(function(data) {
+                    if (data !== null){ 
+                        vm.eventObj = data;                                               
+                        $scope.$broadcast('eventsUpdated');  
+                    }
+                });
+                console.log('device events shedule');
+                break;
+            }
+            
+        }
     };
 
 

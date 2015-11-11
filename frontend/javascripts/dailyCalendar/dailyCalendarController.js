@@ -2,13 +2,18 @@ var app = require('../app');
 
 app.controller('DayViewController', DayViewController);
 
-DayViewController.$inject = ['Notification', 'filterService', 'AuthService', '$rootScope', '$scope', 'crudEvEventService', '$timeout', '$q', '$uibModal', 'socketService', 'helpEventService'];
+DayViewController.$inject = ['Notification', 'scheduleService', 'filterService', 'AuthService', '$rootScope', '$scope', 'crudEvEventService', '$timeout', '$q', '$uibModal', 'socketService', 'helpEventService'];
 
-function DayViewController(Notification, filterService, AuthService, $rootScope, $scope, crudEvEventService, $timeout, $q, $uibModal, socketService, helpEventService) {
+function DayViewController(Notification, scheduleService, filterService, AuthService, $rootScope, $scope, crudEvEventService, $timeout, $q, $uibModal, socketService, helpEventService) {
 
 	var vm = this;
 
 	vm.actualEventTypes = filterService.getActualEventTypes(); 
+
+	$scope.$on('scheduleTypeChanged', function(){
+        console.log('scheduleTypeChanged');
+		getAllEvents(vm.selectedDate, reBuildDailyView);
+    });
 
     $rootScope.$on('filterTypesChanged', function (event, actualEventTypes) {           
         vm.actualEventTypes = actualEventTypes;
@@ -124,11 +129,26 @@ function DayViewController(Notification, filterService, AuthService, $rootScope,
 			// calculate top value as difference between event start and beginning of the day
 			temp.topVal = 888 * (eventStart.getTime() - now.getTime()) / 86400000;
 			// save computed values to the array
+			
+			temp.conflicts = 0;
+			for (var x = 0; x < vm.todayEvents.length; x++){
+				var range1 = moment().range(moment(vm.todayEvents[x].start), moment(vm.todayEvents[x].end));
+				var range2 = moment().range(moment(temp.eventAsItIs.start), moment(temp.eventAsItIs.end));
+        		console.log(range1, range2);
+            	if (range2.contains(moment(vm.todayEvents[x].end)) || range2.contains(moment(vm.todayEvents[x].start)) || range1.contains(moment(temp.eventAsItIs.start)) || range1.contains(moment(temp.eventAsItIs.end))){
+            		temp.conflicts++;
+
+            	}
+			}
+			
+
+
 			for(var j = 0; j < vm.actualEventTypes.length; j++){
 				if(temp.eventAsItIs.type._id == vm.actualEventTypes[j].id){
 					vm.computedEvents.push(temp);
 				}
 			}
+
 		}
 	}
 
@@ -164,6 +184,10 @@ function DayViewController(Notification, filterService, AuthService, $rootScope,
 			block.style['font-weight'] = 900;
 			block.style['text-align'] = 'center';
 			block.style['font-color'] = 'black';
+			var tmpLeft = 100 - (100/vm.computedEvents[c].conflicts);
+			var tmpWidth = 100/vm.computedEvents[c].conflicts;
+			block.style.left = tmpLeft + '%'; 
+			block.style.width = tmpWidth + '%';
 			block.style.height = vm.computedEvents[c].heightVal.toPrecision(3) + 'px';
 			block.style.top = vm.computedEvents[c].topVal.toPrecision(4) + 'px';
 			block.id = vm.computedEvents[c].eventAsItIs._id;
@@ -554,17 +578,60 @@ function DayViewController(Notification, filterService, AuthService, $rootScope,
 		end = new Date();
 		end.setDate(date.getDate() +2);
 		//console.log('start end', start, end);
-		helpEventService.getUserEvents(start, end).then(function(response) {
-	        if (response){
-	            vm.allEvents = response;
-	            if (cb){
-	            	cb();
-	            } 
-	        }
-	        else {
-	        	console.log('failure');
-	        }
-	    });
+		// helpEventService.getUserEvents(start, end).then(function(response) {
+	 //        if (response){
+	            // vm.allEvents = response;
+	            // if (cb){
+	            // 	cb();
+	 //            } 
+	 //        }
+	 //        else {
+	 //        	console.log('failure');
+	 //        }
+	 //    });
+
+		console.log('pulling data, scheduleType: ', scheduleService.getType());
+        console.log('pulling data, scheduleType: ', scheduleService.getItemId());
+        switch (scheduleService.getType()){
+            case 'event':{
+                helpEventService.getUserEvents(start, end).then(function(data) {
+                    if (data !== null){ 
+                        vm.allEvents = data;
+			            if (cb){
+			            	cb();
+			            } 
+                    }
+                });
+                console.log('user events shedule');
+                break;
+            }
+            case 'room':{
+                helpEventService.getRoomEvents(scheduleService.getItemId(), start, end).then(function(data) {
+                    if (data !== null){ 
+                        vm.allEvents = data;
+			            if (cb){
+			            	cb();
+			            } 
+                    }
+                });
+                console.log('room events shedule');
+                break;
+            }
+            case 'device':{
+                helpEventService.getDeviceEvents(scheduleService.getItemId(), start, end).then(function(data) {
+                   if (data !== null){ 
+                        vm.allEvents = data;
+			            if (cb){
+			            	cb();
+			            } 
+                    }
+                });
+                console.log('device events shedule');
+                break;
+            }
+            
+        }
+
 	}
 
 	function filterEventsByTodayDate() {

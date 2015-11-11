@@ -34,6 +34,7 @@ function eventCalendarDirective($rootScope, filterService) {
 
 
 
+
             $scope.$on('eventsUpdated', function(event, dataObj) {
                 $scope.dataObj = dataObj;
                 vm.dataObjOll = $scope.dataObj;

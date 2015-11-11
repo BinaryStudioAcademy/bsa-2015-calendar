@@ -54,14 +54,15 @@ UserRepository.prototype.getUserEvents = function(userId, callback){
 
 UserRepository.prototype.getUserEventsByInterval = function(userId, gteDate, lteDate, callback){
 	var model = this.model;
-	var query = model.findOne({_id:userId}, {events: 1}).populate('events', null, {"start": {"$gte": gteDate, "$lte": lteDate}});
+	var query = model.findOne({_id:userId}, {events: 1})
+	.populate('events', null, {"start": {"$gte": gteDate, "$lte": lteDate}}, {sort: 'start'});
 	query.populate('type');
 	query.exec(function(err, doc){
             Event.populate(doc.events, {path:'type', select: '_id title color isPrivate icon'},
                    function(err, data){
                         callback(null, doc);
                    }
-             );     
+             );     //{ sort: [['damages', 'asc']] }
           });           
 };
 

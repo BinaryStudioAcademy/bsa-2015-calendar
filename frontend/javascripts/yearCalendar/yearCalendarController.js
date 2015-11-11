@@ -10,6 +10,12 @@ function yearCalendarController(calendarService, $scope, $uibModal, helpEventSer
     //init with current year by default
     init();
 
+    $scope.$on('scheduleTypeChanged', function(){
+        console.log('scheduleTypeChanged');
+        //getAllEvents(vm.selectedDate, reBuildDailyView);
+        getEvents(vm.currentYear);
+    });
+
     vm.yearDecrement = function() {
         if (vm.currentYear > 1970) {
             vm.currentYear--;
@@ -26,6 +32,7 @@ function yearCalendarController(calendarService, $scope, $uibModal, helpEventSer
     };
 
     function getEvents(year) {
+        console.log('getevents from year calendar');
         calendarService.getEventsObj(year).then(function(dataObj) {
             if (dataObj) {
                 $scope.$broadcast('eventsUpdated', dataObj);
