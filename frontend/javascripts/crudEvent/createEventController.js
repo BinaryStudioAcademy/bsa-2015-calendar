@@ -220,8 +220,12 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 	vm.form = {};
 	vm.form.users = [];
 	vm.form.devices = [];
+	vm.form.timeStart = vm.selectedDate;
+	console.log('START', vm.form.timeStart );
+	vm.form.timeEnd = vm.selectedDate;
+	console.log('END', vm.form.timeEnd);
 
-	dropEventInfo(vm.selectedDate);
+	//dropEventInfo(vm.selectedDate);
 
 	vm.submitModal = function() {
 
@@ -434,7 +438,6 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 
 		vm.form.timeStart = newEventDate;
 		vm.form.timeEnd = newEventDate;
-
 		vm.form.users = [];
 		vm.form.devices = [];
 
@@ -467,7 +470,6 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 
 	function getUpdateUsers(data) {
 		localUsersArr = JSON.parse(localStorage.getItem("userlist"+loggedUserId));
-		console.log('IN', localUsersArr);
 		//left only id and name fields
 		var usersArr = _.map(data, function(item) {return _.pick(item, '_id', 'name');});
 		//add to local array new users from sever
@@ -498,7 +500,6 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 				return item['_id'] === delItem['_id'];
 			});
 		});
-		console.log('OUT', localUsersArr);
         return localUsersArr;
 	}
 }

@@ -12,12 +12,12 @@ function WeekViewController(crudEvEventService,helpEventService, scheduleService
 
     $rootScope.$on('checkEventTypes', function (event, agrs) {           
         vm.correctFlagsEventTypes = agrs.messege;
-        vm.clearCells();
-        vm.buildEventCells(0);
+        vm.pullData();
     });       
 
     $scope.$on('eventsUpdated', function() {
-        vm.buildEventCells(0);
+        //vm.buildEventCells(0);
+        vm.pullData();
 
     });
 
@@ -64,8 +64,7 @@ function WeekViewController(crudEvEventService,helpEventService, scheduleService
         vm.buildEventCells(0);
     });
 
-    $scope.$on('editedEventWeekView', function(event, selectedDate, oldEventBody, newEventBody){
-        
+    $scope.$on('editedEventWeekView', function(event, selectedDate, oldEventBody, newEventBody){        
         var index = vm.eventObj.length-1,
             indexOfEvent;
         var range = moment().range(vm.weekStartMoment, vm.weekEndMoment);
@@ -86,6 +85,10 @@ function WeekViewController(crudEvEventService,helpEventService, scheduleService
         // подумать над способом перерисовки без очистки всех ячеек
         vm.clearCells();
         vm.buildEventCells(0);
+    });
+
+    $scope.$on('scheduleTypeChanged', function(){
+        vm.pullData();
     });
 
 
@@ -148,7 +151,6 @@ function WeekViewController(crudEvEventService,helpEventService, scheduleService
             }
         }
     };
-
 
 
 
@@ -215,10 +217,11 @@ function WeekViewController(crudEvEventService,helpEventService, scheduleService
         switch (scheduleService.getType()){
             case 'event':{
                 helpEventService.getUserEvents(startDate, endDate).then(function(data) {
-                    if (data !== null){ 
-                        vm.eventsObj = data;
+                    if (data !== null){
+                        vm.eventObj = data;
+                        vm.clearCells();
                         vm.buildEventCells(0);
-                    }  
+                    } 
                 });
                 console.log('user events shedule');
                 break;
@@ -226,7 +229,8 @@ function WeekViewController(crudEvEventService,helpEventService, scheduleService
             case 'room':{
                 helpEventService.getRoomEvents(scheduleService.getItemId(), startDate, endDate).then(function(data) {
                     if (data !== null){ 
-                        vm.eventsObj = data;
+                        vm.eventObj = data;
+                        vm.clearCells();
                         vm.buildEventCells(0);
                     }
                 });
@@ -236,7 +240,8 @@ function WeekViewController(crudEvEventService,helpEventService, scheduleService
             case 'device':{
                 helpEventService.getDeviceEvents(scheduleService.getItemId(), startDate, endDate).then(function(data) {
                     if (data !== null){ 
-                        vm.eventsObj = data;
+                        vm.eventObj = data;
+                        vm.clearCells();
                         vm.buildEventCells(0);
                     }
                 });
