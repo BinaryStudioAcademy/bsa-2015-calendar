@@ -71,6 +71,14 @@
 							label.checkbox
 								checkbox(type="checkbox",id="eventType", ng-model = "eventType.flag", name ="{{ eventType.name }}", ng-change = "calendarCtrl.checkFlag(eventType._id)")
 								span.eventTypeFilters {{ eventType.title }}
+			.filters-new.hidden-xs
+				h3 Filters
+				div(ng-dropdown-multiselect='', 
+					translation-texts='calendarCtrl.selectConfigFIlters', 
+					selected-model='calendarCtrl.checkEventTypesDD', 
+					options='calendarCtrl.allEventTypes', 
+					events='calendarCtrl.dropDownEvents',
+					extra-settings='calendarCtrl.selectConfigFilters')				
 			h3 CRUD
 			.navbar.navbar-default(role="navigation")
 				ul.nav.navbar-nav.text-center
