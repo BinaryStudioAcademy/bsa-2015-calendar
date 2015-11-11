@@ -115,21 +115,6 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
                         event.stopPropagation();
                     });
             
-                    //background color for different types of events
-                    // switch(currEvt.type) {
-                    //     case('basic'):
-                    //         eventDiv.css('background-color', 'rgba(255, 228, 196, 0.7)');
-                    //         break;
-                    //     case('general'):
-                    //         eventDiv.css('background-color', 'rgba(135, 206, 250, 0.7)');
-                    //         break;
-                    //     case('activity'):
-                    //         eventDiv.css('background-color', 'rgba(60, 179, 113, 0.7)');
-                    //         break;
-                    //     default:
-                    //         eventDiv.css('background-color', 'rgba(205, 205, 193, 0.7)');
-                    // }
-
                     $compile(eventDiv)($scope);
                     evtCell.append(eventDiv);
                 }

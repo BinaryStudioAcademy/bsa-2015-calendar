@@ -116,7 +116,24 @@ function eventCalendarDirective($rootScope, filterService) {
                             if ( $scope.dataObj[day][k].type == vm.correctFlagsEventTypes[j]) {
 
 
- 
+                                // var evtCell = angular.element($('[ng-class="'+ evtHour +'"].'+ vm.daysNames[evtDay]));
+                                // var eventDiv = angular.element('<div class="event-cell-week"></div>'); 
+                                // eventDiv.text(currEvt.title);
+                                // var tmpl = '<div>'+currEvt.description+'</div><div>Start at: '+moment(currEvt.start).format('hh:mm')+'</div><div>End at: '+moment(currEvt.end).format('hh:mm')+'</div>';
+                                // $templateCache.put('evtTmpl'+i+'.html', tmpl);
+                                // eventDiv.attr('uib-popover-template', '"evtTmpl'+i+'.html"');
+                                // eventDiv.attr('popover-title', currEvt.title);
+                                // eventDiv.attr('popover-append-to-body', "true");
+                                // eventDiv.attr('trigger', 'focus');
+                                // eventDiv.attr('index', i);
+                                // eventDiv.attr('date', evtStart);
+                                // eventDiv.on( 'dblclick', function(event){
+                                //     var date = new Date($(event.currentTarget).attr('date'));
+                                //     vm.editEvent(date, vm.eventObj[$(event.currentTarget).attr('index')]); 
+                                //     event.stopPropagation();
+                                // });
+                                // $compile(eventDiv)($scope);
+                                // evtCell.append(eventDiv);
 
 
                                 var dayCell = $('#'+day);
@@ -135,7 +152,7 @@ function eventCalendarDirective($rootScope, filterService) {
                                 } else {
                                 //add popover
                                     dayCell.popover({
-                                        trigger: 'hover',
+                                        trigger: 'click',
                                         delay: 500,
                                         container: 'body',
                                         placement: 'top',
