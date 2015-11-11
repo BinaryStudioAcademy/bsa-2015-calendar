@@ -2,11 +2,18 @@ var app = require('../app');
 
 app.controller('DayViewController', DayViewController);
 
-DayViewController.$inject = ['Notification', 'AuthService', '$scope', 'crudEvEventService', '$timeout', '$q', '$uibModal', 'socketService', 'helpEventService'];
+DayViewController.$inject = ['Notification', 'filterService', 'AuthService', '$rootScope', '$scope', 'crudEvEventService', '$timeout', '$q', '$uibModal', 'socketService', 'helpEventService'];
 
-function DayViewController(Notification, AuthService, $scope, crudEvEventService, $timeout, $q, $uibModal, socketService, helpEventService) {
+function DayViewController(Notification, filterService, AuthService, $rootScope, $scope, crudEvEventService, $timeout, $q, $uibModal, socketService, helpEventService) {
 
 	var vm = this;
+
+	vm.actualEventTypes = filterService.getActualEventTypes(); 
+
+    $rootScope.$on('filterTypesChanged', function (event, actualEventTypes) {           
+        vm.actualEventTypes = actualEventTypes;
+        reBuildDailyView();
+    });       
 
     $scope.$on('addedEventDayView', function(event, selectedDate, eventBody){
     	//$( ".day-event-blocks" ).remove();
@@ -31,11 +38,12 @@ function DayViewController(Notification, AuthService, $scope, crudEvEventService
  
     $scope.$on('deletedEventDayView', function(event, selectedDate, eventBody){
     	console.log('event deleted recieved');
- 		getAllEvents(vm.selectedDate, reBuildDailyView);
+ 		document.getElementById(eventBody._id).parentNode.removeChild(document.getElementById(eventBody._id));
     });
  
     $scope.$on('editedEventDayView', function(event, selectedDate, oldEventBody, newEventBody){
     	console.log('event edited recieved');
+    	console.log(document.getElementById(oldEventBody._id));
  		getAllEvents(vm.selectedDate, reBuildDailyView);
     });
 	
@@ -44,9 +52,14 @@ function DayViewController(Notification, AuthService, $scope, crudEvEventService
 	});
 
 	vm.timeStamps = helpEventService.getTimeStampsDaily();
-
+	vm.dpFormat = "dd MMMM yyyy";
+	vm.openDP = function(dp){
+		vm.isDPopened = !vm.isDPopened;
+	};
 	vm.computedEvents = [];
 	vm.selectedDate = vm.selectedDate || new Date();
+
+
 
 	vm.showDay = function(step) {
 		var date = new Date(vm.selectedDate);
@@ -57,15 +70,18 @@ function DayViewController(Notification, AuthService, $scope, crudEvEventService
 				date.getDate() - 1
 		);
 		vm.selectedDate = date;
-		reBuildDailyView(vm.selectedDate, null);
-		getAllEvents();
+		reBuildDailyView();
+		getAllEvents(vm.selectedDate, null);
 	};
 
 	vm.createEvent = function(timeSt) {
-		console.log(timeSt);
 		vm.selectedDate.setHours(timeSt);
-		console.log(vm.selectedDate);
 		crudEvEventService.creatingBroadcast(moment(vm.selectedDate), 'DayView');
+	};
+
+	vm.dateChanged = function(){
+		console.log('date changed');
+		getAllEvents(vm.selectedDate, reBuildDailyView);
 	};
 
 	// function gets array of event objects and return the one with _id == criteria
@@ -108,7 +124,11 @@ function DayViewController(Notification, AuthService, $scope, crudEvEventService
 			// calculate top value as difference between event start and beginning of the day
 			temp.topVal = 888 * (eventStart.getTime() - now.getTime()) / 86400000;
 			// save computed values to the array
-			vm.computedEvents.push(temp);
+			for(var j = 0; j < vm.actualEventTypes.length; j++){
+				if(temp.eventAsItIs.type._id == vm.actualEventTypes[j].id){
+					vm.computedEvents.push(temp);
+				}
+			}
 		}
 	}
 
@@ -433,7 +453,6 @@ function DayViewController(Notification, AuthService, $scope, crudEvEventService
 				self.addEventListener('mouseleave', resizeTrackMouseWhenLeave);
 			}, true);
 		}
-		console.log('after builidng', document.getElementsByClassName('day-event-blocks'));
 	}
 
 	// function which is called when mouse leave the event block on dragging, or simply drops it
@@ -534,7 +553,7 @@ function DayViewController(Notification, AuthService, $scope, crudEvEventService
 		start.setDate(date.getDate() -2);
 		end = new Date();
 		end.setDate(date.getDate() +2);
-		console.log('start end', start, end);
+		//console.log('start end', start, end);
 		helpEventService.getUserEvents(start, end).then(function(response) {
 	        if (response){
 	            vm.allEvents = response;
@@ -549,14 +568,12 @@ function DayViewController(Notification, AuthService, $scope, crudEvEventService
 	}
 
 	function filterEventsByTodayDate() {
-		console.log('events in filter', vm.allEvents);
 		vm.todayEvents = vm.allEvents.filter(function(event) {
 			if(event.start) {
 				var date = new Date(event.start);
 				return date.getDate() === vm.selectedDate.getDate();
 			}
 		});
-		console.log('events after filter', vm.allEvents);
 	}
 	function showWorkHours() {
 		

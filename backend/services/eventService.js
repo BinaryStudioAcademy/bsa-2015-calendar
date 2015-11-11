@@ -167,15 +167,25 @@ eventService.prototype.add = function(data, callback){
 	 					return cb(err, null);
 	 				}
 	 				console.log('added to eventType');
-	 				cb(null, event);
+	 				cb();
 				});
 			}
 			else {
 				console.log('no eventType');
-				cb(null, event);
+				cb();
 			}
 		},
-
+		function(cb){ // получаем event в populate полем eventType
+			eventRepository.getEventPopulateType(event._id, function(err, data){
+				if(err){				
+					return cb(err);
+				}
+				if (!data){
+					return cb(new Error("incorrect eventId " + eventId));
+				}
+				cb(null, data);
+			});
+		},
 	], function(err, result){
 		if(err){
 			//console.log(err.message);
@@ -446,7 +456,7 @@ eventService.prototype.update = function(eventId, newEvent, callback){
 				}, // обновляем экземпляр event
 				
 				function(cb){
-					eventRepository.getById(eventId, function(err, data){
+					eventRepository.getEventPopulateType(eventId, function(err, data){
 						if (!data){
 							return cb(new Error("incorrect eventId " + eventId));
 						}

@@ -9,6 +9,7 @@ MonthController.$inject = ['$rootScope', '$scope', 'scheduleService', 'helpEvent
 
 function MonthController($rootScope, $scope, scheduleService, helpEventService, crudEvEventService, $timeout, $q, $uibModal, $stateParams, filterService) {
 
+
     vm = this;
     $scope.$on('addedEventMonthView', function(event, selectedDate, eventBody){
         var newEventDate = new moment(eventBody.start);
@@ -72,9 +73,16 @@ function MonthController($rootScope, $scope, scheduleService, helpEventService, 
     });
 
     $scope.$on('scheduleTypeChanged', function(){
+        console.log('scheduleTypeChanged');
         vm.pullData();
-        vm.buildMonth();
+        //vm.buildMonth();
     });
+
+    $scope.$on('filterTypesChanged', function(event, actualEventTypes){
+        vm.actualEventTypes = actualEventTypes;
+        console.log('actual event types', vm.actualEventTypes);
+    });
+
 
     vm.next = function () {
         vm.monthStartMoment.add(1,'M');
@@ -112,7 +120,7 @@ function MonthController($rootScope, $scope, scheduleService, helpEventService, 
             vm.events[eventDate] = vm.events[eventDate] || [] ;
             vm.events[eventDate].push(data[i]);
         }
-        // console.log(vm.events);
+        console.log(vm.events);
     };
 
     vm.buildMonth  = function(){
@@ -177,6 +185,7 @@ function MonthController($rootScope, $scope, scheduleService, helpEventService, 
                 helpEventService.getUserEvents(startDate, endDate).then(function(data) {
                     if (data !== null){ 
                         vm.buildEventsObj(data);
+                        console.log('obj',data);
                     }
                     vm.buildMonth();
                 });
@@ -187,6 +196,7 @@ function MonthController($rootScope, $scope, scheduleService, helpEventService, 
                 helpEventService.getRoomEvents(scheduleService.getItemId(), startDate, endDate).then(function(data) {
                     if (data !== null){ 
                         vm.buildEventsObj(data);
+                                                console.log('obj', data);
                     }
                     vm.buildMonth();
                 });
@@ -197,27 +207,32 @@ function MonthController($rootScope, $scope, scheduleService, helpEventService, 
                 helpEventService.getDeviceEvents(scheduleService.getItemId(), startDate, endDate).then(function(data) {
                     if (data !== null){ 
                         vm.buildEventsObj(data);
+                                                console.log('obj', data);
                     }
                     vm.buildMonth();
                 });
                 console.log('device events shedule');
                 break;
             }
+            
         }
     };
 
-    vm.selectTypeEvent = function(event){  
-        // console.log('flagFromMonth', vm.correctFlagsEventTypes);                                
-        // console.log('event in day.events', event);                    
-        for (var i = 0; i < vm.correctFlagsEventTypes.length; i++) {     
-            if (event.type == vm.correctFlagsEventTypes[i]) return true;
+    vm.selectTypeEvent = function(event){                    
+        for (var i = 0; i < vm.actualEventTypes.length; i++) {   
+            // console.log('event', event.type);
+            // console.log('actual', vm.actualEventTypes[i]);
+            // console.log(event.type._id == vm.actualEventTypes[i].id);
+            if (event.type._id == vm.actualEventTypes[i].id) return true;
         }
     };
 
     init();
 
     function init() {
-        vm.correctFlagsEventTypes = filterService.correctFlags(); 
+       vm.actualEventTypes = filterService.getActualEventTypes(); 
+       console.log('actual', vm.actualEventTypes);
+
         vm.weeks = [];
         vm.events = {};
         vm.maxEventNameLength = 18;

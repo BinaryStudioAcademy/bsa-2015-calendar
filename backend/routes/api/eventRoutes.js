@@ -20,6 +20,15 @@ module.exports = function(app) {
 		});
 	}, apiResponse);
 
+	app.get('/api/event/typepop/:id', function(req, res, next) {
+		eventRepository.getEventPopulateType(req.params.id, function(err, data) {
+			res.data = data;
+			res.err = err;
+			next();
+		});
+	}, apiResponse);
+
+
 	app.get('/api/eventpop/:id', function(req, res, next) {
 		eventRepository.getByIdPop(req.params.id, function(err, data) {
 			res.data = data;

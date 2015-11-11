@@ -44,12 +44,6 @@ var app = angular.module('calendar-app', ['ui-notification', 'ui.checkbox', 'col
                     controllerAs: 'loginCtrl',
                     auth: false
                 })
-                .state('calendar.eventsView', {
-                    url: '/calendar/eventsView',
-                    templateUrl: './templates/eventsCalendar/eventsCalendarTemplate.html',
-                    controller: 'EventsViewController',
-                    controllerAs: 'evCtrl'
-                })
                 .state('calendar.dayView', {
                     url: '/dayView',
                     templateUrl: './templates/dailyCalendar/dailyCalendarTemplate.html',

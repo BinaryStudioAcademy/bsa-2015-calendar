@@ -82,9 +82,10 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 				}
 			}
 			console.log('body', vm.eventBody);
-			if (vm.eventBody.type){
+			if (vm.eventBody.type._id){
+				console.log('types', vm.eventBody.type._id, vm.eventTypes);	
 				for (i = 0; i < vm.eventTypes.length; i++){
-					if(vm.eventBody.type == vm.eventTypes[i]._id) {
+					if(vm.eventBody.type._id == vm.eventTypes[i]._id) {
 						vm.event.type._id = vm.eventTypes[i]._id;
 						vm.event.type.title = vm.eventTypes[i].title;
 						break;
@@ -92,10 +93,7 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 				}
 			} 
 
-
-			
-
-			console.log('vm.event = ' ,vm.event);
+			//console.log('vm.event = ' ,vm.event);
 
 			vm.eventSuccess = false;
 
@@ -136,12 +134,12 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 	
 		console.log('editing');
 
-		console.log('vm.event after editing = ', vm.event.title, vm.event.description, vm.event.start, vm.event.end);
+		//console.log('vm.event after editing = ', vm.event.title, vm.event.description, vm.event.start, vm.event.end);
 		var event = {};
 		event.title = vm.event.title;
 		event.description = vm.event.description;
 		if (vm.event.isPrivate !== undefined){
-				event.isPrivate = vm.eventBody.isPrivate;
+				event.isPrivate = vm.event.isPrivate;
 		}
 		event.start = vm.event.start;
 		event.end = vm.event.end;
@@ -160,7 +158,7 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 			for (i = 0; i < vm.event.users.length; i++){
 				event.users[i] = vm.event.users[i]._id;
 			}
-			//updateLocalArr(event.users);
+			updateLocalArr(event.users);
 		}
 		console.log('call submiting event to submit = ', event);
 		vm.submitEdit(event);	
@@ -189,8 +187,6 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 		helpEventService.deleteEvent(vm.eventBody._id).then(function(response) {
 			if(response.status == 200 || response.status == 201){
 				//socketService.emit('edit event', { event : response.data });	
-
-				// тип селектеддейт проверить!
 				crudEvEventService.deletedEventBroadcast(vm.selectedDate, vm.eventBody, vm.viewType);
 
 				$timeout(function() {
@@ -211,10 +207,8 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
            	
 			if(response.status == 200 || response.status == 201){
 				vm.eventSuccess = true;
-				//dropEventInfo();
 				console.log('success edit', response.status);
 				//socketService.emit('edit event', { event : response });	
-				// тип селектеддейт проверить!
 
 				crudEvEventService.editedEventBroadcast(vm.selectedDate, vm.eventBody, response.data, vm.viewType);
 
@@ -230,28 +224,6 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 	};
 
 	init();
-
-	// function dropEventInfo(selDate) {
-
-	// 	var newEventDate = new Date();
-	// 	if (selDate){
-	// 		newEventDate = new Date(selDate.format("DD MMM YYYY HH:mm:ss"));
-	// 	}
-	// 	newEventDate.setHours(0);
-	// 	newEventDate.setMinutes(0);
-
-	// 	vm.event.title = '';
-	// 	vm.event.description = '';
-	// 	vm.event.start = newEventDate;
-	// 	vm.event.end = newEventDate;
-	// 	vm.event.devices = [];
-	// 	vm.event.users = [];
-	// 	vm.event.room = undefined;
-	// 	vm.event.isPrivate = false;
-	// 	vm.event.type = undefined;
-	// 	vm.event.price = undefined;
-
-	// }
 
 	function updateLocalArr(userArr) {
 

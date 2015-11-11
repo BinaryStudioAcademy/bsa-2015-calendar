@@ -20,6 +20,11 @@ Repository.prototype.getByIdPop = function(id, callback){
 	var query = model.findOne({_id:id}).populate('room devices users');
 	query.exec(callback);
 };
+Repository.prototype.getEventPopulateType = function(id, callback){
+	var model = this.model;
+	var query = model.findOne({_id:id}).populate({path:'type', select: '_id title color isPrivate icon'});
+	query.exec(callback);
+};  
 
 EventRepository.prototype.getByIntervalPop = function(gteDate,lteDate, callback){
 	var model = this.model;
@@ -83,8 +88,8 @@ EventRepository.prototype.getByPlanId = function(planId, callback){
 };
 
 EventRepository.prototype.getByPlanIdPop = function(planId, callback){
-	var model = this.model;
-	var query = model.find({"plan":planId}).sort({"start": 1}).populate('room devices users');
+	var model = this.model; // 'room devices users'
+	var query = model.find({"plan":planId}).sort({"start": 1}).populate({path:'type', select: '_id title color isPrivate icon'});
 	query.exec(callback);
 };
 

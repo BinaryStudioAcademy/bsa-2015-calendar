@@ -13,8 +13,6 @@ function NavDirectiveService($resource) {
 								link: 'calendar.monthView'},
 							{ name: 'Year',
 								link: 'calendar.yearView'}, 
-              { name: 'Events',
-								link: '#'}, 
             ];
 
 	function getDays(){

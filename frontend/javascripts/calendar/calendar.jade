@@ -25,11 +25,6 @@
 												input(type="checkbox",id="eventType", ng-model = "eventType.flag", name ="{{ eventType.title }}", ng-change = "calendarCtrl.checkFlag(eventType._id)")
 												span.eventTypeFilters {{ eventType.title }}
 								input(type="checkbox", ng-model="string", name="Alloha", ng-true-value="", ng-false-value="", ng-change="")
-							li
-								.datepicker(style="position: relative")
-									button.btn.btn-default#header-pickdate
-										| {{calendarCtrl.selectedDate | date: 'd EEE yyyy'}}
-									date-picker.nav-datepicker(for="header-pickdate")
 					#navbar.navbar-collapse.collapse
 						nav-menu
 						//- ul.nav.navbar-nav
@@ -61,16 +56,16 @@
 				| Sync with Google
 			a.btn.btn-block.btn-default(ng-click='calendarCtrl.showTutorial()')
 				| Show Tutorial
-			.filters.hidden-xs
-				h3 Filters
-				button(ng-click='calendarCtrl.selectAllEventType()') select all
-				button(ng-click='calendarCtrl.clearAllEventType()') clear all
-				ul
-					form.form-inline
-						li(ng-repeat="eventType in calendarCtrl.allEventTypes")
-							label.checkbox
-								checkbox(type="checkbox",id="eventType", ng-model = "eventType.flag", name ="{{ eventType.name }}", ng-change = "calendarCtrl.checkFlag(eventType._id)")
-								span.eventTypeFilters {{ eventType.title }}
+			//- .filters.hidden-xs
+			//- 	h3 Filters
+			//- 	button(ng-click='calendarCtrl.selectAllEventType()') select all
+			//- 	button(ng-click='calendarCtrl.clearAllEventType()') clear all
+			//- 	ul
+			//- 		form.form-inline
+			//- 			li(ng-repeat="eventType in calendarCtrl.allEventTypes")
+			//- 				label.checkbox
+			//- 					checkbox(type="checkbox",id="eventType", ng-model = "eventType.flag", name ="{{ eventType.name }}", ng-change = "calendarCtrl.checkFlag(eventType._id)")
+			//- 					span.eventTypeFilters {{ eventType.title }}
 			.filters-new.hidden-xs
 				h3 Filters
 				div(ng-dropdown-multiselect='', 

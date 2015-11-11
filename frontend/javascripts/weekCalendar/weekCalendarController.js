@@ -8,22 +8,30 @@ WeekViewController.$inject = ['crudEvEventService','helpEventService', '$scope',
 
 function WeekViewController(crudEvEventService,helpEventService, $scope, $uibModal, $compile, $templateCache, $rootScope, filterService) {
 	var vm = this;
-    vm.correctFlagsEventTypes = filterService.correctFlags(); 
+    vm.actualEventTypes = filterService.getActualEventTypes(); 
 
-    $rootScope.$on('checkEventTypes', function (event, agrs) {           
-        vm.correctFlagsEventTypes = agrs.messege;
+    $scope.$on('scheduleTypeChanged', function(){
+        console.log('scheduleTypeChanged');
+        
+        vm.clearCells();
+        vm.buildEventCells(0);
+    });
+
+    $rootScope.$on('filterTypesChanged', function (event, actualEventTypes) {           
+        vm.actualEventTypes = actualEventTypes;
         vm.clearCells();
         vm.buildEventCells(0);
     });       
 
     $scope.$on('eventsUpdated', function() {
+        console.log('eventsupdated filters', vm.actualEventTypes);
         vm.buildEventCells(0);
-
     });
 
     $scope.$on('addedEventWeekView', function(event, selectedDate, eventBody){
         console.log('addedEventWeekView', selectedDate, eventBody);
         if(eventBody){
+            console.log('evbody',eventBody);
             var index = vm.eventObj.length;
             vm.eventObj.push(eventBody);
             vm.buildEventCells(index);
@@ -31,14 +39,15 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
     });
 
     $scope.$on('addedPlanWeekView', function(event, selectedDate, events){
-        var index = vm.eventObj.length-1;
+        var index = vm.eventObj.length;
         console.log('addedPlanWeekView recieved');
         console.log(selectedDate,events);
         var range = moment().range(vm.weekStartMoment, vm.weekEndMoment);
         console.log(range);
         for (var i = 0; i < events.length; i++){
             console.log(range.contains(events[i].start));
-            if (range.contains(events[i].start)){
+            console.log('start', events[i].start);
+            if (range.contains(moment(events[i].start))){
                 console.log('УРРА!');
                 vm.eventObj.push(events[i]);
             }
@@ -90,10 +99,14 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
 
 
 
-    vm.buildEventCells = function(index){              
+    vm.buildEventCells = function(index){        
+        console.log('buildcells', vm.eventObj.length); 
         for (var i = index; i < vm.eventObj.length; i++) {           
-            for (var j = 0; j < vm.correctFlagsEventTypes.length; j++) {
-                if (vm.eventObj[i].type == vm.correctFlagsEventTypes[j]) {
+            for (var j = 0; j < vm.actualEventTypes.length; j++) {
+               console.log(vm.eventObj[i].type._id == vm.actualEventTypes[j].id);
+               // console.log('vmobj', vm.eventObj[i]);
+                if (vm.eventObj[i].type._id == vm.actualEventTypes[j].id) {
+
                     var currEvt = vm.eventObj[i];
                     var evtStart = new Date(currEvt.start);
                     var evtHour = evtStart.getHours();
@@ -148,9 +161,10 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
 
         vm.selectedDate = new Date(vm.weekStartMoment.format("DD MMM YYYY HH:mm:ss"));       
    
-        helpEventService.getEvents(vm.Start, vm.End).then(function(data) {
+        helpEventService.getUserEvents(vm.Start, vm.End).then(function(data) {
             if (data !== null){
-                vm.eventObj = data;                                           
+                vm.eventObj = data;  
+                console.log('call broadcast', data.length)  ;                                       
                 $scope.$broadcast('eventsUpdated');                     
             }
         });
@@ -167,9 +181,10 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
 
         vm.selectedDate = new Date( vm.weekStartMoment.format("DD MMM YYYY HH:mm:ss"));     
 
-        helpEventService.getEvents(vm.Start, vm.End).then(function(data) {
+        helpEventService.getUserEvents(vm.Start, vm.End).then(function(data) {
             if (data !== null){
-                vm.eventObj = data;                                            
+                vm.eventObj = data;   
+                console.log('call broadcast', data.length)  ;                                             
                 $scope.$broadcast('eventsUpdated');                           
             }
         });
@@ -224,7 +239,7 @@ function WeekViewController(crudEvEventService,helpEventService, $scope, $uibMod
         vm.pullData();
 
 
-        // vm.correctFlagsEventTypes = filterService.correctFlags();    
+        // vm.actualEventTypes = filterService.correctFlags();    
 
 
     }
