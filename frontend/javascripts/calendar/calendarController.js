@@ -15,6 +15,18 @@ function CalendarController(socketService, Notification, filterService, schedule
   vm.selectedDate = todayDate;
   var userInfo = AuthService.getUser();
 
+  vm.selectConfigFilters = {
+    buttonDefaultText: 'Select filters',
+    enableSearch: true,
+    scrollableHeight: '200px', 
+    scrollable: true,
+    displayProp: 'title',
+    idProp: '_id',
+    showCheckAll: false,
+    showUncheckAll: false
+    //externalIdProp: '',
+  };
+
   setInterval(function(){
     helpEventService.checkEventNotification()
     .then(function(result){
@@ -33,7 +45,7 @@ function CalendarController(socketService, Notification, filterService, schedule
       }
       
     });
-  }, 5000);
+  }, 500000);
 
   vm.logOut = function(){
     LoginService.logOut()
@@ -134,7 +146,62 @@ function CalendarController(socketService, Notification, filterService, schedule
 
 
   vm.checkEventTypes = [];
+  vm.checkEventTypesDD = [];
+  vm.checkEventTypesIDs = [];
+
+  vm.fillIds = function(){
+    vm.checkEventTypesIDs = [];
+    for(var i = 0; i < vm.checkEventTypesDD.length; i++){
+      vm.checkEventTypesIDs.push(vm.checkEventTypesDD[i].id);
+    }
+    // console.log('filled Ids: ', vm.checkEventTypesIDs);
+  };
+
+  vm.onItemSelect = function(item){
+    console.log('onitem select', vm.checkEventTypesDD);
+    vm.fillIds();
+    console.log('IDs', vm.checkEventTypesIDs);
+    $rootScope.$broadcast('checkEventTypes', {
+      messege: vm.checkEventTypesIDs
+    });
+  };
+
+  vm.onItemDeselect = function(item){
+    console.log('onitem deselect', vm.checkEventTypesDD);
+    vm.fillIds();
+    console.log('IDs', vm.checkEventTypesIDs);
+    $rootScope.$broadcast('checkEventTypes', {
+      messege: vm.checkEventTypesIDs
+    });
+  };
+
+  vm.onSelectAll = function(){
+    vm.fillIds();
+    console.log('IDs', vm.checkEventTypesIDs);
+    $rootScope.$broadcast('checkEventTypes', {
+      messege: vm.checkEventTypesIDs
+    });
+  };
+
+  vm.onUnselecttAll = function(){
+
+    console.log('onitem deselect all', vm.checkEventTypesDD);
+    vm.fillIds();
+    console.log('IDs', vm.checkEventTypesIDs);
+    $rootScope.$broadcast('checkEventTypes', {
+      messege: vm.checkEventTypesIDs
+    });
+  };
+
+  vm.dropDownEvents = {
+    onSelectAll: vm.onSelectAll,
+    onUnselectAll: vm.onUnselecttAll,
+    onItemSelect: vm.onItemSelect,
+    onItemDeselect: vm.onItemDeselect
+  };
+
   vm.checkFlag = function(_id){         // push check Flags tu vm.checkEventTypes
+    console.log('before: ', vm.checkEventTypes);
     var index = vm.checkEventTypes.indexOf(_id);
     if (index !== -1) {
       vm.checkEventTypes.splice(index, 1);
@@ -144,6 +211,7 @@ function CalendarController(socketService, Notification, filterService, schedule
     $rootScope.$broadcast('checkEventTypes', {   //push vm.checkEventTypes to point $rootScope.$on
       messege: vm.checkEventTypes
     });
+    console.log('after ', vm.checkEventTypes);
   };
 
   vm.selectAllEventType = function(){
