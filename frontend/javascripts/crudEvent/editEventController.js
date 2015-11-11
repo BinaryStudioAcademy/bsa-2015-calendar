@@ -211,7 +211,7 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
            	
 			if(response.status == 200 || response.status == 201){
 				vm.eventSuccess = true;
-				dropEventInfo();
+				//dropEventInfo();
 				console.log('success edit', response.status);
 				//socketService.emit('edit event', { event : response });	
 				// тип селектеддейт проверить!
@@ -231,27 +231,27 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 
 	init();
 
-	function dropEventInfo(selDate) {
+	// function dropEventInfo(selDate) {
 
-		var newEventDate = new Date();
-		if (selDate){
-			newEventDate = new Date(selDate.format("DD MMM YYYY HH:mm:ss"));
-		}
-		newEventDate.setHours(0);
-		newEventDate.setMinutes(0);
+	// 	var newEventDate = new Date();
+	// 	if (selDate){
+	// 		newEventDate = new Date(selDate.format("DD MMM YYYY HH:mm:ss"));
+	// 	}
+	// 	newEventDate.setHours(0);
+	// 	newEventDate.setMinutes(0);
 
-		vm.event.title = '';
-		vm.event.description = '';
-		vm.event.start = newEventDate;
-		vm.event.end = newEventDate;
-		vm.event.devices = [];
-		vm.event.users = [];
-		vm.event.room = undefined;
-		vm.event.isPrivate = false;
-		vm.event.type = undefined;
-		vm.event.price = undefined;
+	// 	vm.event.title = '';
+	// 	vm.event.description = '';
+	// 	vm.event.start = newEventDate;
+	// 	vm.event.end = newEventDate;
+	// 	vm.event.devices = [];
+	// 	vm.event.users = [];
+	// 	vm.event.room = undefined;
+	// 	vm.event.isPrivate = false;
+	// 	vm.event.type = undefined;
+	// 	vm.event.price = undefined;
 
-	}
+	// }
 
 	function updateLocalArr(userArr) {
 

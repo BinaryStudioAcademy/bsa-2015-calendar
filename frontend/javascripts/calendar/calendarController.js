@@ -58,9 +58,9 @@ function CalendarController(socketService, Notification, filterService, schedule
     var openedView = path.split('/')[2];
     switch(openedView) {
       case 'dayView' : return 0;
-      case 'weekView' : return 1;
-      case 'monthView' : return 2;
-      case 'yearView' : return 3;
+      case 'weekView' : return 6;
+      case 'monthView' : return 7;
+      case 'yearView' : return 8;
       default : return 0;
     }
   };

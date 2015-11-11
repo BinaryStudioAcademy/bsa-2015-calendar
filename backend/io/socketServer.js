@@ -46,7 +46,18 @@ module.exports = function(server){
 			console.log(data);
 			console.log('SOCKET.IO: NEW event: ' + data.event.title);
 
-			socket.broadcast.emit('add event notification', data.event);
+			passportSocketIo.filterSocketsByUser(context.io, function(user){
+				//console.log('\nUSER ID: ' + user._id);
+				//console.log('\nUSER ID TYPE: ' + typeof(user._id)); //object
+				//console.log('\nDATA USER IDS: ', data.event.users);
+				//console.log('\nDATA EVENT: ', data.event);
+				//console.log('\nDATA USER ID INDEX OF: ', data.event.users.indexOf(user._id.toString()));
+
+				return data.event.users.indexOf(user._id.toString()) != -1;	//return all users who are assigned to the event
+			}).forEach(function(socket){
+				socket.emit('add event notification', data.event);	//send notifications to them
+			});
+
 		});
 
 		socket.on('add device', function(data){

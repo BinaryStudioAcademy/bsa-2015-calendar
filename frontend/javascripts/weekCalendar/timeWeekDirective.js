@@ -37,22 +37,30 @@ function timeWeekDirective($interval, $timeout) {
                 }
             }
 
+            function timeLine() {
+                var currentTime = Date.now();
+                if ($scope.wCtrl.Start <= currentTime && $scope.wCtrl.End >= currentTime) {
+                    //console.log($scope.wCtrl.Start, $scope.wCtrl.End, currentTime);
+                    //first run after DOM rendering
+                    $timeout(function() {
+                        redLineDraw();
+                    }, 0);
+                    
+                    //run with interval
+                    $interval(function() {
+                        redLineDraw();
+                    }, 500000);
+                } else {
+                    $('.time-line-week').remove();
+                }
+            }
 
-            var currentTime = Date.now();
-            if ($scope.wCtrl.Start <= currentTime && $scope.wCtrl.End >= currentTime) {
-                var redLine = angular.element('<div class="time-line-week"></div>');
+            var redLine = angular.element('<div class="time-line-week"></div>');
+            timeLine();
 
-                //first run after DOM rendering
-                $timeout(function() {
-                    redLineDraw();
-                }, 0);
-                
-                //run with interval
-                $interval(function() {
-                    redLineDraw();
-                }, 500000);
-
-            }        
+            $scope.$on('eventsUpdated', function() {
+                timeLine();
+            });     
         }
     };
 }

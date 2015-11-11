@@ -22,17 +22,16 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 	vm.devices = devices;
 	vm.users = getUpdateUsers(users);
 	vm.eventTypes = eventTypes;
-
-	console.log('createEvCtrl');
-	console.log(selectedDate);
-
 	vm.selectedDateMoment = selectedDate;
 	vm.selectedDate = new Date(selectedDate.format("DD MMM YYYY HH:mm:ss"));
-
 	vm.viewType = viewType;
 	vm.isStartDPopened = false;
 	vm.isEndDPopened = false;
 	vm.dpFormat = "dd MMMM yyyy";
+	vm.form = {};
+	vm.form.timeStart = new Date(vm.selectedDate);
+	vm.form.timeEnd = new Date(vm.selectedDate);
+	vm.form.timeEnd.setMinutes(30);
 
 	vm.openDP = function(dp){
 		if(dp === 'start'){
@@ -217,14 +216,13 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 	};
 
 	vm.formSuccess = false;
-	vm.form = {};
+	//vm.form = {};
 	vm.form.users = [];
 	vm.form.devices = [];
 	vm.form.timeStart = vm.selectedDate;
-	console.log('START', vm.form.timeStart );
+	//console.log('START', vm.form.timeStart );
 	vm.form.timeEnd = vm.selectedDate;
-	console.log('END', vm.form.timeEnd);
-
+	//console.log('END', vm.form.timeEnd);
 	//dropEventInfo(vm.selectedDate);
 
 	vm.submitModal = function() {
@@ -292,17 +290,21 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 			if(vm.isPublic){
 				plan.isPrivate = false;
 				if(vm.form.price) plan.price = vm.form.price;
-				if(vm.form.rooms.length) plan.rooms = vm.form.rooms;
-				if(vm.form.devices.length) plan.devices = vm.form.devices;
-				if(vm.form.users.length){
+				if(vm.form.rooms) plan.rooms = vm.form.rooms;
+				if(vm.form.devices) plan.devices = vm.form.devices;
+				if(vm.form.users){
 					plan.users = vm.form.users;
-					event.users.push({_id:user.id, name:user.name});
-					console.log('users in plan', plan.users);
+					plan.users.push({_id:user.id, name:user.name});
+				} else {
+					plan.users = {_id:user.id, name:user.name};
 				}
+				
 				updateLocalArr(vm.form.users);
-				console.log(vm.form.users);
+			} else {
+				plan.users = {_id:user.id, name:user.name};
 			}
-
+			
+			console.log('users in plan', plan.users);
 			console.log('SUBMITTING PLAN >>>>>', plan);
 			submitPlan(plan);
 		} else{ //event
@@ -317,15 +319,21 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 			if(vm.isPublic){
 				event.isPrivate = false;
 				if(vm.form.price) event.price = vm.form.price;
-				if(vm.form.rooms.length) event.room = vm.form.room['_id'];
-				if(vm.form.devices.length) event.devices = vm.form.devices;
-				if(vm.form.users.length) {
+				if(vm.form.rooms) event.room = vm.form.room['_id'];
+				if(vm.form.devices) event.devices = vm.form.devices;
+				if(vm.form.users) {
 					event.users = vm.form.users;
 					event.users.push({_id:user.id, name:user.name});
-					console.log('users in event', event.users);
+				} else {
+					event.users = {_id:user.id, name:user.name};
 				}
+
 				updateLocalArr(vm.form.users);
+			} else {
+				event.users = {_id:user.id, name:user.name};
 			}
+			
+			console.log('users in event', event.users);
 			console.log('SUBMITTING EVENT >>>>>', event);
 			submitEvent(event);
 		}
@@ -432,16 +440,14 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 
 	function dropEventInfo(selDate) {
 
-		var newEventDate = selDate || new Date();
-		newEventDate.setHours(0);
-		newEventDate.setMinutes(0);
-
-		vm.form.timeStart = newEventDate;
-		vm.form.timeEnd = newEventDate;
-		vm.form.users = [];
-		vm.form.devices = [];
-
-		vm.changeStartDate();
+		// var newEventDate = selDate || new Date();
+		// newEventDate.setHours(0);
+		// newEventDate.setMinutes(0);
+		// vm.form.timeStart = newEventDate;
+		// vm.form.timeEnd = newEventDate;
+		// vm.form.users = [];
+		// vm.form.devices = [];
+		// vm.changeStartDate();
 	}
 
 
@@ -490,7 +496,7 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 			if (!usersArrObj) {
 				delUsers.push(localUserArrObj);
 			}
-			if (localUserArrObj['_id'] == loggedUserId) {
+			if (localUserArrObj['_id'] == loggedUserId) { //add to remove logged user
 				delUsers.push(localUserArrObj);
 			}
 

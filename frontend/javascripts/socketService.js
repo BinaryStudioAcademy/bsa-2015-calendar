@@ -1,4 +1,5 @@
-var app = require('./app');
+var app = require('./app'),
+    moment = require('moment');
 
 app.factory('socketService', ['socketFactory', 'Notification', 'alertify', function(socketFactory, Notification, alertify){
         var socket = socketFactory();
@@ -44,7 +45,9 @@ app.factory('socketService', ['socketFactory', 'Notification', 'alertify', funct
 
         socket.on('add event notification', function(event){
             console.log('event has been added');
-            alertify.log('Event has been created');
+            Notification.success({message: "You have been assigned to '" + event.title + "' event, starting at " +
+                moment(event.start).format("MMMM Do, YYYY, @HH:mm") + "!\nCheck out the calendar for more info!", delay: 300000});
+            //alertify.log('Event has been created');
         }); 
 
         socket.on('update event notification', function(event){
