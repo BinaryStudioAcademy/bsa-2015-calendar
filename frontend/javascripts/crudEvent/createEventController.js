@@ -284,7 +284,7 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 
 			plan.intervals = vm.form.intervals;
 
-			plan.type = vm.form.type['_id'];
+			plan.type = vm.form.type;
 
 
 			if(vm.isPublic){
@@ -315,7 +315,7 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 			event.isPrivate = true;
 			event.start = vm.form.timeStart;
 			event.end = vm.form.timeEnd;
-			event.type = vm.form.type['_id'];
+			event.type = vm.form.type;
 			if(vm.isPublic){
 				event.isPrivate = false;
 				if(vm.form.price) event.price = vm.form.price;

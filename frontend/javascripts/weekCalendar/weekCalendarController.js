@@ -6,7 +6,7 @@ app.controller('WeekViewController', WeekViewController);
 
 WeekViewController.$inject = ['crudEvEventService','helpEventService', 'scheduleService', '$scope', '$uibModal','$compile', '$rootScope', 'filterService'];
 
-function WeekViewController(crudEvEventService,helpEventService, scheduleService, $scope, $uibModal, $compile, $rootScope, filterService) {
+function WeekViewController(crudEvEventService, helpEventService, scheduleService, $scope, $uibModal, $compile, $rootScope, filterService) {
 	var vm = this;
     vm.correctFlagsEventTypes = filterService.correctFlags(); 
 
@@ -20,8 +20,14 @@ function WeekViewController(crudEvEventService,helpEventService, scheduleService
     });
 
     $scope.$on('addedEventWeekView', function(event, selectedDate, eventBody){
-        console.log('addedEventWeekView', selectedDate, eventBody);
+        //console.log('addedEventWeekView', selectedDate, eventBody);
         if(eventBody){
+            for (var evt = 0; evt < vm.eventTypes.length; evt++){
+                if (vm.eventTypes[evt]['_id'] == eventBody.type) {
+                    eventBody.type = vm.eventTypes[evt];
+                }
+                break;
+            }
             var index = vm.eventObj.length;
             vm.eventObj.push(eventBody);
             vm.buildEventCells(index);
@@ -30,14 +36,14 @@ function WeekViewController(crudEvEventService,helpEventService, scheduleService
 
     $scope.$on('addedPlanWeekView', function(event, selectedDate, events){
         var index = vm.eventObj.length-1;
-        console.log('addedPlanWeekView recieved');
-        console.log(selectedDate,events);
+        //console.log('addedPlanWeekView recieved');
+        //console.log(selectedDate,events);
         var range = moment().range(vm.weekStartMoment, vm.weekEndMoment);
-        console.log(range);
+        //console.log(range);
         for (var i = 0; i < events.length; i++){
             console.log(range.contains(events[i].start));
             if (range.contains(events[i].start)){
-                console.log('УРРА!');
+                //console.log('УРРА!');
                 vm.eventObj.push(events[i]);
             }
             else break;
@@ -89,90 +95,31 @@ function WeekViewController(crudEvEventService,helpEventService, scheduleService
         vm.pullData();
     });
 
-    function buildEvent(evt) {
-        console.log(evt);
-        var evtStart = new Date(evt.start);
-        var evtHour = evtStart.getHours();
-        var evtDay = (evtStart.getDay() || 7) - 1;
-        var evtCell = $('[ng-class="'+ evtHour +'"].'+ vm.daysNames[evtDay]);
-        var eventDiv = angular.element('<div class="event-cell-week" id="id' + evt._id + '"></div>');
-        eventDiv.text(evt.title);
-        var tmpl = '<div>';
-        if (evt.description) {
-            tmpl += evt.description;
-        }
-        tmpl +='</div><div>Start at: '+moment(evt.start).format('hh:mm')+'</div><div>End at: '+moment(evt.end).format('hh:mm')+'</div>';
-        eventDiv.popover({
-            trigger: 'focus',
-            delay: 500,
-            container: 'body',
-            placement: 'top',
-            title: evt.title,
-            html: true,
-            content: tmpl
-        });
-        eventDiv.on( 'dblclick', function(event){
-            var date = new Date($(event.currentTarget).attr('date'));
-            vm.editEvent(date, vm.eventObj[$(event.currentTarget).attr('index')]); 
-            event.stopPropagation();
-        });
-        $compile(eventDiv)($scope);
-        evtCell.append(eventDiv);
-    }
-
-    function buildEventCells(evtObj) {
-        for (var i=0; i < evtObj.length; i++) {
-            var oldEvt = $('#'+ evtObj[i]['_id']);
-            if (oldEvt) {
-                oldEvt.remove();
-            }
-            buildEvent(evtObj[i]);
-        }
-    }
-
-    function updateEventCells(evtObj) {
-        for (var i=0; i < evtObj.length; i++) {
-            var oldEvt = $('#'+ evtObj[i]['_id']);
-            if (!oldEvt) {
-                buildEvent(evtObj[i]);
-            }
-            if (oldEvt.css('display') == 'none') {
-                oldEvt.css('display', 'block');
-            }
-        }
-        var eventsElem = $('.event-cell-week');
-        for (var y=0; y < eventsElem.length; y++) {
-            var evtId = eventsElem[y].attr('id').slice(2);
-            if (_.findIndex(evtObj, {'_id': evtId}) == -1) {
-                eventsElem[y].css('display', 'none');
-            }
-        }
-
-    }
-
     vm.clearCells = function(){
         $('.event-cell-week').remove();
     };
 
-    vm.buildEventCells = function(index){              
-        for (var i = index; i < vm.eventObj.length; i++) {           
+    vm.buildEventCells = function(index){            
+        for (var i = index; i < vm.eventObj.length; i++) {  
+            console.log('1', vm.eventObj[i]);         
             for (var j = 0; j < vm.correctFlagsEventTypes.length; j++) {
                 if (vm.eventObj[i].type['_id'] == vm.correctFlagsEventTypes[j]) {
-                    console.log(vm.eventObj[i]);
+                    console.log('2',vm.eventObj[i]);
                     var currEvt = vm.eventObj[i];
                     var evtStart = new Date(currEvt.start);
                     var evtHour = evtStart.getHours();
                     var evtDay = (evtStart.getDay() || 7) - 1;
                     var evtCell = angular.element($('[ng-class="'+ evtHour +'"].'+ vm.daysNames[evtDay]));
-                    var eventDiv = angular.element('<div class="event-cell-week"></div>'); 
+                    var eventDiv = angular.element('<div class="event-cell-week" index='+index+'></div>'); 
                     eventDiv.text(currEvt.title);
+                    eventDiv.css('background-color', currEvt.type['color']);
                     var tmpl = '<div>';
                     if (currEvt.description) {
                         tmpl += currEvt.description;
                     }
                     tmpl +='</div><div>Start at: '+moment(currEvt.start).format('hh:mm')+'</div><div>End at: '+moment(currEvt.end).format('hh:mm')+'</div>';
                     eventDiv.popover({
-                        trigger: 'focus',
+                        trigger: 'hover',
                         delay: 500,
                         container: 'body',
                         placement: 'top',
@@ -182,6 +129,7 @@ function WeekViewController(crudEvEventService,helpEventService, scheduleService
                     });
                     eventDiv.on( 'dblclick', function(event){
                         var date = new Date($(event.currentTarget).attr('date'));
+                        //console.log('EVT', date, vm.eventObj[$(event.currentTarget).attr('index')]);
                         vm.editEvent(date, vm.eventObj[$(event.currentTarget).attr('index')]); 
                         event.stopPropagation();
                     });
@@ -243,10 +191,9 @@ function WeekViewController(crudEvEventService,helpEventService, scheduleService
     };
 
     vm.editEvent = function(selectedDate, eventBody){
-        var tmpDate = vm.weekStartMoment.clone();
-        tmpDate.add(day, 'd');
-        tmpDate.set({'hour': hours, 'minute': 0});
-        console.log(tmpDate);
+        console.log('eventService editindBroadcast call');
+        var tmpDate = moment(selectedDate);
+        //console.log(tmpDate);
         crudEvEventService.editingBroadcast(tmpDate, eventBody, 'WeekView');
     };
 
@@ -255,47 +202,47 @@ function WeekViewController(crudEvEventService,helpEventService, scheduleService
     vm.pullData = function() {
         var startDate = new Date(vm.weekStartMoment.format("DD MMM YYYY HH:mm:ss")),
             endDate = new Date(vm.weekEndMoment.format("DD MMM YYYY HH:mm:ss"));
-        console.log('pulling data, scheduleType: ', scheduleService.getType());
-        console.log('pulling data, scheduleType: ', scheduleService.getItemId());
+        //console.log('pulling data, scheduleType: ', scheduleService.getType());
+        //console.log('pulling data, scheduleType: ', scheduleService.getItemId());
         switch (scheduleService.getType()){
             case 'event':{
                 helpEventService.getUserEvents(startDate, endDate).then(function(data) {
                     if (data !== null){
                         vm.eventObj = data;
+                        console.log('EVNT', vm.eventObj);
                         vm.clearCells();
                         vm.buildEventCells(0);
                     } 
                 });
-                console.log('user events shedule');
+                //console.log('user events shedule');
                 break;
             }
             case 'room':{
                 helpEventService.getRoomEvents(scheduleService.getItemId(), startDate, endDate).then(function(data) {
                     if (data !== null){ 
                         vm.eventObj = data;
-                        console.log('ROOM', vm.eventObj);
+                        //console.log('ROOM', vm.eventObj);
                         vm.clearCells();
                         vm.buildEventCells(0);
                     }
                 });
-                console.log('room events shedule');
+                //console.log('room events shedule');
                 break;
             }
             case 'device':{
                 helpEventService.getDeviceEvents(scheduleService.getItemId(), startDate, endDate).then(function(data) {
                     if (data !== null){ 
                         vm.eventObj = data;
-                        console.log('DEV', vm.eventObj);
+                        //console.log('DEV', vm.eventObj);
                         vm.clearCells();
                         vm.buildEventCells(0);
                     }
                 });
-                console.log('device events shedule');
+                //console.log('device events shedule');
                 break;
             }
         }
     };
-
 
 
     init();
@@ -312,6 +259,8 @@ function WeekViewController(crudEvEventService,helpEventService, scheduleService
         vm.Start = new Date(vm.weekStartMoment.format("DD MMM YYYY HH:mm:ss"));    
         vm.End = new Date(vm.weekEndMoment.format("DD MMM YYYY HH:mm:ss"));
         vm.selectedDate = new Date(vm.weekStartMoment.format("DD MMM YYYY HH:mm:ss"));
-
+        //helpEventService.getEventTypes.then(function(data) {
+        //    vm.eventTypes = data;
+        //});
     }
 }

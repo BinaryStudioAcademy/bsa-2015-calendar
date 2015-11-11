@@ -1,6 +1,7 @@
 var connection = require('../db/dbconnect');
 var Repository = require('./generalRepository');
 var Room = require('../schemas/roomSchema');
+var Event = require('../schemas/eventSchema');
 
 function RoomRepository() {
 	Repository.prototype.constructor.call(this);
@@ -30,7 +31,14 @@ RoomRepository.prototype.removeEvent = function(roomId, eventId, callback) {
 RoomRepository.prototype.getRoomEventsByInterval = function(roomId, gteDate, lteDate, callback){
 	var model = this.model;
 	var query = model.findOne({_id:roomId}, {events: 1}).populate('events', null, {"start": {"$gte": gteDate, "$lte": lteDate}}, {sort: {"start": 1}});
-	query.exec(callback);
+	query.populate('type');
+	query.exec(function(err, doc){
+            Event.populate(doc.events, {path:'type', populate: 'type._id type.title type.color type.isPrivate type.icon'},
+                   function(err, data){
+                        callback(null, doc);
+                   }
+            );     
+    });
 };
 
 module.exports = new RoomRepository();
