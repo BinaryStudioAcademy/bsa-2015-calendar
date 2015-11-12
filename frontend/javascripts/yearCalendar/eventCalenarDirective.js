@@ -149,8 +149,9 @@ function eventCalendarDirective($rootScope, filterService) {
                                 for (var i=0; i<$scope.dataObj[day].length; i++) {
                                     // console.log('from function addEvents  for', $scope.dataObj[day][i]);                          
 
-                                  tmpl += '<li class="list-group-item">'+$scope.dataObj[day][i].title + '</li>';
+                                  tmpl += '<li ' + ' style="background-color:' + $scope.dataObj[day][i].type.color +'" class="list-group-item">'+$scope.dataObj[day][i].title + '</li>';
                                 }
+                                console.log(tmpl);
                                 tmpl +='</ul>';
 
                                 //update template if popover exists

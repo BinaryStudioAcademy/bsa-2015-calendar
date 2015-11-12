@@ -209,7 +209,7 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 				vm.eventSuccess = true;
 				console.log('success edit', response.status);
 				//socketService.emit('edit event', { event : response });	
-
+				console.log(response.data);
 				crudEvEventService.editedEventBroadcast(vm.selectedDate, vm.eventBody, response.data, vm.viewType);
 
 				$timeout(function() {

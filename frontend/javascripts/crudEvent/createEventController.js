@@ -1,4 +1,4 @@
-var app = require('../app');
+	var app = require('../app');
 
 app.controller('createEventController', createEventController);
 
@@ -32,7 +32,10 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 	vm.form.timeStart = new Date(vm.selectedDate);
 	vm.form.timeEnd = new Date(vm.selectedDate);
 	vm.form.timeEnd.setMinutes(30);
-
+	vm.form.users = [];
+	//= vm.users;
+	vm.form.devices = [];
+	
 	vm.openDP = function(dp){
 		if(dp === 'start'){
 			vm.isStartDPopened = !vm.isStartDPopened;
@@ -80,7 +83,6 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 	vm.minDate = new Date();
 	vm.planStartDate = new Date(vm.selectedDate);
 	vm.planEndDate = new Date(vm.selectedDate);
-	//vm.planEndDate.setYear(vm.planEndDate.getFullYear() + 1);
 	vm.planFirstEventStart = new Date();
 
 	vm.computeIntervals = function(selectedDay){
@@ -88,11 +90,8 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 		console.log('week days', vm.weekDays);
 		var currentDay, i;
 		var selectIndex = vm.weekDays.indexOf(selectedDay); //
-		console.log('selectIndex', selectIndex);
-
-
-
-		console.log('today index', vm.todayIndex);
+		//console.log('selectIndex', selectIndex);
+		//console.log('today index', vm.todayIndex);
 
 		var startDay;
 		vm.startDate = new Date();
@@ -216,14 +215,6 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 	};
 
 	vm.formSuccess = false;
-	//vm.form = {};
-	vm.form.users = [];
-	vm.form.devices = [];
-	vm.form.timeStart = vm.selectedDate;
-	//console.log('START', vm.form.timeStart );
-	vm.form.timeEnd = vm.selectedDate;
-	//console.log('END', vm.form.timeEnd);
-	//dropEventInfo(vm.selectedDate);
 
 	vm.submitModal = function() {
 
@@ -393,9 +384,7 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 		helpEventService.saveEvent(event).then(function(response) {
            	if(response.status == 200 || response.status == 201){
 	           	vm.formSuccess = true;
-				dropEventInfo();
 				console.log('success', response.status);
-
 				socketService.emit('add event', { event : response.data });	
 				//$rootScope.$broadcast('eventAdded' + vm.viewType, data);
 				console.log(vm.viewType);
@@ -418,7 +407,6 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 		helpEventService.savePlan(plan).then(function(response) {
 			if(response.status == 200 || response.status == 201){
 	           	vm.formSuccess = true;
-				dropEventInfo();
 				console.log('success', response.status);
 
 
@@ -438,17 +426,6 @@ function createEventController(AuthService, crudEvEventService, socketService, a
         });
 	}
 
-	function dropEventInfo(selDate) {
-
-		// var newEventDate = selDate || new Date();
-		// newEventDate.setHours(0);
-		// newEventDate.setMinutes(0);
-		// vm.form.timeStart = newEventDate;
-		// vm.form.timeEnd = newEventDate;
-		// vm.form.users = [];
-		// vm.form.devices = [];
-		// vm.changeStartDate();
-	}
 
 
 	function updateLocalArr(userArr) {

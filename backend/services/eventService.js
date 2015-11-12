@@ -342,7 +342,23 @@ eventService.prototype.update = function(eventId, newEvent, callback){
 						return cb(err);
 					}
 					if(result.length){
-						return cb(new Error('date/time conflict with room ' + newEvent.room + '\nstart:' + newEvent.start + ' \nend:' + newEvent.end), result);
+						if(result.length == 1){
+							if(result[0]._id != eventId){
+								console.log('FAILED for room');
+								console.log('put ev id = ', eventId);
+								console.log('find ev id = ', result[0]._id);
+								return cb(new Error('date/time conflict with room ' + data.room + '\nstart:' + data.start + ' \nend:' + data.end+ '\n' +  result), result);
+							}
+							else{
+								console.log('SUCCESS for room');
+								console.log('put ev id = ', eventId);
+								console.log('find ev id = ', result[0]._id);
+							}
+						}
+						else {
+							console.log('more > 1 conflict results');
+							return cb(new Error('date/time conflict with room ' + data.room + '\nstart:' + data.start + ' \nend:' + data.end + '\n' +  result), result);
+						}
 					}
 					cb();
 				});
@@ -359,7 +375,23 @@ eventService.prototype.update = function(eventId, newEvent, callback){
 						return cb(err);
 					}
 					if(result.length){
-						return cb(new Error('date/time conflict with device ' + deviceId + '\nstart:' + newEvent.start + ' \nend:' + newEvent.end), result);
+						if(result.length == 1){
+							if(result[0]._id != eventId){
+								console.log('FAILED for device');
+								console.log('put ev id = ', eventId);
+								console.log('find ev id = ', result[0]._id);
+								return cb(new Error('date/time conflict with device ' + deviceId + '\nstart:' + data.start + ' \nend:' + data.end+ '\n' +  result), result);
+							}
+							else{
+								console.log('SUCCESS for device');
+								console.log('put ev id = ', eventId);
+								console.log('find ev id = ', result[0]._id);
+							}
+						}
+						else {
+							console.log('more > 1 conflict results');
+							return cb(new Error('date/time conflict with device ' + deviceId + '\nstart:' + data.start + ' \nend:' + data.end + '\n' +  result), result);
+						}
 					}
 					next();
 				});
@@ -448,6 +480,7 @@ eventService.prototype.update = function(eventId, newEvent, callback){
 				async.waterfall([
 
 				function(cb){ 
+					console.log(newEvent);
 					eventRepository.update(eventId, newEvent, function(err, data){
 						if(err){
 							return cb(err, data);

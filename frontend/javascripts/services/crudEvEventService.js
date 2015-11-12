@@ -41,6 +41,7 @@ function crudEvEventService($rootScope, $uibModal, helpEventService) {
 	// отправка события после редактирования ивента
 	vm.editedEventBroadcast = function(selectedDate, oldEventBody, newEventBody, viewType) {
     	console.log('editedEvent broadcast');
+        console.log(oldEventBody, newEventBody);
     	$rootScope.$broadcast('editedEvent' + viewType, selectedDate, oldEventBody, newEventBody);
 	};
 
@@ -50,7 +51,7 @@ function crudEvEventService($rootScope, $uibModal, helpEventService) {
     		vm.selectedDate = selectedDate;
     		vm.viewType = viewType;
 	        console.log('creatingEvent received');
-	        pullData(initCreateModal);    
+	        pullingData(initCreateModal);    
 	    });
     };
 
@@ -62,12 +63,12 @@ function crudEvEventService($rootScope, $uibModal, helpEventService) {
     		vm.viewType = viewType;
 	        
 	        console.log('editingEvent received');
-	        pullData(initEditModal);
+	        pullingData(initEditModal);
 	    });
     };
 
-    pullData = function(cb){
-		console.log('pullData');
+    pullingData = function(cb){
+		console.log('pullingData');
 		helpEventService.getRooms(true).then(function(data) {
             if (data !== null){
                 vm.rooms = data;
@@ -90,7 +91,7 @@ function crudEvEventService($rootScope, $uibModal, helpEventService) {
 		        if (data !== null){
 		            vm.users = data;
 		        }
-		        console.log('pullDataCb finish');
+		        console.log('pullingDataCb finish');
 		        cb();
 		    });
 		});

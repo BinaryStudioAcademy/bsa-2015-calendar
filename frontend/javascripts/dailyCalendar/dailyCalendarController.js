@@ -114,13 +114,21 @@ function DayViewController(Notification, scheduleService, filterService, AuthSer
 	}
 
 	function computingEvents() {
+		vm.filteredEvents = [];
+		for (i = 0; i < vm.todayEvents.length; i++) {
+			for (j = 0; j < vm.actualEventTypes.length; j++){
+				if (vm.todayEvents[i].type._id == vm.actualEventTypes[j].id){
+					vm.filteredEvents.push(vm.todayEvents[i]);
+				}
+			}
+		}
 		//computing top and height values for all geted events
-		for (var i = 0; i < vm.todayEvents.length; i++) {
+		for (var i = 0; i < vm.filteredEvents.length; i++) {
 			// temp - object to save top and height values for further event displaying
 			var temp = {};
 			var eventEnd = new Date(vm.todayEvents[i].end);
-			var eventStart = new Date(vm.todayEvents[i].start);
-			temp.eventAsItIs = vm.todayEvents[i];
+			var eventStart = new Date(vm.filteredEvents[i].start);
+			temp.eventAsItIs = vm.filteredEvents[i];
 			// calculate height value(888 is the height of the table; 86400000 amount of milliseconds in the 24 hours)
 			temp.heightVal = 888 * (eventEnd.getTime() - eventStart.getTime()) / 86400000;
 
@@ -130,26 +138,40 @@ function DayViewController(Notification, scheduleService, filterService, AuthSer
 			temp.topVal = 888 * (eventStart.getTime() - now.getTime()) / 86400000;
 			// save computed values to the array
 			
+			// temp.conflicts = 0;
+			// for (var x = 0; x < vm.todayEvents.length; x++){
+			// 	var range1 = moment().range(moment(vm.todayEvents[x].start), moment(vm.todayEvents[x].end));
+			// 	var range2 = moment().range(moment(temp.eventAsItIs.start), moment(temp.eventAsItIs.end));
+   //      		console.log(range1, range2);
+   //          	if (range2.contains(moment(vm.todayEvents[x].end)) || range2.contains(moment(vm.todayEvents[x].start)) || range1.contains(moment(temp.eventAsItIs.start)) || range1.contains(moment(temp.eventAsItIs.end))){
+   //          		temp.conflicts++;
+
+   //          	}
+			// }
+			
 			temp.conflicts = 0;
-			for (var x = 0; x < vm.todayEvents.length; x++){
-				var range1 = moment().range(moment(vm.todayEvents[x].start), moment(vm.todayEvents[x].end));
+			//temp.indexGroup = i;
+			for (var x = 0; x < vm.filteredEvents.length; x++){
+				var range1 = moment().range(moment(vm.filteredEvents[x].start), moment(vm.filteredEvents[x].end));
 				var range2 = moment().range(moment(temp.eventAsItIs.start), moment(temp.eventAsItIs.end));
-        		console.log(range1, range2);
-            	if (range2.contains(moment(vm.todayEvents[x].end)) || range2.contains(moment(vm.todayEvents[x].start)) || range1.contains(moment(temp.eventAsItIs.start)) || range1.contains(moment(temp.eventAsItIs.end))){
+        		//console.log(range1, range2);
+            	if (range2.contains(moment(vm.filteredEvents[x].end)) || range2.contains(moment(vm.filteredEvents[x].start)) || range1.contains(moment(temp.eventAsItIs.start)) || range1.contains(moment(temp.eventAsItIs.end))){
             		temp.conflicts++;
 
             	}
 			}
-			
 
+			vm.computedEvents.push(temp);
 
-			for(var j = 0; j < vm.actualEventTypes.length; j++){
-				if(temp.eventAsItIs.type._id == vm.actualEventTypes[j].id){
-					vm.computedEvents.push(temp);
-				}
-			}
+			// for(var j = 0; j < vm.actualEventTypes.length; j++){
+			// 	if(temp.eventAsItIs.type._id == vm.actualEventTypes[j].id){
+					
+			// 	}
+			// }
 
 		}
+		console.log('comp', vm.computedEvents);
+		console.log('filt', vm.filteredEvents);
 	}
 
 	// gets all the events that corre spond to the todays date
