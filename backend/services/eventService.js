@@ -59,6 +59,7 @@ eventService.prototype.checkNotification = function(userId, callback){
 	});
 };
 
+
 eventService.prototype.add = function(data, callback){ 
 	// операция добавления ивента
 	var event;

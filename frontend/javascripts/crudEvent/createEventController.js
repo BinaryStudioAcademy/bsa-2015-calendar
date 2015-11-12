@@ -8,7 +8,6 @@ createEventController.$inject = ['AuthService', 'crudEvEventService', 'socketSer
 function createEventController(AuthService, crudEvEventService, socketService, alertify, helpEventService, $rootScope, $scope, $timeout, $modalInstance, selectedDate, viewType, rooms, devices, users, eventTypes) {
 
 	var vm = this;
-
 	//set userList in localStorage if not exists
 	var loggedUserId = AuthService.getUser().id;
 	if (!localStorage["userlist"+loggedUserId]) {
@@ -18,7 +17,7 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 	if (!localUsersArr) {
 		var localUsersArr = [];
 	}
-
+	
 	vm.rooms = rooms;
 	vm.devices = devices;
 	vm.users = getUpdateUsers(users);
@@ -220,6 +219,10 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 	//vm.form = {};
 	vm.form.users = [];
 	vm.form.devices = [];
+	vm.form.timeStart = vm.selectedDate;
+	//console.log('START', vm.form.timeStart );
+	vm.form.timeEnd = vm.selectedDate;
+	//console.log('END', vm.form.timeEnd);
 	//dropEventInfo(vm.selectedDate);
 
 	vm.submitModal = function() {
@@ -281,7 +284,7 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 
 			plan.intervals = vm.form.intervals;
 
-			plan.type = vm.form.type['_id'];
+			plan.type = vm.form.type;
 
 
 			if(vm.isPublic){
@@ -312,7 +315,7 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 			event.isPrivate = true;
 			event.start = vm.form.timeStart;
 			event.end = vm.form.timeEnd;
-			event.type = vm.form.type['_id'];
+			event.type = vm.form.type;
 			if(vm.isPublic){
 				event.isPrivate = false;
 				if(vm.form.price) event.price = vm.form.price;
@@ -440,13 +443,10 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 		// var newEventDate = selDate || new Date();
 		// newEventDate.setHours(0);
 		// newEventDate.setMinutes(0);
-
 		// vm.form.timeStart = newEventDate;
 		// vm.form.timeEnd = newEventDate;
-
 		// vm.form.users = [];
 		// vm.form.devices = [];
-
 		// vm.changeStartDate();
 	}
 
@@ -462,7 +462,7 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 							break;
 						}
 					}
-				  localUsersArr.splice(index, 1);
+					localUsersArr.splice(index, 1);
 				}
 			}
 			for (var u=0; u < userArr.length; u++) {
@@ -474,42 +474,39 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 		}
 	}
 
-function getUpdateUsers(data) {
-	localUsersArr = [];
-  // localUsersArr = JSON.parse(localStorage.getItem("userlist"+loggedUserId));
-  console.log('IN', localUsersArr);
-  //left only id and name fields
-  var usersArr = _.map(data, function(item) {return _.pick(item, '_id', 'name');});
-  //add to local array new users from sever
-  _.each(usersArr, function(userArrObj) {
-   var localUsersArrObj = _.find(localUsersArr, function(localUsersArrObj) {
-    return userArrObj['_id'] === localUsersArrObj['_id'];
-   });
-   if (!localUsersArrObj) {
-    localUsersArr.push(userArrObj);
-   }
-  });
-  //delete from local deleted users
-  var delUsers = [];
-  _.each(localUsersArr, function(localUserArrObj) {
-   var usersArrObj = _.find(usersArr, function(usersArrObj) {
-    return usersArrObj['_id'] === localUserArrObj['_id'];
-   });
-   if (!usersArrObj) {
-    delUsers.push(localUserArrObj);
-   }
-   if (localUserArrObj['_id'] == loggedUserId) {
-    delUsers.push(localUserArrObj);
-   }
+	function getUpdateUsers(data) {
+		localUsersArr = JSON.parse(localStorage.getItem("userlist"+loggedUserId));
+		//left only id and name fields
+		var usersArr = _.map(data, function(item) {return _.pick(item, '_id', 'name');});
+		//add to local array new users from sever
+		_.each(usersArr, function(userArrObj) {
+			var localUsersArrObj = _.find(localUsersArr, function(localUsersArrObj) {
+				return userArrObj['_id'] === localUsersArrObj['_id'];
+			});
+			if (!localUsersArrObj) {
+				localUsersArr.push(userArrObj);
+			}
+		});
+		//delete from local deleted users
+		var delUsers = [];
+		_.each(localUsersArr, function(localUserArrObj) {
+			var usersArrObj = _.find(usersArr, function(usersArrObj) {
+				return usersArrObj['_id'] === localUserArrObj['_id'];
+			});
+			if (!usersArrObj) {
+				delUsers.push(localUserArrObj);
+			}
+			if (localUserArrObj['_id'] == loggedUserId) { //add to remove logged user
+				delUsers.push(localUserArrObj);
+			}
 
-  });
-  _.each(delUsers, function(delItem) {
-   _.remove(localUsersArr, function(item) {
-    return item['_id'] === delItem['_id'];
-   });
-  });
-  console.log('OUT', localUsersArr);
+		});
+		_.each(delUsers, function(delItem) {
+			_.remove(localUsersArr, function(item) {
+				return item['_id'] === delItem['_id'];
+			});
+		});
         return localUsersArr;
- }
+	}
 }
 

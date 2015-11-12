@@ -7,17 +7,20 @@ function eventCalendarDirective($rootScope, filterService) {
     return {
         restrict: 'A',
         link: function ($scope, element, attr) {
-            var vm = this;
-            vm.correctFlagsEventTypes = filterService.getActualEventTypes(); 
-            vm.dataObjOll = [];
 
-            console.log('actual in year', vm.correctFlagsEventTypes);
+
+            $scope.correctFlagsEventTypes = filterService.getActualEventTypes(); 
+            $scope.dataObjOll = [];
+
+            console.log('actual in year', $scope.correctFlagsEventTypes);
+
 
             $rootScope.$on('filterTypesChanged', function (event, actualEventTypes) {           
-                vm.correctFlagsEventTypes = actualEventTypes;
+                $scope.correctFlagsEventTypes = actualEventTypes;
                 // console.log('year $rootScope.$on checkEventTypes', vm.correctFlagsEventTypes);
                 // console.log('year vm.dataObjOll from $rootScope.$on checkEventTypes', vm.dataObjOll);                
-                $scope.dataObj = vm.dataObjOll;
+                $scope.dataObj = $scope.dataObjOll;
+                //console.log('EventTypes', $scope.dataObj);
                 $scope.maximumLength = 0;
                 for (var day in $scope.dataObj) {
                     if ($scope.dataObj[day].length > $scope.maximumLength) { //maximum events number in day
@@ -37,7 +40,7 @@ function eventCalendarDirective($rootScope, filterService) {
 
             $scope.$on('eventsUpdated', function(event, dataObj) {
                 $scope.dataObj = dataObj;
-                vm.dataObjOll = $scope.dataObj;
+                $scope.dataObjOll = $scope.dataObj;
 
                 $scope.maximumLength = 0;
                 for (var day in $scope.dataObj) {
@@ -112,11 +115,12 @@ function eventCalendarDirective($rootScope, filterService) {
                 // console.log('privet iz function addEvents1', vm.correctFlagsEventTypes);  
                 // console.log('privet iz function addEvents2', $scope.dataObj[day]);    
                 if ($scope.dataObj[day].length > 0) {
-                    for (var j = 0; j < vm.correctFlagsEventTypes.length; j++) {
+                    for (var j = 0; j < $scope.correctFlagsEventTypes.length; j++) {
                         // console.log('from year !!!!!!!!!!!!!!!', $scope.dataObj[day]);         
                         for (var k = 0; k <  $scope.dataObj[day].length; k++) {  
                             // console.log('from year 2 !!!!!!!!!!!!!!!', $scope.dataObj[day]); 
-                            if ( $scope.dataObj[day][k].type._id == vm.correctFlagsEventTypes[j].id) {
+
+                            if ( $scope.dataObj[day][k].type._id == $scope.correctFlagsEventTypes[j].id) {
 
 
                                 // var evtCell = angular.element($('[ng-class="'+ evtHour +'"].'+ vm.daysNames[evtDay]));
@@ -155,7 +159,7 @@ function eventCalendarDirective($rootScope, filterService) {
                                 } else {
                                 //add popover
                                     dayCell.popover({
-                                        trigger: 'click',
+                                        trigger: 'hover',
                                         delay: 500,
                                         container: 'body',
                                         placement: 'top',
