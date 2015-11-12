@@ -127,6 +127,11 @@ function CalendarController(filterService, scheduleService, $document, $modal, $
   };
 
   vm.selectAllEventType = function(){
+    if ($scope.selectedAll) {
+            $scope.selectedAll = true;
+        } else {
+            $scope.selectedAll = false;
+        }
     vm.checkEventTypes.length = 0;
     for (var i = 0; i < vm.allEventTypes.length; i++) {   
       vm.checkEventTypes.push(vm.allEventTypes[i]._id);

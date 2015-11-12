@@ -1,7 +1,7 @@
 #dayView(ng-cloak)
 	.day-header.row
 		.col-md-2.col-sm-2.col-xs-2
-			i.glyphicon.glyphicon-chevron-left.bigger-icon.day-prev.pull-left(class="btn btn-large btn-info"  ng-click='dvCtrl.showDay(-1)')
+			i.glyphicon.glyphicon-menu-left.bigger-icon.day-prev.pull-left(class="btn btn-large btn-info"  ng-click='dvCtrl.showDay(-1)')
 		.col-md-8.col-sm-8.col-xs-8.text-center
 			#datepicker(style="position: relative")
 				a.current-day#pickDate(href='')
@@ -9,7 +9,7 @@
 						| {{ dvCtrl.selectedDate | date: 'd MMM yyyy' }}
 				date-picker.sidebar-datepicker(for="pickDate")
 		.col-md-2.col-sm-2.col-xs-2
-			i.glyphicon.glyphicon-chevron-right.bigger-icon.day-next.pull-right(class="btn btn-large btn-info" ng-click='dvCtrl.showDay(1)')
+			i.glyphicon.glyphicon-menu-right.bigger-icon.day-next.pull-right(class="btn btn-large btn-info" ng-click='dvCtrl.showDay(1)')
 	.content-for-day#day-events-place
 		table#calendar.table.day-in-table
 			time-indicator(table='#calendar' table-row-height='dvCtrl.rowHeight')

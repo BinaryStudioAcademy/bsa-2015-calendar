@@ -1,5 +1,6 @@
 .sidebar-nav
-  .navbar.navbar-default(role="navigation")
+  .navbar.navbar-collapse(role="navigation")
     ul.nav.navbar-nav.text-center
-      li.nav-item(ng-repeat="day in navCtrl.days")
+      li.item(ng-repeat="day in navCtrl.days")
         a(ui-sref="{{day.link}}" ng-click="calendarCtrl.toggleMode()") {{day.name}}
+    a.text-center.pull-right(ui-sref="signIn" ng-click="calendarCtrl.logOut()" style="padding:15px") Logout

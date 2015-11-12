@@ -1,8 +1,8 @@
 #calendarOneDayView(ng-cloak)
 	.container
+		nav-menu
 		.col-sm-2.col-md-2.left-sidebar
 			.sidebar-nav
-				nav.navbar.navbar-default
 					.navbar-header.visible-xs
 						button.navbar-toggle.collapsed(type="button", data-toggle="collapse", data-target="#navbar")
 							span.sr-only Toggle navigation
@@ -31,7 +31,7 @@
 										| {{calendarCtrl.selectedDate | date: 'd EEE yyyy'}}
 									date-picker.nav-datepicker(for="header-pickdate")
 					#navbar.navbar-collapse.collapse
-						nav-menu
+						
 						//- ul.nav.navbar-nav
 						//- 	li
 						//- 		a(ui-sref='.dayView' ng-click="calendarCtrl.toggleMode()") Day
@@ -44,14 +44,15 @@
 			h4 Device/Room schedule
 			ul.nav.nav-pills
 				li.dropdown
-					a.schedule-label.btn-success#userEvents(data-toggle="dropdown", ng-click="calendarCtrl.sheduleChanged('event', null)") User events
+					a.schedule-label.btn-success.btn-xs#userEvents(data-toggle="dropdown", ng-click="calendarCtrl.sheduleChanged('event', null)") User events
+
 				li.dropdown
-					a.schedule-label.btn-primary.dropdown-toggle#roomsMenu(data-toggle="dropdown") Rooms
+					a.schedule-label.btn-primary.btn-xs.dropdown-toggle#roomsMenu(data-toggle="dropdown") Rooms
 					ul.dropdown-menu(role="lisbtox")
 						li(ng-repeat="room in calendarCtrl.rooms" role="listitem")
 							a.schedule-item(ng-click="calendarCtrl.sheduleChanged('room', room._id)" ) {{room.title}}
 				li.dropdown
-					a.schedule-label.btn-primary.dropdown-toggle#devicesMenu(data-toggle="dropdown") Devices
+					a.schedule-label.btn-primary.btn-xs.dropdown-toggle#devicesMenu(data-toggle="dropdown") Devices
 					ul.dropdown-menu(role="lisbtox")
 						li(ng-repeat="device in calendarCtrl.devices" role="listitem")
 							a.schedule-item(ng-click="calendarCtrl.sheduleChanged('device', device._id)") {{device.title}}
@@ -72,17 +73,10 @@
 								checkbox(type="checkbox",id="eventType", ng-model = "eventType.flag", name ="{{ eventType.name }}", ng-change = "calendarCtrl.checkFlag(eventType._id)")
 								span.eventTypeFilters {{ eventType.title }}
 			h3 CRUD
-			.navbar.navbar-default(role="navigation")
-				ul.nav.navbar-nav.text-center
-					li
-						a(ui-sref=".createNewDevice" ng-click="calendarCtrl.toggleMode()") Devices
-					br
-					li
-						a(ui-sref=".createNewRoom" ng-click="calendarCtrl.toggleMode()") Rooms
-					br
-					li
-						a(ui-sref=".createNewEventType" ng-click="calendarCtrl.toggleMode()") Event types
-			a(ui-sref="signIn" ng-click="calendarCtrl.logOut()") Logout
+			.navbar(role="navigation")
+				a.btn.btn-block.btn-info( ui-sref=".createNewDevice" ng-click="calendarCtrl.toggleMode()") Devices
+				a.btn.btn-block.btn-info(ui-sref=".createNewRoom" ng-click="calendarCtrl.toggleMode()") Rooms
+				a.btn.btn-block.btn-info(ui-sref=".createNewEventType" ng-click="calendarCtrl.toggleMode()") Event types
 		.col-sm-10
 			ui-view#calendar-content
 	.container_calendar_footer
