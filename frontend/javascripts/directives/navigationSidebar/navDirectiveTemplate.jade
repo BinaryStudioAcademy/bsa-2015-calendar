@@ -1,5 +1,14 @@
-.sidebar-nav
-  .navbar.navbar-default(role="navigation")
-    ul.nav.navbar-nav.text-center
-      li.nav-item(ng-repeat="day in navCtrl.days")
-        a(ui-sref="{{day.link}}" ng-click="calendarCtrl.toggleMode()") {{day.name}}
+.sidebar-nav.navbar
+  //- .navbar-inner(role="navigation")
+  //-   ul.nav.navbar-nav.text-center
+  //-     li.item.active(ng-repeat = "day in navCtrl.days")
+  //-       a(ui-sref="{{day.link}}" ng-click="calendarCtrl.toggleMode()") {{day.name}}
+
+
+
+
+  table.navigat
+    tr
+      td.navlink(ng-repeat = "day in navCtrl.days")
+        a.link-to(ui-sref="{{day.link}}" ng-click="calendarCtrl.toggleMode()") {{day.name}}
+//- , onMouseOver="this.style.background='#FFCC33'" onMouseOut="this.style.background='#EFEFEF'"

@@ -128,6 +128,8 @@ function CalendarController(socketService, Notification, filterService, schedule
 		scheduleService.sheduleChanged(scheduleItemType, scheduleItemId);
   	};
 
+
+
   	function pullData(){
 		helpEventService.getRooms(true).then(function(data) {
 			if (data !== null){
