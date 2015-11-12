@@ -100,6 +100,16 @@ function WeekViewController(crudEvEventService, helpEventService, scheduleServic
                     var eventDiv = angular.element('<div class="event-cell-week"></div>'); 
                     eventDiv.text(currEvt.title);
                     eventDiv.css('background-color', currEvt.type['color']);
+
+
+                    var icon = document.createElement('div');
+                    if(vm.eventObj[i].type.icon){
+                        icon.className = vm.eventObj[i].type.icon.css;
+                        icon.style.width = '10%';
+                        icon.style.float = 'left';
+                        eventDiv.append(icon);
+                    }   
+
                     // var tmpl = '<div>'+currEvt.description+'</div><div>Start at: '+moment(currEvt.start).format('hh:mm')+'</div><div>End at: '+moment(currEvt.end).format('hh:mm')+'</div>';
                     // $templateCache.put('evtTmpl'+i+'.html', tmpl);
                     // eventDiv.attr('uib-popover-template', '"evtTmpl'+i+'.html"');

@@ -126,7 +126,7 @@ function DayViewController(Notification, scheduleService, filterService, AuthSer
 		for (var i = 0; i < vm.filteredEvents.length; i++) {
 			// temp - object to save top and height values for further event displaying
 			var temp = {};
-			var eventEnd = new Date(vm.todayEvents[i].end);
+			var eventEnd = new Date(vm.filteredEvents[i].end);
 			var eventStart = new Date(vm.filteredEvents[i].start);
 			temp.eventAsItIs = vm.filteredEvents[i];
 			// calculate height value(888 is the height of the table; 86400000 amount of milliseconds in the 24 hours)
@@ -149,6 +149,8 @@ function DayViewController(Notification, scheduleService, filterService, AuthSer
    //          	}
 			// }
 			
+
+
 			temp.conflicts = 0;
 			//temp.indexGroup = i;
 			for (var x = 0; x < vm.filteredEvents.length; x++){
@@ -192,7 +194,7 @@ function DayViewController(Notification, scheduleService, filterService, AuthSer
 			var icon = document.createElement('div');
 
 			// setting content, class as styles for paragraph
-			paragraph.innerHTML = vm.computedEvents[c].eventAsItIs.description;
+			//paragraph.innerHTML = vm.computedEvents[c].eventAsItIs.description;
 			paragraph.className = 'event-info';
 			paragraph.style.width = '80%';
 			paragraph.style.float = 'left';	
@@ -219,13 +221,15 @@ function DayViewController(Notification, scheduleService, filterService, AuthSer
 				block.style.background = 'grey';
 			}
 
-			// if(!vm.computedEvents[c].eventAsItIs.type.icon.css){
-			// 	icon.className = vm.computedEvents[c].eventAsItIs.type.icon.css;
-			// 	icon.style.width = '10%';
-			// 	icon.style.float = 'left';
-			// 	paragraph.appendChild(icon);
-			// }			
+			if(vm.computedEvents[c].eventAsItIs.type.icon){
+				icon.className = vm.computedEvents[c].eventAsItIs.type.icon.css;
+				icon.style.width = '10%';
+				icon.style.float = 'left';
+				block.appendChild(icon);
+			}			
 			// setting styles for resize block
+
+
 			resizeBottom.style.width = '100%';
 			resizeBottom.style.bottom = '-5px';
 			resizeBottom.style.height = '10px';

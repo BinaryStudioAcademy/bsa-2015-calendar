@@ -146,10 +146,17 @@ function eventCalendarDirective($rootScope, filterService) {
                                 var dayCell = $('#'+day);
                                 //create popover template with events titles
                                 var tmpl = '<ul class="list-group">';
+                                //var tmpl = document.createElement('ul');
                                 for (var i=0; i<$scope.dataObj[day].length; i++) {
-                                    // console.log('from function addEvents  for', $scope.dataObj[day][i]);                          
-
-                                  tmpl += '<li ' + ' style="background-color:' + $scope.dataObj[day][i].type.color +'" class="list-group-item">'+$scope.dataObj[day][i].title + '</li>';
+                                    // console.log('from function addEvents  for', $scope.dataObj[day][i]);     
+                                    // var icon = document.createElement('div');
+                                    // if($scope.dataObj[day][i].type.icon){
+                                    //     icon.className = $scope.dataObj[day][i].type.icon.css;
+                                    //     icon.style.width = '10%';
+                                    //     icon.style.float = 'left';
+                                    //     dayCell.append(icon);
+                                    // }                        
+                                    tmpl += '<li ' + ' style="background-color:' + $scope.dataObj[day][i].type.color +'" class="list-group-item">'+$scope.dataObj[day][i].title + '</li>';
                                 }
                                 console.log(tmpl);
                                 tmpl +='</ul>';
@@ -169,6 +176,8 @@ function eventCalendarDirective($rootScope, filterService) {
                                         content: tmpl
                                     });
                                 }
+
+
 
                                 //add color background for events
                                 var evtNum = $scope.dataObj[day].length;
