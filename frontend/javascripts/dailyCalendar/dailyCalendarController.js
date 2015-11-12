@@ -129,6 +129,10 @@ function DayViewController(Notification, scheduleService, filterService, AuthSer
 		// 	vm.groupChanged = false;
 		// }
 
+		for(i = 0; i < vm.todayEvents.length; i++){
+			vm.todayEvents[i].conflictGroup = undefined;
+		}
+
 		//computing top and height values for all geted events
 		for (var i = 0; i < vm.todayEvents.length; i++) {
 			// temp - object to save top and height values for further event displaying
@@ -136,7 +140,7 @@ function DayViewController(Notification, scheduleService, filterService, AuthSer
 			var eventEnd = new Date(vm.todayEvents[i].end);
 			var eventStart = new Date(vm.todayEvents[i].start);
 			temp.eventAsItIs = vm.todayEvents[i];
-			temp.group = vm.todayEvents[i].group;
+			//temp.group = vm.todayEvents[i].group;
 			// calculate height value(888 is the height of the table; 86400000 amount of milliseconds in the 24 hours)
 			temp.heightVal = 888 * (eventEnd.getTime() - eventStart.getTime()) / 86400000;
 
@@ -220,16 +224,18 @@ function DayViewController(Notification, scheduleService, filterService, AuthSer
 			} else{
 				vm.groups[vm.computedEvents[i].conflictGroup]++;
 			}
-			console.log('event title', vm.computedEvents[i].eventAsItIs.title);
-			console.log('event group', vm.computedEvents[i].conflictGroup);
+			// console.log('event title', vm.computedEvents[i].eventAsItIs.title);
+			// console.log('event group', vm.computedEvents[i].conflictGroup);
 		}
 		console.log('groups count', vm.groups);
 
 		for(i = 0; i < vm.computedEvents.length; i++){
 			vm.computedEvents[i].eventsInGroupCount = vm.groups[vm.computedEvents[i].conflictGroup];
-			// console.log('group: ', vm.computedEvents[i].conflictGroup);
-			// console.log('divide by: ', vm.computedEvents[i].conflicts);
-			// console.log('events in group: ', vm.computedEvents[i].eventsInGroupCount);
+			console.log('');
+			console.log('title', vm.computedEvents[i].eventAsItIs.title);
+			console.log('group: ', vm.computedEvents[i].conflictGroup);
+			console.log('divide by: ', vm.computedEvents[i].conflicts);
+			console.log('events in group: ', vm.computedEvents[i].eventsInGroupCount);
 		}
 
 		//console.log('comp', vm.computedEvents);
@@ -243,7 +249,7 @@ function DayViewController(Notification, scheduleService, filterService, AuthSer
 		clearEvents();
 		computingEvents();
 		var currentGroup;
-		var currentGroupCounter;
+		var currentGroupCounter = [];
 
 		var eventsBlocks = [];
 
@@ -278,17 +284,16 @@ function DayViewController(Notification, scheduleService, filterService, AuthSer
 
 			var event = vm.computedEvents[c];
 
-			if(!currentGroup){
-				currentGroup = event.conflictGroup;
-				currentGroupCounter = 1;
-			} else if(currentGroup != event.conflictGroup){
-				currentGroup = event.conflictGroup;
-				currentGroupCounter = 1;
+
+
+			if(!currentGroupCounter[event.conflictGroup]){
+				//currentGroup = event.conflictGroup;
+				currentGroupCounter[event.conflictGroup] = 1;
 			} else{
-				currentGroupCounter++;
+				currentGroupCounter[event.conflictGroup]++;
 			}
 			
-			var tmpLeft = currentGroupCounter*tmpWidth - (tmpWidth);
+			var tmpLeft = currentGroupCounter[event.conflictGroup]*tmpWidth - (tmpWidth);
 
 
 			
