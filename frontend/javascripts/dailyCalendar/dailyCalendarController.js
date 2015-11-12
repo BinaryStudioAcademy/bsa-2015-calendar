@@ -102,6 +102,7 @@ function DayViewController(Notification, scheduleService, filterService, AuthSer
 			if(array[i]._id == newElement._id)
 				array[i] = newElement;
 		}
+		mapEvents();
 	}
 
 	function clearEvents(){
@@ -114,21 +115,28 @@ function DayViewController(Notification, scheduleService, filterService, AuthSer
 	}
 
 	function computingEvents() {
-		vm.filteredEvents = [];
-		for (i = 0; i < vm.todayEvents.length; i++) {
-			for (j = 0; j < vm.actualEventTypes.length; j++){
-				if (vm.todayEvents[i].type._id == vm.actualEventTypes[j].id){
-					vm.filteredEvents.push(vm.todayEvents[i]);
-				}
-			}
-		}
+		// vm.todayEvents = [];
+		// for (i = 0; i < vm.todayEvents.length; i++) {
+		// 	for (j = 0; j < vm.actualEventTypes.length; j++){
+		// 		if (vm.todayEvents[i].type._id == vm.actualEventTypes[j].id){
+		// 			vm.todayEvents.push(vm.todayEvents[i]);
+		// 		}
+		// 	}
+		// }
+
+		// for(i = 0; i < vm.todayEvents.length; i++){
+		// 	vm.todayEvents[i].group = i;
+		// 	vm.groupChanged = false;
+		// }
+
 		//computing top and height values for all geted events
-		for (var i = 0; i < vm.filteredEvents.length; i++) {
+		for (var i = 0; i < vm.todayEvents.length; i++) {
 			// temp - object to save top and height values for further event displaying
 			var temp = {};
 			var eventEnd = new Date(vm.todayEvents[i].end);
-			var eventStart = new Date(vm.filteredEvents[i].start);
-			temp.eventAsItIs = vm.filteredEvents[i];
+			var eventStart = new Date(vm.todayEvents[i].start);
+			temp.eventAsItIs = vm.todayEvents[i];
+			temp.group = vm.todayEvents[i].group;
 			// calculate height value(888 is the height of the table; 86400000 amount of milliseconds in the 24 hours)
 			temp.heightVal = 888 * (eventEnd.getTime() - eventStart.getTime()) / 86400000;
 
@@ -150,14 +158,44 @@ function DayViewController(Notification, scheduleService, filterService, AuthSer
 			// }
 			
 			temp.conflicts = 0;
+
+			var conflictGroup = 1;
+			var isInConflict = false;
+
 			//temp.indexGroup = i;
-			for (var x = 0; x < vm.filteredEvents.length; x++){
-				var range1 = moment().range(moment(vm.filteredEvents[x].start), moment(vm.filteredEvents[x].end));
+			for (var x = 0; x < vm.todayEvents.length; x++){
+				var range1 = moment().range(moment(vm.todayEvents[x].start), moment(vm.todayEvents[x].end));
 				var range2 = moment().range(moment(temp.eventAsItIs.start), moment(temp.eventAsItIs.end));
         		//console.log(range1, range2);
-            	if (range2.contains(moment(vm.filteredEvents[x].end)) || range2.contains(moment(vm.filteredEvents[x].start)) || range1.contains(moment(temp.eventAsItIs.start)) || range1.contains(moment(temp.eventAsItIs.end))){
+            	if (range2.contains(moment(vm.todayEvents[x].end)) || range2.contains(moment(vm.todayEvents[x].start)) || range1.contains(moment(temp.eventAsItIs.start)) || range1.contains(moment(temp.eventAsItIs.end))){
+            		isInConflict = true;
+            		if(temp.conflictGroup && !vm.todayEvents[x].conflictGroup){
+            			vm.todayEvents[x].conflictGroup = temp.conflictGroup;
+            		}
+             		if(!temp.conflictGroup && vm.todayEvents[x].conflictGroup){
+            			temp.conflictGroup = vm.todayEvents[x].conflictGroup;
+            		} 
+            		if(!temp.conflictGroup && !vm.todayEvents[x].conflictGroup){
+            			//conflictGroup++;
+            			vm.todayEvents[x].conflictGroup = conflictGroup;
+            			temp.conflictGroup = conflictGroup;
+
+            		}
+
+
             		temp.conflicts++;
 
+            		// if(i > x){
+            		// 	vm.todayEvents[i].group = temp.group;
+            		// } else if(i < x){
+            		// 	temp.group = vm.todayEvents[i].group;
+            		// }
+
+            	} else{
+            		//if(isInConflict){
+            			isInConflict = false;
+            			conflictGroup++;
+            		//}
             	}
 			}
 
@@ -170,15 +208,43 @@ function DayViewController(Notification, scheduleService, filterService, AuthSer
 			// }
 
 		}
-		console.log('comp', vm.computedEvents);
-		console.log('filt', vm.filteredEvents);
+
+		vm.groups = [];
+		//var grouppsCount = [];
+
+		for(i = 0; i < vm.computedEvents.length; i++){
+			if(!vm.groups[vm.computedEvents[i].conflictGroup]){
+				vm.groups[vm.computedEvents[i].conflictGroup] = 1;
+			} else{
+				vm.groups[vm.computedEvents[i].conflictGroup]++;
+			}
+			console.log('event title', vm.computedEvents[i].eventAsItIs.title);
+			console.log('event group', vm.computedEvents[i].conflictGroup);
+		}
+		console.log('groups count', vm.groups);
+
+		for(i = 0; i < vm.computedEvents.length; i++){
+			vm.computedEvents[i].eventsInGroupCount = vm.groups[vm.computedEvents[i].conflictGroup];
+			// console.log('group: ', vm.computedEvents[i].conflictGroup);
+			// console.log('divide by: ', vm.computedEvents[i].conflicts);
+			// console.log('events in group: ', vm.computedEvents[i].eventsInGroupCount);
+		}
+
+		//console.log('comp', vm.computedEvents);
+		//console.log('filt', vm.todayEvents);
 	}
 
 	// gets all the events that corre spond to the todays date
 	function mapEvents(){
+
 		$('#calendar').css('margin-bottom', 0);
 		clearEvents();
 		computingEvents();
+		var currentGroup;
+		var currentGroupCounter;
+
+		var eventsBlocks = [];
+
 		//creating and appending blocks which display events for today
 		for(var c = 0; c < vm.computedEvents.length; c++) {
 
@@ -206,8 +272,24 @@ function DayViewController(Notification, scheduleService, filterService, AuthSer
 			block.style['font-weight'] = 900;
 			block.style['text-align'] = 'center';
 			block.style['font-color'] = 'black';
-			var tmpLeft = 100 - (100/vm.computedEvents[c].conflicts);
-			var tmpWidth = 100/vm.computedEvents[c].conflicts;
+			var tmpWidth = 100/vm.computedEvents[c].eventsInGroupCount;
+
+			var event = vm.computedEvents[c];
+
+			if(!currentGroup){
+				currentGroup = event.conflictGroup;
+				currentGroupCounter = 1;
+			} else if(currentGroup != event.conflictGroup){
+				currentGroup = event.conflictGroup;
+				currentGroupCounter = 1;
+			} else{
+				currentGroupCounter++;
+			}
+			
+			var tmpLeft = currentGroupCounter*tmpWidth - (tmpWidth);
+
+
+			
 			block.style.left = tmpLeft + '%'; 
 			block.style.width = tmpWidth + '%';
 			block.style.height = vm.computedEvents[c].heightVal.toPrecision(3) + 'px';
@@ -246,7 +328,16 @@ function DayViewController(Notification, scheduleService, filterService, AuthSer
 			block.appendChild(paragraph);
 			block.appendChild(resizeBottom);
 			block.appendChild(resizeTop);
-			document.getElementById('day-events-place').appendChild(block);
+			eventsBlocks.push(block);
+			//document.getElementById('day-events-place').appendChild(block);
+		}
+
+		// for(i = 0; i < eventsBlocks.length; i++){
+		// 	console.log('widths', eventsBlocks[i].style.width);
+		// }
+
+		for(i = 0; i < eventsBlocks.length; i++){
+			document.getElementById('day-events-place').appendChild(eventsBlocks[i]);
 		}
 
 		// take all the events displayed
@@ -551,6 +642,7 @@ function DayViewController(Notification, scheduleService, filterService, AuthSer
 	            thisEvent.start = newStart;
 				thisEvent.end = newEnd;
 				replaceEvent(vm.todayEvents, thisEvent);
+
 	        }
 	    });
 	}
@@ -658,10 +750,19 @@ function DayViewController(Notification, scheduleService, filterService, AuthSer
 
 	function filterEventsByTodayDate() {
 		vm.todayEvents = vm.allEvents.filter(function(event) {
-			if(event.start) {
-				var date = new Date(event.start);
-				return date.getDate() === vm.selectedDate.getDate();
+			//if(event.start) {
+			var date = new Date(event.start);
+			if(date.getDate() != vm.selectedDate.getDate()){
+				return false;
+			} else{
+				for (j = 0; j < vm.actualEventTypes.length; j++){
+					if (event.type._id === vm.actualEventTypes[j].id){
+						return true;
+					}
+				}
+				return false;		
 			}
+			//}
 		});
 	}
 	function showWorkHours() {
