@@ -1,8 +1,10 @@
 #calendarOneDayView(ng-cloak)
+	.container_calendar_head
 	.container
+		nav-menu
 		.col-sm-2.col-md-2.left-sidebar
 			.sidebar-nav
-				nav.navbar.navbar-default
+				nav
 					.navbar-header.visible-xs
 						button.navbar-toggle.collapsed(type="button", data-toggle="collapse", data-target="#navbar")
 							span.sr-only Toggle navigation
@@ -25,8 +27,8 @@
 												input(type="checkbox",id="eventType", ng-model = "eventType.flag", name ="{{ eventType.title }}", ng-change = "calendarCtrl.checkFlag(eventType._id)")
 												span.eventTypeFilters {{ eventType.title }}
 								input(type="checkbox", ng-model="string", name="Alloha", ng-true-value="", ng-false-value="", ng-change="")
-					#navbar.navbar-collapse.collapse
-						nav-menu
+					//#navbar.navbar-collapse.collapse
+						//nav-menu
 						//- ul.nav.navbar-nav
 						//- 	li
 						//- 		a(ui-sref='.dayView' ng-click="calendarCtrl.toggleMode()") Day
@@ -73,18 +75,7 @@
 					selected-model='calendarCtrl.checkEventTypesDD', 
 					options='calendarCtrl.allEventTypes', 
 					events='calendarCtrl.dropDownEvents',
-					extra-settings='calendarCtrl.selectConfigFilters')				
-			h3 CRUD
-			.navbar.navbar-default(role="navigation")
-				ul.nav.navbar-nav.text-center
-					li
-						a(ui-sref=".createNewDevice" ng-click="calendarCtrl.toggleMode()") Devices
-					br
-					li
-						a(ui-sref=".createNewRoom" ng-click="calendarCtrl.toggleMode()") Rooms
-					br
-					li
-						a(ui-sref=".createNewEventType" ng-click="calendarCtrl.toggleMode()") Event types
+					extra-settings='calendarCtrl.selectConfigFilters')
 			a(ui-sref="signIn" ng-click="calendarCtrl.logOut()") Logout
 		.col-sm-10
 			ui-view#calendar-content
