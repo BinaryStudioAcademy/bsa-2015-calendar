@@ -2,9 +2,9 @@
     //-div(ng-controller='LayoutController')
     //-crud-event-directive(clickedDate = 'mCtrl.monthStartMoment()', event='mCtrl.weeks[0]')
     div.month-header
-        i.glyphicon.pull-left.glyphicon-chevron-left.bigger-icon.month-chevron(class="btn btn-large btn-info" ng-click='mCtrl.previous()')
+        .glyphicon.pull-left.glyphicon-chevron-left.bigger-icon.month-chevron(ng-click='mCtrl.previous()')
+        .glyphicon.pull-right.glyphicon-chevron-right.bigger-icon.month-chevron(ng-click='mCtrl.next()')
         span.month-header-title {{mCtrl.monthStartMoment.format("MMMM, YYYY")}}
-        i.glyphicon.pull-right.glyphicon-chevron-right.bigger-icon.month-chevron(class="btn btn-large btn-info" ng-click='mCtrl.next()')
     div
         table.month-table-grid(width="100%")
             col(width='14.28%')

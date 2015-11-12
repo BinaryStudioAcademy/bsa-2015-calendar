@@ -1,9 +1,10 @@
 #weekView(ng-cloak)
   div
     .week_header
-      i.glyphicon.pull-left.week-chevron.glyphicon-chevron-left.bigger-icon.week_prev(class="btn btn-large btn-info"  ng-click='wCtrl.previous()') 
+      .glyphicon.pull-left.week-chevron.glyphicon-chevron-left.bigger-icon.week_prev(ng-click='wCtrl.previous()') 
+      .glyphicon.pull-right.week-chevron.glyphicon-chevron-right.bigger-icon.week_next(ng-click='wCtrl.next()')
       span.week_header_title {{wCtrl.Start | date: 'd MMM yyyy'}} - {{wCtrl.End | date: 'd MMM yyyy'}}
-      i.glyphicon.pull-right.week-chevron.glyphicon-chevron-right.bigger-icon.week_next(class="btn btn-large btn-info" ng-click='wCtrl.next()')
+
 
     .content_for_week(time-week-directive events-week-directive)
       table.week_in_table(width='100%')

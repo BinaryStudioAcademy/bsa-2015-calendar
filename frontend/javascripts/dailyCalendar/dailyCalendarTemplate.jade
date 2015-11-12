@@ -1,15 +1,14 @@
 #dayView(ng-cloak)
 	.day-header.row
-		.col-md-2.col-sm-2.col-xs-2
-			i.glyphicon.glyphicon-chevron-left.bigger-icon.day-prev.pull-left(class="btn btn-large btn-info"  ng-click='dvCtrl.showDay(-1)')
-		.col-md-8.col-sm-8.col-xs-8.text-center
-				span.current-day(ng-click="dvCtrl.openDP()", )
-					input(ng-show="false", ng-model="dvCtrl.selectedDate", ng-change="dvCtrl.dateChanged()") 
-					span
-						|	{{ dvCtrl.selectedDate | date: 'd MMM yyyy' }}
-				input.ui-datepicker(ng-show="false", uib-datepicker-popup="{{dvCtrl.dpFormat}}", ng-model="dvCtrl.selectedDate", show-button-bar="false", is-open="dvCtrl.isDPopened", ng-change="dvCtrl.dateChanged()")
-		.col-md-2.col-sm-2.col-xs-2
-			i.glyphicon.glyphicon-chevron-right.bigger-icon.day-next.pull-right(class="btn btn-large btn-info",ng-click='dvCtrl.showDay(1)')
+		.col-md-12.col-sm-12.col-xs-12.text-center
+			.glyphicon.glyphicon-chevron-left.bigger-icon.day-prev.pull-left(ng-click='dvCtrl.showDay(-1)')
+			.glyphicon.glyphicon-chevron-right.bigger-icon.day-next.pull-right(ng-click='dvCtrl.showDay(1)')
+			span.current-day(ng-click="dvCtrl.openDP()", )
+				input(ng-show="false", ng-model="dvCtrl.selectedDate", ng-change="dvCtrl.dateChanged()") 
+				span
+					|	{{ dvCtrl.selectedDate | date: 'd MMM yyyy' }}
+			input.ui-datepicker(ng-show="false", uib-datepicker-popup="{{dvCtrl.dpFormat}}", ng-model="dvCtrl.selectedDate", show-button-bar="false", is-open="dvCtrl.isDPopened", ng-change="dvCtrl.dateChanged()")
+		//- .col-md-2.col-sm-2.col-xs-2
 	.content-for-day#day-events-place
 		table#calendar.table.day-in-table
 			time-indicator(table='#calendar' table-row-height='dvCtrl.rowHeight')
