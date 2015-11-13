@@ -39,18 +39,18 @@
 						//- 		a(ui-sref='.yearView') Year
 			h4 Device/Room schedule
 			ul.nav.nav-pills
-				li.dropdown(style = "width: 100%; margin-bottom: 5px;")
+				li.dropdown(style = "width: 100%; margin-bottom: 5px;" ng-class='{"active":  !calendarCtrl.currentRoom && !calendarCtrl.currentDevice}')
 					a.schedule-label.btn-success#userEvents(style = "width: 100%", data-toggle="dropdown", ng-click="calendarCtrl.sheduleChanged('event', null)") User events
-				li.dropdown(style = "width: 100%; margin-bottom: 5px;")
+				li.dropdown(style = "width: 100%; margin-bottom: 5px;", ng-class='{"active":  calendarCtrl.currentRoom}')
 					a.schedule-label.btn-primary.dropdown-toggle#roomsMenu(style = "width: 100%", data-toggle="dropdown" ) Rooms
 					ul.dropdown-menu(role="lisbtox" )
-						li(ng-repeat="room in calendarCtrl.rooms" role="listitem")
-							a.schedule-item(ng-click="calendarCtrl.sheduleChanged('room', room._id)" ) {{room.title}}
-				li.dropdown(style = "width: 100%; margin-bottom: 5px;")
+						li(ng-repeat="room in calendarCtrl.rooms" role="listitem", ng-class='{"active": room == calendarCtrl.currentRoom}')
+							a.schedule-item(ng-click="calendarCtrl.sheduleChanged('room', room)" ) {{room.title}}
+				li.dropdown(style = "width: 100%; margin-bottom: 5px;", ng-class='{"active": calendarCtrl.currentDevice}')
 					a.schedule-label.btn-primary.dropdown-toggle#devicesMenu(style = "width: 100%", data-toggle="dropdown") Devices
 					ul.dropdown-menu(role="lisbtox")
-						li(ng-repeat="device in calendarCtrl.devices" role="listitem")
-							a.schedule-item(ng-click="calendarCtrl.sheduleChanged('device', device._id)") {{device.title}}
+						li(ng-repeat="device in calendarCtrl.devices" role="listitem", ng-class='{"active": device == calendarCtrl.currentDevice}')
+							a.schedule-item(ng-click="calendarCtrl.sheduleChanged('device', device)") {{device.title}}
 			br
 			a.btn.btn-block.btn-social.btn-google(ng-controller='GoogleAuthController as gaCtrl'  ng-click='gaCtrl.login()')
 				span.fa.fa-google 
@@ -75,7 +75,7 @@
 					options='calendarCtrl.allEventTypes', 
 					events='calendarCtrl.dropDownEvents',
 					extra-settings='calendarCtrl.selectConfigFilters')				
-			h3 CRUD
+			h3 Admin panel
 			.navbar.navbar-default(role="navigation")
 				ul.nav.navbar-nav.text-center
 					li
@@ -86,7 +86,7 @@
 					br
 					li
 						a(ui-sref=".createNewEventType" ng-click="calendarCtrl.toggleMode()") Event types
-			a(ui-sref="signIn" ng-click="calendarCtrl.logOut()") Logout
+			a.logout(ui-sref="signIn" ng-click="calendarCtrl.logOut()") Logout
 		.col-sm-10
 			ui-view#calendar-content
 	.container_calendar_footer
