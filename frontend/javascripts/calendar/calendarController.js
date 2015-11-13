@@ -125,8 +125,17 @@ function CalendarController(socketService, Notification, filterService, schedule
 		});
   	});
 
+  	vm.currentRoom = null;
+	vm.currnetDevice = null;
+
   	vm.sheduleChanged = function(scheduleItemType, scheduleItem){
-		scheduleService.sheduleChanged(scheduleItemType, scheduleItem._id);
+  		if(scheduleItem){
+  			scheduleService.sheduleChanged(scheduleItemType, scheduleItem._id);
+  			
+  		} else {
+  			scheduleService.sheduleChanged(scheduleItemType);
+  		}
+
 		if (scheduleItemType == 'room'){
 			vm.currentRoom = scheduleItem;
 			vm.currnetDevice = null;	
@@ -171,8 +180,8 @@ function CalendarController(socketService, Notification, filterService, schedule
 		scrollable: true,
 		displayProp: 'title',
 		idProp: '_id',
-		showCheckAll: false,
-		showUncheckAll: false
+		showCheckAll: true,
+		showUncheckAll: true
 		//externalIdProp: '',
   	};
 
@@ -187,35 +196,40 @@ function CalendarController(socketService, Notification, filterService, schedule
 
   	vm.onItemSelect = function(item){
 		//console.log('onitem select', vm.checkEventTypesDD);
-		vm.fillIds();
-		//console.log('IDs', vm.checkEventTypesIDs);
+		//vm.fillIds();
+		console.log('IDs', vm.checkEventTypesIDs);
 		filterService.setActualEventTypes(vm.checkEventTypesDD);
 		$rootScope.$broadcast('filterTypesChanged', vm.checkEventTypesDD);
   	};
 
   	vm.onItemDeselect = function(item){
 		console.log('onitem deselect', vm.checkEventTypesDD);
-		vm.fillIds();
-		console.log('IDs', vm.checkEventTypesDD);filterService.setActualEventTypes(vm.checkEventTypesDD);
+		//vm.fillIds();
+		console.log('IDs', vm.checkEventTypesDD);
+		filterService.setActualEventTypes(vm.checkEventTypesDD);
 		$rootScope.$broadcast('filterTypesChanged', vm.checkEventTypesDD);
   	};
 
   	vm.onSelectAll = function(){
-		vm.fillIds();
+  		console.log('onitem select all', vm.checkEventTypesDD);
+		//vm.fillIds();
 		console.log('IDs', vm.checkEventTypesDD);filterService.setActualEventTypes(vm.checkEventTypesDD);
+		filterService.setActualEventTypes(vm.checkEventTypesDD);
 		$rootScope.$broadcast('filterTypesChanged', vm.checkEventTypesDD);
   	};
 
-  	vm.onUnselecttAll = function(){
+  	vm.onDeselectAll = function(){
 		console.log('onitem deselect all', vm.checkEventTypesDD);
-		vm.fillIds();
-		console.log('IDs', vm.checkEventTypesDD);filterService.setActualEventTypes(vm.checkEventTypesDD);
-		$rootScope.$broadcast('filterTypesChanged', vm.checkEventTypesDD);
+		//vm.fillIds();
+		//vm.checkEventTypesDD = [];
+		console.log('IDs', vm.checkEventTypesDD);
+		filterService.setActualEventTypes(vm.checkEventTypesDD);
+		$rootScope.$broadcast('filterTypesChanged', []);
   	};
 
   	vm.dropDownEvents = {
 		onSelectAll: vm.onSelectAll,
-		onUnselectAll: vm.onUnselecttAll,
+		onDeselectAll: vm.onDeselectAll,
 		onItemSelect: vm.onItemSelect,
 		onItemDeselect: vm.onItemDeselect
   	};

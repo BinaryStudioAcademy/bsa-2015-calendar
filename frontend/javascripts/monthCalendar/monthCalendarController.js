@@ -93,7 +93,7 @@ function MonthController($rootScope, $scope, scheduleService, helpEventService, 
         vm.mViewStartMoment = vm.monthStartMoment.clone();
         vm.mViewStartMoment.add(-vm.monthStartMoment.isoWeekday() +1, 'd');
         vm.mViewEndMoment = vm.mViewStartMoment.clone();    
-        vm.mViewEndMoment.add(5, 'w');
+        vm.mViewEndMoment.add(6, 'w');
         vm.mViewEndMoment.set({'hour': 23, 'minute': 59});
         vm.pullData();
     };
@@ -106,7 +106,7 @@ function MonthController($rootScope, $scope, scheduleService, helpEventService, 
         vm.mViewStartMoment = vm.monthStartMoment.clone();
         vm.mViewStartMoment.add(-vm.monthStartMoment.isoWeekday() +1, 'd');
         vm.mViewEndMoment = vm.mViewStartMoment.clone();    
-        vm.mViewEndMoment.add(5, 'w');
+        vm.mViewEndMoment.add(6, 'w');
         vm.mViewEndMoment.set({'hour': 23, 'minute': 59});
 
         vm.pullData();
@@ -130,7 +130,7 @@ function MonthController($rootScope, $scope, scheduleService, helpEventService, 
         vm.weeks = [];
        
         // формируем недели в таком же стиле как объект с ивентами
-        for (var weekIndex = 0; weekIndex < 5; weekIndex++){
+        for (var weekIndex = 0; weekIndex < 6; weekIndex++){
             var days = [];
             var evDate;
             
@@ -254,7 +254,7 @@ function MonthController($rootScope, $scope, scheduleService, helpEventService, 
         vm.mViewStartMoment = vm.monthStartMoment.clone();
         vm.mViewStartMoment.add(-vm.monthStartMoment.isoWeekday() +1, 'd');
         vm.mViewEndMoment = vm.mViewStartMoment.clone();    
-        vm.mViewEndMoment.add(5, 'w');
+        vm.mViewEndMoment.add(6, 'w');
         vm.mViewEndMoment.set({'hour': 23, 'minute': 59});
        
         //will be pulled from server 

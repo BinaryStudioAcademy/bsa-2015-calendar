@@ -225,6 +225,9 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 	}
 
 	function getRoomEvents(roomId, start, stop) {
+		console.log('id', roomId);
+		console.log('start', start);
+		console.log('stop',stop);
 		var roomEventsPromise = $http.get('api/room/events/'+ roomId+ '/' + (+start)+ '/'+ (+stop))       
 		.then(function (response) {
 			var eventsArr = response.data.events;
@@ -243,6 +246,9 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 	}
 
 	function getDeviceEvents(deviceId, start, stop) {
+				console.log('id', deviceId);
+		console.log('start', start);
+		console.log('stop',stop);
 		var deviceEventsPromise = $http.get('api/device/events/'+ deviceId+ '/' + (+start)+ '/'+ (+stop))       
 		.then(function (response) {
 			var eventsArr = response.data.events;

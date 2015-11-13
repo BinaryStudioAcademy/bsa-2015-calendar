@@ -554,7 +554,8 @@ eventService.prototype.updateStartEnd = function(eventId, data, callback){
 								console.log('FAILED for room');
 								console.log('put ev id = ', eventId);
 								console.log('find ev id = ', result[0]._id);
-								return cb(new Error('date/time conflict with room ' + data.room + '\nstart:' + data.start + ' \nend:' + data.end+ '\n' +  result), result);
+								// return cb(new Error('date/time conflict with room ' + event.room + '\nstart:' + data.start + ' \nend:' + data.end+ '\n' +  result), result);
+								return cb(new Error('Room on this time not available'), result);
 							}
 							else{
 								console.log('SUCCESS for room');
@@ -564,7 +565,8 @@ eventService.prototype.updateStartEnd = function(eventId, data, callback){
 						}
 						else {
 							console.log('more > 1 conflict results');
-							return cb(new Error('date/time conflict with room ' + data.room + '\nstart:' + data.start + ' \nend:' + data.end + '\n' +  result), result);
+							return cb(new Error('Room on this time not available'), result);
+							//return cb(new Error('date/time conflict with room ' + event.room + '\nstart:' + data.start + ' \nend:' + data.end + '\n' +  result), result);
 						}
 					}
 					cb();
@@ -587,7 +589,8 @@ eventService.prototype.updateStartEnd = function(eventId, data, callback){
 								console.log('FAILED for device');
 								console.log('put ev id = ', eventId);
 								console.log('find ev id = ', result[0]._id);
-								return cb(new Error('date/time conflict with device ' + deviceId + '\nstart:' + data.start + ' \nend:' + data.end+ '\n' +  result), result);
+								return cb(new Error('Devices on this time not available'), result);
+								//return cb(new Error('date/time conflict with device ' + deviceId + '\nstart:' + data.start + ' \nend:' + data.end+ '\n' +  result), result);
 							}
 							else{
 								console.log('SUCCESS for device');
@@ -597,7 +600,8 @@ eventService.prototype.updateStartEnd = function(eventId, data, callback){
 						}
 						else {
 							console.log('more > 1 conflict results');
-							return cb(new Error('date/time conflict with device ' + deviceId + '\nstart:' + data.start + ' \nend:' + data.end + '\n' +  result), result);
+							return cb(new Error('Devices on this time not available'), result);
+							//return cb(new Error('date/time conflict with device ' + deviceId + '\nstart:' + data.start + ' \nend:' + data.end + '\n' +  result), result);
 						}
 					}
 					next();

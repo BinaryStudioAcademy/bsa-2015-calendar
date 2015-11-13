@@ -87,7 +87,7 @@ function eventCalendarDirective($rootScope, filterService) {
                 addEvents(evDate);
             });
 
-            $scope.$on('editedEventWeekView', function(event, selectedDate, oldEventBody, newEventBody){
+            $scope.$on('editedEventYearView', function(event, selectedDate, oldEventBody, newEventBody){
         
                 var eventStartDate = new Date(oldEventBody.start);
                 var evDate = eventStartDate.getDate()+'_'+(eventStartDate.getMonth()+1)+'_'+eventStartDate.getFullYear();
@@ -158,7 +158,7 @@ function eventCalendarDirective($rootScope, filterService) {
                                     // }                        
                                     tmpl += '<li ' + ' style="background-color:' + $scope.dataObj[day][i].type.color +'" class="list-group-item">'+$scope.dataObj[day][i].title + '</li>';
                                 }
-                                console.log(tmpl);
+                                //console.log(tmpl);
                                 tmpl +='</ul>';
 
                                 //update template if popover exists

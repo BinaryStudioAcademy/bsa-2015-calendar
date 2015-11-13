@@ -6,6 +6,7 @@ var eventRepository = require('../../repositories/eventRepository');
 var eventTypeRepository = require('../../repositories/eventTypeRepository');
 var userRepository = require('../../repositories/userRepository');
 var googleConfig = require('./../googleConfig');
+var eventService = require('../../services/eventService');
 
 var getUserEvents = function(auth) {
 	var deferred = q.defer();
@@ -60,7 +61,7 @@ var addToDb = function(events, user) {
 			users :  [user.id],
 			isPrivate: true
 		};
-		eventRepository.add(newEvent, function(err, data){
+		eventService.add(newEvent, function(err, data){
 			if(err) {
 				console.log(err);
 				deferred.reject(err);
@@ -70,11 +71,11 @@ var addToDb = function(events, user) {
 				googleEventIds.push(data.id);
 			}
 
-			if(googleEventIds.length == events.length) {
-				//console.log(googleEventIds);
-				user.googleEvents = googleEventIds;
-				userRepository.update(user.id, user);
-			}
+			// if(googleEventIds.length == events.length) {
+			// 	//console.log(googleEventIds);
+			// 	user.googleEvents = googleEventIds;
+			// 	userRepository.update(user.id, user);
+			// }
 		});
 	}
 	});

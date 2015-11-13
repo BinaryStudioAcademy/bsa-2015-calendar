@@ -229,7 +229,7 @@ function WeekViewController(crudEvEventService, helpEventService, scheduleServic
     init();
 
     function init() {
-        vm.timeStamps = helpEventService.getTimeStamps();
+        vm.timeStamps = helpEventService.getTimeStampsDaily();
         vm.days = helpEventService.getDays();
         vm.daysNames = helpEventService.getDaysNames();
         var nowMoment = moment();

@@ -37,8 +37,8 @@ angular
 			$scope.tableSel = $attrs.table;
 
 			function goToIndicator() {
-				$location.hash('time-indicator');
-				$anchorScroll();
+				// $location.hash('time-indicator');
+				// $anchorScroll();
 			}
 
 			function changePosition(element, rowHeight) {

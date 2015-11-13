@@ -21,7 +21,7 @@
 								button(ng-click='calendarCtrl.clearAllEventType()') clear all
 								ul.dropdown-menu(role="menu")
 									form.form-inline
-										li(ng-repeat="eventType in calendarCtrl.allEventTypes")
+										li(ng-repeat="eventType in calendarCtrl.allEventTypes", style = "width: 100%")
 											label.checkbox
 												input(type="checkbox",id="eventType", ng-model = "eventType.flag", name ="{{ eventType.title }}", ng-change = "calendarCtrl.checkFlag(eventType._id)")
 												span.eventTypeFilters {{ eventType.title }}
@@ -37,19 +37,19 @@
 						//- 		a(href="#") Month
 						//- 	li
 						//- 		a(ui-sref='.yearView') Year
-			h4 Device/Room schedule
+			h4 Schedule type
 			ul.nav.nav-pills
-				li.dropdown(style = "width: 100%; margin-bottom: 5px;" ng-class='{"active":  !calendarCtrl.currentRoom && !calendarCtrl.currentDevice}')
-					a.schedule-label.btn-success#userEvents(style = "width: 100%", data-toggle="dropdown", ng-click="calendarCtrl.sheduleChanged('event', null)") User events
+				li.dropdown(style = "width: 100%; margin-bottom: 5px;")
+					a.schedule-label.btn-success#userEvents( ng-class='{"active":  !calendarCtrl.currentRoom && !calendarCtrl.currentDevice}', style = "width: 100%", data-toggle="dropdown", ng-click="calendarCtrl.sheduleChanged('event', null)") User events
 				li.dropdown(style = "width: 100%; margin-bottom: 5px;", ng-class='{"active":  calendarCtrl.currentRoom}')
-					a.schedule-label.btn-primary.dropdown-toggle#roomsMenu(style = "width: 100%", data-toggle="dropdown" ) Rooms
+					a.schedule-label.btn-primary.dropdown-toggle#roomsMenu(ng-class='{"active":  calendarCtrl.currentRoom}', style = "width: 100%", data-toggle="dropdown" ) Rooms
 					ul.dropdown-menu(role="lisbtox" )
 						li(ng-repeat="room in calendarCtrl.rooms" role="listitem", ng-class='{"active": room == calendarCtrl.currentRoom}')
 							a.schedule-item(ng-click="calendarCtrl.sheduleChanged('room', room)" ) {{room.title}}
 				li.dropdown(style = "width: 100%; margin-bottom: 5px;", ng-class='{"active": calendarCtrl.currentDevice}')
-					a.schedule-label.btn-primary.dropdown-toggle#devicesMenu(style = "width: 100%", data-toggle="dropdown") Devices
+					a.schedule-label.btn-primary.dropdown-toggle#devicesMenu(ng-class='{"active": calendarCtrl.currentDevice  && !calendarCtrl.currentRoom}', style = "width: 100%", data-toggle="dropdown") Devices
 					ul.dropdown-menu(role="lisbtox")
-						li(ng-repeat="device in calendarCtrl.devices" role="listitem", ng-class='{"active": device == calendarCtrl.currentDevice}')
+						li(ng-repeat="device in calendarCtrl.devices" role="listitem", ng-class='{"active": device == calendarCtrl.currentDevice && !calendarCtrl.currentRoom}')
 							a.schedule-item(ng-click="calendarCtrl.sheduleChanged('device', device)") {{device.title}}
 			br
 			a.btn.btn-block.btn-social.btn-google(ng-controller='GoogleAuthController as gaCtrl'  ng-click='gaCtrl.login()')
@@ -67,7 +67,7 @@
 			//- 				label.checkbox
 			//- 					checkbox(type="checkbox",id="eventType", ng-model = "eventType.flag", name ="{{ eventType.name }}", ng-change = "calendarCtrl.checkFlag(eventType._id)")
 			//- 					span.eventTypeFilters {{ eventType.title }}
-			.filters-new.hidden-xs
+			.filters-new.hidden-xs()
 				h3 Filters
 				div(ng-dropdown-multiselect='', 
 					translation-texts='calendarCtrl.selectConfigFIlters', 

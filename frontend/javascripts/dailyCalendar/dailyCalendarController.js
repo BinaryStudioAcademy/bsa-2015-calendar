@@ -15,7 +15,8 @@ function DayViewController(Notification, scheduleService, filterService, AuthSer
 		getAllEvents(vm.selectedDate, reBuildDailyView);
     });
 
-    $rootScope.$on('filterTypesChanged', function (event, actualEventTypes) {           
+    $scope.$on('filterTypesChanged', function (event, actualEventTypes) {      
+    	console.log('message recieve "filterschanged" in daily');     
         vm.actualEventTypes = actualEventTypes;
         reBuildDailyView();
     });       
@@ -115,19 +116,6 @@ function DayViewController(Notification, scheduleService, filterService, AuthSer
 	}
 
 	function computingEvents() {
-		// vm.todayEvents = [];
-		// for (i = 0; i < vm.todayEvents.length; i++) {
-		// 	for (j = 0; j < vm.actualEventTypes.length; j++){
-		// 		if (vm.todayEvents[i].type._id == vm.actualEventTypes[j].id){
-		// 			vm.todayEvents.push(vm.todayEvents[i]);
-		// 		}
-		// 	}
-		// }
-
-		// for(i = 0; i < vm.todayEvents.length; i++){
-		// 	vm.todayEvents[i].group = i;
-		// 	vm.groupChanged = false;
-		// }
 
 		for(i = 0; i < vm.todayEvents.length; i++){
 			vm.todayEvents[i].conflictGroup = undefined;
@@ -149,19 +137,6 @@ function DayViewController(Notification, scheduleService, filterService, AuthSer
 			// calculate top value as difference between event start and beginning of the day
 			temp.topVal = 888 * (eventStart.getTime() - now.getTime()) / 86400000;
 			// save computed values to the array
-			
-			// temp.conflicts = 0;
-			// for (var x = 0; x < vm.todayEvents.length; x++){
-			// 	var range1 = moment().range(moment(vm.todayEvents[x].start), moment(vm.todayEvents[x].end));
-			// 	var range2 = moment().range(moment(temp.eventAsItIs.start), moment(temp.eventAsItIs.end));
-   //      		console.log(range1, range2);
-   //          	if (range2.contains(moment(vm.todayEvents[x].end)) || range2.contains(moment(vm.todayEvents[x].start)) || range1.contains(moment(temp.eventAsItIs.start)) || range1.contains(moment(temp.eventAsItIs.end))){
-   //          		temp.conflicts++;
-
-   //          	}
-			// }
-			
-
 
 			temp.conflicts = 0;
 
@@ -191,11 +166,6 @@ function DayViewController(Notification, scheduleService, filterService, AuthSer
 
             		temp.conflicts++;
 
-            		// if(i > x){
-            		// 	vm.todayEvents[i].group = temp.group;
-            		// } else if(i < x){
-            		// 	temp.group = vm.todayEvents[i].group;
-            		// }
 
             	} else{
             		//if(isInConflict){
@@ -207,11 +177,6 @@ function DayViewController(Notification, scheduleService, filterService, AuthSer
 
 			vm.computedEvents.push(temp);
 
-			// for(var j = 0; j < vm.actualEventTypes.length; j++){
-			// 	if(temp.eventAsItIs.type._id == vm.actualEventTypes[j].id){
-					
-			// 	}
-			// }
 
 		}
 
@@ -224,18 +189,17 @@ function DayViewController(Notification, scheduleService, filterService, AuthSer
 			} else{
 				vm.groups[vm.computedEvents[i].conflictGroup]++;
 			}
-			// console.log('event title', vm.computedEvents[i].eventAsItIs.title);
-			// console.log('event group', vm.computedEvents[i].conflictGroup);
+
 		}
 		console.log('groups count', vm.groups);
 
 		for(i = 0; i < vm.computedEvents.length; i++){
 			vm.computedEvents[i].eventsInGroupCount = vm.groups[vm.computedEvents[i].conflictGroup];
-			console.log('');
-			console.log('title', vm.computedEvents[i].eventAsItIs.title);
-			console.log('group: ', vm.computedEvents[i].conflictGroup);
-			console.log('divide by: ', vm.computedEvents[i].conflicts);
-			console.log('events in group: ', vm.computedEvents[i].eventsInGroupCount);
+			// console.log('');
+			// console.log('title', vm.computedEvents[i].eventAsItIs.title);
+			// console.log('group: ', vm.computedEvents[i].conflictGroup);
+			// console.log('divide by: ', vm.computedEvents[i].conflicts);
+			// console.log('events in group: ', vm.computedEvents[i].eventsInGroupCount);
 		}
 
 		//console.log('comp', vm.computedEvents);
@@ -280,7 +244,7 @@ function DayViewController(Notification, scheduleService, filterService, AuthSer
 			block.style['font-weight'] = 900;
 			block.style['text-align'] = 'center';
 			block.style['font-color'] = 'black';
-			var tmpWidth = 100/vm.computedEvents[c].eventsInGroupCount;
+			var tmpWidth = 93/vm.computedEvents[c].eventsInGroupCount;
 
 			var event = vm.computedEvents[c];
 
@@ -296,7 +260,7 @@ function DayViewController(Notification, scheduleService, filterService, AuthSer
 			var tmpLeft = currentGroupCounter[event.conflictGroup]*tmpWidth - (tmpWidth);
 
 
-			
+			block.style['margin-left'] = '7%';
 			block.style.left = tmpLeft + '%'; 
 			block.style.width = tmpWidth + '%';
 			block.style.height = vm.computedEvents[c].heightVal.toPrecision(3) + 'px';
@@ -431,7 +395,7 @@ function DayViewController(Notification, scheduleService, filterService, AuthSer
 					newEnd.setMilliseconds(0);
 					newStart.setFullYear(oldStart.getFullYear(), oldStart.getMonth(), oldStart.getDate());
 					newEnd.setFullYear(oldEnd.getFullYear(), oldEnd.getMonth(), oldEnd.getDate());
-					Notification.success({message: 'newStart: ' + newStart + ';\nnewEnd: ' + newEnd });
+					
 					// create object to send to the server with new dates
 					var newElement = {
 						start: newStart,
@@ -443,6 +407,11 @@ function DayViewController(Notification, scheduleService, filterService, AuthSer
 				            thisEvent.start = newStart;
 							thisEvent.end = newEnd;
 							replaceEvent(vm.todayEvents, thisEvent);
+							Notification.success({message: 'newStart: ' + newStart + ';\nnewEnd: ' + newEnd });
+				        }
+				        else {
+				        	mapEvents();
+				        	Notification.warning({message: response.data });
 				        }
 				    });
 				}
@@ -542,7 +511,6 @@ function DayViewController(Notification, scheduleService, filterService, AuthSer
 					newEnd.setMilliseconds(0);
 					newStart.setFullYear(oldStart.getFullYear(), oldStart.getMonth(), oldStart.getDate());
 					newEnd.setFullYear(oldEnd.getFullYear(), oldEnd.getMonth(), oldEnd.getDate());
-					Notification.success({message: 'newStart: ' + newStart + ';\nnewEnd: ' + newEnd });
 					// create object to send to the server with new dates
 					var newElement = {
 						start: newStart,
@@ -554,6 +522,10 @@ function DayViewController(Notification, scheduleService, filterService, AuthSer
 				            thisEvent.start = newStart;
 							thisEvent.end = newEnd;
 							replaceEvent(vm.todayEvents, thisEvent);
+							Notification.success({message: 'newStart: ' + newStart + ';\nnewEnd: ' + newEnd });		
+				        } else {
+				        	mapEvents();
+				        	Notification.warning({message: response.data });
 				        }
 				    });
 				}
@@ -639,7 +611,7 @@ function DayViewController(Notification, scheduleService, filterService, AuthSer
 		var newEnd = new Date(newStart.getTime() + (oldEnd.getTime() - oldStart.getTime()));
 		newStart.setFullYear(oldStart.getFullYear(), oldStart.getMonth(), oldStart.getDate());
 		newEnd.setFullYear(oldEnd.getFullYear(), oldEnd.getMonth(), oldEnd.getDate());
-		Notification.success({message: 'newStart: ' + newStart + ';\nnewEnd: ' + newEnd });
+		
 		//object to send to the server for update
 		var newElement = {
 			start: newStart,
@@ -651,7 +623,10 @@ function DayViewController(Notification, scheduleService, filterService, AuthSer
 	            thisEvent.start = newStart;
 				thisEvent.end = newEnd;
 				replaceEvent(vm.todayEvents, thisEvent);
-
+				Notification.success({message: 'newStart: ' + newStart + ';\nnewEnd: ' + newEnd });
+			} else {
+	        	mapEvents();
+	        	Notification.warning({message: response.data });
 	        }
 	    });
 	}
