@@ -90,6 +90,7 @@ function CalendarController(socketService, Notification, filterService, schedule
 		vm.determineOpenedView();
 		var modalInstance = $uibModal.open({
 			animation: true,
+			size: 'lg',
 			templateUrl: 'templates/tutorial/tutorial.html',
 			controller: 'tutorialController',
 			controllerAs: 'tutorialCtrl',

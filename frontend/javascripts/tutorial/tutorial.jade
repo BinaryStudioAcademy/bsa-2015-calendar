@@ -6,8 +6,7 @@
 				| Tutorial
 	.tab-content
 		.tab-pane.active(role="tabpanel" id="everything")
-			.container-fluid
-				.col-md-10
+				.col-md-12
 					.col-sm-2.pull-left
 						button.btn.btn-block.btn-default(ng-click="tutorialCtrl.changeTextLeft()")
 							span
@@ -16,15 +15,13 @@
 						button.btn.btn-block.btn-default(ng-click="tutorialCtrl.changeTextRight()")
 							span
 								i.glyphicon.glyphicon-arrow-right
-			.container-fluid
-				.col-md-8
-					.col-md-10
-						img.col-md-12.img-responsive(ng-src="../../javascripts/tutorial{{tutorialCtrl.tutorialTexts[tutorialCtrl.currentText].img}}")
-						span(ng-model="tutorialCtrl.currentText") {{ tutorialCtrl.tutorialTexts[tutorialCtrl.currentText].text }}
+				.col-md-12
+					.col-md-12
+						img.col-md-9.img-responsive(ng-src="../../javascripts/tutorial{{tutorialCtrl.tutorialTexts[tutorialCtrl.currentText].img}}")
+						span.col-md-3(ng-model="tutorialCtrl.currentText") {{ tutorialCtrl.tutorialTexts[tutorialCtrl.currentText].text }}
 						
 .modal-footer
 	.save-area
-		.col-md-6.col-sm-6.col-xs-6
+		.col-md-4.col-md-offset-4.col-sm-4.col-sm-offset-4.col-xs-4.col-xs-offset-4
 			button.btn.btn-danger(type='submit' ng-click="tutorialCtrl.completeTutorial()") Never to show
-		.col-md-6.col-sm-6
 			button.btn.btn-primary(ng-click="tutorialCtrl.closeModal()") Hide
