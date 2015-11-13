@@ -125,9 +125,21 @@ function CalendarController(socketService, Notification, filterService, schedule
 		});
   	});
 
-  	vm.sheduleChanged = function(scheduleItemType, scheduleItemId){
-		scheduleService.sheduleChanged(scheduleItemType, scheduleItemId);
+  	vm.sheduleChanged = function(scheduleItemType, scheduleItem){
+		scheduleService.sheduleChanged(scheduleItemType, scheduleItem._id);
+		if (scheduleItemType == 'room'){
+			vm.currentRoom = scheduleItem;
+			vm.currnetDevice = null;	
+		} else if(scheduleItemType== 'event') {
+			vm.currentRoom = null;
+			vm.currnetDevice = null;			
+		} else {
+			vm.currentDevice = scheduleItem;
+			vm.currentRoom = null;
+		}
   	};
+
+
 
   	function pullData(){
 		helpEventService.getRooms(true).then(function(data) {
