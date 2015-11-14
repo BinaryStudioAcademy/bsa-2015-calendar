@@ -138,10 +138,11 @@ function CalendarController(socketService, Notification, filterService, schedule
 
 		if (scheduleItemType == 'room'){
 			vm.currentRoom = scheduleItem;
-			vm.currnetDevice = null;	
-		} else if(scheduleItemType== 'event') {
+			vm.currentDevice = null;	
+		} else if(scheduleItemType == 'event') {
+
 			vm.currentRoom = null;
-			vm.currnetDevice = null;			
+			vm.currentDevice = null;			
 		} else {
 			vm.currentDevice = scheduleItem;
 			vm.currentRoom = null;

@@ -39,15 +39,15 @@
 						//- 		a(ui-sref='.yearView') Year
 			h4 Schedule type
 			ul.nav.nav-pills
-				li.dropdown(style = "width: 100%; margin-bottom: 5px;")
-					a.schedule-label.btn-success#userEvents( ng-class='{"active":  !calendarCtrl.currentRoom && !calendarCtrl.currentDevice}', style = "width: 100%", data-toggle="dropdown", ng-click="calendarCtrl.sheduleChanged('event', null)") User events
-				li.dropdown(style = "width: 100%; margin-bottom: 5px;", ng-class='{"active":  calendarCtrl.currentRoom}')
-					a.schedule-label.btn-primary.dropdown-toggle#roomsMenu(ng-class='{"active":  calendarCtrl.currentRoom}', style = "width: 100%", data-toggle="dropdown" ) Rooms
+				li.dropdown.filters-btn(style = "width: 100%; margin-bottom: 5px;")
+					a.schedule-label.btn-primary#userEvents( ng-class='{"active":  !calendarCtrl.currentRoom && !calendarCtrl.currentDevice}', style = "width: 100%", data-toggle="dropdown", ng-click="calendarCtrl.sheduleChanged('event', null)") User events
+				li.dropdown.filters-btn(style = "width: 100%; margin-bottom: 5px;", ng-class='{"active":  calendarCtrl.currentRoom}')
+					a.schedule-label.btn-primary.dropdown-toggle#roomsMenu(ng-class='{"active":  calendarCtrl.currentRoom}', style = "width: 100%", data-toggle="dropdown" ) Rooms: {{calendarCtrl.currentRoom.title}}
 					ul.dropdown-menu(role="lisbtox" )
 						li(ng-repeat="room in calendarCtrl.rooms" role="listitem", ng-class='{"active": room == calendarCtrl.currentRoom}')
 							a.schedule-item(ng-click="calendarCtrl.sheduleChanged('room', room)" ) {{room.title}}
-				li.dropdown(style = "width: 100%; margin-bottom: 5px;", ng-class='{"active": calendarCtrl.currentDevice}')
-					a.schedule-label.btn-primary.dropdown-toggle#devicesMenu(ng-class='{"active": calendarCtrl.currentDevice  && !calendarCtrl.currentRoom}', style = "width: 100%", data-toggle="dropdown") Devices
+				li.dropdown.filters-btn(style = "width: 100%; margin-bottom: 5px;", ng-class='{"active": calendarCtrl.currentDevice}')
+					a.schedule-label.btn-primary.dropdown-toggle#devicesMenu(ng-class='{"active": calendarCtrl.currentDevice}', style = "width: 100%", data-toggle="dropdown") Devices: {{calendarCtrl.currentDevice.title}}
 					ul.dropdown-menu(role="lisbtox")
 						li(ng-repeat="device in calendarCtrl.devices" role="listitem", ng-class='{"active": device == calendarCtrl.currentDevice && !calendarCtrl.currentRoom}')
 							a.schedule-item(ng-click="calendarCtrl.sheduleChanged('device', device)") {{device.title}}
