@@ -8,6 +8,16 @@ function crudEvEventService($rootScope, $uibModal, helpEventService) {
 
 	vm = this;
 
+    vm.weekDays = [
+        { name: 'Mo', selected: false },
+        { name: 'Tu', selected: false },
+        { name: 'We', selected: false },
+        { name: 'Th', selected: false },
+        { name: 'Fr', selected: false },
+        { name: 'Sa', selected: false },
+        { name: 'Su', selected: false }
+    ];
+
 	// отправка события после добавления нового ивента
 	vm.addedEventBroadcast = function(selectedDate, eventBody, viewType) {
     	console.log('addedEvent broadcast', viewType);

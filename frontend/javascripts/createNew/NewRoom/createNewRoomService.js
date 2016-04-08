@@ -1,42 +1,31 @@
 var app = require('../../app');
 
 app.factory('createNewRoomService', createNewRoomService);
-createNewRoomService.$inject = ['$resource'];
+createNewRoomService.$inject = ['$resource', 'Globals'];
 
-function createNewRoomService ($resource) {
-	// var dbrooms = $resource('http://localhost:3080/api/room/', {});
-	// var rooms = dbrooms.query();
+function createNewRoomService ($resource, Globals) {
+
+	var dbroomsUrl = Globals.baseUrl + '/api/room/:id';
+	var dbrooms = $resource(dbroomsUrl, null, {
+
+		'update': { 'method': 'put'},
+		'delete': { 'method': 'delete'}
+	});
 
 	function getRooms(){
-		var rooms = $resource('http://localhost:3080/api/room/', {});
-		return rooms.query();		
+		return dbrooms.query();		
 	}
-  // alternativa str 10-13
-	// function getRooms(callback){
-	// var dbrooms = $resource('http://localhost:3080/api/room/', {});
-	// dbrooms.query(function(data){
-	// 	console.log(data);
-	// 	callback(data);
-	// }, function(error, status){
-	// 		console.log(error, status);
-	// });
-	// }
 
 	function saveRoom(newroom) {
-		var dbrooms = $resource('http://localhost:3080/api/room/', {});
 		return dbrooms.save(newroom);
 	}
 
 	function updateRoom(room){	
-		var dbroomById = $resource('http://localhost:3080/api/room/:id', {id: room._id}, {'update': { method:'PUT'}});
-		// delete room._id;
-		return dbroomById.update(room);
+		return dbrooms.update({id: room._id}, room);
 	}
 
 	function deleteRoom(room) {
-		var dbroomdel = $resource('http://localhost:3080/api/room/:id', {id: room._id});
-		console.log(room);
-		return dbroomdel.delete(room);
+		return dbrooms.delete({id: room._id});
 	}
 
 	return  {

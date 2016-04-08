@@ -4,8 +4,9 @@ var moment = require('moment');
 app.directive('calendarDirective', calendarDirective);
 
 
+calendarDirective.$inject = ['$animate', '$state'];
 
-function calendarDirective($animate) {
+function calendarDirective($animate, $state) {
     return {
         restrict: 'A',
         templateUrl: 'templates/yearCalendar/monthTemplate.html',
@@ -51,7 +52,21 @@ function calendarDirective($animate) {
                 var elemDate = clickElem.split('_');
                 var tmpDate = new Date(+elemDate[2], (+elemDate[1])-1, +elemDate[0]);
                 var mDate = moment(tmpDate);
+
+                console.log('date clicked: ', mDate);
+
                 crudEvEventService.creatingBroadcast(mDate, 'YearView');
+            };
+
+            $scope.moveToDayView = function($event) {
+                var clickElem = $event.target.attributes.id.value;
+                var elemDate = clickElem.split('_');
+                var tmpDate = new Date(+elemDate[2], (+elemDate[1])-1, +elemDate[0]);
+                var mDate = moment(tmpDate);
+
+                $state.transitionTo('calendar.dayViewFromYear', { year: mDate.year(), month: mDate.month() + 1, day: mDate.date() });
+
+                console.log('date clicked: ', mDate);
             };
 
             $scope.editEvent = function(selectedDate, eventBody) {

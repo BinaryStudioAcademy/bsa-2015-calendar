@@ -6,29 +6,9 @@ createNewEventTypeController.$inject = ['$scope', 'createNewEventTypeService', '
 function createNewEventTypeController($scope, createNewEventTypeService, AuthService, $rootScope) {
     var vm = this;
 
-    vm.icons = [
-        { css: null, name: 'None' },
-        { css: 'fa fa-users', name: 'Meeting' },
-        { css: 'fa fa-microphone', name: 'Speech' },        
-        { css: 'fa fa-line-chart', name: 'Line chart' },
-        { css: 'fa fa-plane', name: 'Plane' },
-        { css: 'fa fa-birthday-cake', name: 'Birthay Cake' },
-        { css: 'fa fa-code', name: 'Code' },
-        { css: 'fa fa-cogs', name: 'Cogs' },
-        { css: 'fa fa-film', name: 'Film' },
-        { css: 'fa fa-television', name: 'Television' },
-        { css: 'fa fa-pie-chart', name: 'Pie chart' },
-        { css: 'fa fa-music', name: 'Music' },
-        { css: 'fa fa-graduation-cap', name: 'Education' },
-        { css: 'fa fa-futbol-o', name: 'Football' },
-        { css: 'fa fa-coffee', name: 'Coffee' },
-        { css: 'fa fa-bicycle', name: 'Bicycle' },
-        { css: 'fa fa-heart', name: 'Heart' },
-        { css: 'fa fa-beer', name: 'Beer' }
-    ];
 
-    vm.eventType = {};
-    vm.eventType.icon = vm.icons[0];
+
+
 
     vm.setIcon = function(eventType, icon){
         // console.log('new icon: ', icon);
@@ -38,14 +18,9 @@ function createNewEventTypeController($scope, createNewEventTypeService, AuthSer
         } else{
             eventType.icon = icon;
         }
-        
     };
 
-    vm.eventTypes = [];
 
-    vm.inputStyles = [];
-
-    vm.inputStyle = {};
 
     vm.changeStyle = function(type){
         if(!type){
@@ -60,16 +35,28 @@ function createNewEventTypeController($scope, createNewEventTypeService, AuthSer
 
     };
 
-    createNewEventTypeService.getEventTypesPublicByOwner()
-    .then(function(response){
-        vm.eventTypes = response.data;
+    function init() {
+        vm.icons = createNewEventTypeService.getIcons();
+        vm.eventType = {};
+        vm.eventType.icon = vm.icons[0];
+        vm.eventTypes = [];
 
-        for(var i = 0; i < vm.eventTypes.length; i++){
-            vm.inputStyles[vm.eventTypes[i]._id] = vm.eventTypes[i].color;
-            vm.changeStyle(vm.eventTypes[i]);
-        }
+        vm.inputStyles = [];
 
-    });
+        vm.inputStyle = {};
+
+        createNewEventTypeService.getEventTypesPublicByOwner().$promise.then(function(types) {
+            vm.eventTypes = types;
+
+             for(var i = 0; i < vm.eventTypes.length; i++){
+                vm.inputStyles[vm.eventTypes[i]._id] = vm.eventTypes[i].color;
+                vm.changeStyle(vm.eventTypes[i]);
+            }           
+        });
+    }
+
+
+    init();
 
     vm.reset = function () {
         vm.eventType.title = '';

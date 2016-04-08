@@ -33,12 +33,12 @@ RoomRepository.prototype.getRoomEventsByInterval = function(roomId, gteDate, lte
 	var query = model.findOne({_id:roomId}, {events: 1}).populate('events', null, {"start": {"$gte": gteDate, "$lte": lteDate}}, {sort: {"start": 1}});
 	query.populate('type');
 	query.exec(function(err, doc){
-            if(doc)
-            	Event.populate(doc.events, {path:'type', populate: 'type._id type.title type.color type.isPrivate type.icon'},
-                   function(err, data){
-                        callback(null, doc);
-                   }
-            );     
+        if(doc)
+        	Event.populate(doc.events, {path:'type', populate: 'type._id type.title type.color type.isPrivate type.icon'},
+               function(err, data){
+                    callback(null, doc);
+               }
+        );     
     });
 };
 

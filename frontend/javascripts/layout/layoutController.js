@@ -6,7 +6,6 @@ LayoutController.$inject = ['socketService','$rootScope'];
 
 function LayoutController(socketService, $rootScope) {
 	
-	console.log('layoutctrl');
 	$rootScope.$on('editEvent', function(event, selectedDate, eventBody){
 		console.log('edit receive');
 		var modalInstance = $uibModal.open({

@@ -2,7 +2,9 @@ var app = require('../app');
 
 app.factory('filterService', filterService);
 
-function filterService() {
+filterService.$inject = ['helpEventService'];
+
+function filterService(helpEventService) {
   var vm = this;
   vm.actualEventTypes = [];
 
@@ -10,12 +12,26 @@ function filterService() {
 		vm.actualEventTypes = actualEventTypes;
 	}
 
-	function getActualEventTypes(){
-		return vm.actualEventTypes;
+	function pullEventTypesSync(callback) {
+		$.ajax({
+			  method: "GET",
+			  url: "api/eventTypeClipped/",
+			  async: false
+		}).done(function( eventTypes ) {
+			  	callback(eventTypes);
+		});
 	}
+
+	function getActualEventTypes(){
+		// console.log('test');
+		return vm.actualEventTypes.length ? vm.actualEventTypes : pullEventTypes();
+		// return vm.actualEventTypes;
+	}
+
 
 	return  {
 		getActualEventTypes: getActualEventTypes,
-		setActualEventTypes: setActualEventTypes
+		setActualEventTypes: setActualEventTypes,
+		pullEventTypesSync: pullEventTypesSync
 	};
 }

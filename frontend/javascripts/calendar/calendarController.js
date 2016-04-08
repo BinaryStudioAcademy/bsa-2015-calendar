@@ -2,39 +2,44 @@ var app = require('../app');
 
 app.controller('CalendarController', CalendarController);
 
-CalendarController.$inject = ['socketService', 'Notification', 'filterService', 'scheduleService', '$document', '$modal', '$resource', '$scope', '$rootScope', '$state', 'LoginService', 'AuthService', 'GoogleAuthService', 'helpEventService', '$uibModal', '$location'];
+CalendarController.$inject = ['NotificationService', 'socketService', 'Notification', 'filterService', 'scheduleService', '$document', '$modal', '$resource', '$scope', '$rootScope', '$state', 'LoginService', 'AuthService', 'GoogleAuthService', 'helpEventService', '$uibModal', '$location'];
 
-function CalendarController(socketService, Notification, filterService, scheduleService, $document, $modal, $resource, $scope, $rootScope, $state, LoginService, AuthService, GoogleAuthService, helpEventService, $uibModal, $location) {
+function CalendarController(NotificationService, socketService, Notification, filterService, scheduleService, $document, $modal, $resource, $scope, $rootScope, $state, LoginService, AuthService, GoogleAuthService, helpEventService, $uibModal, $location) {
 
   	var vm = this;
 
-	vm.checkEventTypesDD = [];
-	vm.checkEventTypesIDs = [];
-	var todayDate = Date.now();
-	vm.selectedDate = todayDate;
-	var userInfo = AuthService.getUser();
-	
+  	var todayDate, userInfo;
 
-	$.ajax({
-		  method: "GET",
-		  url: "api/eventTypeClipped/",
-		  async: false
-		})
-		  .done(function( msg ) {
-		  	vm.allEventTypes = msg;
-		    console.log( "Data Saved: ", msg );
-		  });
-	for(var i = 0; i < vm.allEventTypes.length; i++){
-		vm.checkEventTypesDD.push({id:vm.allEventTypes[i]._id});
+	function init() {
+
+		vm.checkEventTypesDD = [];
+		vm.checkEventTypesIDs = [];
+		todayDate = Date.now();
+		vm.selectedDate = todayDate;
+		userInfo = AuthService.getUser();
+
+		filterService.pullEventTypesSync(handleEventTypes);
 	}
-	filterService.setActualEventTypes(vm.checkEventTypesDD);
-	console.log(filterService.getActualEventTypes());
-	console.log('all eventtypes', vm.allEventTypes);
-	console.log('checked IDs',vm.checkEventTypesIDs);
-	console.log(vm.allEventTypes);
 
-	pullData();
+	init();
 
+	function handleEventTypes(types) {
+		vm.allEventTypes = types;
+
+
+		for(var i = 0; i < vm.allEventTypes.length; i++){
+			vm.checkEventTypesDD.push({id:vm.allEventTypes[i]._id});
+		}
+
+
+		filterService.setActualEventTypes(vm.checkEventTypesDD);
+		console.log(filterService.getActualEventTypes());
+		console.log('all eventtypes', vm.allEventTypes);
+		console.log('checked IDs',vm.checkEventTypesIDs);
+		console.log(vm.allEventTypes);
+
+		pullData();
+	}
 
 
 	setInterval(function(){
@@ -47,10 +52,27 @@ function CalendarController(socketService, Notification, filterService, schedule
 			// }
 
 			for(var i = 0; i < result.data.length; i++){
+
+				var event = result.data[i];
+
 				var lapse = new Date(result.data[i].start) - new Date();
 				lapse = lapse / ( 1000 * 60 ) + 1;
 				lapse = Math.floor(lapse);
-				Notification.success({message: "Event '" + result.data[i].title + "' starts in " + lapse + " minute(s).", delay: 300000});
+				if(!NotificationService.contains(event)) {
+
+					NotificationService.add(event);
+
+					var now = new Date();
+					var currentTime = now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds();
+
+					Notification.success({
+						message: "Event '" + result.data[i].title + "' starts in " + lapse + " minute(s).", 
+						delay: 3000000,
+
+					});					
+				}
+
+
 				//alertify.delay(300000).closeLogOnClick(true).log("Event '" + result.data[i].title + "' starts in " + lapse + " minutes.");
 			}
 		});

@@ -17,25 +17,48 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 	if (!localUsersArr) {
 		var localUsersArr = [];
 	}
-	
-	vm.rooms = rooms;
-	vm.devices = devices;
-	vm.users = getUpdateUsers(users);
-	vm.eventTypes = eventTypes;
-	vm.selectedDateMoment = selectedDate;
-	vm.selectedDate = new Date(selectedDate.format("DD MMM YYYY HH:mm:ss"));
-	vm.viewType = viewType;
-	vm.isStartDPopened = false;
-	vm.isEndDPopened = false;
-	vm.dpFormat = "dd MMMM yyyy";
-	vm.form = {};
-	vm.form.timeStart = new Date(vm.selectedDate);
-	vm.form.timeEnd = new Date(vm.selectedDate);
-	vm.form.timeEnd.setMinutes(30);
-	vm.form.users = [];
-	//= vm.users;
-	vm.form.devices = [];
-	
+
+	function init() {
+		vm.formSuccess = false;	
+		vm.rooms = rooms;
+		vm.devices = devices;
+		vm.users = getUpdateUsers(users);
+		vm.eventTypes = eventTypes;
+		vm.selectedDateMoment = selectedDate;
+		vm.selectedDate = new Date(selectedDate.format("DD MMM YYYY HH:mm:ss"));
+		vm.viewType = viewType;
+		vm.isStartDPopened = false;
+		vm.isEndDPopened = false;
+		vm.dpFormat = "dd MMMM yyyy";
+		vm.form = {};
+		vm.form.timeStart = new Date(vm.selectedDate);
+		vm.form.timeEnd = new Date(vm.selectedDate);
+		vm.form.timeEnd.setMinutes(30);
+		vm.form.users = [];
+		//= vm.users;
+		vm.form.devices = [];
+
+		vm.planIntervals = [];
+
+		vm.minDate = new Date();
+		vm.planStartDate = new Date(vm.selectedDate);
+		vm.planEndDate = new Date(vm.selectedDate);
+		vm.planFirstEventStart = new Date();
+		
+
+
+		vm.todayIndex = vm.selectedDate.getDay() - 1;
+		if(vm.todayIndex === -1){
+			vm.todayIndex = 6;
+		}
+
+		vm.weekDays = crudEvEventService.weekDays;
+
+		vm.weekDays[vm.todayIndex].selected = true;	
+	}
+
+	init();
+
 	vm.openDP = function(dp){
 		if(dp === 'start'){
 			vm.isStartDPopened = !vm.isStartDPopened;
@@ -45,23 +68,7 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 		
 	};
 
-	vm.todayIndex = vm.selectedDate.getDay() - 1;
-	if(vm.todayIndex === -1){
-		vm.todayIndex = 6;
-	}
 
-
-	vm.weekDays = [
-		{ name: 'Mo', selected: false },
-		{ name: 'Tu', selected: false },
-		{ name: 'We', selected: false },
-		{ name: 'Th', selected: false },
-		{ name: 'Fr', selected: false },
-		{ name: 'Sa', selected: false },
-		{ name: 'Su', selected: false }
-	];
-
-	vm.weekDays[vm.todayIndex].selected = true;	
 
 	vm.changeStartDate = function(){
 		vm.todayIndex = vm.planStartDate.getDay() - 1;
@@ -78,12 +85,7 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 		});
 	};
 
-	vm.planIntervals = [];
 
-	vm.minDate = new Date();
-	vm.planStartDate = new Date(vm.selectedDate);
-	vm.planEndDate = new Date(vm.selectedDate);
-	vm.planFirstEventStart = new Date();
 
 	vm.computeIntervals = function(selectedDay){
 		console.log('>>>>>> COMPUTING INTERVALS');
@@ -214,7 +216,7 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 
 	};
 
-	vm.formSuccess = false;
+
 
 	vm.submitModal = function() {
 

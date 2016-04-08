@@ -6,10 +6,6 @@ createNewRoomController.$inject = ['$scope', 'createNewRoomService', 'socketServ
 function createNewRoomController($scope, createNewRoomService, socketService) {
     var vm = this;
     vm.rooms = createNewRoomService.getRooms();
-    // alternativa str 9
-    // createNewRoomService.getRooms(function(data){
-    //   vmrooms = data;
-    // });
 
     vm.reset = function () {
         vm.room.title = '';

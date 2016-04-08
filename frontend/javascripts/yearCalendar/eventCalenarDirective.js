@@ -144,38 +144,38 @@ function eventCalendarDirective($rootScope, filterService) {
 
 
                                 var dayCell = $('#'+day);
-                                //create popover template with events titles
-                                var tmpl = '<ul class="list-group">';
-                                //var tmpl = document.createElement('ul');
-                                for (var i=0; i<$scope.dataObj[day].length; i++) {
-                                    // console.log('from function addEvents  for', $scope.dataObj[day][i]);     
-                                    // var icon = document.createElement('div');
-                                    // if($scope.dataObj[day][i].type.icon){
-                                    //     icon.className = $scope.dataObj[day][i].type.icon.css;
-                                    //     icon.style.width = '10%';
-                                    //     icon.style.float = 'left';
-                                    //     dayCell.append(icon);
-                                    // }                        
-                                    tmpl += '<li ' + ' style="background-color:' + $scope.dataObj[day][i].type.color +'" class="list-group-item">'+$scope.dataObj[day][i].title + '</li>';
-                                }
-                                //console.log(tmpl);
-                                tmpl +='</ul>';
+                                // //create popover template with events titles
+                                // var tmpl = '<ul class="list-group">';
+                                // //var tmpl = document.createElement('ul');
+                                // for (var i=0; i<$scope.dataObj[day].length; i++) {
+                                //     // console.log('from function addEvents  for', $scope.dataObj[day][i]);     
+                                //     // var icon = document.createElement('div');
+                                //     // if($scope.dataObj[day][i].type.icon){
+                                //     //     icon.className = $scope.dataObj[day][i].type.icon.css;
+                                //     //     icon.style.width = '10%';
+                                //     //     icon.style.float = 'left';
+                                //     //     dayCell.append(icon);
+                                //     // }                        
+                                //     tmpl += '<li ' + ' style="background-color:' + $scope.dataObj[day][i].type.color +'" class="list-group-item">'+$scope.dataObj[day][i].title + '</li>';
+                                // }
+                                // //console.log(tmpl);
+                                // tmpl +='</ul>';
 
-                                //update template if popover exists
-                                if(dayCell.data('bs.popover')) {
-                                    dayCell.data('bs.popover').options.content = tmpl;
-                                } else {
-                                //add popover
-                                    dayCell.popover({
-                                        trigger: 'hover',
-                                        delay: 500,
-                                        container: 'body',
-                                        placement: 'top',
-                                        title: 'Events:',
-                                        html: true,
-                                        content: tmpl
-                                    });
-                                }
+                                // //update template if popover exists
+                                // if(dayCell.data('bs.popover')) {
+                                //     dayCell.data('bs.popover').options.content = tmpl;
+                                // } else {
+                                // //add popover
+                                //     dayCell.popover({
+                                //         trigger: 'hover',
+                                //         delay: 500,
+                                //         container: 'body',
+                                //         placement: 'top',
+                                //         title: 'Events:',
+                                //         html: true,
+                                //         content: tmpl
+                                //     });
+                                // }
 
 
 

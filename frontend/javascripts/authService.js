@@ -1,8 +1,8 @@
 var app = require('./app');
 
-app.factory('AuthService', ['$http', function($http){
+app.factory('AuthService', ['$http', 'Globals', function($http, Globals){
 
-        var baseUrl = 'http://localhost:3080/';
+        var baseUrl = Globals.baseUrl;
 
         var service = {};
         var userInfo = null;
@@ -34,7 +34,7 @@ app.factory('AuthService', ['$http', function($http){
 
         service.checkAuth = function(){
             return $http({
-                url: baseUrl + 'api/isAuth',
+                url: baseUrl + '/api/isAuth',
                 method: 'POST',
             });
         };

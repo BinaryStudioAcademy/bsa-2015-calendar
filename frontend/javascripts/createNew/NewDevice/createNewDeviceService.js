@@ -1,44 +1,36 @@
 var app = require('../../app');
 
 app.factory('createNewDeviceService', createNewDeviceService);
-createNewDeviceService.$inject = ['$resource'];
+createNewDeviceService.$inject = ['$resource', 'Globals'];
 
-function createNewDeviceService ($resource) {
-	var dbdevices = $resource('http://localhost:3080/api/device/', {});
+function createNewDeviceService ($resource, Globals) {
+	var baseUrl = Globals.baseUrl;
+	var resourceURL = baseUrl + '/api/device/:id';
+
+	var dbdevices = $resource(resourceURL, null, {
+		'update': { method: 'PUT'},
+		'delete': { method: 'DELETE'}
+	});
 	var devices = dbdevices.query();
 	
 	function getDevices(){
 		return dbdevices.query();
 	}
-  // alternativa str 10-12
-	// function getDevices(callback){
-	// var dbdevices = $resource('http://localhost:3080/api/device/', {});
-	// 	dbdevices.query(
-	// 		function(data) {
-	// 			console.log(data);
-	// 			callback(data);
-	// 		},
-	// 		function(error, status) {
-	// 			console.log(error, status);
-	// 		}
-	// 	);
-	// }
+
 
 	function saveDevice(newdevice) {
 		return dbdevices.save(newdevice);
 	}
 
 	function updateDevice(device){	
-		var dbdeviceById = $resource('http://localhost:3080/api/device/:id', {id: device._id}, {'update': { method:'PUT'}});
-		var one_device = dbdeviceById.update(device);
+		console.log(device);
+		var one_device = dbdevices.update({id: device._id}, device);
+
 	}
 
 	function deleteDevice(device) {
-		var dbdevicedel = $resource('http://localhost:3080/api/device/:id', {id: device._id});
-		console.log('DEVICE ID: ' + device._id);
-		// var dbdevicedel = $resource('http://localhost:3080/api/device/' + device._id);
-		// console.log(device);
-		return dbdevicedel.delete(device);
+		console.log(device);
+		return dbdevices.delete({ id: device._id });
 	}
 
 	return  {

@@ -1,4 +1,4 @@
-var app = angular.module('calendar-app', ['ui-notification', 'ui.checkbox', 'colorpicker.module', 'ui.router', 'ngAlertify', 'btford.socket-io', 'ngResource', 'ui.bootstrap', 'ngAnimate', 'angularjs-dropdown-multiselect'])
+var app = angular.module('calendar-app', ['angularResizable', 'ui-notification', 'ui.checkbox', 'colorpicker.module', 'ui.router', 'ngAlertify', 'btford.socket-io', 'ngResource', 'ui.bootstrap', 'ngAnimate', 'angularjs-dropdown-multiselect'])
     .config(['$stateProvider', '$urlRouterProvider', '$resourceProvider', '$httpProvider', '$locationProvider',
         function ($stateProvider, $urlRouterProvider, $resourceProvider, $httpProvider, $locationProvider) {
             $urlRouterProvider.otherwise('/');
@@ -70,6 +70,13 @@ var app = angular.module('calendar-app', ['ui-notification', 'ui.checkbox', 'col
                     templateUrl: './templates/monthCalendar/monthCalendar.html',
                     controller: 'MonthController',
                     controllerAs: 'mCtrl',
+                    auth: true
+                })
+                .state('calendar.dayViewFromYear', {
+                    url: '/dayView/:year/:month/:day',
+                    templateUrl: './templates/dailyCalendar/dailyCalendarTemplate.html',
+                    controller: 'DayViewController',
+                    controllerAs: 'dvCtrl',
                     auth: true
                 })
                 .state('calendar.createNewDevice', {
