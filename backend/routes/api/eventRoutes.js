@@ -140,6 +140,7 @@ module.exports = function(app) {
 		eventService.update(req.params.id, req.body, function(err, data){
 			res.data = data;
 			res.err = err;
+
 			next();
 		});
 	}, apiResponse);

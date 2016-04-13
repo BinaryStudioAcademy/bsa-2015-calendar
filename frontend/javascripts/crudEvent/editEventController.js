@@ -17,106 +17,136 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 	}
 
 	function init(){
+		vm.currentUserId = AuthService.getUser().id;
+
+		vm.form = [];
+		vm.form.devices = [];
+		vm.form.users = [];
 
 		vm.rooms = rooms;
 		vm.devices = devices;
 		vm.users = getUpdateUsers(users);
+
+		vm.users = vm.users.filter(function(user) {
+			return user._id !== vm.currentUserId;
+		});
+
+		console.log('vm.users', vm.users);
+
 		vm.eventTypes = eventTypes;
 
 		vm.selectedDate = selectedDate;
 		vm.viewType = viewType;
 		vm.eventBody = eventBody;
 
-		console.log(eventBody);
-
+		console.log('eventBody', eventBody);
 		initEvent();
 
-		function initEvent(){
-			vm.event = {};
-			vm.event.users = [];
-			vm.event.devices = [];
-			vm.event.room = {};
-			vm.event.type = {};
-			vm.event.start = vm.eventBody.start;
-			vm.event.end = vm.eventBody.end;
-			vm.event.title = vm.eventBody.title;
-			vm.event.description = vm.eventBody.description;
 
-			if (vm.eventBody.isPrivate !== undefined){
-				vm.event.isPrivate = vm.eventBody.isPrivate;
+	}
+
+	init();
+
+	function initEvent(){
+		vm.event = {};
+		vm.event.users = [];
+		// vm.event.devices = [];
+		// vm.event.room = {};
+		vm.event.type = {};
+		vm.event.start = vm.eventBody.start;
+		vm.event.end = vm.eventBody.end;
+		vm.event.title = vm.eventBody.title;
+		vm.event.description = vm.eventBody.description;
+
+		if (vm.eventBody.isPrivate !== undefined){
+			vm.event.isPrivate = vm.eventBody.isPrivate;
+		}
+
+		if(vm.eventBody.price){
+			vm.event.price = vm.eventBody.price;
+		}
+
+		if(vm.eventBody.room){
+			vm.form.room = {};
+			for (i = 0; i < vm.rooms.length; i++){
+				if(vm.eventBody.room == vm.rooms[i]._id) {
+					vm.form.room._id = vm.rooms[i]._id;
+					vm.form.room.title = vm.rooms[i].title;
+					break;
+				}
 			}
+		}
 
-			if(vm.eventBody.price){
-				vm.event.price = vm.eventBody.price;
+		if (vm.eventBody.devices){
+			vm.form.devices = [];
+			for (j = 0; j < vm.eventBody.devices.length; j++){
+				for (k = 0; k < vm.devices.length; k++){
+					if(vm.eventBody.devices[j] == vm.devices[k]._id) {
+						vm.form.devices.push({_id: vm.devices[k]._id, title: vm.devices[k].title});
+						break;
+					}
+				}
 			}
+		}
 
-			if (vm.eventBody.room){
-				for (i = 0; i < vm.rooms.length; i++){
-					if(vm.eventBody.room == vm.rooms[i]._id) {
-						vm.event.room._id = vm.rooms[i]._id;
-						vm.event.room.title = vm.rooms[i].title;
+		if (vm.eventBody.users){
+			vm.form.users = [];
+			for (var j = 0; j < vm.eventBody.users.length; j++){
+				for (var k = 0; k < vm.users.length; k++){
+					var user = vm.users[k];
+
+
+
+					if(vm.eventBody.users[j] == user._id && vm.currentUserId !== user._id) {
+
+						console.log('user id', user._id);
+						console.log('AuthService.getUser()._id', vm.currentUserId);
+
+						vm.form.users.push({ _id: user._id, name: user.name });
 						break;
 					}
 				}
 			}
 
-			if (vm.eventBody.devices){
-				for (j = 0; j < vm.eventBody.devices.length; j++){
-					for (k = 0; k < vm.devices.length; k++){
-						if(vm.eventBody.devices[j] == vm.devices[k]._id) {
-							vm.event.devices.push({_id: vm.devices[k]._id, title: vm.devices[k].title});
-							break;
-						}
-					}
+			console.log('vm.form.users', vm.form.users);
+			console.log('vm.users', vm.users);
+		}
+
+		console.log('body', vm.eventBody);
+		if (vm.eventBody.type._id){
+			console.log('types', vm.eventBody.type._id, vm.eventTypes);	
+			for (i = 0; i < vm.eventTypes.length; i++){
+				if(vm.eventBody.type._id == vm.eventTypes[i]._id) {
+					vm.event.type._id = vm.eventTypes[i]._id;
+					vm.event.type.title = vm.eventTypes[i].title;
+					break;
 				}
 			}
+		} 
 
-			if (vm.eventBody.users){
-				for (var j = 0; j < vm.eventBody.users.length; j++){
-					for (var k = 0; k < vm.users.length; k++){
-						if(vm.eventBody.users[j] == vm.users[k]._id) {
-							vm.event.users.push({_id: vm.users[k]._id, title: vm.users[k].title});
-							break;
-						}
-					}
-				}
-			}
-			console.log('body', vm.eventBody);
-			if (vm.eventBody.type._id){
-				console.log('types', vm.eventBody.type._id, vm.eventTypes);	
-				for (i = 0; i < vm.eventTypes.length; i++){
-					if(vm.eventBody.type._id == vm.eventTypes[i]._id) {
-						vm.event.type._id = vm.eventTypes[i]._id;
-						vm.event.type.title = vm.eventTypes[i].title;
-						break;
-					}
-				}
-			} 
+		console.log('vm.event = ' ,vm.event);
 
-			//console.log('vm.event = ' ,vm.event);
+		vm.eventSuccess = false;
 
-			vm.eventSuccess = false;
-
-			vm.selectConfigDevices = {
-				buttonDefaultText: 'Select devices',
-				enableSearch: true,
-				scrollableHeight: '200px', 
-				scrollable: true,
-				displayProp: 'title',
-				idProp: '_id',
-				externalIdProp: '',
-			};
-			vm.selectConfigUsers = {
-				buttonDefaultText: 'Add people to event', 
-				enableSearch: true, 
-				smartButtonMaxItems: 3, 
-				scrollableHeight: '200px', 
-				scrollable: true,
-				displayProp: 'name',
-				idProp: '_id',
-				externalIdProp: '',
-			};
-		}	
+		vm.selectConfigDevices = {
+			buttonDefaultText: 'Select devices',
+			enableSearch: true,
+			scrollableHeight: '200px', 
+			scrollable: true,
+			displayProp: 'title',
+			idProp: '_id',
+			externalIdProp: '',
+		};
+		vm.selectConfigUsers = {
+			buttonDefaultText: 'Add people to event', 
+			enableSearch: true, 
+			// smartButtonMaxItems: 3, 
+			scrollableHeight: '200px', 
+			scrollable: true,
+			displayProp: 'name',
+			idProp: '_id',
+			externalIdProp: '',
+		};
 	}
 
 	vm.checkDuration = function(){
@@ -181,6 +211,14 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 		vm.event.room.title = room.title;
 	};
 
+	vm.selectEventRoom = function(room) {
+		vm.form.room = room;
+	};
+
+	vm.isUserOwner = function() {
+		return vm.currentUserId === vm.eventBody.ownerId;
+	};
+
 	vm.submitDelete = function(){
 		console.log('deleting an event...');
 
@@ -201,9 +239,54 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 	};
 
 
-	vm.submitEdit = function(event) {
-		console.log('submiting an event...');
-		helpEventService.updateEvent(vm.eventBody._id, event).then(function(response) {
+	vm.submitEdit = function() {
+
+		// vm.event._id = vm.eventBody._id;
+		vm.event.type = vm.event.type._id;
+
+		if(!vm.event.isPrivate)	{
+			if(vm.form.room) {
+				vm.event.room = vm.form.room._id;
+
+				console.log('vm.event.room', vm.event.room);
+			} else {
+				vm.event.room = null;				
+			}
+
+			if(vm.form.devices.length) {
+				vm.event.devices = vm.form.devices.map(function(device) {
+					return device._id;
+				});
+			} else {
+				vm.event.devices = null;
+			}
+
+			if(vm.form.users.length) {
+				vm.event.users = vm.form.users.map(function(user) {
+					return user._id;
+				});
+			} else {
+				vm.event.users = [];
+			}
+			
+			if(!vm.event.devices && !vm.event.users.length && !vm.event.room) {
+			vm.event.isPrivate = true;
+			}
+		
+		}  else {
+			vm.event.room = null;
+			vm.event.devices = null;
+			vm.event.users = [];
+
+		}
+
+		vm.event.users.push(vm.currentUserId);
+
+
+		console.log('submiting an event...', vm.event);
+
+		// console.log(vm.event._id);
+		helpEventService.updateEvent(vm.eventBody._id, vm.event).then(function(response) {
            	
 			if(response.status == 200 || response.status == 201){
 				vm.eventSuccess = true;
@@ -212,10 +295,10 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
 				console.log(response.data);
 				crudEvEventService.editedEventBroadcast(vm.selectedDate, vm.eventBody, response.data, vm.viewType);
 
-				$timeout(function() {
+				// $timeout(function() {
 					$modalInstance.close();
 					vm.eventSuccess = false;
-				}, 1500);
+				// }, 1500);
 			} else {
 				vm.editingError = true;
 				return;
@@ -223,7 +306,6 @@ function editEventController(crudEvEventService, socketService, alertify, helpEv
         });
 	};
 
-	init();
 
 	function updateLocalArr(userArr) {
 

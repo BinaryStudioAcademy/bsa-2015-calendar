@@ -2,9 +2,9 @@ var app = require('../app');
 
 app.factory('helpEventService', helpEventService);
 
-helpEventService.$inject = ['$resource', '$q', '$timeout', '$http', 'AuthService'];
+helpEventService.$inject = ['Globals', '$resource', '$q', '$timeout', '$http', 'AuthService'];
 
-function helpEventService($resource, $timeout, $q, $http, AuthService) {
+function helpEventService(Globals, $resource, $timeout, $q, $http, AuthService) {
 
 /*
 	var timeSatmps = [	{ time: '12am-7am'},
@@ -52,14 +52,17 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 	 				            { time: '11pm'},
 	 					        ]; 					       
 
-	var days = [	{ name: 'Mon'}, 
-		           	{ name: 'Tue'}, 
-		           	{ name: 'Wed'},
-					{ name: 'Thu'}, 
-		            { name: 'Fri'}, 
-		            { name: 'Sat'},
-		            { name: 'Sun'},
-		          ];
+	var days = [
+		{ name: 'Mon'}, 
+       	{ name: 'Tue'}, 
+       	{ name: 'Wed'},
+		{ name: 'Thu'}, 
+        { name: 'Fri'}, 
+        { name: 'Sat'},
+        { name: 'Sun'},
+	];
+
+	var baseUrl = Globals.baseUrl;
 
 	var daysNames = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 
@@ -99,7 +102,7 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 
 
 	function saveEvent(event) {
-		var saveEventPromise = $http.post('api/event/', event)       
+		var saveEventPromise = $http.post(baseUrl + '/api/event/', event)       
 		.then(function (response) {
 			console.log('adding event status: ', response.status);
 			return response;
@@ -111,7 +114,7 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 
 
 	function updateEvent(eventId, eventBody) {
-		var updateEventPromise = $http.put('api/event/' + eventId, eventBody)       
+		var updateEventPromise = $http.put(baseUrl + '/api/event/' + eventId, eventBody)       
 		.then(function (response) {
 			console.log('updating event status: ', response.status);
 			return response;
@@ -122,7 +125,7 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 	}
 
 	function updateEventStartEnd(eventId, body) {
-		var updateStartEndEventPromise = $http.put('api/event/newdate/' + eventId, body)
+		var updateStartEndEventPromise = $http.put(baseUrl + '/api/event/newdate/' + eventId, body)
 		.then(function (response) {
 			console.log('updating event start end status: ', response.status);
 			return response;
@@ -133,7 +136,7 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 	}
 
 	function deleteEvent(eventId) {
-		var deleteEventPromise = $http.delete('api/event/' + eventId)       
+		var deleteEventPromise = $http.delete(baseUrl + '/api/event/' + eventId)       
 		.then(function (response) {
 			console.log('deleting event status: ', response.status);
 			return response;
@@ -144,7 +147,7 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 	}
 
 	function savePlan(plan) {
-		var savePlanPromise = $http.post('api/plan/', plan)       
+		var savePlanPromise = $http.post(baseUrl + '/api/plan/', plan)       
 		.then(function (response) {
 			console.log('adding plan status: ', response.status);
 			return response;
@@ -164,7 +167,7 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 
 	
 	function getAllEvents() {
-		var allEventsPromise = $http.get('api/event/')       
+		var allEventsPromise = $http.get(baseUrl + '/api/event/')       
 		.then(function (response) {
 			console.log('success Number of all events: ', response.data.length);
 			return response.data;
@@ -184,12 +187,12 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 
 	// так делать не надо, есть же пример ниже!!
 	function getAllUserEvents(){
-		return $http.get('api/eventPublicAndByOwner');
+		return $http.get(baseUrl + '/api/eventPublicAndByOwner');
 	}
 
 
 	function getEvents(start, stop) {
-		var eventsPromise = $http.get('api/eventByInterval/'+ (+start)+ '/'+ (+stop))       
+		var eventsPromise = $http.get(baseUrl + '/api/eventByInterval/'+ (+start)+ '/'+ (+stop))       
 		.then(function (response) {
 			console.log('success Number of finded events: ', response.data.length);
 			return response.data;
@@ -207,7 +210,7 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 
 	function getUserEvents(start, stop) {
 		var loggedUserId = AuthService.getUser().id;
-		var eventsPromise = $http.get('api/user/eventsByInterval/'+ loggedUserId+ '/' + (+start)+ '/'+ (+stop))       
+		var eventsPromise = $http.get(baseUrl + '/api/user/eventsByInterval/'+ loggedUserId+ '/' + (+start)+ '/'+ (+stop))       
 		.then(function (response) {
 			var eventsArr = response.data.events;
 			console.log('success Number of finded events: ', eventsArr.length);
@@ -228,7 +231,7 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		console.log('id', roomId);
 		console.log('start', start);
 		console.log('stop',stop);
-		var roomEventsPromise = $http.get('api/room/events/'+ roomId+ '/' + (+start)+ '/'+ (+stop))       
+		var roomEventsPromise = $http.get(baseUrl + '/api/room/events/'+ roomId+ '/' + (+start)+ '/'+ (+stop))       
 		.then(function (response) {
 			var eventsArr = response.data.events;
 			console.log('success! Searching events for room ID:'+ roomId + ' Number of finded events: ', eventsArr.length);
@@ -249,7 +252,7 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 				console.log('id', deviceId);
 		console.log('start', start);
 		console.log('stop',stop);
-		var deviceEventsPromise = $http.get('api/device/events/'+ deviceId+ '/' + (+start)+ '/'+ (+stop))       
+		var deviceEventsPromise = $http.get(baseUrl + '/api/device/events/'+ deviceId+ '/' + (+start)+ '/'+ (+stop))       
 		.then(function (response) {
 			var eventsArr = response.data.events;
 			console.log('success! Searching events for device ID:'+ deviceId + ' Number of finded events: ', eventsArr.length);
@@ -276,7 +279,7 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		} else {
 			addStr = '/';
 		}
-		var roomsPromise = $http.get('api/room'+ addStr)       
+		var roomsPromise = $http.get(baseUrl + '/api/room'+ addStr)       
 		.then(function (response) {
 			 console.log('success Total rooms: items: ', response.data.length);
 			return response.data;
@@ -299,7 +302,7 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		} else {
 			addStr = '/';
 		}
-		var devicesPromise = $http.get('api/device' + addStr)       
+		var devicesPromise = $http.get(baseUrl + '/api/device' + addStr)       
 		.then(function (response) {
 			console.log('success Total devices: ', response.data.length);
 			return response.data;
@@ -322,7 +325,7 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		} else {
 			addStr = '/';
 		}
-		var usersPromise = $http.get('api/user'+ addStr)       
+		var usersPromise = $http.get(baseUrl + '/api/user'+ addStr)       
 		.then(function (response) {
 			console.log('success Number of Users: ', response.data.length);
 			return response.data;
@@ -345,7 +348,7 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 		} else {
 			addStr = '/';
 		}
-		var typesPromise = $http.get('api/eventType'+ addStr)         
+		var typesPromise = $http.get(baseUrl + '/api/eventType'+ addStr)         
 		.then(function (response) {
 			console.log('success Current number of types: ', response.data.length);
 			return response.data;
@@ -363,7 +366,7 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 
 
 	function getEventTypesPublicByOwner() {
-		var eventTypesPublicByOwnerPromise = $http.get('api/eventTypePublicAndByOwner/')
+		var eventTypesPublicByOwnerPromise = $http.get(baseUrl + '/api/eventTypePublicAndByOwner/')
 		.then(function (response) {
 			console.log('success Current number of types (public by owner): ', response.data.length);
 			return response.data;
@@ -380,7 +383,7 @@ function helpEventService($resource, $timeout, $q, $http, AuthService) {
 	}
 
 	function checkEventNotification(){
-		return $http.get('api/checkEventNotification');
+		return $http.get(baseUrl + '/api/checkEventNotification');
 	}
 
 	return {

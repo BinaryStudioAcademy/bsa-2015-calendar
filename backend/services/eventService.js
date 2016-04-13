@@ -1,4 +1,5 @@
 var async = require('async');
+var ObjectId = require('mongoose').Types.ObjectId;
 var eventRepository = require('../repositories/eventRepository');
 var userRepository = require('../repositories/userRepository');
 var roomRepository = require('../repositories/roomRepository');
@@ -30,10 +31,10 @@ eventService.prototype.checkNotification = function(userId, callback){
 				eventRepository.getById(eventId, function(err, data){
 					//console.log('data: ', data);
 					var lapse = new Date(data.start) - new Date();
-					console.log('LAPSE: ', lapse);
+					// console.log('LAPSE: ', lapse);
 					if(lapse < 300000 && lapse > 0){
-						console.log('pushing lapse', lapse);
-						console.log('pushing ', data);
+						// console.log('pushing lapse', lapse);
+						// console.log('pushing ', data);
 						events.push(data);
 					}
 					next();
@@ -331,7 +332,10 @@ eventService.prototype.update = function(eventId, newEvent, callback){
 		devicesToDelete = [],
 		oldEvent;
 
-	console.log("eventID: " + eventId);
+	console.log('new event', newEvent);
+
+
+
 
 	async.waterfall([
 
@@ -347,7 +351,7 @@ eventService.prototype.update = function(eventId, newEvent, callback){
 								console.log('FAILED for room');
 								console.log('put ev id = ', eventId);
 								console.log('find ev id = ', result[0]._id);
-								return cb(new Error('date/time conflict with room ' + data.room + '\nstart:' + data.start + ' \nend:' + data.end+ '\n' +  result), result);
+								return cb(new Error('date/time conflict with room ' + result.room + '\nstart:' + result.start + ' \nend:' + result.end+ '\n' +  result), result);
 							}
 							else{
 								console.log('SUCCESS for room');
@@ -357,7 +361,7 @@ eventService.prototype.update = function(eventId, newEvent, callback){
 						}
 						else {
 							console.log('more > 1 conflict results');
-							return cb(new Error('date/time conflict with room ' + data.room + '\nstart:' + data.start + ' \nend:' + data.end + '\n' +  result), result);
+							return cb(new Error('date/time conflict with room ' + result.room + '\nstart:' + result.start + ' \nend:' + result.end + '\n' +  result), result);
 						}
 					}
 					cb();
@@ -380,7 +384,8 @@ eventService.prototype.update = function(eventId, newEvent, callback){
 								console.log('FAILED for device');
 								console.log('put ev id = ', eventId);
 								console.log('find ev id = ', result[0]._id);
-								return cb(new Error('date/time conflict with device ' + deviceId + '\nstart:' + data.start + ' \nend:' + data.end+ '\n' +  result), result);
+
+								return cb(new Error('date/time conflict with device ' + deviceId + '\nstart:' + result.start + ' \nend:' + result.end+ '\n' +  result), result);
 							}
 							else{
 								console.log('SUCCESS for device');
@@ -390,7 +395,7 @@ eventService.prototype.update = function(eventId, newEvent, callback){
 						}
 						else {
 							console.log('more > 1 conflict results');
-							return cb(new Error('date/time conflict with device ' + deviceId + '\nstart:' + data.start + ' \nend:' + data.end + '\n' +  result), result);
+							return cb(new Error('date/time conflict with device ' + deviceId + '\nstart:' + result.start + ' \nend:' + result.end + '\n' +  result), result);
 						}
 					}
 					next();
@@ -416,16 +421,45 @@ eventService.prototype.update = function(eventId, newEvent, callback){
 			});
 		}, // получаем экземпляр старого event
 		function(cb){ // определяем различия старого и нового экземпляра по спискам девайсов и подписанных юзеров
+
+
+
+
+			newEvent.users.map(function(user) {
+				console.log('typeof user(new)', typeof user);
+			});
+
+			oldEvent.users.map(function(user) {
+				user = user.toString();
+				console.log('typeof user(old)', typeof user);
+			});
+
 			usersToAdd = _.difference(newEvent.users, oldEvent.users);
 			usersToDelete = _.difference(oldEvent.users, newEvent.users);
 			devicesToAdd = _.difference(newEvent.devices, oldEvent.devices);
 			devicesToDelete = _.difference(oldEvent.devices, newEvent.devices);
 
+			// newEvent.users = newEvent.users.map(function(user) {
+			// 	user = ObjectId.fromString( user );
+			// })
+
+			// oldEvent.users = oldEvent.users.map(function(user) {
+			// 	user = ObjectId.fromString( user );
+			// })
+
+			console.log('new event users', newEvent.users);
+			console.log('old event users', oldEvent.users);
+
+			console.log('userToDelete', usersToDelete);
+			console.log('usersToAdd', usersToAdd);
+			//process.exit()
 			console.log("old devices: " + oldEvent.devices);
 			console.log("new devices: " + newEvent.devices);
 
 			console.log("devices to add: " + devicesToAdd);
 			console.log("devices to delete: " + devicesToDelete);
+
+
 
 
 			usersToDelete.forEach(function(userId){
@@ -462,17 +496,27 @@ eventService.prototype.update = function(eventId, newEvent, callback){
 
 			if(oldEvent.room !== newEvent.room){ // если комната для ивента изменилась
 				console.log("changing room");
-				roomRepository.removeEvent(oldEvent.room, eventId, function(err, data){
-					if(err){
-						return cb(err, null);
-					}
-				}); // удаляем запись о ивенте из старой комнтаы
 
-				roomRepository.addEvent(newEvent.room, eventId, function(err, data){
-					if(err){
-						return cb(err, null);
-					}
-				}); // добавляем запись об ивенте в новую комнату
+				if(oldEvent.room) {
+					roomRepository.removeEvent(oldEvent.room, eventId, function(err, data){
+						if(err){
+							return cb(err, null);
+						}
+					}); // удаляем запись о ивенте из старой комнтаы					
+				}
+
+
+				if(newEvent.room) {
+					console.log('newEvent.room: ', newEvent.room);
+
+					roomRepository.addEvent(newEvent.room, eventId, function(err, data){
+						if(err){
+							return cb(err, null);
+						}
+					}); // добавляем запись об ивенте в новую комнату					
+				}
+
+
 			}
 			cb();
 		},
@@ -480,7 +524,7 @@ eventService.prototype.update = function(eventId, newEvent, callback){
 				async.waterfall([
 
 				function(cb){ 
-					console.log(newEvent);
+					console.log('newEvent', newEvent);
 					eventRepository.update(eventId, newEvent, function(err, data){
 						if(err){
 							return cb(err, data);
@@ -498,7 +542,7 @@ eventService.prototype.update = function(eventId, newEvent, callback){
 							return cb(err);
 						}
 						else{
-							console.log(data);
+							console.log('data', data);
 							cb(null, data);
 						}		
 					});

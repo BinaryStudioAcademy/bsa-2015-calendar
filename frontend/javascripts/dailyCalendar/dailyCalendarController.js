@@ -142,6 +142,8 @@ function DayViewController($stateParams, Notification, scheduleService, filterSe
 		// take all the events displayed
 		var blocks = document.getElementsByClassName('day-event-blocks');
 
+		vm.currentUserId = AuthService.getUser().id;
+
 		addDragNDropListeners(blocks);
 
 		addResizeBlockListeners();
@@ -159,8 +161,8 @@ function DayViewController($stateParams, Notification, scheduleService, filterSe
 		//addMouseDownListeners(resizeBlocks, 'bot');
 
 		// in the loop put an event listener for each on mousedown event and handle event on capture event
-		for(var n = 0; n < resizeBlocks.length; n++) {
-			resizeBlocks[n].addEventListener('mousedown', resizeBlockMouseDownHandler, true);
+		for(var i = 0; i < resizeBlocks.length; i++) {
+			resizeBlocks[i].addEventListener('mousedown', resizeBlockMouseDownHandler, true);
 		}
 
 		var resizeTops = document.getElementsByClassName('resize-block-top');
@@ -168,10 +170,12 @@ function DayViewController($stateParams, Notification, scheduleService, filterSe
 		//addMouseDownListeners(resizeTops, 'top');
 
 
-		for(var o = 0; o < resizeTops.length; o++){
-			resizeTops[o].addEventListener('mousedown', resizeTopMouseDownHandler, true);
+		for(i = 0; i < resizeTops.length; i++){
+			resizeTops[i].addEventListener('mousedown', resizeTopMouseDownHandler, true);
 		}
 	}
+
+
 
 	function resizeBlockMouseDownHandler(e) {
 		// stop continueing event handling
@@ -408,6 +412,8 @@ function DayViewController($stateParams, Notification, scheduleService, filterSe
 		if (e.button == 2){
 			crudEvEventService.editingBroadcast(new Date(), findById(vm.todayEvents, self.id), 'DayView');
 			return false;
+		} else if(this.getAttribute('ownerId') !== vm.currentUserId){
+			return;
 		} else {
 			//add event listeners while dragging for tracking mouse and updating dates if mouse leave block or mouse is up
 			self.addEventListener.apply(self, ['mousemove', trackMouse]);
@@ -422,7 +428,7 @@ function DayViewController($stateParams, Notification, scheduleService, filterSe
 		var resizeBlocks = self.getElementsByClassName('resize-block')[0];
 
 		self = this;
-		resizeBlocks.style.display = 'none';
+		if(resizeBlocks) resizeBlocks.style.display = 'none';
 
 		// remove event listeners for tracking mousemove, mouseleave and mouseup so it would not track the mouse after we drop the block
 		self.removeEventListener('mousemove', trackMouse);
@@ -430,7 +436,7 @@ function DayViewController($stateParams, Notification, scheduleService, filterSe
 		self.removeEventListener('mouseleave', mouseAway);
 
 		// return resize block to normal view
-		resizeBlocks.style.display = 'block';
+		if(resizeBlocks) resizeBlocks.style.display = 'block';
 		// put event block to the same levels as others
 		self.style.zIndex = '0';
 

@@ -5,9 +5,9 @@ var app = require('../app'),
 app.controller('MonthController', MonthController);
 
 
-MonthController.$inject = ['$rootScope', '$scope', 'scheduleService', 'helpEventService', 'crudEvEventService', '$timeout', '$q', '$uibModal', '$stateParams', 'filterService'];
+MonthController.$inject = ['$state', '$rootScope', '$scope', 'scheduleService', 'helpEventService', 'crudEvEventService', '$timeout', '$q', '$uibModal', '$stateParams', 'filterService'];
 
-function MonthController($rootScope, $scope, scheduleService, helpEventService, crudEvEventService, $timeout, $q, $uibModal, $stateParams, filterService) {
+function MonthController($state, $rootScope, $scope, scheduleService, helpEventService, crudEvEventService, $timeout, $q, $uibModal, $stateParams, filterService) {
 
 
     vm = this;
@@ -166,6 +166,10 @@ function MonthController($rootScope, $scope, scheduleService, helpEventService, 
     vm.createEvent = function(selectedDate){
         console.log('eventService creatingBroadcast call');
         crudEvEventService.creatingBroadcast(selectedDate, 'MonthView');
+    };
+
+    vm.goToDayView = function(mDate) {
+       $state.transitionTo('calendar.dayViewFromYear', { year: mDate.year(), month: mDate.month() + 1, day: mDate.date() }); 
     };
 
     vm.editEvent = function(selectedDate, eventBody) {

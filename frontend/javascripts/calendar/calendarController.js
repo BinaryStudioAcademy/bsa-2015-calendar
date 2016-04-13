@@ -19,6 +19,24 @@ function CalendarController(NotificationService, socketService, Notification, fi
 		userInfo = AuthService.getUser();
 
 		filterService.pullEventTypesSync(handleEventTypes);
+
+		var getHeader = function() {
+		var request = new XMLHttpRequest();
+		request.open('GET', 'http://team.binary-studio.com/app/header', true);
+		    request.send();
+		    request.onreadystatechange = function() {
+		        if (request.readyState != 4) return;
+		        if (request.status != 200) {
+		            alert(request.status + ': ' + request.statusText);
+		        } else {
+		           var headerHtml = request.responseText;
+		           var headerContainer = document.getElementById('header');
+		           headerContainer.innerHTML =headerHtml;
+		           headerFunction();
+		        }
+		    };
+		};
+		getHeader();
 	}
 
 	init();
@@ -108,34 +126,34 @@ function CalendarController(NotificationService, socketService, Notification, fi
 	}
   };
 
-  	vm.showTutorial = function () {
-		vm.determineOpenedView();
-		var modalInstance = $uibModal.open({
-			animation: true,
-			size: 'lg',
-			templateUrl: 'templates/tutorial/tutorial.html',
-			controller: 'tutorialController',
-			controllerAs: 'tutorialCtrl',
-			bindToController: true,
-			resolve: {
-		  		openedViewIndex: vm.determineOpenedView()
-			}
-		});
-  	};
+  // 	vm.showTutorial = function () {
+		// vm.determineOpenedView();
+		// var modalInstance = $uibModal.open({
+		// 	animation: true,
+		// 	size: 'lg',
+		// 	templateUrl: 'templates/tutorial/tutorial.html',
+		// 	controller: 'tutorialController',
+		// 	controllerAs: 'tutorialCtrl',
+		// 	bindToController: true,
+		// 	resolve: {
+		//   		openedViewIndex: vm.determineOpenedView()
+		// 	}
+		// });
+  // 	};
 
-  	if(!userInfo.completedTutorial){
-		vm.showTutorial();
-  	}
+  // 	if(!userInfo.completedTutorial){
+		// vm.showTutorial();
+  // 	}
 
-  	$document.bind("keydown", function(event) {
-		// console.log(event.keyCode);
-		if (event.keyCode == 113) {
-	  		$("#myModal").modal("show");
-		}
-		if (event.keyCode == 27) {
-	  		$("#myModal").modal("hide");
-		}
-  	});
+  // 	$document.bind("keydown", function(event) {
+		// // console.log(event.keyCode);
+		// if (event.keyCode == 113) {
+	 //  		$("#myModal").modal("show");
+		// }
+		// if (event.keyCode == 27) {
+	 //  		$("#myModal").modal("hide");
+		// }
+  // 	});
 
   	$scope.$on('newEventTypeAdded', function (event, eventTypeBody) {
 		vm.allEventTypes.push(eventTypeBody);

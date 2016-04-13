@@ -23,7 +23,7 @@
                 th.tg-month-yw4l.month-day-header.dayoff Sat
                 th.tg-month-yw4l.month-day-header.dayoff Sun
             tr(ng-repeat='week in mCtrl.weeks')
-                td.tg-month-yw4l.month-day(ng-dblClick="mCtrl.createEvent(day.date)", ng-class="{ 'month-day-today': day.isToday, 'different-month': !day.isCurrentMonth, 'dayoff': $last || $index == 5}", ng-repeat='day in week.days') {{day.number}} 
+                td.tg-month-yw4l.month-day(ng-dblClick="mCtrl.goToDayView(day.date)", ng-class="{ 'month-day-today': day.isToday, 'different-month': !day.isCurrentMonth, 'dayoff': $last || $index == 5}", ng-repeat='day in week.days') {{day.number}} 
                     div.month-event(ng-repeat='event in day.events | filter : mCtrl.selectTypeEvent | limitTo: (mCtrl.maxDisplayEventsNumber)',
                     ng-dblClick="mCtrl.editEvent(day.date, event); $event.stopPropagation();", uib-popover='Starting at {{event.momentStartDate.format("HH:mm")}}', popover-trigger='mouseenter', popover-title='{{event.title | limitTo: mCtrl.maxEventNameLength}}', ng-style="{'background-color':event.type.color}")
                         div(ng-class='event.type.icon.css', ng-show='event.type.icon.css')

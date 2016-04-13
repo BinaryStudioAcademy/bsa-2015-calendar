@@ -1,4 +1,4 @@
-var app = angular.module('calendar-app', ['angularResizable', 'ui-notification', 'ui.checkbox', 'colorpicker.module', 'ui.router', 'ngAlertify', 'btford.socket-io', 'ngResource', 'ui.bootstrap', 'ngAnimate', 'angularjs-dropdown-multiselect'])
+var app = angular.module('calendar-app', ['ui-notification', 'ui.checkbox', 'colorpicker.module', 'ui.router', 'ngAlertify', 'btford.socket-io', 'ngResource', 'ui.bootstrap', 'ngAnimate', 'angularjs-dropdown-multiselect'])
     .config(['$stateProvider', '$urlRouterProvider', '$resourceProvider', '$httpProvider', '$locationProvider',
         function ($stateProvider, $urlRouterProvider, $resourceProvider, $httpProvider, $locationProvider) {
             $urlRouterProvider.otherwise('/');

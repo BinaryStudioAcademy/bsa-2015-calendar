@@ -18,12 +18,22 @@ function createEventController(AuthService, crudEvEventService, socketService, a
 		var localUsersArr = [];
 	}
 
+	vm.currentUserId =  loggedUserId;
+
 	function init() {
 		vm.formSuccess = false;	
 		vm.rooms = rooms;
 		vm.devices = devices;
 		vm.users = getUpdateUsers(users);
-		vm.eventTypes = eventTypes;
+
+		console.log('eventTypes', eventTypes);
+
+		vm.eventTypes = eventTypes.filter(function(type) {
+			return type.ownerId === vm.currentUserId || type.isPrivate === false; 
+		});
+
+		console.log('filtered eventtypes', eventTypes);
+
 		vm.selectedDateMoment = selectedDate;
 		vm.selectedDate = new Date(selectedDate.format("DD MMM YYYY HH:mm:ss"));
 		vm.viewType = viewType;

@@ -4,7 +4,7 @@ function dbConnectionHandler() {
 
 	mongoose.connect(config.uri, config.opts);
 
-	mongoose.set('debug', true);
+	mongoose.set('debug', false);
 	
 	this.connection = mongoose.connection;
 

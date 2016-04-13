@@ -22,6 +22,9 @@ Repository.prototype.getByIdPop = function(id, callback){
 };
 Repository.prototype.getEventPopulateType = function(id, callback){
 	var model = this.model;
+
+	console.log('populate id', id);
+
 	var query = model.findOne({_id:id}).populate({path:'type', select: '_id title color isPrivate icon'});
 	query.exec(callback);
 };  

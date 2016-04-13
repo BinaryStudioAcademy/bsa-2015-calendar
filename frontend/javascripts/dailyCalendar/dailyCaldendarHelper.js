@@ -2,9 +2,9 @@ var app = require('../app');
 
 app.service('dailyCalendarHelper', dailyCalendarHelper);
 
-dailyCalendarHelper.$inject = ['helpEventService'];
+dailyCalendarHelper.$inject = ['AuthService', 'helpEventService'];
 
-function dailyCalendarHelper(helpEventService) { 
+function dailyCalendarHelper(AuthService, helpEventService) { 
  	var vm = this;
  	vm.todayEvents = null;
  	vm.computedEvents = [];
@@ -178,6 +178,7 @@ function dailyCalendarHelper(helpEventService) {
 
 			// setting computed top and height values for event block, and id so in the future we could use it for updating dates
 			eventBlock.className = 'day-event-blocks';
+			eventBlock.setAttribute('ownerId', events[c].eventAsItIs.ownerId);
 			eventBlock.innerHTML = events[c].eventAsItIs.title;
 			eventBlock.style['font-weight'] = 900;
 			eventBlock.style['text-align'] = 'center';
@@ -236,8 +237,12 @@ function dailyCalendarHelper(helpEventService) {
 
 			// appending eventTitle and resize block inside event block and appending it to the table of hours
 			eventBlock.appendChild(eventTitle);
-			eventBlock.appendChild(resizeBottom);
-			eventBlock.appendChild(resizeTop);
+
+			if(events[c].eventAsItIs.ownerId === AuthService.getUser().id) {
+				eventBlock.appendChild(resizeBottom);
+				eventBlock.appendChild(resizeTop);
+			}
+
 			eventsBlocks.push(eventBlock);
 			//document.getElementById('day-events-place').appendChild(block);
 		}
