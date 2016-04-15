@@ -3,7 +3,12 @@ var app = require('./app');
 app.service('Globals', function() {
 	var vm = this;
 
+	//vm.baseUrl = 'http://intranet.local:88/calendar';
 	vm.baseUrl = 'http://localhost:3080';
+
+	vm.isMobileDevice = function() {
+		return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+	};
 
 	vm.tutorialTexts = [{
 		text: 'Use double click to create event and right click to change event',

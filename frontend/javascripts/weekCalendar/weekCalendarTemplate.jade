@@ -21,12 +21,12 @@
                 th.tg-month-yw4l.month-day-header.dayoff Sun
         tr(ng-repeat="timeSt in wCtrl.timeStamps")
           td.hourCell(style = "width: 7%") {{timeSt.value}}:00
-          td.eventCell.mon(ng-class='{{$index}}', ng-dblclick = 'wCtrl.createEvent(0, $index)')
-          td.eventCell.tue(ng-class='{{$index}}', ng-dblclick = 'wCtrl.createEvent(1, $index)')
-          td.eventCell.wed(ng-class='{{$index}}', ng-dblclick = 'wCtrl.createEvent(2, $index)')
-          td.eventCell.thu(ng-class='{{$index}}', ng-dblclick = 'wCtrl.createEvent(3, $index)')
-          td.eventCell.fri(ng-class='{{$index}}', ng-dblclick = 'wCtrl.createEvent(4, $index)')
-          td.eventCell.sat(ng-class='{{$index}}', ng-dblclick = 'wCtrl.createEvent(5, $index)')
-          td.eventCell.sun(ng-class='{{$index}}', ng-dblclick = 'wCtrl.createEvent(6, $index)')
+          td.eventCell.mon(ng-class='{{$index}}', ng-dblclick = 'wCtrl.createEvent(0, $index)', ng-click='wCtrl.goToDayViewIfMobile(0)')
+          td.eventCell.tue(ng-class='{{$index}}', ng-dblclick = 'wCtrl.createEvent(1, $index)', ng-click='wCtrl.goToDayViewIfMobile(1)')
+          td.eventcell.wed(ng-class='{{$index}}', ng-dblclick = 'wctrl.createevent(2, $index)', ng-click='wctrl.gotodayviewifmobile(2)')
+          td.eventCell.thu(ng-class='{{$index}}', ng-dblclick = 'wCtrl.createEvent(3, $index)', ng-click='wCtrl.goToDayViewIfMobile(3)')
+          td.eventCell.fri(ng-class='{{$index}}', ng-dblclick = 'wCtrl.createEvent(4, $index)', ng-click='wCtrl.goToDayViewIfMobile(4)')
+          td.eventCell.sat(ng-class='{{$index}}', ng-dblclick = 'wCtrl.createEvent(5, $index)', ng-click='wCtrl.goToDayViewIfMobile(5)')
+          td.eventCell.sun(ng-class='{{$index}}', ng-dblclick = 'wCtrl.createEvent(6, $index)', ng-click='wCtrl.goToDayViewIfMobile(6)')
 
 

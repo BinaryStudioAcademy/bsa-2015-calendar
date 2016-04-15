@@ -13,6 +13,10 @@ var userSchema = new Schema({
         type: 'string',
         required: true
     },
+    binaryID: {
+        type: 'string',
+        required: false
+    },
     surname: {
         type: 'string',
         required: false

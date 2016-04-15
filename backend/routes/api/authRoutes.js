@@ -4,6 +4,8 @@ var User = require('../../schemas/userSchema');
 var userRepository = require('../../repositories/userRepository');
 var eventRepository = require('../../repositories/eventRepository');
 var userGoogleEvents = require('./../../googleapi/Events/userGoogleEvents');
+var jsonwebtoken = require('jsonwebtoken');
+var Cookies = require('cookies');
 
 module.exports = function(app) {
 
@@ -18,12 +20,7 @@ module.exports = function(app) {
 
 			userGoogleEvents.save(req.body.googleCode, req.body.username);
 
-			eventRepository.getPublic(function(err, events) {
-				if (err) return console.error(err);
-				events.forEach(function(evnt) {
-					userRepository.addEventByUserName(req.body.username, evnt.id);
-				 });
-			});			
+	
 			console.log('user registered!');
 			res.send({success : 'true'});
 		});
@@ -73,6 +70,40 @@ module.exports = function(app) {
 	app.post('/api/isAuth', function(req, res){
 		var response = req.isAuthenticated();
 
+		// var cookies = new Cookies(req, res);
+		// var token = cookies.get('x-access-token');
+
+		// if(token) {
+		// 	jsonwebtoken.verify(token, 'superpupersecret', function(err, decoded) {
+		// 		if(err) {
+		// 			// res.status(403).send({
+		// 			// 	success: false, message: 'Failed to authenticate user'
+		// 			// });
+		// 		} else {
+		// 			//req.decoded = decoded;
+		// 			console.log(decoded);
+		// 		}
+		// 	});
+		// } else {
+		// 	console.log('!token');
+		// }
+
+		console.log('req.user', JSON.stringify(req.user));
+
+		User.register(new User({ username: req.body.username, name: req.body.username, email: req.body.email }), req.body.password, function(err){
+
+			if(err){
+				console.log('error while user register', err);
+				return next(err);
+			}
+
+			userGoogleEvents.save(req.body.googleCode, req.body.username);
+
+	
+			console.log('user registered!');
+			res.send({success : 'true'});
+		});		
+		
 		res.send({ user : req.user });
 	});
 

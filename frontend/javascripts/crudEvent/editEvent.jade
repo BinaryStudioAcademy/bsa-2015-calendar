@@ -3,7 +3,7 @@
 	ul.nav.nav-tabs(role='tablist')
 		li.active(role='presentation')
 			a(href="#everything" aria-controls="everything" role="tab" data-toggle="tab")
-				| Create new event
+				| Edit event
 	.tab-content
 		.tab-pane.active(role="tabpanel" id="everything")
 			form(role='form' name='newPlanForm')
@@ -11,12 +11,12 @@
 					.form-group
 						label.col-md-2.col-sm-2.control-label Time:
 						.col-md-10.col-sm-10
-							.col-md-6.col-sm-6.col-xs-6
+							.col-md-6.col-sm-6S
 								.input-group
 									.input-group-addon
 										i.glyphicon.glyphicon-time
 									uib-timepicker( readonly-input='!editEvCtrl.isUserOwner()' ng-model='editEvCtrl.event.start', show-meridian='false', show-spinners='false', ng-change='editEvCtrl.checkDuration()', minute-step=5)
-							.col-md-6.col-sm-6.col-xs-6
+							.col-md-6.col-sm-6
 								.input-group
 									.input-group-addon
 										i.glyphicon.glyphicon-time
@@ -66,12 +66,12 @@
 					.form-group(ng-show="!editEvCtrl.event.isPrivate")
 						label.col-md-2.col-sm-2.control-label Organization:
 						.col-md-10.col-sm-10
-							.col-md-6.col-sm-6.col-xs-6
+							.col-md-6.col-sm-6
 								.input-group
 									.input-group-addon 
 										i.glyphicon.glyphicon-piggy-bank
 									input.form-control(ng-disabled='!editEvCtrl.isUserOwner()' type='text', placeholder='Price...', ng-model='editEvCtrl.event.price')
-							.col-md-6.col-sm-6.col-xs-6
+							.col-md-6.col-sm-6
 								.input-group
 									.input-group-btn
 										button.btn.btn-default.dropdown-toggle(ng-disabled='!editEvCtrl.isUserOwner()' type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
@@ -142,5 +142,5 @@
 			|  You've just saved the event! Check the calendar now.
 		.col-md-6.col-sm-6.col-xs-6
 			button.btn.btn-primary(type='submit' ng-show='editEvCtrl.isUserOwner()' ng-disabled="newEventForm.$invalid" ng-click="editEvCtrl.submitEdit()") Save
-		.col-md-6.col-sm-6
+		.col-md-6.col-sm-6.col-xs-6
 			button.btn.btn-default(ng-click="editEvCtrl.closeModal()") Cancel
