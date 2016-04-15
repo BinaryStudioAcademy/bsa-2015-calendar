@@ -5,9 +5,9 @@ var app = require('../app'),
 app.controller('MonthController', MonthController);
 
 
-MonthController.$inject = ['$state', '$rootScope', '$scope', 'scheduleService', 'helpEventService', 'crudEvEventService', '$timeout', '$q', '$uibModal', '$stateParams', 'filterService'];
+MonthController.$inject = ['Globals', '$state', '$rootScope', '$scope', 'scheduleService', 'helpEventService', 'crudEvEventService', '$timeout', '$q', '$uibModal', '$stateParams', 'filterService'];
 
-function MonthController($state, $rootScope, $scope, scheduleService, helpEventService, crudEvEventService, $timeout, $q, $uibModal, $stateParams, filterService) {
+function MonthController(Globals, $state, $rootScope, $scope, scheduleService, helpEventService, crudEvEventService, $timeout, $q, $uibModal, $stateParams, filterService) {
 
 
     vm = this;
@@ -84,6 +84,25 @@ function MonthController($state, $rootScope, $scope, scheduleService, helpEventS
         console.log('actual event types', vm.actualEventTypes);
     });
 
+    vm.isMobileDevice = function() {
+        return Globals.isMobileDevice();
+    };
+
+    vm.editIfMobileDevice = function(day, date, event) {
+        if(Globals.isMobileDevice()) {
+            vm.editEvent(day, date, event);
+        }
+    };
+
+    vm.goToDayViewIfMobile = function($event, date) {
+        console.log('target', $event.target.tagName);
+
+        var source = $event.target.tagName === 'TD' ? 'cell' : 'event';
+        
+        if(Globals.isMobileDevice() && source === 'cell') {
+            vm.goToDayView(date);
+        }
+    };
 
     vm.next = function () {
         vm.monthStartMoment.add(1,'M');

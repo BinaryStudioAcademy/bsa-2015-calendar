@@ -5,9 +5,9 @@ require('moment-range');
 app.controller('WeekViewController', WeekViewController);
 
 
-WeekViewController.$inject = ['crudEvEventService','helpEventService', 'scheduleService', '$scope', '$uibModal', '$templateCache', '$compile', '$rootScope', 'filterService'];
+WeekViewController.$inject = ['$state', 'Globals', 'crudEvEventService','helpEventService', 'scheduleService', '$scope', '$uibModal', '$templateCache', '$compile', '$rootScope', 'filterService'];
 
-function WeekViewController(crudEvEventService, helpEventService, scheduleService, $scope, $uibModal, $templateCache, $compile, $rootScope, filterService) {
+function WeekViewController($state, Globals, crudEvEventService, helpEventService, scheduleService, $scope, $uibModal, $templateCache, $compile, $rootScope, filterService) {
 
 	var vm = this;
     vm.actualEventTypes = filterService.getActualEventTypes();
@@ -121,22 +121,30 @@ function WeekViewController(crudEvEventService, helpEventService, scheduleServic
                         tmpl += currEvt.description;
                     }
                     tmpl +='</div><div>Start at: '+moment(currEvt.start).format('hh:mm')+'</div><div>End at: '+moment(currEvt.end).format('hh:mm')+'</div>';
-                    eventDiv.popover({
-                        trigger: 'hover',
-                        delay: 500,
-                        container: 'body',
-                        placement: 'top',
-                        title: currEvt.title,
-                        html: true,
-                        content: tmpl
-                    });
-                    eventDiv.attr('index', i);
-                    eventDiv.attr('date', evtStart);
-                    eventDiv.on( 'dblclick', function(event){
+                    
+
+                    if(!Globals.isMobileDevice())
+                        eventDiv.popover({
+                            trigger: 'hover',
+                            delay: 500,
+                            container: 'body',
+                            placement: 'top',
+                            title: currEvt.title,
+                            html: true,
+                            content: tmpl
+                        });
+
+                    var clickEv = Globals.isMobileDevice() ? 'click' : 'dblclick';
+
+                    eventDiv.on( clickEv, function(event){
                         var date = new Date($(event.currentTarget).attr('date'));
                         vm.editEvent(date, vm.eventObj[$(event.currentTarget).attr('index')]); 
                         event.stopPropagation();
-                    });
+                    });    
+
+                    eventDiv.attr('index', i);
+                    eventDiv.attr('date', evtStart);
+
             
                     $compile(eventDiv)($scope);
                     evtCell.append(eventDiv);
@@ -177,10 +185,17 @@ function WeekViewController(crudEvEventService, helpEventService, scheduleServic
         crudEvEventService.creatingBroadcast(tmpDate, 'WeekView');
     };
 
+    vm.goToDayViewIfMobile = function(day) {
+        var tmpDate = vm.weekStartMoment.clone();
+        tmpDate.add(day, 'd');
+        $state.transitionTo('calendar.dayViewFromYear', { year: tmpDate.year(), month: tmpDate.month() + 1, day: tmpDate.date() });
+    };
+
     vm.editEvent = function(selectedDate, eventBody){
         console.log('eventService editindBroadcast call');
         var tmpDate = moment(selectedDate);
-        crudEvEventService.editingBroadcast(tmpDate, eventBody, 'WeekView');
+
+        if(Globals.isMobileDevice())  crudEvEventService.editingBroadcast(tmpDate, eventBody, 'WeekView');
     };
 
 

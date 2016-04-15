@@ -2,10 +2,10 @@ var app = require('../app');
 
 app.controller('DayViewController', DayViewController);
 
-DayViewController.$inject = ['$stateParams', 'Notification', 'scheduleService', 'filterService', 'AuthService',
+DayViewController.$inject = ['Globals', '$stateParams', 'Notification', 'scheduleService', 'filterService', 'AuthService',
  '$rootScope', '$scope', 'crudEvEventService', '$timeout', '$q', '$uibModal', 'socketService', 'helpEventService', 'dailyCalendarHelper'];
 
-function DayViewController($stateParams, Notification, scheduleService, filterService, AuthService, $rootScope, $scope, crudEvEventService,
+function DayViewController(Globals, $stateParams, Notification, scheduleService, filterService, AuthService, $rootScope, $scope, crudEvEventService,
  $timeout, $q, $uibModal, socketService, helpEventService, dailyCalendarHelper) {
 
 	var vm = this;
@@ -144,9 +144,14 @@ function DayViewController($stateParams, Notification, scheduleService, filterSe
 
 		vm.currentUserId = AuthService.getUser().id;
 
-		addDragNDropListeners(blocks);
+		if( Globals.isMobileDevice() ) {
+			addMobileListeners(blocks);	
+		} else {
+			addDragNDropListeners(blocks);
 
-		addResizeBlockListeners();
+			addResizeBlockListeners();			
+		}
+
 	}
 
 
@@ -154,6 +159,17 @@ function DayViewController($stateParams, Notification, scheduleService, filterSe
 	//--------------------RESIZING functions
 
 	var resizeTrackMouseWhenLeaveListener,resizeTopTrackMouseWhenLeaveListener, resizeMouseAwayListener;
+
+	function addMobileListeners(eventBlocks) {
+		for(var i = 0; i < eventBlocks.length; i++) {
+			eventBlocks[i].addEventListener('click', mobileTapHandler);
+		}	
+	}
+
+	function mobileTapHandler(e) {
+		crudEvEventService.editingBroadcast(new Date(), findById(vm.todayEvents, this.id), 'DayView');
+		return false;
+	}
 
 	function addResizeBlockListeners() {
 		// get an array of all the resize blocks
@@ -632,7 +648,7 @@ function DayViewController($stateParams, Notification, scheduleService, filterSe
 			}	
 		}
 
-
+		
 
 		getAllEvents(vm.selectedDate, reBuildDailyView);
 	}
