@@ -88,6 +88,7 @@ module.exports = function(app) {
 		// 	console.log('!token');
 		// }
 
+
 		// console.log('req.user', JSON.stringify(req.user));
 
 		// User.register(new User({ username: req.body.username, name: req.body.username, email: req.body.email }), req.body.password, function(err){
@@ -103,6 +104,7 @@ module.exports = function(app) {
 		// 	console.log('user registered!');
 		// 	res.send({success : 'true'});
 		// });		
+
 		
 		res.send({ user : req.user });
 	});
